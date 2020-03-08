@@ -1,0 +1,20 @@
+'zh-CN':
+  grade:
+    container_type:
+      avatar: 首次上传头像
+      phone: 绑定手机
+      attendance: 签到
+      mail: 绑定邮箱
+      account: 完善基本资料
+      answer: 查看参考答案
+      game: 闯关
+      memo: 额外奖励
+      discusses: 额外奖励
+      test_set: 查看隐藏测试集
+      shixun_publish: 发布实训
+      star: 实训评分
+      check_ta_answer: 查看TA人解答
+      feedback: 额外奖励
+      authentication: 完成实名认证
+      professional: 完成职业认证
+

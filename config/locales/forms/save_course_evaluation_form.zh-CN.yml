@@ -1,0 +1,17 @@
+'zh-CN':
+  activemodel:
+    models:
+      ecs/save_course_evaluation_form: 考核方式
+    attributes:
+      ecs/save_course_evaluation_form:
+        name: 名称
+        evaluation_count: 考核次数
+        status: 支撑方式
+        course_evaluation_subitems: 考核分项
+    errors:
+      models:
+        ecs/save_course_evaluation_form:
+          attributes:
+            course_evaluation_subitems:
+              name_blank: 名称不能为空
+

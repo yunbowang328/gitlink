@@ -1,0 +1,41 @@
+<%
+  define_admin_breadcrumbs do
+    add_admin_breadcrumb('联系我们')
+  end
+%>
+
+<div class="row">
+  <% @cooperations.each do |cooperation| %>
+    <div class="mb-4 col-12 col-lg-6">
+      <div class="card">
+        <div class="card-header"><%= cooperation.user_type_text %></div>
+        <div class="card-body">
+          <%= simple_form_for(cooperation, url: admins_contact_us_path(id: cooperation.id), wrapper: :horizontal_form) do |f| %>
+            <%= f.input :name, label: '联系人:' %>
+            <%= f.input :qq, label: 'QQ:' %>
+            <%= f.input :mail, label: 'Email:' %>
+
+            <div class="text-right">
+              <%= f.button :submit, value: '保存', class: 'btn-primary btn-sm', 'data-disable-with': '保存中...' %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="mb-4 col-12 col-lg-6">
+    <div class="card">
+      <div class="card-header">公司地址</div>
+      <div class="card-body">
+        <%= simple_form_for(@help, url: update_address_admins_contact_us_path, wrapper: :horizontal_form) do |f| %>
+          <%= f.input :status, label: '地址:' %>
+
+          <div class="text-right">
+            <%= f.button :submit, value: '保存', class: 'btn-primary btn-sm', 'data-disable-with': '保存中...' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

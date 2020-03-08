@@ -1,0 +1,15 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('项目列表') %>
+<% end %>
+
+<div class="box search-form-container project-list-form">
+  <%= form_tag(admins_projects_path, method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+    <%= text_field_tag(:search, params[:search], class: 'form-control col-12 col-md-2 mr-3', placeholder: '项目名称检索') %>
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+    <input type="reset" class="btn btn-secondary clear-btn" value="清空"/>
+  <% end %>
+</div>
+
+<div class="box admin-list-container project-list-container">
+  <%= render partial: 'admins/projects/shared/list', locals: { projects: @projects } %>
+</div>

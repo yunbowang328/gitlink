@@ -1,0 +1,372 @@
+.eaSystemp a{
+  color:#05101a;
+}
+.eaSystemp span{
+  color: #05101a !important;
+}
+.eacourse p{
+  height:84px;
+  margin-bottom:0px !important;
+}
+.eacourse #training_objective_contents{
+   height:81px;
+}
+.courseSystem{
+font-size:18px;
+font-family:MicrosoftYaHei;
+font-weight:400;
+line-height:45px;
+color:rgba(5,16,26,1);
+}
+.SystemParameters{
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  line-height:45px;
+  color:rgba(50,50,50,1);
+}
+.SystemParametersysls{
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:rgba(50,50,50,1);
+}
+.Systemnum{
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:#FF6800;
+}
+.newSystem{
+  width:1200px;
+  overflow:auto;
+  background: #FFF;
+}
+.newSystem .clearfix .column-1{
+  width: 113px !important;
+  text-align: center;
+}
+.operationColumn{
+  margin: 0px 10%;
+  width:100%;
+  height:100%;
+}
+.operationalter{
+  margin: 20px 16px;
+}
+.SystemModifythelist  .column-1{
+  width: 120px !important;
+  text-align: center;
+}
+
+.SystemModifythelist  .column-3{
+  padding-left: 96px;
+  margin-right: 23px;
+}
+.operationright{
+  float:right !important;
+}
+
+.newSystem p{
+  /*padding: 10px 33px !important;*/
+  margin-bottom: 0em;
+}
+.newSystem li{
+  margin:0 !important;
+}
+.SystemModifythelist{
+  background:#FFF !important;
+}
+
+.SystemModifythelist  .column-1:nth-child(1){
+  margin-left: 7px;
+}
+
+.Systempoint{
+  font-size:12px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:rgba(152,152,152,1);
+}
+.editorModify{
+  background:#FFF !important;
+}
+.newSystem .editorModify .column-1{
+  width: 194px !important;
+  text-align: left;
+  margin-left: 30px;
+}
+.newSystem .editorModify .column-1:nth-child(1){
+  margin-right: 510px;
+}
+.editorModify .ant-select{
+  width: 556px  !important;
+  margin-left: 36px;
+}
+.editorModify .ant-select .ant-select-selection{
+  height: 30px !important;
+}
+.editorModify .ant-select .ant-select-selection .ant-select-selection__rendered{
+  height: 30px !important;
+}
+.editorModify .ant-select .ant-select-selection .ant-select-selection__rendered .ant-select-selection-selected-value{
+  line-height: 30px !important;
+}
+.inputWeight{
+ width: 20%;
+ font-size:14px;
+ height:30px;
+ margin-left: 20px;
+ background-color: #F5F5F5;
+}
+.SetTheAssociated{
+  width: 314px;
+  height: 30px;
+  float: right;
+  margin-right: -3.5%;
+}
+.SetTheAssociatedchild{
+  width: 120px;
+  height: 30px;
+  background: rgba(255,255,255,1);
+  border: 1px solid rgba(234,234,234,1);
+  border-radius: 4px;
+  float: left;
+  margin-right: 10px;
+  text-align: center;
+  line-height: 30px;
+  /*margin-left: 34px;*/
+}
+.operatebutton{
+  margin-left: 20px;
+  /* margin-top: 16px; */
+}
+.editbulebutton{
+  width:120px;
+  height:30px;
+  background:rgba(76,172,255,1);
+  border-radius:2px;
+  color:#FFF;
+  text-align: center;
+  line-height: 30px;
+}
+.editglybutton{
+  width:120px;
+  height:30px;
+  border:1px solid rgba(205,205,205,1);
+  border-radius:2px;
+  color:#999;
+  text-align: center;
+  line-height: 30px;
+}
+
+.editglybuttonbox{
+  width: 275px;
+  margin-bottom: 30px;
+  margin-right: 20px;
+  margin-right:7%;
+}
+.editglybuttonboxs{
+  width: 275px;
+  margin-bottom: 30px;
+  margin-right: 20px;
+  margin-right:3%;
+}
+.defalutCancelbtn:hover {
+  border: 1px solid #B2B2B2;
+  color: #B2B2B2!important;
+}
+
+.gouxuanbule{
+  color:#4CACFF;
+}
+.gouxuanwhite{
+  color:#FFF;
+}
+.icon-gouxuan{
+  cursor: pointer;
+}
+/* 谷歌 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+/* 火狐 */
+input{
+    -moz-appearance:textfield;
+}
+.inputWeight{
+  text-indent:0.625rem;
+}
+
+.columnlocation{
+  height: 40px;
+  line-height: 40px;
+}
+.paddingLF{
+  padding:0 33px;
+}
+.width20{
+  width: 20px;
+  height: 20px;
+  text-align: center;
+}
+.defalutSubmitbtn,.defalutCancelbtn{
+  cursor: pointer;
+}
+.mb290{
+  margin-bottom:290px;
+}
+.Spinlarge{
+  text-align: center;
+  width: 100%;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.DDred{
+  color:#DD1717;
+}
+.color-666{
+  color:#666666 !important;
+}
+.color-05101A{
+  color:#05101A !important;
+}
+/*边框*/
+bordertopsolid{
+    border:1px solid #000;
+ }
+.ec_graduation_name{
+  margin-right:20px !important;
+}
+.column-width575{
+  color: transparent !important;
+}
+.column-width130{
+  width: 130px !important;
+  height: 40px;
+}
+
+
+.ListTableLine li>span {
+    max-width: 550px !important;
+}
+
+.graduateRequirement .clearfix .column-1 {
+    width: 76px!important;
+}
+.newrightcalculatebutton{
+  width: 50px;
+  height: 25px;
+  border: 1px solid rgba(76,172,255,1);
+  border-radius: 1px;
+  line-height: 25px;
+  text-align: center;
+  margin-top: 7px;
+  cursor: pointer;
+  color: rgba(76,172,255,1);
+}
+.newrightcalculatebuttons{
+   width: 50px;
+   height: 25px;
+   border: 1px solid rgba(76,172,255,1);
+   border-radius: 1px;
+   line-height: 25px;
+   text-align: center;
+   margin-top:9px;
+   cursor: pointer;
+   color: rgba(76,172,255,1);
+ }
+.columnbox{
+  height: 53px;
+  overflow: hidden;
+}
+
+.ant-modal-mask {
+  background-color: rgba(5,16,26,0.4);
+}
+.ecmodeldelet{
+  top:300px;
+}
+.ecmodeldelet .ant-modal-header{
+  padding: 0px 24px;
+}
+.ecmodeldelet .ant-modal-title{
+  padding: 0px 15px;
+  text-align: center;
+  box-sizing: border-box;
+  line-height: 70px;
+  height: 70px;
+  border-radius: 10px 10px 0px 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.bor-red {
+  border: 1px solid #db0505 !important;
+}
+
+.ml93{
+  margin-left:93px;
+}
+.ml26{
+  margin-left: 26px;
+}
+.finishtarget{
+  width: 69px;
+  /* height: 48px; */
+  line-height: 20px;
+  text-align: center;
+  margin-right: 48px;
+}
+
+.bordereaeaea{
+  border-bottom: 1px solid transparent !important;
+}
+
+.heightimportant{
+  height: 30px !important;
+  background-color: #F5F5F5;
+}
+.heightimportant:focus {
+  background-color: #fff;
+}
+.inputWeight:focus {
+  background-color: #fff;
+ }
+.heightlineimportant{
+  line-height: 30px !important;
+}
+
+.ant-select-selection:hover{
+  border-color: #d9d9d9 !important;
+}
+.ant-input:focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 2px transparent !important;
+  box-shadow: 0 0 0 2px transparent !important;
+ }
+ .ant-input{
+  border-color: #d9d9d9 !important;
+ }
+ .ant-select-selection:focus{
+  -webkit-box-shadow: 0 0 0 2px transparent !important;
+  box-shadow: 0 0 0 2px transparent !important;
+ }
+ .ant-select-selection:active{
+  -webkit-box-shadow: 0 0 0 2px transparent !important;
+  box-shadow: 0 0 0 2px transparent !important;
+ }
+
+ .ant-select-selection:focus{
+  border-color: #d9d9d9 !important;
+ }
+ .ant-select-selection{
+  -webkit-box-shadow: 0 0 0 2px transparent !important;
+  box-shadow: 0 0 0 2px transparent !important;
+ }
+
+.mt60{
+  margin-top:60px;
+}

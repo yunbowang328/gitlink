@@ -1,0 +1,148 @@
+.height-60{
+    line-height: 60px;
+    height:60px;
+    background:rgba(255,208,88,1);
+    border-radius:4px 4px 0px 0px;
+}
+.height-40{
+   line-height: 40px;
+    height:40px;
+    background:rgba(224,229,234,1);
+    border-radius:4px 0px 0px 0px;
+}
+.height-20{
+    line-height: 20px;
+    height:20px;
+    background:rgba(229,168,102,1);
+    border-radius:0px 4px 0px 0px;
+}
+.Statisticscenter{
+    text-align: center;
+}
+.Statisticscenter div:nth-child(1){
+    margin-top: 5px;
+    font-size:12px;
+    color:rgba(51,51,51,1);
+}
+
+.Statisticscenter div:nth-child(2){
+    margin-top: 5px;
+    font-size: 12px;
+    color: rgba(153,153,153,1);
+}
+
+.rankingss {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.rankingss a img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border:1px solid #F4F4F4;
+    /*box-shadow: 0px 0px 12px rgba(0,0,0,0.2);*/
+}
+
+.huangguans{
+    width: 36px;
+    height: 17px;
+    position: absolute;
+    top: -6px;
+    left: 71px;
+}
+
+.relatives{
+    position: relative;
+}
+
+.statisticsTabs{
+    padding: 30px;
+    padding-top: 0px;
+}
+
+.statisticsTabs .ant-tabs-tab{
+    height: 80px;
+    text-align: center;
+    line-height: 61px;
+    font-size: 16px;
+}
+
+.Statisticsli{
+    clear: both;
+    margin: 0;
+    padding: 5px 12px;
+    color: rgba(0, 0, 0, 0.65);
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.StatisticsMenubox{
+    position: relative;
+    margin: 0;
+    padding: 4px 0;
+    text-align: left;
+    list-style-type: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border-radius: 4px;
+    outline: none;
+    -webkit-box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+.Statisticslibox li label{
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.Statisticslibox .ant-menu-item{
+    height: 20px;
+    line-height: 20px;
+    text-overflow: clip;
+}
+
+.top10s{
+    font-size: 16px;
+    font-weight: bold;
+    color: rgba(51,51,51,1);
+}
+
+.Statisticsliboxjsgz{
+    font-size:12px;
+    color:rgba(51,51,51,1);
+    text-align: right;
+}
+
+.Statisticscircle p{
+    height: 30px;
+    font-size: 12px;
+    color: rgba(153,153,153,1);
+    line-height: 20px;
+}
+.Statisticsmxxy{
+    font-size: 16px;
+    margin-left:15px;
+}
+.maxnamewidth200 {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+}
+.maxnamewidth180 {
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: default;
+}

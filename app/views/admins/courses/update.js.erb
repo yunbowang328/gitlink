@@ -1,0 +1,3 @@
+var index = $("#course-item-<%= @course.id %>").children(":first").html();
+$("#course-item-<%= @course.id %>").html("<%= j render partial: "admins/courses/shared/td",locals: {course: @course, no: 1} %>");
+$("#course-item-<%= @course.id %>").children(":first").html(index);

@@ -1,0 +1,37 @@
+.admins-major-informations-index-page{
+  .fr{
+    float:right;
+  }
+  .panel-default{
+    margin-bottom: 10px;
+    background-color: rgb(245, 245, 245);
+    .panel-heading{
+      i{
+        margin-right:15px;
+        font-size:16px;
+        color:rgb(204, 204, 204);
+      }
+      a{
+        padding: 8px 10px;
+        display: inline-block;
+        width:100%;
+        color:rgb(102, 102, 102);
+      }
+    }
+    .panel-collapse{
+      padding-top: 10px;
+      background: #fff;
+      table{
+        text-align:center;
+        th,td{
+          padding: 8px;
+        }
+        td{
+          color:#888;
+        }
+      }
+    }
+
+  }
+
+}

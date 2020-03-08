@@ -1,0 +1,33 @@
+<div class="modal fade admin-upload-file-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= title ||= '上传文件' %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="admin-upload-file-form" enctype="multipart/form-data">
+          <%= hidden_field_tag(:source_type, nil) %>
+          <%= hidden_field_tag(:source_id, nil) %>
+          <%= hidden_field_tag(:suffix, nil) %>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">文件</span>
+            </div>
+            <div class="custom-file">
+              <input type="file" name="file" class="upload-file-input" accept="<%= accept ||= '*' %>" id="upload-file-input">
+              <label class="custom-file-label file-names" for="upload-file-input">选择文件</label>
+            </div>
+          </div>
+          <div class="error text-danger"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary submit-btn" data-disable-with="上传中...">上传</button>
+      </div>
+    </div>
+  </div>
+</div>

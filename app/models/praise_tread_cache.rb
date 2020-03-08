@@ -1,0 +1,2 @@
+class PraiseTreadCache < ApplicationRecord
+end

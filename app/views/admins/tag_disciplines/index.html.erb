@@ -1,0 +1,15 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('课程方向', admins_disciplines_path) %>
+  <% add_admin_breadcrumb(@sub_discipline&.discipline&.name, admins_sub_disciplines_path(discipline_id: @sub_discipline&.discipline_id)) %>
+  <% add_admin_breadcrumb(@sub_discipline.name) %>
+<% end %>
+
+<div class="box search-form-container tag-discipline-list-form">
+  <%= javascript_void_link '新增', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-create-tag-discipline-modal' } %>
+</div>
+
+<div class="box admin-list-container tag-discipline-list-container">
+  <%= render(partial: 'admins/tag_disciplines/shared/list') %>
+</div>
+
+<%= render 'admins/tag_disciplines/shared/create_tag_discipline_modal' %>

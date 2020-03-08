@@ -1,0 +1,2 @@
+$('.admin-modal-container').html("<%= j( render partial: 'admins/mirror_repositories/shared/choose_mirror_modal', locals: { mirror: @mirror, new_mirror: @new_mirror } ) %>");
+$('.modal.admin-choose-mirror-modal').modal('show');

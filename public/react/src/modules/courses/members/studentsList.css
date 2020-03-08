@@ -1,0 +1,51 @@
+.stu_table .ant-table-thead > tr > th, .stu_table .ant-table-tbody > tr > td,
+.courseGroupList .ant-table-thead > tr > th, .courseGroupList .ant-table-tbody > tr > td {
+    padding: 14px 6px;
+}
+
+.E9F8FF{
+    background-color: #E9F8FF;
+}
+
+.codeBtnStyle{
+    height: 18px;
+    line-height: 18px;
+    padding:0px 5px;
+    cursor: pointer;
+    font-size: 12px;
+    border-radius: 2px;
+}
+.codeBtn_yellow{
+    border:1px solid #FF6B06;
+    color: #FF6B06!important;
+}
+.codeBtn_green{
+    border:1px solid #00BA38;
+    color: #00BA38!important;
+}
+
+.codeBtn_blue{
+    border:1px solid #4CACFF;
+    color: #4CACFF!important;
+}
+
+.course_publicNav{
+    display: flex;
+}
+.course_publicNav li{
+    position: relative;
+    margin-right: 30px;
+    cursor: pointer;
+}
+.course_publicNav li.active{
+    color: #4CACFF
+}
+.course_publicNav li.active::after{
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    content: '';
+    left: 0px;
+    bottom: -33px;
+    background: #4CACFF;
+}

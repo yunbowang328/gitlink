@@ -1,0 +1,9 @@
+.help-container {
+  margin-top: 30px;
+}
+.help-container .help-menu {
+  text-align: center;
+}
+.help-container .help-content {
+  margin-bottom: 40px;
+}

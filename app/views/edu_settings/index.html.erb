@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<h1>EduCoder公共配置</h1>
+<p>说明：该界面适用于存储全局变量</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>变量名</th>
+      <th>变量值</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @edu_settings.each do |edu_setting| %>
+      <tr>
+        <td><%= edu_setting.name %></td>
+        <td><%= edu_setting.value %></td>
+        <td><%= link_to 'Show', edu_setting %></td>
+        <td><%= link_to 'Edit', edit_edu_setting_path(edu_setting) %></td>
+        <td><%= link_to 'Destroy', edu_setting, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Edu Setting', new_edu_setting_path %>

@@ -1,0 +1,29 @@
+<table class="table table-hover text-center laboratory-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="4%">序号</th>
+    <th width="14%" class="text-left">单位名称</th>
+    <th width="16%" class="text-left">域名</th>
+    <th width="6%">统计链接</th>
+    <th width="22%">管理员</th>
+    <th width="10%"><%= sort_tag('创建时间', name: 'id', path: admins_laboratories_path) %></th>
+    <th width="4%" title="同步显示主站下该单位的课堂">同步课堂</th>
+    <th width="4%" title="同步显示主站下该单位用户创建的实践课程">同步实践课程</th>
+    <th width="4%" title="同步显示主站下该单位用户创建的实训">同步实训</th>
+    <th width="16%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if laboratories.present? %>
+    <% laboratories.each_with_index do |laboratory, index| %>
+      <tr class="laboratory-item laboratory-item-<%= laboratory.id %>">
+        <%= render partial: 'admins/laboratories/shared/laboratory_item', locals: {laboratory: laboratory, index: index} %>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: laboratories } %>

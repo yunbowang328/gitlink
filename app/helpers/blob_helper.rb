@@ -1,0 +1,2 @@
+module BlobHelper
+end

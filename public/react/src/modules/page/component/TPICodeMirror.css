@@ -1,0 +1,80 @@
+.CodeMirror-hints {
+  position: absolute;
+  z-index: 10;
+  overflow: hidden;
+  list-style: none;
+
+  margin: 0;
+  padding: 2px;
+
+  -webkit-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  -moz-box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  box-shadow: 2px 3px 5px rgba(0,0,0,.2);
+  border-radius: 3px;
+  border: 1px solid silver;
+
+  background: white;
+  font-size: 90%;
+  font-family: monospace;
+
+  max-height: 20em;
+  overflow-y: auto;
+}
+
+.CodeMirror-hint {
+  margin: 0;
+  padding: 0 4px;
+  border-radius: 2px;
+  white-space: pre;
+  color: black;
+  cursor: pointer;
+}
+
+li.CodeMirror-hint-active {
+  background: #08f;
+  color: white;
+}
+
+
+
+/*setting*/
+.-padding-24{padding:24px}
+.-space-v-24>* {
+    margin-top: 24px;
+}
+.-light {
+  font-weight: 300;
+  color: #4CACFF;
+}
+.settingDrawer .-center {
+  min-height: 36px;
+}
+
+.ide-settings--section {
+  border-bottom:1px solid #F5F6F7;
+  padding:24px;
+}
+
+/*两列key value*/
+.ant-select-dropdown {
+  z-index: 8000 !important;
+}
+.settingDrawer>div[role='document']{
+  top: 50px;
+  width:260px;
+}
+.-space-v-24>*:first-child {
+    margin-top: 0;
+}
+.-justify-m-gt, .-justify-between {
+  justify-content: space-between;
+}
+
+.ide-settings--item-key,.-grey,.-grey-40 {
+  color:#999;
+}
+  
+
+.ide-settings--item-value,.-grey-60 {
+  color:#666;
+}

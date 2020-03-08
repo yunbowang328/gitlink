@@ -1,0 +1,2 @@
+module EcCourseTargetDecorator
+end

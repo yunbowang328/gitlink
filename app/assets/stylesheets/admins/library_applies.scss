@@ -1,0 +1,9 @@
+.admins-library-applies-index-page {
+  .library-applies-list-container {
+    span {
+      &.apply-status-agreed { color: #28a745; }
+      &.apply-status-refused { color: #dc3545; }
+      &.apply-status-processed { color: #6c757d; }
+    }
+  }
+}

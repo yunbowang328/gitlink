@@ -1,0 +1,288 @@
+/*.login_register_content, .login_register_content .ant-tabs-tabpane {*/
+/*  !*display: flex;*!*/
+/*  justify-content: center;*/
+/*}*/
+.login_register_content .ant-input {
+    background:rgb(244,244,244);
+}
+.login_register_content .loginInputzhucheyslass{
+    border:1px solid red !important;
+}
+.login_register_content .loginInputzhucheyslass:hover{
+    border:1px solid red !important;
+}
+.login_register_content {
+    width: 434px;
+    box-shadow:3px 10px 21px 0px rgba(76,76,76,0.15);
+    border-radius:6px;
+    background: #fff;
+}
+.login_register_content .ant-tabs-ink-bar {
+    width: 21px !important;
+    left: 19px;
+}
+.login_register_content .ant-tabs {
+    width: 354px;
+}
+
+.login_section {
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.login_sectionysl{
+    width: 100%;
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+}
+.loginInput {
+    width: 100%;
+    margin-bottom: 16px;
+    height: 45px;
+}
+
+.educouddiv {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.left_right {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.login_btn {
+    width: 100%;
+    margin-top: 26px;
+    margin-bottom: 20px;
+}
+.dragValidator {
+    margin-bottom: 16px;
+}
+.ysldivhome12{
+    display: flex;
+    flex-direction: row;
+    margin-left: 100px;
+    margin-right: 129px;
+    margin-top: 10px;
+}
+.ysldivhome22{
+    width: 800px;
+    display: flex;
+    flex-flow: row wrap;
+    align-content:stretch;
+}
+.ysldivhomediv222{
+    width: 101px;
+    height: 130px;
+
+}
+.ysldivhomediv12{
+    width: 110px;
+    height: 110px;
+    border-radius:50%;
+    box-shadow:3px 10px 21px 0px rgba(76,76,76,0.15);
+    background: #fff;
+    display: flex;
+    flex-direction:column;
+    margin-left: 73px;
+    margin-top: 5px;
+}
+.ysldivhomediv22{
+    width: 110px;
+    height: 110px;
+    border-radius:50%;
+    box-shadow:3px 10px 21px 0px rgba(76,76,76,0.15);
+    background: #fff;
+    display: flex;
+    flex-direction:column;
+    margin-left: 73px;
+    margin-top: 15px;
+}
+.ysldivhomedivtxt2{
+    width:101px;
+    height:27px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    text-align: center;
+
+}
+.ysldivhomedivimg2{
+    width: 90px;
+    height: 90px;
+}
+.ysllogin_register_contents2{
+    display: flex;
+    justify-content: center;
+    box-shadow:3px 10px 21px 0px rgba(76,76,76,0.15);
+    border-radius:6px;
+    background: #fff;
+}
+.ysllogin_section2 {
+    width:800px;
+    height: 600px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.yslspans12{
+    text-align: center;
+    font-size: 16px;
+    color: #111C24;
+}
+.yslspans22{
+    text-align: center;
+    font-size: 15px;
+    color: #05101A;
+}
+.yslspans32{
+    text-align: center;
+    font-size: 13px;
+    color: #656565;
+}
+.yslbutton2{
+    width:255px;
+    height: 36px;
+    margin-top: 20px;
+
+}
+.mt22{
+    margin-top: 22px;
+}
+.gouxuanimg2{
+    margin-right: 10px;
+    margin-bottom: 2px;
+}
+.textall2{
+    text-align: center;
+    font-size: 13px;
+    color: #4B4B4B;
+}
+.div1img2{
+    display: flex;
+    justify-content:center;
+    width: 60px;
+    margin-left: 26px;
+
+}
+.div1img2xx{
+    width: 20px;
+    margin-left: 26px;
+
+}
+.yslgouxuanimg22x{
+    width: 20px;
+    height: 20px;
+    margin-left: 75px;
+
+}
+.yslgouxuanimg2x{
+    height: 20px;
+    width: 20px;
+    margin-left: 75px;
+}
+
+.yslbutondls{
+    display: flex;
+    flex-direction:row;
+}
+。yslinpulsy input{
+
+}
+.loginInputzhuche{
+    width: 100%;
+    background-color: #fff!important;
+    height: 45px !important;
+    padding: 5px;
+
+}
+.loginInputzhucheyslass {
+    width: 100%;
+    background-color: #fff!important;
+    height: 45px !important;
+    padding: 5px;
+
+}
+.loginInputzhucheyslass .ant-input{
+    width: 100%;
+    background-color: #fff!important;
+    height: 45px !important;
+    padding: 5px;
+    position: relative;
+    right: 5px;
+    width: 103%;
+    border: 1px solid #FF0000!important;
+    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.loginInputzhucheyslass .ant-input:hover{
+    border: 1px solid #FF0000!important;
+
+}
+.loginInputzhuche .ant-input{
+    width: 100%;
+    background-color: #fff!important;
+    height: 45px !important;
+    padding: 5px;
+    position: relative;
+    right: 5px;
+    width: 103%;
+}
+
+.loginInputzhucheysl{
+    width: 100%;
+    background-color: #fff!important;
+    height: 45px !important;
+    padding: 5px;
+    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+
+}
+.loginInputzhucheysl .ant-input{
+    width: 100%;
+    background-color: #fff!important;
+    height: 45px !important;
+    padding: 5px;
+    position: relative;
+    right: 5px;
+    width: 103%;
+    border: 1px solid #FF0000!important;
+    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.loginInputzhucheysl .ant-input:hover{
+    border: 1px solid #FF0000!important;
+}
+
+.bth100{
+    width: 100px;
+    margin: 0 auto;
+}
+.ysllw100{
+    width: 100%;
+}
+
+.textcenter{
+    text-align: center;
+}
+
+.weixinregister{
+    width: 434px;
+    border-radius: 6px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+}

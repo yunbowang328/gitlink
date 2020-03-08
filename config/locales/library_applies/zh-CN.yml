@@ -1,0 +1,7 @@
+zh-CN:
+  library_apply:
+    status:
+      'pending': '待审批'
+      'processed': '已审批'
+      'refused': '已拒绝'
+      'agreed': '已同意'

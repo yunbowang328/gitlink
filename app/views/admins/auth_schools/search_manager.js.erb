@@ -1,0 +1,4 @@
+
+if($("#add-users-list").length > 0){
+  $("#add-users-list").html("<%= j render partial: "admins/auth_schools/shared/add_users_list", locals: {users: @users, school_id: params[:school_id]} %>")
+}

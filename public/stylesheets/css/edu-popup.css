@@ -1,0 +1,47 @@
+/* 修改密码成功弹框 */
+.task-popup{ width: 30%;background: #fff; border:1px solid #e8e8e8; border-radius:3px;}
+.task-popup-text-center{ text-align: center; color: #333;}
+.task-popup-title{ border-bottom: 1px solid #eee; padding:10px 15px; }
+.task-popup-content{ padding:15px;}
+.task-popup-submit{ margin:0px auto 15px; width: 120px;}
+.task-popup-sure{ margin:0px auto 15px; width: 54px;}
+.task-popup-right-sure{margin:0px auto 15px;text-align: center}
+.task-popup-OK{ margin:15px auto; text-align: center}
+.task-popup-bggrey{ background:#fff; color:#333;}
+
+/************实训弹窗****************/
+.task-popup-warp{ width: 100%; height:100%; background:black; position:fixed;}
+.task-popup-box{  position: relative; margin:150px auto 0px; }
+.task-box1{ width:428px; height:420px;background:url(/images/task/task-success.png) 0px 0px no-repeat;}
+.task-box2{ width:496px; height:373px;background:url(/images/task/task-success02.png) 0px 50px no-repeat;}
+a.task-popup-close{ display: block; background:url(/images/task/task-close.png) 0px 0px no-repeat; width: 31px; height: 31px; position:absolute; right:5px; top:100px;}
+a:hover.task-popup-close{background:url(/images/task/task-close.png) -40px 0px no-repeat; }
+.task-su-con{  text-align: center; padding-top:285px;}
+.task-su-p{ font-size: 20px; color:#ee4a1f; font-weight: bold;}
+a.task-su-btn{display: block;background:url(/images/task/task-su-btn.png) 0px -64px no-repeat; width: 138px; height: 57px;color:#ee4a1f; line-height: 50px; text-align: center; font-size: 16px; margin:20px auto;}
+a:hover.task-su-btn{background:url(/images/task/task-su-btn.png) 0px 0px no-repeat; }
+a.task-su-btn-white{ display: inline-block; padding:8px 25px; border:1px solid #fff; color:#fff; text-align: center; border-radius:5px; font-size:14px;}
+a:hover.task-su-btn-white{ color: #ee4a1f;  border:1px solid #ee4a1f; }
+
+/*  模板弹框 20170407byLB */
+#task_popup_box{ background:#fff;padding-bottom:15px;-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;border-radius:5px;box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5);}
+.task_popup_top{background:#ccc;height:40px;-webkit-border-radius: 5px 5px 0px 0px;-moz-border-radius: 5px 5px 0px 0px;-o-border-radius: 5px 5px 0px 0px;border-radius: 5px 5px 0px 0px;}
+.task_popup_top h3{ font-size:14px; color:#333; line-height:40px; padding-left:10px; }
+a.task_icons_close{width:20px; height:20px;display:block;background: url(../images/popup/sy_icons_close.png) 0 0px no-repeat; margin:8px 10px 0 0;}
+a:hover.task_icons_close{background: url(../images/popup/sy_icons_close.png) -40px 0px no-repeat;}
+.task_popup_con{ padding:20px;}
+
+/*智能课堂弹框 20170421byLB*/
+.task-popup-submit02{ margin:15px auto; width:120px;}
+.task-popup-submit03{ margin:15px auto; width:70px;}
+.task-popup-submit04{ margin:15px auto; width:85px;}
+/*智能课堂弹框tab 20170428byLB*/
+.newupload_conbox{ background: #fff; padding-bottom: 0;}
+.newupload_navbox{border-bottom:1px solid #dbdbdb;}
+.newupload_nav { height: 38px; line-height: 38px; background: #e7e7e7;  }
+.newupload_nav li {float:left; padding:0 15px;   display: block;  text-align:center; }
+.newupload_nav li:last-child{ border-right: none;}
+.newupload_nav li a{font-size:12px; color:#444;}
+.newupload_nav_hover{ background: #3498db; }
+.newupload_nav_nomal { }
+.newupload_nav_hover a{color: #fff !important; }

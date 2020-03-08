@@ -1,0 +1,42 @@
+<div class="modal fade admin-choose-mirror-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">更新镜像仓库</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <%= form_tag(admins_choose_mirror_repositories_path(mirror_id: mirror.id), method: :post, class: 'admin-choose-mirror-form') do %>
+          <div class="form-group row">
+            <div class="col-md-2"></div>
+            <div class="col-md-5">ID</div>
+            <div class="col-md-5">名称</div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-2">旧镜像</div>
+            <div class="col-md-5 form-check">
+              <input class="form-check-input" type="radio" name="mirror_number" id="old-mirror-check" value="<%= mirror.mirrorID %>">
+              <label class="form-check-label" for="old-mirror-check"><%= mirror.mirrorID %></label>
+            </div>
+            <div class="col-md-5"><%= mirror.name %></div>
+          </div>
+          <div class="form-group row">
+            <div class="col-md-2">新镜像</div>
+            <div class="col-md-5 form-check">
+              <input class="form-check-input" type="radio" name="mirror_number" id="new-mirror-check" value="<%= new_mirror.mirror_id %>">
+              <label class="form-check-label" for="new-mirror-check"><%= new_mirror.mirror_id %></label>
+            </div>
+            <div class="col-md-5"><%= new_mirror.mirror_name %></div>
+          </div>
+          <div class="mt-2 error text-danger"></div>
+        <% end %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary submit-btn">确认</button>
+      </div>
+    </div>
+  </div>
+</div>

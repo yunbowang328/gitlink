@@ -1,0 +1,19 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('合作伙伴', admins_partners_path) %>
+  <% add_admin_breadcrumb(current_partner.school&.name || current_partner.name) %>
+<% end %>
+
+<div class="box search-form-container customer-list-form">
+  <%= form_tag(admins_partner_customers_path(current_partner), method: :get, class: 'form-inline search-form', remote: true) do %>
+    <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-md-4 ml-3', placeholder: '客户名称检索') %>
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+  <% end %>
+
+  <%= javascript_void_link('添加', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-select-school-modal' }) %>
+</div>
+
+<div class="box admin-list-container customer-list-container">
+  <%= render 'admins/customers/shared/list', customers: @customers %>
+</div>
+
+<%= render partial: 'admins/shared/modal/select_school_modal', locals: { title: '添加客户', multiple: true, url: admins_partner_customers_path(current_partner) } %>

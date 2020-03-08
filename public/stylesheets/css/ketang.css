@@ -1,0 +1,69 @@
+/*----------课堂首页------------*/
+.active-class{width:1200px;margin:10px auto;}
+.active-class .head{height:42px;line-height:42px;}
+.active-class .search .open{padding-top:6px;}
+.active-class .search b{cursor:pointer;}
+.active-class .search span input{border:none;outline:none;padding-right:80px;display:none;}
+.active-class .content .sub-con{width:23.69%;border:1px solid #eee;background:#fff;margin: 0 1.5% 1.5% 0px;box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);}
+.active-class .content .sub-con:nth-child(4n+0){margin:0 0 1.5% 0;}
+.active-class .content .sub-con:hover{box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);cursor: pointer;-webkit-animation: bounce-down 1s linear 1;animation: bounce-down 1s linear 1;}
+.active-class .content .sub-con .top{height:154px;}
+.active-class .content .sub-con .top p{margin-bottom:15px;padding:0 15px;color:#666;}
+.active-class .content .sub-con .top .title{line-height:30px; font-weight:bold;height:60px;overflow:hidden;text-overflow:ellipsis;-webkit-line-clamp: 2;-webkit-box-orient: vertical; display: -webkit-box;}
+.active-class .content .sub-con .top p span{padding-right:20px;}
+.active-class .content .sub-con .bot{line-height:50px;background:#F5F6F7;}
+.active-class .content .sub-con .bot em{font-style:normal;}
+@-webkit-keyframes bounce-down {
+    25% {margin-top:-10px;}
+    50%, 100% {margin-top: 0;}
+}
+
+@keyframes bounce-down {
+    25% {margin-top:-10px;}
+    50%, 100% {margin-top: 0;}
+}
+.sidebar{width:60px;height:100%;box-shadow: 0 30px 30px 0 rgba(0, 0, 0, 0.15);position:fixed;left:0;top:0;background:#fff;z-index: 99999}
+.sidebar-top{height:60px;line-height:60px;background:#35373a;text-align:center;}
+.sidebar-top span{color:#fff;display:none;}
+.sidebar-con{padding-top:20px;white-space: nowrap;}
+.sidebar-con .list{min-height:45px;margin-top:15px;}
+.sidebar-con .list span{line-height:20px;display:inline-block;display:none;}
+.sidebar-con .list ul{margin-left:40px;display:none;}
+.sidebar-con .list ul li{padding-top:10px;cursor: pointer;}
+.sidebar-con .list ul li a{color: #333;}
+.sidebar:hover{width:100px;}
+.sidebar:hover .sidebar-top i{display:none;}
+.sidebar:hover .sidebar-top span{display:inline-block;}
+.sidebar:hover .sidebar-con .list i{padding-left:10px;}
+.sidebar:hover .sidebar-con .list span{display:inline-block;}
+.sidebar:hover .sidebar-con .list ul{display:block;}
+
+/*--------------我的课堂----------------*/
+.more{width:1200px;margin:50px auto;}
+.more .head{height:42px;line-height:42px;}
+.more .play{background:#fff;}
+
+.more .play .nav p span{background:#e9e9e9;padding:2px 5px;border-radius:10px;}
+
+.more .play .con .sub-con .head-top{position:relative;line-height:50px;}
+.more .play .con .sub-con .head-top .handle{position:absolute; font-size:12px;top:40px;right:20px;z-index:5000;display:none;background:#fff;box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);width:100px;line-height:30px;text-align:center;}
+.more .play .con .sub-con .head-top .handle span{display:block;}
+.more .play .con .sub-con .head-top .handle span:hover{background:#e9e9e9;cursor:pointer;}
+.more .play .con .sub-con span{display:inline-block;}
+.more .play .con .sub-con .operate{color:#ccc;}
+.more .play .con .sub-con .operate:hover{color:#3498DB;}
+.more .play .con .sub-con .count {position:relative;width:20px;}
+.more .play .con .sub-con .count i{position:absolute;top:-15px;left:0;} 
+.more .play .con .sub-con .span1{width:66%;}
+.more .play .con .sub-con .span1 em{padding:0 5px;border-radius:10px;background:#e9e9e9;line-height:19px;font-style: normal;}
+.more .play .con .sub-con .span2{width:10%;}
+.more .play .con .sub-con .span3{width:17%;}
+.more .play .con .sub-con .span4{width:68.3%;}
+.more .play .con .sub-con .span4 a{max-width:600px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;display:inline-block;}
+.more .play .con .sub-con .span5{width:12%;text-indent:5px}
+.more .play .con .sub-con ul{display:none;}
+.more .play .con .sub-con ul li:nth-child(1){border-top:1px dashed #ccc;}
+.more .play .con .sub-con ul li{line-height:50px;border-bottom:1px dashed #ccc;}
+
+/*老师评阅页面答题序号定位*/
+.exercise_No{position: fixed;width: 1200px;top:50px;z-index: 11}

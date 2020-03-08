@@ -1,0 +1,8 @@
+if($(".auth-schools-user-add").length > 0){
+  $(".auth-schools-user-add").modal("hide")
+}
+<% if @school_users.size > 0 %>
+ $("#table-school-<%= @school_id %>").find(".school_user_list").html("<%= j render partial: "admins/auth_schools/shared/school_user_list", locals: {users: @school_users, school_id: @school_id} %> ")
+<% end %>
+
+show_success_flash()

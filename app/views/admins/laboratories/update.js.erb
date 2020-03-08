@@ -1,0 +1,3 @@
+var index = $(".laboratory-item-<%= @laboratory.id %>").children(":first").html();
+$(".laboratory-item-<%= @laboratory.id %>").html("<%= j render partial: "admins/laboratories/shared/laboratory_item",locals: {laboratory: @laboratory, index: 1} %>");
+$(".laboratory-item-<%= @laboratory.id %>").children(":first").html(index);

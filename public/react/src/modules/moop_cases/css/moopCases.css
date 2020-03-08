@@ -1,0 +1,178 @@
+.winput-300-35{
+  width: 300px;
+  height: 35px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+.library_nav li {
+  float: left;
+  cursor: pointer;
+  margin-right: 30px;
+  position: relative;
+  color: #05101A;
+  height: 40px;
+  line-height: 20px;
+  font-size: 16px;
+}
+.library_nav li.active a, .library_nav li:hover a{
+  color: #4cacff!important;
+}
+.library_list {
+  margin-bottom: 30px;
+}
+.library_list_item:hover {
+  box-shadow: 0px 4px 8px rgba(158,158,158,0.16);
+}
+.library_list_item {
+  background: #fff;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  display: flex;
+}
+.library_list_item .library_l_name {
+  max-width: 600px;
+  float: left;
+}
+
+.edu-activity-red {
+  background-color: #FC2B6A;
+  color: #fff!important;
+  cursor: pointer;
+  border: 1px solid #FC2B6A;
+  line-height: 17px;
+}
+.edu-activity-green {
+  background-color: green;
+  color: #fff!important;
+  cursor: pointer;
+  border: 1px solid green;
+  line-height: 17px;
+}
+.edu-activity-orange {
+  background-color: #ff6800;
+  color: #fff!important;
+  cursor: pointer;
+  border: 1px solid #ff6800;
+  line-height: 17px;
+}
+.edu-activity-blue {
+  background-color: #4CACFF;
+  color: #fff!important;
+  cursor: pointer;
+  border: 1px solid #4CACFF;
+  line-height: 17px;
+}
+.edu-activity-orange-sub {
+  background-color: #FF781B;
+  color: #fff!important;
+  cursor: pointer;
+  border: 1px solid #ff6800;
+  line-height: 17px;
+}
+.edu-activity-36c53c-sub {
+    background-color: #36c53c;
+    color: #fff!important;
+    cursor: pointer;
+    border: 1px solid #36c53c;
+    line-height: 17px;
+}
+.pointsBtn {
+  width: 70px;
+  height: 70px;
+  background-color: #4cacff;
+  border-radius: 50%;
+  color: #fff;
+  text-align: center;
+  margin: 0 auto;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 2px 0;
+  cursor: pointer;
+  line-height: 22px;
+  padding-top: 12px;
+}
+.pointedBtn{
+  background: #BCD1E3;
+  cursor: default
+}
+.pointsBtn span{
+  display: block;
+}
+.upload_Title {
+  position: relative;
+  margin-right: 20px;
+  float: left;
+  line-height: 35px;
+  font-size: 16px;
+  /*width: 56px;*/
+  color:rgba(0, 0, 0, 0.85);
+  text-align: center
+}
+.upload_Title.must:before {
+  display: inline-block;
+  margin-right: 4px;
+  color: #f5222d;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+.upload_Title:after{
+  content: ':';
+  position: relative;
+  top: -0.5px;
+  margin: 0 8px 0 2px;
+}
+.libraries_tab li {
+  width: 120px;
+  height: 35px;
+  line-height: 33px;
+  border-radius: 18px;
+  border: 1px solid #4C98FF;
+  color: #4C98FF;
+  cursor: pointer;
+  margin-right: 30px;
+  float: left;
+  text-align: center;
+}
+.libraries_tab li.active {
+  background: #4C98FF;
+  color: #fff;
+}
+.librariesField .ant-upload{
+  width: 100%;
+  background: #F2F9FF;
+  justify-content: center;
+  align-items: center;
+  display: -webkit-flex;
+  text-align: center;
+  height: 120px!important;
+  border-radius: 4px;
+  border: 1px dashed #4cacff!important;
+  display: block;
+  cursor: pointer;
+}
+.librariesField .ant-upload.ant-upload-drag{
+  border:none!important;
+}
+.uploadImage .ant-upload.ant-upload-select-picture-card{
+  width:120px;
+  height: 90px;
+}
+.uploadImage .ant-upload.ant-upload-select-picture-card > .ant-upload{
+  padding:0px!important;
+}
+.successPage {
+  justify-content: center;
+  align-items: center;
+  display: -webkit-flex;
+  height: 570px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+.changebtn {
+  width:166px;
+  font-size: 16px;
+  height: 45px;
+  line-height: 45px;
+}

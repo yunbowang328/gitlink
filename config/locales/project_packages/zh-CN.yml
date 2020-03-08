@@ -1,0 +1,9 @@
+zh-CN:
+  project_package:
+    status:
+      pending: 已创建
+      applying: 审核中
+      refused: 已拒绝
+      published: 竞标中
+      bidding_ended: 待选标
+      bidding_finished: 已完成

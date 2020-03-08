@@ -1,0 +1,31 @@
+<table class="table table-hover text-center partner-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="10%">序号</th>
+    <th width="40%" class="text-left">名称</th>
+    <th width="30%"><%= sort_tag('添加时间', name: 'created_at', path: admins_partners_path) %></th>
+    <th width="20%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if partners.present? %>
+    <% partners.each_with_index do |partner, index| %>
+      <tr class="partner-item-<%= partner.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td class="text-left">
+          <%= link_to partner.school&.name || partner.name, customers_partner_path(partner), target: '_blank' %>
+        </td>
+        <td><%= partner.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td>
+          <%= link_to '查看', admins_partner_customers_path(partner), class: 'action' %>
+          <%= delete_link '删除', admins_partner_path(partner, element: ".partner-item-#{partner.id}"), class: 'delete-partner-action' %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: partners } %>

@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @edu_setting.name %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @edu_setting.value %>
+</p>
+
+<%= link_to 'Edit', edit_edu_setting_path(@edu_setting) %> |
+<%= link_to 'Back', edu_settings_path %>

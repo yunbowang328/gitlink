@@ -1,0 +1,94 @@
+.versionmilepostleft{
+    padding: 15px;
+    margin-right: 50px;
+    width: 80%;
+  }
+.topWrapper_btn_close {
+    background: #504b4b;
+    color: #FFFFFF!important;
+    padding:0px 12px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+  }
+
+  .topWrapper_btn_delete {
+    background: #da1010;
+    color: #FFFFFF!important;
+    padding:0px 12px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+  }
+
+  .versionrighe{
+    flex: 2;
+  }
+  .versionleft{
+    flex: 1;
+    text-align: right;
+    display: flex;
+    justify-content: right;
+  }
+
+  /* .version_line{
+    display: flex;
+    height: 30px;
+    margin: auto;
+    border-left:1px solid #eee;
+   } */
+   .version_line_one{
+    display: flex;
+    height: 45px;
+    margin: auto;
+    border-left:1px solid #eee;
+   }
+
+   .version_line_tpw{
+    display: flex;
+    height: 80px;
+    margin: auto;
+    border-left:1px solid #eee;
+   }
+
+   .versiondiv{
+    display: flex;
+  }
+  .verwinth{
+    width: 80%;
+  }
+
+  /*开启中 关闭中*/
+.opendversionetail{
+  display: inline-block;
+  background: #21ba45;
+  color: #ffffff!important;
+  padding:0px 5px;
+  text-align: center;
+  height: 25px;
+  /*width: 110px;*/
+  border-radius: 4px;
+  line-height: 25px;
+}
+.closedversionetail{
+  display: inline-block;
+  background: #e60b0b;
+  color: #ffffff!important;
+  padding:0px 5px;
+  text-align: center;
+  height: 25px;
+  /*width: 110px;*/
+  border-radius: 4px;
+  line-height: 25px;
+}
+.versionrectangle {
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  margin-top: 15px;
+  margin-left: -4px;
+  margin-bottom: 10px;
+  background: rgb(83, 81, 81);
+  }

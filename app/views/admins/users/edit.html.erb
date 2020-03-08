@@ -1,0 +1,138 @@
+<%
+  define_admin_breadcrumbs do
+    add_admin_breadcrumb('用户管理', admins_users_path)
+    add_admin_breadcrumb('用户详情')
+  end
+%>
+
+<div class="box user-edit-container">
+  <div class="user-info mb-4 row">
+    <%= link_to "/users/#{@user.login}", class: 'user-info-avatar col-md-1', target: '_blank', data: { toggle: 'tooltip', title: '个人中心' } do %>
+      <img src="/images/<%= url_to_avatar(@user) %>" class="rounded-circle" width="80" height="80" />
+    <% end %>
+    <div class="d-flex flex-column justify-content-between col-md-3 user-info-content">
+      <div class="user-info-name flex"><%= @user.real_name %> | <%= @user.id %> | <%= @user.login %></div>
+
+      <div class="d-flex flex-row user-info-auth">
+        <% if @user.authentication? %>
+          <i class="fa fa-user text-success" data-toggle="tooltip" data-placement="bottom" title="已实名认证"></i>
+        <% elsif @user.process_real_name_apply.present? %>
+          <i class="fa fa-user text-danger" data-toggle="tooltip" data-placement="bottom" title="实名认证中"></i>
+        <% else %>
+          <i class="fa fa-user text-muted" data-toggle="tooltip" data-placement="bottom" title="未实名认证"></i>
+        <% end %>
+
+        <% if @user.professional_certification %>
+          <i class="fa fa-list-alt text-success" data-toggle="tooltip" data-placement="bottom" title="已职业认证"></i>
+        <% elsif @user.process_professional_apply.present? %>
+          <i class="fa fa-list-alt text-danger" data-toggle="tooltip" data-placement="bottom" title="职业认证中"></i>
+        <% else %>
+          <i class="fa fa-list-alt text-muted" data-toggle="tooltip" data-placement="bottom" title="未职业认证"></i>
+        <% end %>
+
+        <% if @user.phone.present? %>
+          <i class="fa fa-mobile text-success" data-toggle="tooltip" data-placement="bottom" title="已绑定手机"></i>
+        <% else %>
+          <i class="fa fa-mobile text-muted" data-toggle="tooltip" data-placement="bottom" title="未绑定手机"></i>
+        <% end %>
+
+        <% if @user.mail.present? %>
+          <i class="fa fa-envelope text-success" data-toggle="tooltip" data-placement="bottom" title="已绑定邮箱"></i>
+        <% else %>
+          <i class="fa fa-envelope text-muted" data-toggle="tooltip" data-placement="bottom" title="未绑定邮箱"></i>
+        <% end %>
+      </div>
+      <div class="user-info-last-login">最近登录：<%= @user.last_login_on&.strftime('%Y-%m-%d %H:%M') %></div>
+    </div>
+  </div>
+
+  <%= simple_form_for(@user, url: admins_user_path(@user)) do |f| %>
+
+    <div><h6>基本信息</h6></div>
+    <div class="form-group px-2">
+      <div class="form-row">
+        <%= f.input :lastname, label: '姓名', wrapper_html: { class: 'col-md-3' }, input_html: {  class: 'col-md-11', value: @user.only_real_name } %>
+      </div>
+
+      <div class="form-row">
+        <%= f.input :nickname, label: '昵称', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-md-11' } %>
+        <%= f.input :gender, as: :radio_buttons, label: '性别', collection: [%w(男 0), %w(女 1)], wrapper_html: { class: 'col-md-3' } %>
+      </div>
+
+      <div class="form-row user-identity-select">
+        <div class="form-group select optional col-md-1">
+          <%= f.label :identity, label: '职业' %>
+          <%= select_tag('user[identity]', [], class: 'form-control identity-select optional', 'data-value': @user.user_extension&.identity, 'data-first-title': '请选择') %>
+        </div>
+        <div class="form-group technical-title-select-wrapper optional col-md-1" style="<%= @user.user_extension.student? ? 'display:none;' : '' %>">
+          <%= f.label :technical_title, label: '职称' %>
+          <%= select_tag('user[technical_title]', [], class: 'form-control technical-title-select optional', 'data-value': @user.technical_title) %>
+        </div>
+
+        <%= f.input :student_id, as: :tel, label: '学号', wrapper_html: { class: 'col-md-2', style: @user.user_extension.student? ? '' : 'display:none;' }, input_html: { class: 'student-id-input' } %>
+      </div>
+
+      <div class="form-row">
+        <%= f.input :mail, as: :email, label: '邮箱地址', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11' } %>
+        <%= f.input :phone, as: :tel, label: '手机号', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'off' } %>
+      </div>
+
+      <div class="form-row province-city-select">
+        <div class="form-group select optional col-md-2">
+          <%= f.label :location, label: '省份' %>
+          <%= select_tag('user[location]', [], class: 'form-control province-select optional', 'data-value': @user.location, 'data-first-title': '请选择') %>
+        </div>
+        <div class="form-group select optional col-md-2">
+          <%= f.label :location_city, label: '城市' %>
+          <%= select_tag('user[location_city]', [], class: 'form-control city-select optional', 'data-value': @user.location_city) %>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <%= f.input :school_id, as: :hidden %>
+        <%= f.input :department_id, as: :hidden %>
+        <div class="form-group select optional col-md-2">
+          <%= f.label :school_name, label: '所属学校/单位' %>
+          <%= f.select :school_name, [@user.school_id], {}, class: 'form-control school-select optional' %>
+        </div>
+        <div class="form-group select optional col-md-2">
+          <%= f.label :department_name, label: '所属学院/部门' %>
+          <%= f.select :department_name, [@user.department_id], {}, class: 'form-control department-select optional' %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4"><h6>管理</h6></div>
+    <div class="form-group px-2">
+      <% if current_user.admin? %>
+        <div class="form-group check_boxes optional">
+          <%= f.label :role, label: '角色' %>
+          <div class="d-flex">
+            <%= f.input :admin, as: :boolean, label: '管理员', checked_value: 1, unchecked_value: 0 %>
+            <%= f.input :business, as: :boolean, label: '运营人员', wrapper_html: { class: 'ml-3' }, checked_value: 1, unchecked_value: 0 %>
+            <%= f.input :is_test, as: :boolean, label: '测试账号', wrapper_html: { class: 'ml-3' }, checked_value: 1, unchecked_value: 0 %>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="form-group check_boxes optional">
+        <%= f.label :role, label: '认证信息' %>
+        <div class="d-flex">
+          <%= f.input :professional_certification, as: :boolean, label: '职业认证', checked_value: 1, unchecked_value: 0 %>
+          <%= f.input :authentication, as: :boolean, label: '实名认证', wrapper_html: { class: 'ml-3' }, checked_value: 1, unchecked_value: 0 %>
+          <%= f.input :is_shixun_marker, as: :boolean, label: '实训制作', wrapper_html: { class: 'ml-3' }, checked_value: 1, unchecked_value: 0 %>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <%= f.input :password, as: :password, label: '修改密码', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'new-password' } %>
+        <%= f.input :password_confirmation, as: :password, label: '确认密码', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'new-password' } %>
+      </div>
+    </div>
+
+    <div class="form-row mt-4">
+      <%= f.button :submit, value: '保存', class: 'btn-primary mr-3 px-4' %>
+      <%= link_to '取消', admins_users_path, class: 'btn btn-secondary px-4' %>
+    </div>
+  <% end %>
+</div>

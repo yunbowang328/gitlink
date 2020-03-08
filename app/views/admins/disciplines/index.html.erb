@@ -1,0 +1,17 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('课程方向', admins_disciplines_path) %>
+<% end %>
+
+<div class="box search-form-container discipline-list-form rig">
+  <div class="flex-1">
+    <%= javascript_void_link '新增', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-create-discipline-modal' } %>
+  </div>
+  <%= javascript_void_link '导入数据', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-import-discipline-modal'} %>
+</div>
+
+<div class="box admin-list-container discipline-list-container">
+  <%= render(partial: 'admins/disciplines/shared/list') %>
+</div>
+
+<%= render 'admins/disciplines/shared/create_discipline_modal' %>
+<%= render partial: 'admins/disciplines/shared/import_discipline_modal' %>

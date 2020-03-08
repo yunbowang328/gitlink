@@ -1,0 +1,11 @@
+.error_result_wrap{
+  &.error_result_txt{
+    padding: 20px 30px;
+  }
+  &.error_result_code{
+    height: 150px;
+    .error_result_code_txt{
+      line-height: 32px;
+    }
+  }
+}

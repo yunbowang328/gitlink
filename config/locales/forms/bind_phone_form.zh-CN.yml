@@ -1,0 +1,6 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/bind_phone_form:
+        phone: 手机号
+        code: 验证码

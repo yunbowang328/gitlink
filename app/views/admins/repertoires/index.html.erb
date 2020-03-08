@@ -1,0 +1,15 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('技术体系', admins_repertoires_path) %>
+<% end %>
+
+<div class="box search-form-container repertoires-list-form rig">
+  <div class="flex-1">
+    <%= javascript_void_link '新增', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-create-repertoire-modal' } %>
+  </div>
+</div>
+
+<div class="box admin-list-container repertoire-list-container">
+  <%= render(partial: 'admins/repertoires/shared/list') %>
+</div>
+
+<%= render 'admins/repertoires/shared/create_repertoire_modal' %>

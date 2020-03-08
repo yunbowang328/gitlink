@@ -1,0 +1,44 @@
+
+/* 新版展示内页 */
+.inner-banner{ background:url(/images/inner/banner-inner.jpg) 0px 0px repeat-x; width: 100%;min-width:1200px; height: 550px; padding-top:50px;}
+.inner-man{ position: absolute; right:100px; top:115px;}
+.inner-man img{width:200px; }
+.inner-banner-con{ width: 1200px; margin: 0px auto; color:#fff; text-align: center;}
+.inner-banner-con h2{ font-size: 60px; font-weight: normal;}
+.inner-banner-con-h3{font-size: 24px; font-weight: normal; color: #fff;}
+.inner-c_blue{ color:#3b94d6;}
+a.btn-blue{ display: block; width:265px; height:40px; line-height: 40px; background:#3b94d6;  color:#fff; font-size:14px; border-radius:5px;  text-align:center;border: 3px solid #3b94d6; font-weight: bold; }
+a:hover.btn-blue{background: #2384cd; border: 3px solid #2384cd;}
+a.btn-blue-line{ display: block; width:265px; height:40px; line-height: 40px; border: 3px solid #3b94d6; color:#3b94d6; font-size:14px; border-radius:5px;  text-align:center; font-weight: bold; }
+a:hover.btn-blue-line{background: #3b94d6; color:#fff;}
+.inner-btnbox{ width: 580px; margin: 30px auto;}
+.innner-banner-bottom{ width: 300px; text-align: left; float: left; margin-top: 50px; font-size: 14px;}
+.inner-border{ display: block; width: 100px; border-top:3px solid #fff; margin-bottom: 15px;}
+.new-container-inner-h3{ font-size:40px; font-weight: normal; color: #333; text-align: center; margin-bottom: 20px;}
+.innerbox-txt{ width:300px;}
+.innerbox-txt-h3{ font-size:24px; color: #333; margin-bottom:20px;}
+.innerbox-txt-p{font-size: 16px; color: #666; margin-bottom:20px;}
+.back-color-black{ background:#47494d;}
+.inner-t-c{ text-align: center;}
+
+/*消息弹框*/
+.shadowbox_news{ width:305px; background-color:#fff;    box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); position:absolute; font-size: 12px;  top:50px; left:-135px;display: none; z-index:999;}
+.shadowbox_news_title{ height:40px; line-height:40px;padding-left:10px; font-size:12px; color:#333;border-bottom:1px solid #eee;}
+.shadowbox_news font{ border: 1px solid #dddddd;   display: block; border-width: 8px; position: absolute; top: -15px;left: 140px; border-style:solid; border-color:  transparent transparent  #fff transparent;font-size: 0;line-height: 0;  box-shadow:2px rgba(146, 153, 169, 0.5); }
+.shadowbox_news_list{ max-height:200px; overflow:hidden;}
+.shadowbox_news_list a{ color:#999;}	
+.shadowbox_news_list li{ height:40px; border-bottom:1px dashed #ebebeb; line-height:40px;overflow:hidden; white-space: nowrap; text-overflow:ellipsis; padding:0 10px;}
+.shadowbox_news_list li:hover{ background-color:#eee;}
+a.shadowbox_news_user{ color:#3b94d6;}
+a.shadowbox_news_all{ display:block; width:305px; height:40px; line-height:40px; color:#3b94d6; text-align:center;border-top:1px solid #eee;}
+.inner-nav-mes li:hover ul{ display: block;}
+
+.inner-user-info{ border-radius:3px; background:#fff; padding:15px;box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); width:305px; display:block; width:300px; display: none;}
+.inner-user-info font{ border: 1px solid #dddddd;   display: block; border-width: 8px; position: absolute; top:289px;left: 110px; border-style:solid; border-color:transparent transparent #fff  transparent;font-size: 0;line-height: 0;  box-shadow:2px rgba(146, 153, 169, 0.5); }
+.inner-user-info li a{ display: block; height: 30px; line-height: 30px; color: #fff; width: 200px; }
+
+.inner-img02{ width: 1000px; margin:0 auto;}
+.inner-txtbox02{width: 800px; margin:0 auto;}
+.inner-txtbox02 p{ display: block; width: 200px; font-size: 20px; float: left; margin-top:30px; text-align: center; color:#666;}
+.innerbox-txt-h3{ font-size:28px; color: #333; margin-bottom:20px;}
+.innerbox-txt-p{font-size: 20px; color: #666; margin-bottom:20px;}

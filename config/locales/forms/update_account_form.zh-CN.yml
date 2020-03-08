@@ -1,0 +1,25 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/update_account_form:
+        user: ''
+        nickname: 昵称
+        name: 姓名
+        gender: 性别
+        location: 所在省份
+        location_city: 所在城市
+        identity: 职业
+        technical_title: 职称
+        school_id: '学校/单位'
+        department_id: '院系/部门'
+    errors:
+      models:
+        users/update_account_form:
+          attributes:
+            school_id:
+              blank: 不能为空
+              not_exist: 不存在
+            department_id:
+              blank: 不能为空
+              not_exist: 不存在
+

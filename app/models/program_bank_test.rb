@@ -1,0 +1,2 @@
+class ProgramBankTest < ApplicationRecord
+end

@@ -1,0 +1,10 @@
+$('.admin-alert-container').html('<%= j( render partial: 'shared/alert', locals: { message: message } ) %>');
+
+setTimeout(function() {
+  if ($('.admin-alert-container button.close').length > 0) {
+    $('.admin-alert-container button.close').trigger('click');
+  }
+}, 5000)
+$(".admin-body-container").animate({
+  scrollTop: 0
+}, 200);

@@ -1,0 +1,8 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      competitions/save_prize_team_account_form:
+        bank: '开户行'
+        second_bank: '支行'
+        card_no: '卡号'
+

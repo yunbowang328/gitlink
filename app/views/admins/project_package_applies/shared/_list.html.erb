@@ -1,0 +1,58 @@
+<% is_processed = params[:status].to_s != 'pending' %>
+
+<table class="table table-hover text-center library_applies-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="4%">序号</th>
+    <th width="8%">头像</th>
+    <th width="14%">姓名</th>
+    <th width="26%" class="text-left">众包需求</th>
+    <th width="26%" class="text-left">需求描述</th>
+    <th width="12%">时间</th>
+    <% if is_processed %>
+      <th width="16%">拒绝原因</th>
+      <th width="8%">状态</th>
+    <% else %>
+      <th width="20%">操作</th>
+    <% end %>
+  </tr>
+  </thead>
+  <tbody>
+  <% if applies.present? %>
+    <% applies.each_with_index do |apply, index| %>
+      <% package = apply.project_package %>
+      <% user = package.creator %>
+      <tr class="project-package-item project-package-applies-<%= apply.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td>
+          <%= link_to "/users/#{user.login}", class: 'professional-authentication-avatar', target: '_blank', data: { toggle: 'tooltip', title: '个人主页' } do %>
+            <img src="/images/<%= url_to_avatar(user) %>" class="rounded-circle" width="40" height="40" />
+          <% end %>
+        </td>
+        <td><%= link_to user&.real_name,"/users/#{user&.login}", target: "_blank" %></td>
+        <td class="text-left"><%= link_to package.title, "/crowdsourcing/#{package.id}", :target => "_blank"  %></td>
+        <td class="text-left"><%= overflow_hidden_span package.content[0..50] %></td>
+        <td><%= apply.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+
+        <% if is_processed %>
+          <td class="text-secondary"><%= overflow_hidden_span apply.reason %></td>
+          <td><span class="apply-status-<%= apply.status %>"><%= t("admins_apply_status.status.#{apply.status}") %></span></td>
+        <% else %>
+          <td class="action-container">
+            <%= agree_link '同意', agree_admins_project_package_apply_path(apply, element: ".project_package_applies-#{apply.id}"), 'data-confirm': '确认审核通过？' %>
+            <%= javascript_void_link('拒绝', class: 'action refuse-action',
+                                     data: {
+                                         toggle: 'modal', target: '.admin-common-refuse-modal', id: apply.id,
+                                         url: refuse_admins_project_package_apply_path(apply, element: ".project_package_applies-#{apply.id}")
+                                     }) %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: applies } %>

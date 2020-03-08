@@ -1,0 +1,6 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/bind_email_form:
+        email: 邮箱
+        code: 验证码

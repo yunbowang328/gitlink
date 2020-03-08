@@ -1,0 +1,42 @@
+<table class="table table-hover text-center salesman-channel-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="6%">序号</th>
+    <th width="17%" class="text-left">名称</th>
+    <th width="15%" class="text-left">教师数</th>
+    <th width="15%" class="text-left">学生数</th>
+    <th width="15%">课堂数</th>
+    <th width="15%">实训数</th>
+    <th width="17%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @channels.present? %>
+    <% @channels.each_with_index do |channel, index| %>
+      <tr class="channel-item salesman-channel-item-<%= channel.id %>">
+        <td><%= index + 1 %></td>
+        <td class="text-left">
+          <span><%= channel.school_name %></span>
+        </td>
+        <td class="text-left">
+          <span><%= channel.teacher_count(@start_time, @end_time)  %></span>
+        </td>
+        <td class="text-left">
+          <span><%= channel.student_count(@start_time, @end_time)  %></span>
+        </td>
+        <td>
+          <%=  channel.course_count(@start_time, @end_time)  %>
+        </td>
+        <td>
+          <%= channel.shixuns_count(@start_time, @end_time)   %>
+        </td>
+        <td>
+          <%= delete_link '删除', admins_salesman_channel_path(channel, salesman_id: channel.salesman_id, element: ".salesman-channel-item-#{channel.id}"), class: 'delete-salesman-action' %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>

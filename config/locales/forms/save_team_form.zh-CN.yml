@@ -1,0 +1,26 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      competitions/save_team_form:
+        competition: ''
+        name: '战队名称'
+        creator: ''
+        teacher_ids: ''
+        member_ids: ''
+    errors:
+      models:
+        competitions/save_team_form:
+          attributes:
+            creator:
+              enrolled: "您已经报名过该竞赛了"
+              teacher_enroll_forbidden: "本竞赛的参赛者限定为：学生"
+              member_enroll_forbidden: "本竞赛的参赛者限定为：教师"
+            teacher_ids:
+              enroll_forbidden: "本竞赛的参赛者限定为：学生"
+              invalid_count: "教师数量应为%{minimum}~%{maximum}人"
+              enrolled: "教师 %{names} 已加入其它战队了"
+            member_ids:
+              enroll_forbidden: "本竞赛的参赛者限定为：教师"
+              invalid_count: "队员数量应为%{minimum}~%{maximum}人"
+              enrolled: "队员 %{names} 已加入其它战队了"
+

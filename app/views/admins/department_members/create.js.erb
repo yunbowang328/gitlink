@@ -1,0 +1,6 @@
+$('.modal.admin-add-department-member-modal').modal('hide');
+$.notify({ message: '操作成功' });
+
+var index = $(".department-item-<%= current_department.id %>").children(":first").html();
+$('.department-list-table .department-item-<%= current_department.id %>').html("<%= j(render partial: 'admins/departments/shared/department_item', locals: { department: current_department, index: 1 }) %>");
+$(".department-item-<%= current_department.id %>").children(":first").html(index);

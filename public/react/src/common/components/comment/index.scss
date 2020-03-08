@@ -1,0 +1,230 @@
+$bdColor: rgba(244,244,244,1);
+$bgColor: rgba(250,250,250,1);
+$lh14: 14px;
+$lh22: 22px;
+$fz14: 14px;
+$fz12: 12px;
+$ml: 20px;
+
+.comment_list_wrapper{
+  box-sizing: border-box;
+  // border-top: 1px solid $bdColor;
+  .empty_comment{
+    display: flex;
+    height: calc(100vh - 200px);
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .comment_item_show{
+    display: block;
+  }
+  .comment_item_hide{
+    display: none;
+  }
+  .comment_item_area{
+    display: flex;
+    padding: 20px 0;
+    box-sizing: border-box;
+    border-bottom: 1px solid $bdColor;
+
+    .comment_child_item_area:hover{
+      .item-close{
+        display: inline-block;
+      }
+    }
+
+    .flex-image{
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+    }
+    .item-desc{
+      flex: 1;
+      // margin-left: $ml;
+      margin-left: 5px;
+    }
+    .item-header{
+      font-size: $fz14;
+      line-height: $lh14;
+      color: #333;
+      margin-left: 15px;
+      .item-time{
+        font-size: $fz12;
+        line-height: $lh14;
+        margin-left: $ml;
+      }
+      .item-close{
+        display: none;
+        cursor: pointer;
+        float: right;
+      }
+
+      .item-close.hide{
+        display: none;
+      }
+      
+    }
+    .item-ctx{
+      position: relative;
+      line-height: $lh22;
+      font-size: $fz12;
+      color: #333;
+      margin-top: 10px;
+      vertical-align: top;
+    }
+    .comment_icon_area{
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+
+      .comment-icon-margin{
+        margin-left: 20px;
+      }
+      .comment-icon-margin-10{
+        margin-left: 10px;
+      }
+    }
+
+    // .comment_item_quill{
+    //   // margin-top: 10px;
+    // }
+    .show_upload_image{
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      &::before{
+        position: absolute;
+        height: 100%;
+        width:100%;
+        content: '';
+        background: #000;
+        opacity: .7;
+      }
+
+      .image_info{
+        display: flex;
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        left: 10%;
+        top: 10%;
+        justify-content: center;
+        align-items: center;
+        // background: green;
+        .image{
+          display: block;
+          width: 100%;
+        }
+      }
+
+      .image_close{
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+  }
+  .comment_icon_count{
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1.5;
+
+    .comment_icon{
+      color: #333;
+    }
+    .comment_count{
+      color: #999999;
+      margin-left: 10px;
+      transition: color .3s;
+    }
+    .comment_count_none{
+      margin-left: 0;
+    }
+
+    &:hover{
+      .comment_icon,
+      .comment_count{
+        color: #5091FF;
+      }
+    }
+  }
+  .comment_item_append_list{
+    display: none;
+    position: relative;
+    background-color: $bgColor;
+    border-radius: 5px;
+    padding: 0 15px 10px;
+    margin: 15px 0;
+    &.active{
+      display: block;
+    }
+    &::before {
+      position: absolute;
+      left: 15px;
+      bottom: 100%;
+      height: 0;
+      width: 0;
+      content: '';
+      // border: 5px solid transparent;
+      border: 10px solid transparent;
+      border-bottom-color: $bgColor;
+    }
+
+    .comment_item_loadmore{
+      display: none;
+      padding-top: 10px;
+      cursor: pointer;
+      .loadmore-txt,
+      .loadmore-icon{
+        color: #999;
+        text-align: center;
+        font-size: $fz12;
+      }
+
+      &.show{
+        display: block;
+      }
+    }
+  }
+
+  .icon_font_size_14{
+    font-size: 14px !important;
+  }
+}
+
+.comment_form_area,
+.comment_form_bottom_area{
+  width: 100%;
+}
+.comment_form_area{
+  position: relative;
+  background: #fff;
+  // top: 10px;
+  .ant-form-explain{
+    padding-left: 0px;
+  }
+  .show_input{
+    margin-top: 10px;
+  }
+}
+
+.comment_form_bottom_area{
+  position: relative;
+  background: #fff;
+  top: 10px;
+
+  &.active{
+    position: absolute;
+    background: #fff;
+    left: 0px;
+    right: 0px;
+    top: -230px;
+    padding: 0 20px;
+  }
+}

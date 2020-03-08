@@ -1,0 +1,2 @@
+class OldMessageDetail < ApplicationRecord
+end

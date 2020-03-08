@@ -1,0 +1,8 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      add_school_apply_form:
+        name: 名称
+        province: 省份
+        city: 城市
+        address: 详细地址

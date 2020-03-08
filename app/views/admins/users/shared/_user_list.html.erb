@@ -1,0 +1,67 @@
+<table class="table table-hover users-list-table">
+  <thead class="thead-light">
+    <tr>
+      <th width="4%">序号</th>
+      <th width="8%" class="text-left">真实姓名</th>
+      <th width="13%">邮件地址</th>
+      <th width="10%">手机号码</th>
+      <th width="14%">单位</th>
+      <th width="7%">角色</th>
+      <th width="10%"><%= sort_tag('创建于', name: 'created_on', path: admins_users_path) %></th>
+      <th width="10%"><%= sort_tag('最后登录', name: 'last_login_on', path: admins_users_path) %></th>
+      <th width="6%"><%= sort_tag('经验值', name: 'experience', path: admins_users_path) %></th>
+      <th width="6%"><%= sort_tag('金币', name: 'grade', path: admins_users_path) %></th>
+      <th width="14%">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if users.present? %>
+      <% users.each_with_index do |user, index| %>
+        <tr class="user-item-<%= user.id %>">
+          <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+          <td class="text-left">
+            <%= link_to "/users/#{user.login}", target: '_blank' do %>
+              <%= overflow_hidden_span user.real_name, width: 100 %>
+            <% end %>
+          </td>
+          <td><%= overflow_hidden_span display_text(user.mail), width: 150 %></td>
+          <td><%= overflow_hidden_span display_text(user.phone), width: 100 %></td>
+          <td><%= overflow_hidden_span display_text(user.school_name), width: 150 %></td>
+          <td><%= user.identity %></td>
+          <td><%= display_text(user.created_on&.strftime('%Y-%m-%d %H:%M')) %></td>
+          <td><%= display_text(user.last_login_on&.strftime('%Y-%m-%d %H:%M')) %></td>
+          <td><%= user.experience.to_i %></td>
+          <td class="grade-content"><%= user.grade.to_i %></td>
+          <td class="action-container">
+            <%= link_to '编辑', edit_admins_user_path(user), class: 'action' %>
+
+            <%= javascript_void_link '解锁', class: 'action unlock-action', data: { id: user.id }, style: user.locked? ? '' : 'display: none;' %>
+
+            <% if user.registered? %>
+              <%= javascript_void_link '激活', class: 'action active-action', data: { id: user.id } %>
+            <% end %>
+
+            <% if user.id != current_user.id %>
+              <%= javascript_void_link '加锁', class: 'action lock-action', data: { id: user.id }, style: user.locked? || user.registered? ? 'display: none;' : '' %>
+            <% end %>
+
+            <div class="d-inline">
+              <%= javascript_void_link('更多', class: 'action dropdown-toggle', 'data-toggle': 'dropdown', 'aria-haspopup': true, 'aria-expanded': false) %>
+              <div class="dropdown-menu more-action-dropdown">
+                <%= javascript_void_link('奖励', class: 'dropdown-item reward-grade-action', data: { toggle: 'modal', target: '.admin-users-reward-grade-modal', id: user.id }) %>
+
+                <%= javascript_void_link '恢复禁密账号', class: 'dropdown-item reset-login-times-action', data: { id: user.id } %>
+
+                <%= delete_link '删除', admins_user_path(user, element: ".user-item-#{user.id}"), class: 'dropdown-item delete-user-action' %>
+              </div>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <%= render 'admins/shared/no_data_for_table' %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: users } %>

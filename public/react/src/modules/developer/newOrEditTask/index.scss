@@ -1,0 +1,32 @@
+@import '../split_pane_resizer.scss';
+
+.new_add_task_wrap {
+  .split-pane-area{
+    height: calc(100vh - 121px);
+  }
+}
+.new_add_task_ctl{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  // background: #333333;
+  background: rgba(18,28,36,1);
+  > button{
+    margin-right: 20px;
+  }
+}
+
+.quite_btn{
+  position: absolute;
+  right: 10px;
+  top: 15px;
+  margin-left: 30px;
+  color: #888888;
+  transition: all .3s;
+  cursor: pointer;
+  &:hover{
+    color: #5091FF;
+  }
+}
+

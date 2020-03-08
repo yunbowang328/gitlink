@@ -1,0 +1,12 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      libraries/save_form:
+        title: 标题
+        content: 描述
+        author_name: 作者名称
+        author_school_name: 作者单位
+        cover_id: 封面
+        publish: ''
+        attachment_ids: 附件
+        tag_ids: 标签

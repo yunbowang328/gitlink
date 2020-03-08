@@ -1,0 +1,23 @@
+
+<%= form_tag(add_school_admins_auth_schools_path, method: :post, remote: true) do %>
+  <div class="add-school-list-item">
+    <div class="list-item-title">单位名称</div>
+    <div class="school-search-list">
+      <% if schools.size > 0 %>
+        <% schools.each do |school| %>
+          <div class="school-list-item">
+            <%= check_box_tag("school_id[]", school.id, false, id: "check_school_#{school.id}") %>
+            <label for="check_school_<%= school.id %>">
+              <%= school.try(:name) %>
+            </label>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="padding10-5 color-grey-c">没有相关的单位</p>
+      <% end %>
+    </div>
+  </div>
+  <div class="text-right mt10">
+    <%= submit_tag("确认",class: "btn btn-primary submit-btn") %>
+  </div>
+<% end %>

@@ -1,0 +1,72 @@
+.newPanel{
+  border:1px solid #eaeaea;
+  border-radius: 4px;
+}
+.newPanel_title{
+  height: 3rem;
+  line-height: 3rem;
+  background: #f0f0f0;
+  text-align: center;
+  border-radius: 4px 4px 0px 0px;
+  font-size: 1.6em;
+  border-bottom: 1px solid #f0f0f0
+}
+.newPanel_content{
+  width: 600px;
+  margin:1rem auto;
+}
+.newPanel_content .ant-row.ant-form-item{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.newPanel_content .ant-form-item-label{
+  width: 135px;
+  display: block;
+  text-align: right;
+  margin-right: 10px;
+  height: 37px;
+  line-height: 40px;
+}
+.newPanel_content .ant-form-item-control-wrapper{
+  flex: 1;
+  min-width: 280px;
+}
+.newPanel_content .ant-select-selection{
+  height: 37px;
+}
+.newPanel_content .ant-select-selection__rendered,.newPanel_content input{
+  height: 35px;
+  line-height: 35px;
+}
+
+.newContent_inline{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items:flex-end
+}
+
+.newContent_inline > .ant-form-item:nth-child(2){
+  margin-left: 20px;
+}
+.formTip{
+  margin:0px 0px 20px 146px;
+}
+@media screen and (max-width: 750px){
+  .newPanel_content{
+    width:95%;
+  }
+  .newPanel_content .ant-row.ant-form-item{
+    display: grid
+  }
+  .newPanel_content .ant-form-item-label{
+    text-align: left;
+  }
+  .newContent_inline > .ant-form-item:nth-child(2){
+    margin-left:0px
+  }
+  .formTip{
+    margin:0px 0px 20px 0px;
+  }
+}

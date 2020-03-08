@@ -1,0 +1,147 @@
+.cooperative-laboratory-settings-edit-page, .cooperative-laboratory-settings-update-page {
+  .edit-laboratory-setting-container {
+    .logo-item {
+      display: flex;
+
+      &-img {
+        display: block;
+        width: 80px;
+        height: 80px;
+        background: #f0f0f0;
+      }
+
+      &-upload {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        width: 80px;
+        height: 80px;
+        background: #F5F5F5;
+        border: 1px solid #E5E5E5;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 27px;
+          left: 39px;
+          width: 2px;
+          height: 26px;
+          background: #E5E5E5;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 39px;
+          left: 27px;
+          width: 26px;
+          height: 2px;
+          background: #E5E5E5;
+        }
+      }
+
+      &-left {
+        position: relative;
+        width: 80px;
+        height: 80px;
+
+        &.has-img {
+          .logo-item-upload {
+            display: none;
+          }
+
+          &:hover {
+            .logo-item-upload {
+              display: block;
+              background: rgba(145, 145, 145, 0.8);
+            }
+          }
+        }
+      }
+
+      &-right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: #777777;
+        font-size: 12px;
+      }
+
+      &-title {
+        color: #23272B;
+        font-size: 14px;
+      }
+    }
+
+    .banner-item {
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+
+      &-img {
+        display: block;
+        width: 300px;
+        height: 80px;
+        background: #f0f0f0;
+      }
+
+      &-upload {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        width: 300px;
+        height: 80px;
+        background: #F5F5F5;
+        border: 1px solid #E5E5E5;
+
+        &::before {
+          content: '';
+          position: absolute;
+          top: 27px;
+          left: 149px;
+          width: 2px;
+          height: 26px;
+          background: #E5E5E5;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 39px;
+          left: 137px;
+          width: 26px;
+          height: 2px;
+          background: #E5E5E5;
+        }
+      }
+
+      &-top {
+        margin-bottom: 10px;
+      }
+
+      &-bottom {
+        position: relative;
+        width: 300px;
+        height: 80px;
+
+        &.has-img {
+          .banner-item-upload {
+            display: none;
+          }
+
+          &:hover {
+            .banner-item-upload {
+              display: block;
+              background: rgba(145, 145, 145, 0.8);
+            }
+          }
+        }
+      }
+
+      &-title {
+        color: #23272B;
+        font-size: 14px;
+      }
+    }
+  }
+}

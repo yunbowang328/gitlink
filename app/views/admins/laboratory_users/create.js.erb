@@ -1,0 +1,6 @@
+$('.modal.admin-add-laboratory-user-modal').modal('hide');
+$.notify({ message: '操作成功' });
+
+var index = $(".laboratory-item-<%= current_laboratory.id %>").children(":first").html();
+$('.laboratory-list-table .laboratory-item-<%= current_laboratory.id %>').html("<%= j(render partial: 'admins/laboratories/shared/laboratory_item', locals: {laboratory: current_laboratory, index: 1}) %>");
+$(".laboratory-item-<%= current_laboratory.id %>").children(":first").html(index);

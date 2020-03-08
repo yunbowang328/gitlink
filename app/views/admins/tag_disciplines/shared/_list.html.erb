@@ -1,0 +1,52 @@
+<% max_position = @tag_disciplines.pluck(:position).max %>
+<table class="table table-hover text-center tag-discipline-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="6%">序号</th>
+    <th width="42%" class="text-left">知识点</th>
+    <th width="12%">创建者</th>
+    <th width="8%">实践课程</th>
+    <th width="8%">实训</th>
+    <th width="8%">题库</th>
+    <th width="16%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @tag_disciplines.present? %>
+    <% @tag_disciplines.each do |tag| %>
+      <tr class="tag-discipline-item tag-discipline-item-<%= tag.id %>">
+        <td><%= tag.position %></td>
+        <td class="text-left"><%= tag.name %></td>
+        <td>
+          <% if tag.user.present? %>
+            <%= link_to tag.user.real_name, user_path(tag.user), :target => "_blank" %>
+          <% else %>
+            --
+          <% end %>
+        </td>
+        <td>
+          <% disabled = !(tag.sub_discipline&.subject && tag.discipline&.subject) %>
+          <%= check_box_tag :subject,!tag.subject,tag.subject,disabled:disabled,remote:true,data:{id:tag.id},class:"tag-discipline-source-form" %>
+        </td>
+        <td>
+          <% disabled = !(tag.sub_discipline&.shixun && tag.discipline&.shixun) %>
+          <%= check_box_tag :shixun,!tag.shixun,tag.shixun,disabled:disabled,remote:true,data:{id:tag.id},class:"tag-discipline-source-form" %>
+        </td>
+        <td>
+          <% disabled = !(tag.sub_discipline&.question && tag.discipline&.question) %>
+          <%= check_box_tag :question,!tag.question,tag.question,disabled:disabled,remote:true,data:{id:tag.id},class:"tag-discipline-source-form" %>
+        </td>
+        <td>
+          <%= javascript_void_link('上移', class: 'move-action', data: { id: tag.id, opr: "up" }, style: tag.position == 1 ? 'display:none' : '') %>
+          <%= javascript_void_link('下移', class: 'move-action', data: { id: tag.id, opr: "down" }, style: tag.position == max_position ? 'display:none' : '') %>
+
+          <%= link_to '编辑', edit_admins_tag_discipline_path(tag), remote: true, class: 'action' %>
+          <%= delete_link '删除', admins_tag_discipline_path(tag, element: ".tag-discipline-item-#{tag.id}"), class: 'delete-tag-discipline-action' %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>

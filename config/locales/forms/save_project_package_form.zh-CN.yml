@@ -1,0 +1,13 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      project_packages/save_form:
+        category_id: 类型
+        title: 标题
+        content: 描述
+        deadline_at: 截止日期
+        min_price: 最小价格
+        max_price: 最大价格
+        contact_name: 联系人姓名
+        contact_phone: 联系人电话
+        code: 验证码

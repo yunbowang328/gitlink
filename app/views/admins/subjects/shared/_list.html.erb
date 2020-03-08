@@ -1,0 +1,60 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="4%">序号</th>
+    <th width="14%" class="text-left">名称</th>
+    <th width="5%">阶段数</th>
+    <th width="5%">实训数</th>
+    <th width="7%">创建者</th>
+    <th width="10%">单位</th>
+    <th width="10%"><%= sort_tag('创建时间', name: 'created_at', path: admins_subjects_path) %></th>
+    <th width="7%">状态</th>
+    <th width="9%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if subjects.present? %>
+    <% subjects.each_with_index do |subject, index| %>
+      <tr class="subject-item-<%= subject.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td class="text-left">
+          <%= link_to(subject.name, "/paths/#{subject.id}", target: '_blank') %>
+          <span class="badge badge-pill badge-success homepage-show-badge" style="<%= subject.homepage_show? ? '' : 'display:none' %>">首页</span>
+          <span class="badge badge-pill badge-info excellent-badge" style="<%= subject.excellent? ? '' : 'display:none' %>">金课</span>
+        </td>
+        <td><%= subject.stages_count %></td>
+        <td><%= subject.shixuns_count %></td>
+        <td><%= subject.user.real_name %></td>
+        <td><%= subject.user.school_name %></td>
+        <td><%= subject.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td>
+          <%= display_subject_status(subject) %>
+        </td>
+        <td class="action-container">
+          <%= javascript_void_link('隐藏', class: 'hide-action', data: { id: subject.id }, style: subject.hidden? ? 'display:none' : '') %>
+          <%= javascript_void_link('取消隐藏', class: 'active-action', data: { id: subject.id }, style: subject.hidden? ? '' : 'display:none') %>
+
+          <%= delete_link '删除', admins_subject_path(subject, element: ".subject-item-#{subject.id}"), class: 'delete-subject-action' %>
+
+          <% if subject.published? %>
+            <div class="d-inline">
+              <%= javascript_void_link('更多', class: 'action dropdown-toggle', 'data-toggle': 'dropdown', 'aria-haspopup': true, 'aria-expanded': false) %>
+              <div class="dropdown-menu more-action-dropdown">
+                <%= javascript_void_link('首页展示', class: 'dropdown-item homepage-show-action', data: { id: subject.id }, style: subject.homepage_show? ? 'display:none' : '') %>
+                <%= javascript_void_link('取消首页展示', class: 'dropdown-item homepage-hide-action', data: { id: subject.id }, style: subject.homepage_show? ? '' : 'display:none') %>
+
+                <%= javascript_void_link('选为金课', class: 'dropdown-item excellent-action', data: { id: subject.id }, style: subject.excellent? ? 'display:none' : '') %>
+                <%= javascript_void_link('取消金课', class: 'dropdown-item cancel-excellent-action', data: { id: subject.id }, style: subject.excellent? ? '' : 'display:none') %>
+              </div>
+            </div>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: subjects } %>

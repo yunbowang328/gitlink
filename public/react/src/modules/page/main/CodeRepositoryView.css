@@ -1,0 +1,154 @@
+#codetab_con_1 .codePath {
+	color: #fff;
+    margin-left: 30px;
+	display: inline-block;
+}
+	.codemirrorBackground {
+		background-repeat: no-repeat;
+		position:absolute;
+		z-index: 1100;
+		width:160px;
+		height:160px;
+		right: 80px;
+		top: 36px;
+	}
+	/*解决按位取反符号~不垂直居中的问题*/
+	#codetab_con_1 .CodeMirror pre{
+		font-family: Courier New; 
+	}
+	/* 行间距 */
+	#codetab_con_1 .CodeMirror-code>div {
+		/* 不能这样设置行间距，光标会错位（光标不受这个样式的影响） */
+		/* margin-top: 1px; */
+	}
+.cm-s-railscasts.CodeMirror {
+    background: #111c24;
+    margin-top: 3px;
+}
+/* 留30pxmargin 以免字体变大看不到最后面的代码 */
+#games_repository_contents .CodeMirror-code {
+	padding-bottom: 30px;
+}
+#games_repository_contents .CodeMirror-scroll {
+	background: #111C24;
+}
+#games_repository_contents .CodeMirror-activeline .CodeMirror-line {
+	background: #312F3F;
+}
+/*  codemirror 行号背景色、前景色 TODO 这个样式加载太慢，能看到背景颜色变化，解决办法：loading时替换掉整个区域 */
+#games_repository_contents .CodeMirror-linenumber.CodeMirror-gutter-elt, 
+	#games_repository_contents .CodeMirror-gutter.CodeMirror-linenumbers{
+	background: #111c24;
+	color: #747A7F;
+}
+
+#games_repository_contents #codetab_nav_1 a{
+	width: 80px;
+}
+#games_repository_contents .dot {
+	width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #4CACFF;
+    width: 4px;
+    position: relative;
+    bottom: 15px;
+    left: -19px;
+    display: inline-block;
+}
+
+#games_repository_valuation .-changebg {
+    height: 2px;
+    background: #19527B;
+}
+
+/* 文件树 */
+.repoFilesDrawer>div:nth-child(1) {
+	opacity: 0 !important;
+}
+.repoFilesDrawer>div:nth-child(2) {
+	box-shadow: -3px 3px 4px 0px rgba(76,172,255,0.08);
+	background: #05101A;
+    color: #CBCBCB;
+
+    top: 94px !important;
+    height: 89% !important;
+
+    min-width: 400px;
+}
+
+.codeRepoShow {
+	transform: rotate(90deg);
+}
+
+.code-flie-list {
+	background: #05101A;
+	box-shadow: rgb(31, 47, 59) 0px 3px 10px 0px;
+    left: 2px;
+    width: auto !important;
+    padding: 12px 10px;
+}
+
+.codefile-all p.blue-line {
+	color:#4CACFF;
+}
+.codefile-all p:hover {
+	background: none;
+	color:#FFF;
+}
+.codefile-all p {
+	border-left: none !important;	
+	color: #747A7F;
+	width: auto !important;
+}
+
+
+/*  tab右侧iconbutton */
+#blacktab_nav .iconButton {
+	margin-right: 16px;
+	color: #747A7F;
+}
+#blacktab_nav a.iconButton:hover {
+	color: #4CACFF;
+	cursor: pointer;
+}
+	#blacktab_nav a {
+		text-decoration: none !important;
+	}
+	#blacktab_nav li a {
+		user-select: none;
+
+	}
+	#blacktab_nav #codetab_nav_add a {
+		height: 28px;
+	}
+	#blacktab_nav .ant-tabs-close-x {
+		border-radius: 8px;
+		background: #394248;
+		padding: 2px;
+		position: absolute;
+		top: 13px;
+		right: 5px;
+		color: #8B9399;
+		font-size: 9px;
+	}
+	#blacktab_nav .ant-tabs-close-x:hover, #blacktab_nav #codetab_nav_add:hover a{
+		color: #4CACFF !important;
+		cursor: pointer;
+	}
+
+#extend_and_zoom.iconButton {
+	margin-right: 20px;
+}
+
+/* ssh xterm */
+.term {
+	text-align: left;
+}
+.xterm .xterm-viewport {
+	overflow-y: auto !important;
+}
+
+.repoFilesDrawer .rc-tree {
+	user-select: none;
+}

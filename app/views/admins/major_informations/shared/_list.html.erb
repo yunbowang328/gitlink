@@ -1,0 +1,48 @@
+<div class="panel-group" id="accordion">
+  <% if @disciplines.size > 0 %>
+    <% @disciplines.each_with_index do |d,index| %>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion"
+               href="#collapse-<%= index %>" class="collapse-item">
+              <i class="fa fa-caret-right fa-fw"></i>
+              <span><%= "#{d.code} #{d.name}" %></span>
+              <span class="fr"><%= d.major_count %></span>
+            </a>
+          </div>
+        </div>
+        <div id="collapse-<%= index %>" class="panel-collapse collapse in">
+          <div class="panel-body">
+            <table class="table table-bordered" cellpadding="0" cellspacing="0">
+              <thead>
+              <th class="with20">一级学科代码</th>
+              <th class="with20">一级学科名称</th>
+              <th class="with20">专业代码</th>
+              <th class="with20">专业名称</th>
+              <th class="with20">认证学校数量</th>
+              </thead>
+              <tbody>
+              <% d.ec_discipline_firsts.each do |f| %>
+                <% f.ec_majors.each_with_index do |m, index| %>
+                  <tr>
+                    <td><%= index == 0 ? f.code : "" %></td>
+                    <td><%= index == 0 ? f.name : "" %></td>
+                    <td><%= m.code %></td>
+                    <td><%= m.name %></td>
+                    <td><%= m.schools.size.to_i %></td>
+                  </tr>
+                <% end %>
+              <% end %>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+</div>
+<%= render partial: 'admins/shared/paginate', locals: { objects: @disciplines } %>

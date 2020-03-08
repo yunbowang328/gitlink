@@ -1,0 +1,96 @@
+.monaco_editor_area{
+  height: 100%;
+  background-color: rgba(7,15,25,1);
+  .code_title{
+    display: flex;
+    align-items: center;
+    background-color: rgba(18,28,36,1);
+    color: #fff;
+    height: 56px;
+    padding: 0 20px;
+    .flex_strict{
+      flex: 1;
+    }
+
+    .flex_normal{
+      color: #E51C24;
+      cursor: pointer;
+      margin-right: 20px;
+    }
+    .code-icon{
+      cursor: pointer;
+    }
+    .flex_strict,
+    .flex_normal,
+    .code-icon{
+      color: #666;
+    }
+  }
+
+  // .margin,
+  // .margin-view-overlays,
+  // .current-line{
+  //   width: 40px !important;
+  // }
+  // .monaco-editor .margin-view-overlays .line-numbers{
+  //   text-align: center;
+  // }
+  // .monaco-scrollable-element{
+  //   left: 40px !important;
+  // }
+}
+
+.setting_drawer{
+  .ant-drawer-close{
+    color: #ffffff;
+  }
+  .ant-drawer-content{
+    top: 120px;
+    bottom: 56px;
+    height: calc(100vh - 176px);
+    // background: #333333;
+    background: rgba(7,15,25,1);
+    color: #fff;
+    .setting_h2{
+      color: #fff;
+    }
+
+    select{
+      color: #fff;
+      background: #222222;
+      height: 24px;
+      // line-height: 24px;
+      margin-top: 4px;
+    }
+    select option{
+      background: gold;
+      color: #fff;
+    }
+  }
+}
+
+.flex_has_save{
+  // animation: blink 3s line 3;
+  animation-name: blink;
+  animation-duration: .4s;
+  animation-iteration-count: 3;
+}
+
+// .monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input,
+// .monaco-editor .margin,
+// .minimap slider-mouseover,
+// .minimap-decorations-layer{
+//   background:rgba(3,19,40,1) !important;
+// }
+
+@keyframes blink{
+  50% {
+    color: #fff;
+  }
+}
+
+.monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input,
+.monaco-editor .margin,
+.minimap .minimap-decorations-layer{
+  background-color: transparent !important;
+}

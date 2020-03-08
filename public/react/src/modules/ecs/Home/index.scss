@@ -1,0 +1,127 @@
+.ec-home {
+  .head-image {
+    width: 100%;
+    height: 240px;
+    background-size: 100% 100%;
+    justify-content: center;
+    align-items: center;
+    display: -webkit-flex;
+  }
+
+  .ec-home-item {
+    background: #fff;
+
+    &-head {
+      display: flex;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+
+    &-label {
+      margin-right: 20px;
+      font-size: 18px;
+    }
+
+    &-tip {
+      color: #999;
+      font-size: 12px;
+    }
+
+    &.major-list-item {
+      .ec-home-item {
+        &-head {
+          margin-bottom: -24px;
+          padding: 20px 30px;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        &-tip {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .school-manager-item {
+    padding: 20px 30px;
+  }
+
+  .ec-school-manager {
+    display: flex;
+    flex-wrap: wrap;
+
+    &-item {
+      margin-right: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &-name {
+      display: block;
+      text-align: center;
+      max-width: 48px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      color: #666;
+    }
+  }
+
+  .major-list-item {
+    .major-list {
+      &-container {
+
+      }
+
+      &-head {
+        margin-top: -24px;
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .total { font-size: 12px; }
+      }
+
+      &-body {
+        padding-bottom: 30px;
+      }
+
+      &-row {
+        padding: 10px 15px;
+        border-bottom: 1px solid #eee;
+
+        &:last-child { border-bottom: unset; }
+
+        &.head {
+          background: #F5F5F5;
+        }
+        .ant-btn-link {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .operate-box {
+    .link {
+      margin: 0 5px;
+    }
+  }
+  .manager-box {
+    display: flex;
+    align-items: center;
+
+    &-content {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+
+  .link {
+    color: #007bff;
+  }
+}

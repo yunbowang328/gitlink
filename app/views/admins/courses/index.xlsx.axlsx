@@ -1,0 +1,29 @@
+wb = xlsx_package.workbook
+
+wb.styles do |s|
+  blue_cell = s.add_style :bg_color => "FAEBDC", :sz => 10,:height => 25,:b => true, :border => { :style => :thin, :color =>"000000" },:alignment => {wrap_text: true,:horizontal => :center,:vertical => :center}
+  wb.add_worksheet(name: "课堂列表") do |sheet|
+    sheet.add_row %w(ID 课堂名称 成员 资源 普通作业 分组作业 实训作业 试卷 评测次数 私有 状态 单位 创建者 创建时间 动态时间), :height => 25,:style => blue_cell
+
+    @courses.each do |course|
+      data = [
+        course.id,
+        course.name,
+        course.course_members_count,
+        get_attachment_count(course, 0),
+        course.course_homework_count(1),
+        course.course_homework_count(3),
+        course.course_homework_count(4),
+        course.exercises_count,
+        course.evaluate_count,
+        course.is_public == 1 ? "--" : "√",
+        course.is_end ? "已结束" : "正在进行",
+        course.school&.name,
+        course.teacher&.real_name,
+        course.created_at&.strftime('%Y-%m-%d %H:%M'),
+        course.max_activity_time ? course.max_activity_time&.strftime('%Y-%m-%d %H:%M') : "--"
+      ]
+      sheet.add_row(data)
+    end
+  end
+end

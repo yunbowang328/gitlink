@@ -1,0 +1,108 @@
+@charset "utf-8";
+/* CSS Document */
+.orgName {width:130px; color:#484848;}
+.organization_r_h02{ width:980px; height:40px; background:#eaeaea; margin-bottom:10px;}
+.organization_h2{ background:#64bdd9; color:#fff; height:33px; width:90px; text-align:center; font-weight:normal; padding-top:7px; font-size:16px;}
+.orgSettingOp {width:45px; height:21px; color:#269ac9; text-align:center; border-bottom:3px solid #e4e4e4; float:left; font-weight:bold; cursor:pointer;}
+.orgBorder {width:628px; height:21px; border-bottom:3px solid #e4e4e4; float:left;}
+.orgOpActive {border-bottom:3px solid #269ac9 !important; color:#444444;}
+.logoBorder {border:1px solid #eaeaea; padding:2px;}
+.logoBorder:hover {border:1px solid #269ac9;}
+.logoEnter {border:1px solid #eaeaea; padding:2px 5px; margin-top:37px;}
+.orgNameInput {width:600px; outline:none; border:1px solid #eaeaea; float:right; height:22px;}
+.orgRow {font-size:14px; color:#484848;}
+.orgDes {width:600px; height:150px; outline:none; border:1px solid #eaeaea; float:right; resize:none;}
+.orgUrlInput {width:200px; outline:none; border:1px solid #eaeaea; height:22px;}
+a.saveBtn {padding:2px 10px; background-color:#3b94d6; color:#ffffff; border-radius: 3px;}
+a.saveBtn:hover {background-color:#2788d0;}
+.orgMemberList {width:300px; float:left;}
+.orgColumnList {width:688px; float:left;}
+.orgListUser {width:110px; float:left;padding-right: 10px;}
+.orgListRole {width:100px; float:left;}
+.orgOrder {width:70px; float:left; text-align:center;}
+.orgSubNum {width:30px; float:left; text-align:center;}
+.subNumBlock {cursor:pointer;background-color:#fffce6;color: #0d90c3;  width:30px; height:17px; line-height:17px; margin:7px 0; vertical-align:middle;}
+.orgMemContainer {width:378px;}
+.orgMemberAdd {float:right;}
+.orgAddSearch {border:1px solid #dddddd; outline:none; width:180px; height:22px; color:#9b9b9b;}
+a.org_member_btn{ padding:1px 5px; background:#15bccf; color:#fff;}
+/*项目关联css*/
+.relateOrg {width:335px;}
+.relatedList {width:335px;}
+.searchOrg {height:24px; width:200px; color:#9b9b9b; border:1px solid #3b94d6;}
+a.cancelBtn {padding:3px 5px; background-color:#D9D9D9; color:#656565;}
+a.cancelBtn:hover {background-color:#717171; color:#ffffff;}
+a.org-cancel-btn {padding:3px 5px; background-color:#D9D9D9; color:#656565; border-radius: 3px;}
+a.org-cancel-btn:hover {background-color:#717171; color:#ffffff;}
+.relatedList ul li {border-bottom:1px solid #e4e4e4; width:320px; height:22px; vertical-align:middle; line-height:22px;}
+.relatedListName {width:240px; text-align:left; max-width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.relatedListOption {width:80px; text-align:center;}
+.relateOrgName {width:240px; max-width:240px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;color:#656565;}
+.search_org {width:150px; max-width:200px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;color:#656565;}
+/*组织列表*/
+.orgWrap {width:880px; float:left;}
+.orgTitle {width:880px; max-width:880px; margin-bottom:5px;word-break: break-all; word-wrap:break-word; }
+.orgIntro {width:880px; max-width:880px; margin-bottom:6px; color:#484848;}
+/*关联项目弹窗*/
+.projectRelate {float:left; max-height:118px;margin-right:16px;margin-bottom:10px;    overflow:auto; overflow-x:hidden; width:288px;}
+/*组织首页新151204Tim*/
+.orgNav {width:1000px; height:30px; background-color:#cfcfcf; margin:0 auto;}
+.orgContainer {width:100%; margin:0 auto; background-color:#cfcfcf;}
+.navOrgLogo {width:21px; height:30px; margin-left:2px; margin-right:15px;}
+.navOrgMenu {display:inline-block;height:30px; line-height:30px; vertical-align:middle;}
+a.linkGrey8 {color:#888888;}
+a.linkGrey8:hover {color:#585858;}
+.orgBorder {width:583px; height:21px; border-bottom:3px solid #e4e4e4; float:left;}
+.orgListRow {border-bottom:1px solid #e4e4e4; padding:5px 0; color:#555555; line-height:21px;}
+.orgSubList {height:31px; line-height:31px; vertical-align:middle; color:#555555;}
+.orgListBg {background-color:#eaebec;}
+.orgMenuArrow {background:url(../images/nav_icon.png) -10px -165px no-repeat; position:relative; display:inline-block; width:20px; height:30px;}
+.orgMenuArrow2 {background:url(../images/nav_icon.png) -10px -132px no-repeat; position:relative; display:inline-block; width:20px; height:30px;}
+.org_login_list{ border:1px solid #eaeaea; background:#fff; padding-left:10px; padding-bottom:10px; padding-top:8px; width:60px; left:-53px;
+    position:absolute; z-index:9999; line-height:2; box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); margin-top: 30px;}
+#orgUserName {display:inline-block;}
+.org_login_list a {color:#269ac9;}
+.orgListStatus, .orgSubStatus {width:55px; float:left;}
+.orgListStatusList, .orgSubOrder {width:90px; float:left;}
+.orgListType, .orgSubType {width:55px; float:left;}
+.orgListCatalog, .orgSubCatalog {width:75px; float:left;}
+.orgListOperation, .orgSubOperation {width:223px; float:left; text-align:right;}
+.orgSubTree {width:20px; height:31px; background:url(/images/org_tree.png) 0 0 no-repeat; float:left; margin-left:30px;}
+.orgSubTree2 {width:20px; height:31px; background:url(/images/org_tree.png) 0 -45px no-repeat; float:left; margin-left:30px;}
+.orgSubColumn {width:100px; float:left;}
+.subColumnControl {width:90px; max-width:90px; margin-right:10px; float:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.personalUrl {border:1px solid #dddddd; width:75px; outline:none; white-space:nowrap; padding-left:2px;}
+.reCon{ margin:5px; width:710px;}
+.retop{width:710px; height:40px; background:#eaeaea; padding:5px;}
+.re_search{ margin-top:7px; margin-left:5px;}
+.re_schbox{ width:240px; height:24px; border:1px solid #64bdd9; color:#666666;}
+.re_schbtn{ width:60px; height:26px;  color:#fff; margin-right:5px; border:none;  margin-left:0px;padding-left: 0px;}
+.re_con{ margin:5px; width:665px;}
+.re_con_top{color:#494949; }
+.re_con_top span{ color:#999999; font-weight:bold;}
+ul.wlist{ float:right; border-bottom:none; height:30px; margin-top:20px; }
+/*转发样式*/
+.org_login_list a {color:#269ac9;}
+div.flash {margin-top :0px !important}
+.relatePInfo {text-align: left; position:absolute; background-color:#ffffff; padding:3px 8px; white-space:nowrap; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5); z-index:999; color:#585858; cursor:pointer; display:none;}
+.captainName {max-width:65px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: inline-block;}
+.researchBox { width:240px; height:24px; border:1px solid #dddddd; color:#666666; outline:none;}
+.blueBtn{ width:60px; height:26px; color:#FFF; border:none; background-color:#269ac9; cursor:pointer; padding-left:0px; text-align:center;}
+.blueBtn:hover {background-color:#298fbd;}
+/*名师榜20160505*/
+.function-row {border-bottom:1px dashed #b2b2b2; padding-bottom:16px;}
+.teacher-list-search {width:310px; height:23px; border:1px solid #ccc; border-right:none; outline:none;}
+.teacher-search-icon {background:url(/images/search.png) 0 3px no-repeat; width:25px; height:25px; border:1px solid #ccc; border-left:none; cursor:pointer;}
+.teacher-search-type {width:84px; height:23px; border:1px solid #ccc; outline:none;}
+.teacher-list-row {border-bottom:1px dashed #b2b2b2; padding:18px 0;}
+.teacher-avatar {float:left;}
+.teacher-name {font-size:18px; color:#333; margin-right:15px;}
+.teacher-social-block {width:90px; float:left; text-align:center;}
+.block-num {font-size:16px; color:#000;}
+.block-title {font-size:12px; color:#999;}
+.block-slice {width:1px; height:40px; background-color:#e0e0e0; float:left; margin-top:3px;}
+.teacher-intro {font-size:13px; color:#999; line-height:24px; height:72px; overflow:hidden;}
+a.teacher-select {font-size:13px; color:#fff; padding:3px 18px; background-color:#269ac9;}
+a.teacher-select:hover {background-color:#297fb8;}
+a.follow-button {font-size:13px; color:#272727; padding:3px 5px; background-color:#f2efef;}
+a.follow-button:hover {background-color:#c1c1c1;}

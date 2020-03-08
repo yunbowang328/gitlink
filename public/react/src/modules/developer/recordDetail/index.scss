@@ -1,0 +1,55 @@
+@import '../split_pane_resizer.scss';
+
+.record_detail_area{
+  background: #fff;
+  .record_detail_ctx{
+    padding: 0 20px;
+    .detail_ctx_header{
+      position: relative;
+      height: 56px;
+    }
+    .header_h2{
+      line-height: 56px;
+    }
+    .header_btn{
+      position: absolute;
+      right: 0;
+      top: 14px;
+    }
+    .detail_ctx_status{
+      height: 18px;
+      line-height: 18px;
+      .status_label{
+        color: rgba(153,153,153,1);
+        margin-right: 40px;
+      }
+      .status_label_error{
+        color: #E51C24;
+      }
+      .status_label_success{
+        color: #28BD8B;
+      }
+      .status_label_sub{
+        color: #333333;
+      }
+      .pass_case{
+        float: right;
+        margin-right: 0;
+      }
+      .pass_case_span{
+        margin-right: 10px;
+      }
+    }
+
+    .result_code_area{
+      // height: 500px;
+      height: calc(100vh - 360px);
+    }
+    .result_error_area{
+      margin-top: 15px;
+      background: rgba(250,250,250,1);
+      color: #E51C24;
+      border-radius: 3px;
+    }
+  }
+}

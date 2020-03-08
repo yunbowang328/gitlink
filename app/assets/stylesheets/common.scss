@@ -1,0 +1,58 @@
+body {
+  font-size: 14px;
+  background: #efefef;
+}
+
+a {
+  &:hover {
+    text-decoration: unset;
+  }
+}
+
+textarea.danger, input.danger {
+  border-color: #dc3545!important;
+}
+
+label.error {
+  color: #dc3545!important;
+}
+
+input.form-control {
+  font-size: 14px;
+}
+.input-group-prepend {
+  .input-group-text {
+    font-size: 14px;
+  }
+}
+
+.flex-1 {
+  flex: 1;
+}
+.fl{float: left}
+.no_padding{padding: 0px!important;}
+.font-12 { font-size: 12px !important; }
+.font-14 { font-size: 14px !important; }
+.font-16 { font-size: 16px !important; }
+.font-18 { font-size: 18px !important; }
+.font-20 { font-size: 20px !important; }
+.font-24 { font-size: 24px !important; }
+.padding10-5 { padding: 10px 5px;}
+.width100 { width: 100%;}
+.mb10 { margin-bottom: 10px ;}
+.mt10 { margin-top: 10px ;}
+.mr10{ margin-right: 10px; }
+.ml10{ margin-left: 10px; }.ml20{ margin-left: 20px; }
+.textarea-width-100{width:100%; resize: none; border: 1px solid #ccc;}
+.padding10{padding: 10px;}
+.padding5-10{padding: 5px 10px;}
+.position-r{position:relative;}
+.color-grey-c{color:#ccc}
+.color-blue{color:#4CACFF}
+.color-orange{color: #ff6800}
+.inline-block{display:inline-block;}
+.hide{display: none;}
+.show{display: block;}
+
+.input_small{flex: 0 0 6%!important;}
+.input_middle{flex:0 0 13%!important;}

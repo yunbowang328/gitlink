@@ -1,0 +1,13 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: '统计总表') do |sheet|
+  sheet.add_row %w(ID 单位名称 教师总人数 学生总人数 课堂总数 正在进行课堂数 总实训数 实训评测总数 实训作业总数 其它作业总数 动态时间)
+
+  @schools.each do |school|
+    sheet.add_row([
+                    school[:id].to_s, school[:name].to_s, (school[:teacher_count] || 0).to_s, (school[:student_count] || 0).to_s,
+                    (school[:course_count] || 0).to_s, (school[:active_course_count] || 0).to_s,
+                    (school[:shixun_count] || 0).to_s,(school[:shixun_evaluate_count] || 0).to_s, (school[:homework_count] || 0).to_s,
+                    (school[:other_homework_count] || 0).to_s, format_time(school[:nearly_course_time])
+                  ])
+  end
+end

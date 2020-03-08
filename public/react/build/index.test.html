@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="theme-color" content="#000000">
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+<!--    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">-->
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+<!--    <title>Educoder</title>-->
+    <!--react-ssr-head-->
+    <script type="text/javascript">
+      window.__isR = true;
+    </script>
+
+    
+    <!-- <link rel="stylesheet" type="text/css" href="/css/edu-common.css">
+    <link rel="stylesheet" type="text/css" href="/css/edu-public.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/taskstyle.css">
+    
+    <link rel="stylesheet" type="text/css" href="/css/font-awesome.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/editormd.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/css/merge.css"> -->
+
+    <link rel="stylesheet" type="text/css" href="/css/css_min_all.css">
+
+    <link href="/stylesheets/educoder/edu-all.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" type="text/css" href="//at.alicdn.com/t/font_653600_qa9lwwv74z.css">
+
+  
+    <!-- <link rel="stylesheet" type="text/css" href="https://www.educoder.net/stylesheets/css/font-awesome.css?1510652321"> -->
+  </head>
+  <body>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+  <!--用于markdown转html -->
+    <div id="md_div" style="display: none;"></div>
+    <div id="root" class="page -layout-v -fit">
+    </div>
+    <div id="picture_display" style="display: none;"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+    
+    <!-- js css合并  文件优先级的问题 -->
+
+    <!---->
+    <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
+    
+    
+    <script type="text/javascript" src="/js/editormd/lib/underscore.min.js"></script>
+
+    <script type="text/javascript" src="/js/editormd/lib/marked.min.js"></script>
+    <script type="text/javascript" src="/js/editormd/lib/prettify.min.js"></script>
+    <script type="text/javascript" src="/js/editormd/lib/raphael.min.js"></script>
+    <script type="text/javascript" src="/js/editormd/sequence-diagram.min.js"></script>
+
+    <script type="text/javascript" src="/js/editormd/flowchart.min.js"></script>
+    <script type="text/javascript" src="/js/editormd/jquery.flowchart.min.js"></script>
+
+    
+    
+    <script type="text/javascript" src="/js/editormd/editormd.min.js"></script>
+  
+    <!-- codemirror addon -->
+    <script type="text/javascript" src="/js/codemirror/codemirror.js"></script>
+
+     <!--hint-->
+    <script type="text/javascript" src="/js/codemirror/lib/fuzzysort.js"></script>
+    <script type="text/javascript" src="/js/codemirror/addon/hint/show-hint.js"></script>
+    <!-- <script type="text/javascript" src="/js/codemirror/addon/hint/javascript-hint.js"></script> -->
+    <script type="text/javascript" src="/js/codemirror/addon/hint/anyword-hint.js"></script>
+    <script type="text/javascript" src="/js/codemirror/mode/javascript.js"></script>
+
+    <script type="text/javascript" src="/js/diff_match_patch.js"></script>
+
+    <script type="text/javascript" src="/js/merge.js"></script>
+
+    <script type="text/javascript" src="/js/edu_tpi.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/javascripts/application.js"></script>
+    
+    <script type="text/javascript" src="http://localhost:3000/assets/kindeditor/kindeditor.js"></script>
+  
+    <!-- // <script type="text/javascript" src="http://localhost:3000/javascripts/create_kindeditor.js"></script> -->
+    <script type="text/javascript" src="/js/create_kindeditor.js"></script>
+    <script type="text/javascript" src="http://localhost:3000/javascripts/educoder/edu_application.js"></script>
+  </body>
+</html>

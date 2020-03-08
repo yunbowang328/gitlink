@@ -1,0 +1,38 @@
+<%
+  define_admin_breadcrumbs do
+    add_admin_breadcrumb('合作伙伴')
+  end
+%>
+
+<% @data.each do |type, objs| %>
+  <div class="card mb-5 coo-img-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span class="flex-1"><%= t("enumerize.coo_img.img_type.#{type}") %></span>
+      <%= javascript_void_link '添加', class: 'btn btn-primary btn-sm add-btn', data: { img_type: type, toggle: 'modal', target: '.admin-add-cooperative-modal' } %>
+    </div>
+    <div class="card-body row" id="coo-img-container-<%= type %>">
+      <% objs.sort_by(&:position).each do |obj| %>
+        <div class="col-12 col-md-6 col-lg-3 coo-img-item coo-img-item-<%= obj.id %>" data-id="<%= obj.id %>">
+          <div class="border rounded relative p-3 mb-3 drag">
+            <%= delete_link '删除', admins_cooperative_path(obj, element: ".coo-img-item-#{obj.id}", not_refresh: true) do %>
+              <i class="fa fa-trash-o delete-btn" data-id="<%= obj.id %>"></i>
+            <% end %>
+
+            <div class="coo-img-item-img" data-source-id="<%= obj.id %>" data-source-type="CooImg" data-toggle="modal" data-target=".admin-upload-file-modal">
+              <img src="<%= obj.url_states || (Util::FileManage.exist?('CooImg', obj.id) ? Util::FileManage.disk_file_url('CooImg', obj.id) : '') %>" data-toggle="tooltip" data-title="重新上传"/>
+            </div>
+            <div class="input-group input-group-sm">
+              <input type="text" value="<%= obj.src_states %>" class="form-control url-input" placeholder="请输入跳转地址">
+              <div class="input-group-prepend">
+                <button class="input-group-text save-url-btn" data-id="<%= obj.id %>">保存</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'admins/cooperatives/shared/add_cooperative_modal' %>
+<%= render partial: 'admins/shared/modal/upload_file_modal' %>

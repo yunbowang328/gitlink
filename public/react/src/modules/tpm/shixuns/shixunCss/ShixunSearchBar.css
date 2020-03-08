@@ -1,0 +1,20 @@
+.iconfontShixunSearchBar{
+    z-index: 1000;
+    position: absolute;
+    right: 3px;
+    top: 0px;
+}
+
+.diffSelect{
+    margin-left:20px !important;
+ }
+ .ant-input-search-button{
+     /*margin-right: 10px;*/
+    border: 1px solid transparent;
+ }
+.Mousebox{
+    width: 800px !important;
+}
+.subshaicontent a{
+  height:30px;
+}

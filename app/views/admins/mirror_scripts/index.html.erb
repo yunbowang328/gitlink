@@ -1,0 +1,14 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('镜像管理', admins_mirror_repositories_path) %>
+  <% add_admin_breadcrumb(current_mirror.type_name, edit_admins_mirror_repository_path(current_mirror)) %>
+  <% add_admin_breadcrumb('脚本列表') %>
+<% end %>
+
+<div class="box search-form-container mirror-script-list-form">
+  <form class="flex-1"></form>
+  <%= link_to '新建', new_admins_mirror_repository_mirror_script_path(current_mirror), class: 'btn btn-primary' %>
+</div>
+
+<div class="box admin-list-container mirror-script-list-container">
+  <%= render partial: 'admins/mirror_scripts/shared/list', locals: { mirror: current_mirror, scripts: @scripts } %>
+</div>

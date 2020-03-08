@@ -1,0 +1,19 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('云上实验室') %>
+<% end %>
+
+<div class="box search-form-container laboratory-list-form">
+  <%= form_tag(admins_laboratories_path(unsafe_params), method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+    <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-6 col-md-4 ml-3', placeholder: '学校名称/二级域名前缀检索') %>
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+  <% end %>
+
+  <%= javascript_void_link '新建', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-create-laboratory-modal' } %>
+</div>
+
+<div class="box admin-list-container laboratory-list-container">
+  <%= render(partial: 'admins/laboratories/shared/list', locals: { laboratories: @laboratories }) %>
+</div>
+
+<%= render 'admins/laboratories/shared/create_laboratory_modal' %>
+<%= render 'admins/laboratories/shared/add_laboratory_user_modal' %>

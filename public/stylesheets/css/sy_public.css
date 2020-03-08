@@ -1,0 +1,41 @@
+/* 字体颜色 */
+.sy_cblack{ color: #333;}
+.sy_f14{ font-size: 14px;}
+.sy_f16{ font-size: 16px;}
+a:hover.sy_cgrey{ color:#ee4a1f;}
+a:hover.sy_corange{ text-decoration:underline;}
+a.sy_cblack{ color: #333;}
+a:hover.sy_cblack{color: #3b94d6;}
+a.sy_cmore{ font-size:12px; color:#888; font-weight:normal;}
+a:hover.sy_cmore{color: #ee4a1f;}
+/* 题库新增*/
+a.hw_cgreen{ color: #60b25e;}
+a:hover.hw_cgreen{ color: #49a047;}
+a.hw_cgrey{ color: #888;}
+a:hover.hw_cgrey{ color: #3b94d6;}
+a.hw_btn_green{ color: #60b25e !important; border:1px solid #60b25e; background:#fff;text-align: center; font-size: 12px;   padding:0 15px; height: 30px;  line-height: 30px;
+    border-radius:3px;}
+a:hover.hw_btn_green,a:active.hw_btn_green{ background: #51a74f; color:#fff !important;}
+a.hw_btn_green2{ color: #60b25e !important;  border:1px solid #60b25e;background:#fff; text-align: center;  font-size: 12px; padding:0 10px;  height: 30px; line-height: 30px;
+ border-radius:3px;}
+a:hover.hw_btn_green2,a:active.hw_btn_green{ background: #51a74f; color:#fff !important;}
+a.hw_btn_grey{ color: #888 !important;  border:1px solid #888;background:#fff; text-align: center; font-size: 12px; padding:0 15px;  height: 30px;  line-height: 30px;
+ border-radius:3px;}
+.hw_icons_cir{ display:block; width:15px; height:15px; background:url(/images/hw/icons_hw.png) 0 0px no-repeat;}
+.hw_icons_lock{ display:block; width:15px; height:16px; background:url(/images/hw/icons_hw.png) 0 -90px no-repeat;}
+/* 我的作业新增*/
+a.hw_corange{ color: #ee4a1f;}
+a:hover.hw_corange{ color: #e1412b;}
+.hw_cir_nomal{display:block;display:inline-block; color:#fff; font-size:10px; padding:0 5px;  background:#c1c1c1;-webkit-border-radius:3px; -moz-border-radius:3px; -o-border-radius:3px; border-radius:3px;}
+.hw_cir_lorange{ background:#f79981;}
+.hw_cir_lgreen{ background:#7ecfa2;}
+.hw_w20{ width:20px; display:block; text-align:center;}
+.hw_w30{ width:30px; display:block; text-align:center;}
+/* 排序 */
+.sy_category{ height: 50px; line-height: 50px; padding-left: 15px; border-bottom:1px solid #ddd;}
+.sy_category span{ float: left;}
+/* 输入框 */
+.sy_right_box input,.sy_right_box select{ border:1px solid #ccc; padding:5px;  background:#fff;}
+.sy_top_con input,.sy_top_con select{ border:1px solid #ccc; padding:5px; background:#fff;}
+
+

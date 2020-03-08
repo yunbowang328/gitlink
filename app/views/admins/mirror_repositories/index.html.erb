@@ -1,0 +1,23 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('镜像管理') %>
+<% end %>
+
+<div class="box search-form-container mirror-repository-list-form">
+  <form class="flex-1"></form>
+  <%= link_to '新建', new_admins_mirror_repository_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @error_mirror_names.present? %>
+  <div class="box pb-0">
+    以下镜像异常:
+    <% @error_mirror_names.each do |mirror_name| %>
+      <span class="ml-2 text-danger"><%= mirror_name %></span>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="box admin-list-container mirror-repository-list-container">
+  <%= render partial: 'admins/mirror_repositories/shared/list', locals: { mirrors: @mirrors } %>
+</div>
+
+<%= render 'admins/mirror_repositories/shared/replace_mirror_modal' %>

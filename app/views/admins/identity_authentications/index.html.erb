@@ -1,0 +1,36 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('实名认证') %>
+<% end %>
+
+<div class="box search-form-container flex-column mb-0 pb-0 identity-authentication-list-form">
+  <ul class="nav nav-tabs w-100 search-form-tabs">
+    <li class="nav-item">
+      <%= link_to '待审批', admins_identity_authentications_path(status: :pending), remote: true, 'data-value': 'pending',
+                  class: "nav-link search-form-tab #{params[:status] == 'pending' ? 'active' : ''}" %>
+    </li>
+    <li class="nav-item">
+      <%= link_to '已审批', admins_identity_authentications_path(status: :processed), remote: true, 'data-value': 'processed',
+                  class: "nav-link search-form-tab #{params[:status] != 'pending' ? 'active' : ''}" %>
+    </li>
+  </ul>
+
+  <%= form_tag(admins_identity_authentications_path(unsafe_params), method: :get, class: 'form-inline search-form justify-content-end mt-3', remote: true) do %>
+    <div class="form-group status-filter" style="<%= params[:status] != 'pending' ? '' : 'display: none;' %>">
+      <label for="status">审核状态：</label>
+      <% status_options = [['全部', 'processed'], ['已同意', 'agreed'], ['已拒绝', 'refused']] %>
+      <%= select_tag(:status, options_for_select(status_options), class: 'form-control') %>
+    </div>
+    <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-sm-2 ml-3', placeholder: '姓名/学校/单位检索') %>
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+  <% end %>
+</div>
+
+<div class="batch-action-container">
+  <%= javascript_void_link '批量同意', class: 'btn btn-outline-primary btn-sm batch-agree-btn' %>
+</div>
+
+<div class="box admin-list-container identity-authentication-list-container">
+  <%= render(partial: 'admins/identity_authentications/shared/list', locals: { applies: @applies }) %>
+</div>
+
+<%= render(partial: 'admins/shared/admin_common_refuse_modal') %>

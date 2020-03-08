@@ -1,0 +1,43 @@
+.text_number_area{
+  display: flex;
+}
+
+.flex_vertical{
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.flex_horizontal{
+  flex-direction: row;
+}
+
+.text_label_numb,
+.text_icon_numb{
+  line-height: 18px;
+  vertical-align: top;
+  .numb_value{
+    font-size: 14px;
+  }
+}
+
+.text_label_numb{
+  .numb_value{
+    color: #333333;
+  }
+  .text_label{
+    font-size: 12px;
+  }
+}
+
+.text_icon_numb{
+  .numb_icon{
+    font-size: 16px;
+    margin-right: 5px;
+    color: #333333;
+    cursor: pointer;
+  }
+  .numb_value{
+    color: #999999;
+  }
+}

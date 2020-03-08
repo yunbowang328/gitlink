@@ -1,0 +1,8 @@
+.yslinitials{
+
+    display: flex;
+    flex-direction:initial;
+}
+.yslpadding{
+    padding: 0px 30px;
+}

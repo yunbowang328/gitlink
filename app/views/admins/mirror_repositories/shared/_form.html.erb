@@ -1,0 +1,42 @@
+<div class="box edit-mirror-repository-container">
+  <%= simple_form_for([:admins, mirror], url: { action: form_action }, html: { class: 'edit-mirror col-md-12' }, defaults: { wrapper_html: { class: 'col-md-4' } }) do |f| %>
+    <% unless mirror.new_record? %>
+      <div class="row">
+        <%= f.input :mirrorID, label: '镜像ID', input_html: { readonly: true, class: 'form-control-plaintext' } %>
+        <%= f.input :name, label: '镜像名称', input_html: { readonly: true, class: 'form-control-plaintext' } %>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <%= f.input :type_name, as: :string, label: '镜像别名 *' %>
+
+      <div class="form-group select optional col-md-4">
+        <%= f.label :main_type, label: '类别' %>
+        <%= f.select :main_type, [['主类别', 1],['小类别', 0]], {}, class: 'form-control optional' %>
+      </div>
+    </div>
+
+    <div class="row">
+      <%= f.input :time_limit, as: :integer, label: '评测时限(S)' %>
+      <%= f.input :resource_limit, as: :integer, label: '磁盘限制(K)' %>
+    </div>
+
+    <div class="row">
+      <%= f.input :cpu_limit, as: :integer, label: 'CPU限制(核)' %>
+      <%= f.input :memory_limit, as: :integer, label: '内存限制(M)' %>
+    </div>
+
+    <div class="row">
+      <%= f.input :description, as: :text, label: '描述', wrapper_html: { class: 'col-md-8' } %>
+    </div>
+
+    <div class="row">
+      <%= f.input :status, as: :radio_buttons, label: '状态', collection: [%w(未发布 0), %w(已发布 1)], wrapper_html: { class: 'col-md-4' } %>
+    </div>
+
+    <div class="row">
+      <%= f.button :submit, value: '保存', class: 'btn-primary mr-3 px-4', 'data-disable-with': '保存中...' %>
+      <%= link_to '取消', admins_mirror_repositories_path, class: 'btn btn-secondary px-4' %>
+    </div>
+  <% end %>
+</div>

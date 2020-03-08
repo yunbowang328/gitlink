@@ -1,0 +1,603 @@
+.TrainingLecturer{
+  font-size:18px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:#656565;
+}
+.TrainingTheory{
+  font-size:18px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:#05101A !important;
+
+}
+.marginleft76{
+ margin-left: 76px;
+}
+
+#SystemParameters{
+  height: 81px;
+  line-height: 40px;
+}
+#SystemParameters .SystemParameters:nth-child(1){
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  /* color:#989898 !important; */
+}
+#SystemParameters .SystemParameters:nth-child(2){
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:#989898 !important;
+}
+.operationright{
+  float:right !important;
+}
+.ml75{
+  margin-left:75px;
+}
+.mlim30{
+  margin-left:30px !important;
+}
+.RadioGroupbox{
+  display: inline-block;
+  width: 100px;
+  height: 25px;
+  position: relative;
+}
+.RadioGroupboxab{
+  position: absolute;
+  top: -5px;
+  left: 30px;
+}
+.buttoninline{
+  display: inline-block;
+  margin-left: 29px;
+  position: relative;
+  /* width: 100px; */
+  margin-top: 0px;
+  height: 25px;
+}
+.placeholder::-moz-placeholder{font-size:12px;}
+.placeholder::-webkit-input-placeholder{font-size:12px;}
+.placeholder:-ms-input-placeholder{font-size:12px;}
+.mr16{
+  margin-right:16px;
+}
+.defalutSubmitbtn{
+  cursor: pointer;
+}
+.defalutCancelbtn{
+  cursor: pointer;
+}
+.newSystem{
+  background: #fff;
+}
+/* #EvaluationsList{
+  padding:20px 0px;
+} */
+.mt55{
+  margin-top:55px !important;
+}
+.mb100{
+  margin-bottom:100px !important;
+}
+.mt26{
+  margin-top:26px !important;
+}
+.mb80{
+  margin-bottom:80px !important;
+}
+.color99{
+  color:#999999;
+}
+.ant-select-selection__placeholder{
+  width: 100%;
+  font-size:14px;
+  height:58px;
+}
+.mt70{
+  margin-top:70px;
+}
+.mb50{
+  margin-bottom:50px;
+}
+/* 谷歌 */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  font-size:14px;
+}
+/* 火狐 */
+input{
+  -moz-appearance:textfield;
+  font-size:14px;
+}
+.ColorF68{
+  color:#FF6800;
+}
+.eaSystemp a{
+  color:#05101a;
+}
+.eaSystemp span{
+  color: #05101a !important;
+}
+.editorModify div .ant-input-lg{
+  font-size: 14px;
+}
+#Coursemultiple div div ul .ant-select-selection__choice{
+  margin-left: 0px;
+  height: 20px !important;
+  min-height: 29px;
+  font-size: 14px;
+  line-height: 27px;
+  margin-top: 4px;
+  margin-bottom: 3px;
+}
+
+#Coursemultiple .ant-select-selection--multiple{
+  min-height: 40px !important;
+  line-height: 38px !important;
+}
+#Coursemultiple div div ul .ant-select-search.ant-select-search--inline{
+  margin-left: 0px;
+  height: 20px !important;
+  min-height: 29px;
+  font-size: 14px;
+  line-height: 27px;
+  margin-top: 4px;
+  margin-bottom: 3px;
+}
+.neweditSubentry{
+  position: relative;
+  top: -4px;
+  left: 7px;
+}
+.nulleditSubentry{
+  position: relative;
+  top: -4px;
+  left: 3px;
+}
+.percentage{
+  margin-left: 8px;
+  padding-left: 25px !important;
+}
+.percentages{
+  margin-left: 8px;
+}
+.Coursetitle{
+  margin-bottom:0px !important;
+}
+.textaligncenter{
+  padding-left: 30px !important;
+  width: 70px !important;
+}
+.textaligncenters{
+  width: 133px !important;
+  display: block;
+  float: left;
+}
+.ml72{
+  margin-left:72px;
+}
+
+.bordereaeaea{
+  border-bottom: 1px solid transparent !important;
+}
+.ecnowrap{
+  max-width: 170px;
+  display: inline-block;
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #40a9ff !important;
+  margin-right: 108px;
+}
+.ecblock{
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.Spinlarge{
+  text-align: center;
+  width: 100%;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+/* .ant-select-search{
+  display:none;
+}
+.ant-select-search--inline{
+  display:none;
+} */
+.boxinline-block{
+  display: inline-block;
+}
+.boxinline{
+  margin-right: 20px;
+}
+.evaluationdataClass{
+  margin-left: 217px !important;
+  width: 589px !important;
+  display: inline-block;
+}
+.evaluationdataClassy{
+  width: 589px !important;
+  display: inline-block;
+}
+.absolute{
+  position:absolute;
+}
+.ml115{
+  margin-left: 115px;
+}
+.ml100{
+  margin-left: 100px;
+}
+.Importclassroomdata{
+  position: absolute;
+  right: 18px;
+  top: 26px;
+}
+.Importclassroomdatas{
+  position: absolute;
+  right: 375px!important;
+  top: 122px !important;
+}
+.Importclassroomdatass {
+  position: absolute;
+  right: 375px !important;
+  top: 248px !important;
+}
+
+#SystemParameters{
+  position: relative;
+}
+
+.newSystem .newtarget_scoreclass{
+  padding: 10px 0px !important;
+  margin: 0px 20px !important;
+}
+.newSystem .newtarget_scoreclassysl{
+    padding: 10px 0px !important;
+}
+.mynewtarget_scoreclassysls{
+    padding: 10px 20px!important;
+}
+.newSystem .newtarget_target{
+  padding: 10px 0px !important;
+  margin: 0px 30px !important;
+  border-bottom:1px solid transparent !important;
+}
+.newSystem .newtarget_targets{
+    padding: 10px 0px !important;
+
+    border-bottom:1px solid transparent !important;
+}
+
+.nowrap329{
+  max-width: 329px !important;
+  text-align: left;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:transparent !important;
+  min-width: 329px !important;
+}
+.ListTableLine li>.column-500{
+  max-width: 366px !important;
+  text-align: left;
+  min-width: 366px !important;
+}
+.color-666{
+  color:#666666 !important;
+}
+.color-05101A{
+  color:#05101A !important;
+}
+#SystemParametersP{
+  position:relative;
+  margin-bottom:0px !important;
+}
+.major_name{
+  cursor:inherit;
+}
+.padding1030{
+  padding: 10px 30px;
+  height: 60px !important;
+}
+.color-red{
+  color:#DD1717;
+}
+.color-redFF{
+  color:#FF6666;
+}
+.margin-left63{
+  margin-left: 63px !important;
+}
+.colorTransparent{
+  color:transparent !important;
+}
+.color999{
+  color: #999999 !important;
+}
+.operationrightbotton{
+  margin-top: 2px!important;
+  margin-right: -25px;
+}
+.mr2{
+  margin-right:2px;
+}
+.colorFF6800{
+  color: #FF6800 !important;
+}
+.lineheight60{
+  line-height: 52px !important;
+}
+.mr13{
+  margin-right: 13px;
+}
+.mr14{
+  margin-right: 14px;
+}
+
+.ecmorelist{
+  margin: 0 auto;
+  width: 100px;
+  /* height: 100px; */
+  display: block;
+}
+
+.padding10im{
+  padding: 10px 0px !important;
+}
+
+.lipadding10im{
+  margin: 0 0px!important;
+}
+
+.lipadding20im{
+  padding: 10px 20px!important;
+}
+
+.marlr19{
+  margin: 0 19px!important;
+}
+.mrj15{
+  margin-right: -15px;
+}
+.margin64px{
+  margin: 0 64px!important;
+}
+.marginright84{
+  margin-right: 84px!important;
+}
+
+.marginright162{
+  margin-right: 162px;
+}
+.width86{
+  width: 86px!important;
+}
+
+.ant-modal-mask {
+  background-color: rgba(5,16,26,0.4);
+}
+.ecmodeldelet{
+  /* 考虑有各种尺寸的屏幕，用比例 */
+  top:36%;
+}
+.ecmodeldelet .ant-modal-header{
+  padding: 0px 24px;
+}
+.ecmodeldelet .ant-modal-title{
+  padding: 0px 15px;
+  text-align: center;
+  box-sizing: border-box;
+  line-height: 70px;
+  height: 70px;
+  border-radius: 10px 10px 0px 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+a.TrainingLecturer:hover{
+  color:#4CACFF !important;
+}
+
+.newSystem .lipadding10im{
+  margin: 0 0px!important;
+}
+
+.operationleft{
+ float:left !important;
+}
+.color4D4D4D{
+    color:#4D4D4D !important;
+}
+
+/* #SystemParameters .SystemParameters:nth-child(1){
+  color:#4D4D4D !important;
+} */
+
+.color4CACFF{
+  color:#4CACFF !important;
+}
+
+.SystemParameters4CACFF{
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  line-height: 45px;
+}
+
+.detaillist{
+  text-align: center !important;
+  width: 133px  !important;
+  height: 24px ;
+}
+
+.associatedclass{
+    margin-right: 128px !important;
+}
+
+.associatedclasslist{
+  width: 234px;
+  height: 20px;
+  font-size: 14px;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(101,101,101,1);
+  line-height: 22px;
+  margin: 6px auto;
+}
+
+.associatedclasslists{
+  width: 323px;
+  height: 35px;
+  font-size: 14px;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(101,101,101,1);
+  line-height: 22px;
+  margin: 6px auto;
+  margin-bottom: 15px;
+}
+.newecmodeldelet{
+  width:600px !important;
+  top:100px;
+}
+
+.assclasslistsearch{
+  width:454px;
+  height:36px;
+  background:rgba(244,244,244,1);
+  border:1px solid rgba(234,234,234,1);
+  border-radius:4px;
+  position: relative;
+}
+
+.assclassposition{
+    position: absolute;
+    top: 3px;
+    left: 9px;
+}
+
+.assclasslistsearchbtn{
+  width: 64px;
+  height: 35px !important;
+  font-weight: 300 !important;
+  line-height: 35px !important;
+}
+.btnweight{
+  font-weight: 300 !important;
+  color: #fff !important;
+}
+
+.CBCBCB{
+  background:#CBCBCB!important;
+}
+.clear{
+  clear: both;
+}
+.ml120{
+  margin-left: 120px;
+}
+.ml88{
+  margin-left: 88px;
+}
+.assclasslistmid{
+  width: 540px;
+  height: 282px;
+  background: rgba(244,250,255,1);
+  border-radius: 4px;
+  margin-left: 10px;
+  overflow: auto;
+  padding-top: 10px;
+}
+
+.assclasslistsubmit{
+  margin-top: 26px !important;
+  margin-bottom: 8px !important;
+}
+.ant-modal-header{
+  border-top-left-radius:10px;
+  border-top-right-radius:10px;
+}
+.ant-modal-content{
+  border-radius: 10px;
+}
+.assclasslistmidname{
+  width: 160px;
+  overflow: hidden;
+  /* height: 24px; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bordereaeaeas{
+  border-bottom: 1px solid #eaeaea !important;
+}
+.isreloadsbtn{
+  width: 80px !important;
+  font-weight: 400 !important;
+  padding: 0px !important;
+  padding-left: 10px !important;
+}
+
+.f5f5f5{
+  color:rgb(245, 245, 245) !important;
+}
+
+.ant-select-selection{
+  border-radius: 0px !important;
+  background-color: #F5F5F5;
+}
+
+.ant-select-selection:focus{
+  border-radius: 0px !important;
+  background-color: #fff;
+  border-color: #d9d9d9 !important;
+}
+
+.listchildbox{
+  overflow: hidden;
+}
+
+.listchildboxs{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ant-input:focus, .ant-input:hover{
+  border-color: transparent;
+}
+.inputWeight{
+  background-color: #F5F5F5;
+}
+.inputWeight:focus {
+  background-color: #fff;
+ }
+ .ant-input:focus {
+  outline: 0;
+  -webkit-box-shadow: 0 0 0 2px transparent !important;
+  box-shadow: 0 0 0 2px transparent !important;
+ }
+
+ .ant-input{
+  border-color: #d9d9d9 !important;
+ }
+
+.mt60{
+  margin-top:60px;
+}
+
+.SystemParameters{
+    height:auto;
+}

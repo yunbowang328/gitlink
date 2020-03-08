@@ -1,0 +1,37 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="4%">序号</th>
+    <th width="4%">ID</th>
+    <th width="10%" class="text-left">课堂名称</th>
+    <th width="5%">成员</th>
+    <th width="4%">资源</th>
+    <th width="4%">普通作业</th>
+    <th width="4%">分组作业</th>
+    <th width="4%">实训作业</th>
+    <th width="4%">试卷</th>
+    <th width="6%">评测次数</th>
+    <th width="4%">私有</th>
+    <th width="6%">状态</th>
+    <th width="10%">单位</th>
+    <th width="7%">创建者</th>
+    <th width="10%"><%= sort_tag('创建时间', name: 'created_at', path: admins_courses_path) %></th>
+    <th width="4%">首页</th>
+    <th width="5%">邮件通知</th>
+    <th width="5%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if courses.present? %>
+    <% courses.each_with_index do |course, index| %>
+      <tr class="course-item-<%= course.id %>">
+        <%= render partial: 'admins/courses/shared/td', locals: {course: course, no: index} %>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: courses } %>

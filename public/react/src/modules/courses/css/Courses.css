@@ -1,0 +1,1766 @@
+i.iconfont {
+    cursor: pointer;
+}
+.overflowHidden1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+}
+.overflowHidden2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* BASICS */
+.CodeMirror {
+    /* Set height, width, borders, and global font properties here */
+    font-family: monospace;
+    height: 300px;
+    color: black;
+    direction: ltr;
+}
+
+/* PADDING */
+
+.CodeMirror-lines {
+    padding: 4px 0; /* Vertical padding around content */
+}
+.CodeMirror pre {
+    padding: 0 4px; /* Horizontal padding of content */
+}
+
+.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+    background-color: white; /* The little square between H and V scrollbars */
+}
+
+/* GUTTER */
+
+.CodeMirror-gutters {
+    border-right: 1px solid #ddd;
+    background-color: #f7f7f7;
+    white-space: nowrap;
+}
+.CodeMirror-linenumbers {}
+.CodeMirror-linenumber {
+    padding: 0 3px 0 5px;
+    min-width: 20px;
+    text-align: right;
+    color: #999;
+    white-space: nowrap;
+}
+
+.CodeMirror-guttermarker { color: black; }
+.CodeMirror-guttermarker-subtle { color: #999; }
+
+/* CURSOR */
+
+.CodeMirror-cursor {
+    border-left: 1px solid black;
+    border-right: none;
+    width: 0;
+}
+/* Shown when moving in bi-directional text */
+.CodeMirror div.CodeMirror-secondarycursor {
+    border-left: 1px solid silver;
+}
+.cm-fat-cursor .CodeMirror-cursor {
+    width: auto;
+    border: 0 !important;
+    background: #7e7;
+}
+.cm-fat-cursor div.CodeMirror-cursors {
+    z-index: 1;
+}
+.cm-fat-cursor-mark {
+    background-color: rgba(20, 255, 20, 0.5);
+    -webkit-animation: blink 1.06s steps(1) infinite;
+    animation: blink 1.06s steps(1) infinite;
+}
+.cm-animate-fat-cursor {
+    width: auto;
+    border: 0;
+    -webkit-animation: blink 1.06s steps(1) infinite;
+    animation: blink 1.06s steps(1) infinite;
+    background-color: #7e7;
+}
+@-webkit-keyframes blink {
+    0% {}
+    50% { background-color: transparent; }
+    100% {}
+}
+@keyframes blink {
+    0% {}
+    50% { background-color: transparent; }
+    100% {}
+}
+
+/* Can style cursor different in overwrite (non-insert) mode */
+.CodeMirror-overwrite .CodeMirror-cursor {}
+
+.cm-tab { display: inline-block; text-decoration: inherit; }
+
+.CodeMirror-rulers {
+    position: absolute;
+    left: 0; right: 0; top: -50px; bottom: -20px;
+    overflow: hidden;
+}
+.CodeMirror-ruler {
+    border-left: 1px solid #ccc;
+    top: 0; bottom: 0;
+    position: absolute;
+}
+
+/* DEFAULT THEME */
+
+.cm-s-default .cm-header {color: blue;}
+.cm-s-default .cm-quote {color: #090;}
+.cm-negative {color: #d44;}
+.cm-positive {color: #292;}
+.cm-header, .cm-strong {font-weight: bold;}
+.cm-em {font-style: italic;}
+.cm-link {text-decoration: underline;}
+.cm-strikethrough {text-decoration: line-through;}
+
+.cm-s-default .cm-keyword {color: #708;}
+.cm-s-default .cm-atom {color: #219;}
+.cm-s-default .cm-number {color: #164;}
+.cm-s-default .cm-def {color: #00f;}
+.cm-s-default .cm-variable,
+.cm-s-default .cm-punctuation,
+.cm-s-default .cm-property,
+.cm-s-default .cm-operator {}
+.cm-s-default .cm-variable-2 {color: #05a;}
+.cm-s-default .cm-variable-3, .cm-s-default .cm-type {color: #085;}
+.cm-s-default .cm-comment {color: #a50;}
+.cm-s-default .cm-string {color: #a11;}
+.cm-s-default .cm-string-2 {color: #f50;}
+.cm-s-default .cm-meta {color: #555;}
+.cm-s-default .cm-qualifier {color: #555;}
+.cm-s-default .cm-builtin {color: #30a;}
+.cm-s-default .cm-bracket {color: #997;}
+.cm-s-default .cm-tag {color: #170;}
+.cm-s-default .cm-attribute {color: #00c;}
+.cm-s-default .cm-hr {color: #999;}
+.cm-s-default .cm-link {color: #00c;}
+
+.cm-s-default .cm-error {color: #f00;}
+.cm-invalidchar {color: #f00;}
+
+.CodeMirror-composing { border-bottom: 2px solid; }
+
+/* Default styles for common addons */
+
+div.CodeMirror span.CodeMirror-matchingbracket {color: #0b0;}
+div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #a22;}
+.CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }
+.CodeMirror-activeline-background {background: #e8f2ff;}
+
+/* STOP */
+
+/* The rest of this file contains styles related to the mechanics of
+   the editor. You probably shouldn't touch them. */
+
+.CodeMirror {
+    position: relative;
+    overflow: hidden;
+    background: white;
+}
+
+.CodeMirror-scroll {
+    overflow: scroll !important; /* Things will break if this is overridden */
+    /* 30px is the magic margin used to hide the element's real scrollbars */
+    /* See overflow: hidden in .CodeMirror */
+    margin-bottom: -30px; margin-right: -30px;
+    padding-bottom: 30px;
+    height: 100%;
+    outline: none; /* Prevent dragging from highlighting the element */
+    position: relative;
+}
+.CodeMirror-sizer {
+    position: relative;
+    border-right: 30px solid transparent;
+}
+
+/* The fake, visible scrollbars. Used to force redraw during scrolling
+   before actual scrolling happens, thus preventing shaking and
+   flickering artifacts. */
+.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+    position: absolute;
+    z-index: 6;
+    display: none;
+}
+.CodeMirror-vscrollbar {
+    right: 0; top: 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.CodeMirror-hscrollbar {
+    bottom: 0; left: 0;
+    overflow-y: hidden;
+    overflow-x: scroll;
+}
+.CodeMirror-scrollbar-filler {
+    right: 0; bottom: 0;
+}
+.CodeMirror-gutter-filler {
+    left: 0; bottom: 0;
+}
+
+.CodeMirror-gutters {
+    position: absolute; left: 0; top: 0;
+    min-height: 100%;
+    z-index: 3;
+}
+.CodeMirror-gutter {
+    white-space: normal;
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: -30px;
+}
+.CodeMirror-gutter-wrapper {
+    position: absolute;
+    z-index: 4;
+    background: none !important;
+    border: none !important;
+}
+.CodeMirror-gutter-background {
+    position: absolute;
+    top: 0; bottom: 0;
+    z-index: 4;
+}
+.CodeMirror-gutter-elt {
+    position: absolute;
+    cursor: default;
+    z-index: 4;
+}
+.CodeMirror-gutter-wrapper ::-moz-selection { background-color: transparent }
+.CodeMirror-gutter-wrapper ::selection { background-color: transparent }
+.CodeMirror-gutter-wrapper ::-moz-selection { background-color: transparent }
+
+.CodeMirror-lines {
+    cursor: text;
+    min-height: 1px; /* prevents collapsing before first draw */
+}
+.CodeMirror pre {
+    /* Reset some styles that the rest of the page might have set */ border-radius: 0;
+    border-width: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    white-space: pre;
+    word-wrap: normal;
+    line-height: inherit;
+    color: inherit;
+    z-index: 2;
+    position: relative;
+    overflow: visible;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-variant-ligatures: contextual;
+    font-variant-ligatures: contextual;
+}
+.CodeMirror-wrap pre {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
+}
+
+.CodeMirror-linebackground {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    z-index: 0;
+}
+
+.CodeMirror-linewidget {
+    position: relative;
+    z-index: 2;
+    padding: 0.1px; /* Force widget margins to stay inside of the container */
+}
+
+.CodeMirror-widget {}
+
+.CodeMirror-rtl pre { direction: rtl; }
+
+.CodeMirror-code {
+    outline: none;
+}
+
+/* Force content-box sizing for the elements where we expect it */
+.CodeMirror-scroll,
+.CodeMirror-sizer,
+.CodeMirror-gutter,
+.CodeMirror-gutters,
+.CodeMirror-linenumber {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+
+.CodeMirror-measure {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+}
+
+.CodeMirror-cursor {
+    position: absolute;
+    pointer-events: none;
+}
+.CodeMirror-measure pre { position: static; }
+
+div.CodeMirror-cursors {
+    visibility: hidden;
+    position: relative;
+    z-index: 3;
+}
+div.CodeMirror-dragcursors {
+    visibility: visible;
+}
+
+.CodeMirror-focused div.CodeMirror-cursors {
+    visibility: visible;
+}
+
+.CodeMirror-selected { background: #d9d9d9; }
+.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }
+.CodeMirror-crosshair { cursor: crosshair; }
+.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }
+.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: #d7d4f0; }
+.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }
+
+.cm-searching {
+    background-color: #ffa;
+    background-color: rgba(255, 255, 0, .4);
+}
+
+/* Used to force a border model for a node */
+.cm-force-border { padding-right: .1px; }
+
+@media print {
+    /* Hide the cursor when printing */
+    .CodeMirror div.CodeMirror-cursors {
+        visibility: hidden;
+    }
+}
+
+/* See issue #2901 */
+.cm-tab-wrap-hack:after { content: ''; }
+
+/* Help users use markselection to safely style text background */
+span.CodeMirror-selectedtext { background: none; }
+
+
+
+
+.radioStyle{
+    display: block;
+    height: 30px;
+}
+a.white-btn.use_scope-btn:hover{
+
+}
+.shixunScopeInput{
+    width:218px;
+    height:33px;
+    display:block;
+    margin-bottom:15px;
+}
+
+#memoMD .CodeMirror {
+    /*width: 576px !important;*/
+    margin-top: 31px !important;
+    height: 364px !important;
+}
+
+#memoMD .editormd-preview {
+    width: 578px !important;
+    top: 40px !important;
+    height: 364px !important;
+}
+
+.ml36{
+    margin-left: 26px;
+}
+#person-unit a.white-btn.use_scope-btn:hover {
+    border: 1px solid #F06200;
+    color:#FFF !important;
+}
+
+
+#root { background: rgb(250, 250, 250); }
+.newedu-class-leftnav{ background:#fff;}
+.newedu-class-leftnav li{ height: 50px;line-height: 49px;font-size:16px;cursor: pointer;position: relative;}
+.newedu-class-leftnav li a{padding-left: 42px;width: 93%;box-sizing: border-box;color: #05101A; background:transparent;}
+.newedu-class-leftnav > div:last-child .Draggablelichild:last-child li a{border-bottom: none;}
+.newedu-class-leftnav li:hover{background-color: #F1F1F1}
+/*.newedu-class-leftnav li:hover a{color: #FFF!important;}*/
+/*.newedu-class-leftnav li:hover a,.edu-class-leftnav li:hover i{color: #fff!important;}*/
+.newedu-class-leftnav li:hover a{color: #05101A; background:transparent; }
+/*.newedu-class-leftnav li.active:before{content: '';position: absolute;left: 0px;top: 14px;bottom: 0;right: auto;height: 24px;width: 2px;background-color: #459be5;}*/
+.newedu-class-leftnav li.active{color:#05101A !important;}
+.newedu-class-leftnav li.active a{color:#05101A !important; background:transparent;}
+/*.newedu-class-leftnav-leftnav li.active:hover{color: #fff; }*/
+/*.newedu-class-leftnav li.active:hover .activity-left-name,.edu-class-leftnav li.active:hover i,.edu-class-leftnav li:hover .groupNum{color: #fff!important;}*/
+/*.newedu-class-leftnav li.active:hover .courseNewNum{color:#fff!important;}*/
+.newedu-class-leftnav li a {
+    padding-left: 20px;
+}
+
+.addtaskmodle{ width: 69px;  height: 50px; font-size: 14px; font-family: MicrosoftYaHei; font-weight: 400;  color: #000;}
+.addtaskmodle .iconfont{font-size: 15px !important; color: #666666;}
+.newedu-class-leftnav li:hover a .addtaskmodle{color: #666666;}
+.martop1{margin-top: 1px;}
+.ml100{margin-left: 100px;}
+.ml110{margin-left: 110px;}
+.addjia {
+    padding: 20px;
+    height: 48px !important;
+    line-height: 10px !important;
+}
+.newedu-class-leftnav .addjia:hover{background:#fff !important;}
+.pl20{padding-left:20px;}
+.ml90{margin-left: 90px;}
+.ebebeb{border-bottom: 1px solid #EBEBEB;}
+.CheckboxGroup{background:rgba(249,249,249,1);}
+.maxwidth155{max-width: 155px; color:#666666;font-size: 14px;}
+.maxwidth170{max-width: 170px; color:#666666;font-size: 14px;}
+.pl46{ margin-left: 46px !important; border-bottom: 1px solid #eeee; width: 90% !important;}
+.hidden{overflow: hidden;}
+.pd0{padding: 0px !important;}
+.color999{color: #999999 !important;}
+.maxwidth190{max-width: 190px; color:#666666;font-size: 14px;}
+.color05101A{color:#05101A;}
+.liactive{border-left: 1px solid #4CACFF;}
+
+.bannername{
+    max-width: 907px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 40px;
+}
+
+.bannnerusername{
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.bannnerusernames{
+    font-size: 14px;
+    margin-left: 20px;
+}
+.bannerimgname{
+    width: 40px;
+    height: 40px;
+}
+.clearfixborder{
+    /*border-top: 1px solid rgba(255,255,255,0.2);*/
+    padding-top: 10px;
+}
+.ml8{
+    margin-left:8px;
+}
+.bannerurli{
+    border-right: 1px solid rgba(255,255,255,0.3);
+    width: 70px;
+    margin-left: -10px;
+}
+.bannerurlis{
+    width: 70px;
+    margin-left: -10px;
+}
+.pathInfobox li{
+    margin-right: 20px;
+    height: 20px;
+    /*overflow: hidden;*/
+    line-height: 20px;
+}
+.width70f{
+    width: 70px;
+    margin-left: -10px;
+}
+.width100f{
+    width: 100px;
+}
+.mr10im{
+    margin-right: 10px !important;
+}
+/*.width83{*/
+    /*width: 83px;*/
+/*}*/
+.width75f{
+    width: 75px;
+}
+.width107f{
+    width: 107px;
+}
+.mr0{
+    margin-right: 0px !important;
+}
+
+.mlf3{
+    margin-left: -3px;
+}
+.relative{
+    position: relative;
+}
+
+.courseedu-menu-list{
+    right: 262px;
+    top: 245px;
+}
+.edu-menu-list li {
+    width: 100%;
+    padding: 0px 15px;
+    box-sizing: border-box;
+    height: 35px !important;
+    line-height: 35px !important;
+    cursor: pointer;
+    /*!*text-align: center;*!  影响全局了*/
+}
+.marleftf20{
+    margin-left:-20px;
+}
+
+.marleftf10{
+    margin-left:-10px;
+}
+.sandianbox{
+    width: 92px;
+    /*height: 88px;*/
+    background: rgba(255,255,255,1);
+    /*-webkit-box-shadow: 0px 0px 6px 0px rgba(0,3,30,0.29);*/
+    /*box-shadow: 0px 0px 6px 0px rgba(0,3,30,0.29);*/
+    /*border-radius: 2px;*/
+    /*position: absolute;*/
+    /*right: -88px;*/
+    /*z-index: 20000;*/
+    /*padding-top: 10px;*/
+    /*padding-bottom: 10px;*/
+    /*top: 0px;*/
+}
+.sandianbox div{
+    width: 92px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+    cursor: pointer;
+}
+.sandianbox div:hover{
+    background: rgba(240,240,240,1);
+}
+
+.sandianshow:hover .icon-sandian .sandianbox{
+    display: block;
+}
+
+.sandianboxs{
+    width: 92px;
+    /* height: 88px; */
+    background: rgba(255,255,255,1);
+    /*-webkit-box-shadow: 0px 0px 6px 0px rgba(0,3,30,0.29);*/
+    /*box-shadow: 0px 0px 6px 0px rgba(0,3,30,0.29);*/
+    /*border-radius: 2px;*/
+    /*!*position: absolute;*!*/
+    /*!*right: -109px;*!*/
+    /*!*z-index: 20000;*!*/
+    /*padding-top: 10px;*/
+    /*padding-bottom: 10px;*/
+    /*top: 0px;*/
+}
+.sandianboxs div{
+    width: 92px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+}
+.sandianboxs div:hover{
+    background: rgba(240,240,240,1);
+}
+
+.sandianshows:hover .icon-sandian .sandianbox{
+    display: block;
+}
+.mr6{
+    margin-right:6px;
+}
+
+.mr28{
+    margin-right: 28px;
+}
+.mr23{
+    margin-right: 23px;
+}
+
+.width93{
+    width: 240px !important;
+}
+.colortransparent{
+    color:transparent !important;
+}
+
+.inputNav{
+    width: 439px;
+    height: 30px;
+    background: rgba(244,244,244,1);
+    border: 1px solid rgba(234,234,234,1);
+    border-radius: 4px;
+}
+
+.Navmodal{
+    width: 600px !important;
+    height: 237px;
+    background: rgba(255,255,255,1);
+    box-shadow: 0px 2px 10px 0px rgba(76,76,76,0.3);
+    border-radius: 10px;
+}
+.Navmodal .ant-modal-content .ant-modal-header{
+    /*border-radius: 10px 10px 0 0;*/
+}
+.ant-modal-content{
+    -webkit-box-shadow: 0 4px 12px  transparent !important;
+    box-shadow: 0 4px 12px transparent !important;
+    /*border-radius: 10px !important;*/
+}
+
+.Navmodal  .ant-modal-body{
+    margin-top:10px;
+}
+.ant-input:focus{
+    border: 1px solid #d9d9d9 !important;
+}
+
+/* 公用的文字按钮：蓝、白、灰 */
+.btn.colorblue {
+    color:#4CACFF !important;
+}
+.btn.colorblue:hover{
+    color:#459BE5 !important;
+}
+.btn.colorwhite{
+    color:#fff !important
+}
+.btn.colorwhite:hover{
+    color:#CCCCCC !important
+}
+.btn.colorgrey{
+    color:#999999 !important;
+}
+.btn.colorgrey:hover{
+    color:#05101A !important;
+}
+.btn.hovercolorblue:hover{
+    color:#459BE5 !important;
+}
+
+/* 公用封装的按钮 */
+.Actionbtn{
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+    text-align: center;
+}
+.greyWidthFixed{
+    width: 120px;
+    border:1px solid #CCCCCC;
+    color: #CCCCCC!important;
+}
+.greyWidthFixed:hover{
+    border:1px solid #4CACFF;
+    color: #4CACFF!important;
+}
+.blueFull{
+    padding: 0px 7px;
+    background-color: #4CACFF;
+    color: #fff!important;
+}
+
+.colorBlue {
+    padding: 0px 7px;
+    background-color: #fff;
+    color: #4CACFF!important;
+    border: 1px solid #4CACFF;
+}
+.greyBack{
+    /* 不要固定宽度 */
+    /* width: 64px; */
+    background-color: #CBCBCB;
+    color: #fff!important;
+}
+.greenBack{
+    padding: 0px 7px;
+    background-color: #29BD8B;
+    color: #fff!important;
+}
+.Actionbtn.middle {
+    padding: 0px 18px;
+}
+.greyLine{
+    background: #fff;
+    border:1px solid #eaeaea;
+    color: #999!important;
+    padding:0px 10px;
+}
+.orangeLine{
+    background: #fff;
+    border:1px solid #FE944B;
+    color: #FE944B!important;
+    padding:0px 10px;
+    line-height: 28px;
+    border-radius: 4px;
+}
+
+.colorFF6800{
+    color:#FF6800;
+}
+.color979797{
+    color:#979797;
+}
+.Draggableli:hover .Draggablelichild{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:active .Draggablelichild{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:focus .Draggablelichild{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:focus-within .Draggablelichild{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:visited .Draggablelichild{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:hover{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:active{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:focus{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:focus-within{
+    background: #f1f1f1 !important;;
+}
+
+.Draggableli:visited {
+    background: #f1f1f1 !important;;
+}
+.transparent{
+    background: transparent;
+}
+
+.HomeworkModal{
+    width:600px !important;
+}
+.HomeworkModal .ant-modal-content .ant-modal-body{
+    padding: 10px 20px;
+}
+
+.ant-modal-title{
+    height: 38px;
+    line-height: 38px;
+}
+.underline{text-decoration: underline;}
+
+.HomeworkModal .task-popup-content #search_not_members_list{
+    height: 198px;
+}
+
+/* 选择实训列表 */
+.greybackHead{height: 40px;line-height: 40px;padding: 0px 20px;box-sizing: border-box;color: #676767;background-color: #eaeaea;}
+
+.mtf3{
+    margin-top:-3px;
+}
+
+.mtf5{
+    margin-top: -5px;
+}
+
+.color204{
+    color:rgba(204,204,204,1);
+}
+
+.lesson-saved-list-itemdrop{
+    height: 93px;
+    overflow: hidden;
+}
+
+.lesson-saved-list{
+    position: relative;
+}
+
+.itempositionleft{
+    position: absolute;
+}
+
+.itempositionright{
+    position: absolute;
+}
+
+.ant-input,.ant-input .ant-input-suffix{
+    background-color: #fafafa!important;
+}
+.ant-input:focus,.ant-input:focus .ant-input-suffix{
+    background-color:#ffffff!important;
+}
+
+.pathNavLine{bottom: -11px;}
+
+#shixun_operation:hover{
+    color:#fff !important;
+}
+
+.cursor{
+    cursor: pointer;
+}
+.paragraph_nameid:hover{
+    color:#4cacff !important;
+}
+
+.next-loading{
+    width:100%;
+}
+
+
+/*提交总结*/
+.summaryname{
+    /*height: 23px;*/
+    font-size: 22px;
+    height: 25px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(51,51,51,1);
+    /*cursor: pointer;*/
+    max-width: 825px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.educontentbox{
+    background: #fff;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.commitcontents{
+    width: 43px;
+    height: 15px;
+    font-size: 16px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    margin-left: 28px;
+}
+.commitcontentsysl{
+    width: 43px;
+    height: 15px;
+    font-size: 16px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    margin-left: -4px;
+}
+
+
+/*列表状态*/
+.typestyle{
+    min-width: 68px;
+    height: 24px !important;
+    line-height: 24px !important;
+    color: #fff !important;
+}
+.edu-filter-btn-028d01{
+    /*border: 1px solid #ff6800;*/
+    /*color: #ff6800!important;*/
+    background: #028d01 !important;
+}
+.edu-filter-btn-CC317C{
+    background:#CC317C !important;
+}
+.edu-filter-btn-006B75{
+    background:#006B75 !important;
+}
+.edu-filter-btn-E99695{
+    background:#E99695 !important;
+}
+.edu-filter-btn-EDEDED{
+    background:#EDEDED !important;
+}
+.edu-filter-btn-4CACFF{
+    background:#4CACFF !important;
+}
+.edu-filter-btn-84B6EB{
+    background:#84B6EB !important;
+}
+.edu-filter-btn-5E5FB9{
+    background:#5E5FB9 !important;
+}
+.edu-filter-btn-FC2B6A{
+    background:#FC2B6A !important;
+}
+
+.edu-filter-btn-FF6800{
+    background:#FF6800 !important;
+}
+.color666666{
+    color:#666666 !important;
+}
+
+.TabsWarp{
+    width: 100px;
+    height: 31px;
+    display: inline-block;
+}
+
+.mt38{
+    margin-top: 38px;
+}
+
+
+.poll_list a.active{
+    color: #4CACFF;
+}
+
+.poll_list a {
+    display: inline-block;
+    padding: 20px;
+    font-size: 18px;
+    text-align: center;
+    position: relative;
+    color:#05101a;
+}
+
+.poll_list a.active:after {
+    content: '';
+    width: 94px;
+    left: 10px;
+    bottom: 0px;
+    height: 2px;
+    background-color: #4CACFF;
+    position: absolute;
+}
+
+.ml22{
+    margin-left:22px;
+}
+/* antd样式重置 */
+/* 字体 https://www.trustie.net/issues/21668/ */
+pre,
+code,
+kbd,
+samp {
+    font-family: "Monospaced Number", "Chinese Quote", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* 表格间距太大 */
+.ant-table-tbody>tr>td, .ant-table-thead>tr>th {
+    padding: 16px 0px;
+}
+/* FORM START */
+.ant-form label{
+    /* 为了覆盖antd的样式，这里使用了important，TODO */
+    font-size: 16px !important;
+}
+.ant-form label.font-18 {
+    font-size: 18px !important;
+}
+.ant-form label.font-14 {
+    font-size: 14px !important;
+}
+.ant-form label.font-12 {
+    font-size: 12px !important;
+}
+/* md编辑器在form中时，使用这个样式，可以把错误信息绝对定位 */
+/* 去掉form下边距 */
+.mdInForm.ant-form-item {
+    margin-bottom: 0px;
+}
+.mdInForm .has-error .ant-form-explain {
+    position: absolute;
+    margin-top: -2px;
+    margin-left: -7px;
+}
+/* ！！！课堂下统一的form样式前缀 courseForm */
+.courseForm .ant-select-selection--single, .courseForm .ant-select-selection__rendered{
+    height: 40px;
+    line-height: 40px;
+}
+
+.courseForm .ant-input-group > .ant-input:first-child, .ant-input-group-addon:first-child {
+    height: 40px;
+}
+.courseForm .ant-select-selection, .courseForm .ant-select-selection-selected-value {
+    height: 40px;
+    line-height: 40px;
+}
+.courseForm .ant-input-affix-wrapper .ant-input {
+    height: 40px;
+}
+.courseForm .ant-select-auto-complete.ant-select .ant-input {
+    height: 40px;
+}
+
+.courseForm .ant-select-auto-complete.ant-select .ant-select-selection__rendered {
+    line-height: 40px;
+}
+.courseForm .ant-select-auto-complete.ant-select .ant-input {
+    height: 40px;
+}
+
+/*新建课堂*/
+
+.newcourses .ant-input{
+    width:280px;
+    margin-left: 11px;
+    height: 40px !important;
+}
+
+.newcourses .ant-input{
+    width:280px;
+    margin-left: 11px;
+    height: 40px !important;
+}
+
+.newcourses .ant-select-selection--single{
+    width: 280px;
+    /*margin-left: 11px;*/
+    height: 40px;
+    /*padding: 0px 0px 0px 0px;*/
+    color: rgba(0, 0, 0, 0.65);
+    background-color: #fafafa!important;
+}
+.newcourses .ant-select-selection__rendered{
+    line-height: 40px;
+}
+.newcourses  .ant-select-selection-selected-value{
+    opacity: 1 !important;
+}
+.newcourses .ant-select-selection--single:focus {
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+    background-color: #fff!important;
+}
+
+.newcourses .ant-select-selection--single:hover {
+  border: 1px solid #d9d9d9!important;
+}
+
+.pd20{
+    padding:20px;
+}
+
+.newcoursestitle{
+    font-size: 12px;
+    color: #989898;
+    margin-left: 40px;
+}
+.newcoursestitleysl{
+    font-size: 12px;
+    color: #989898;
+    margin-left: 51px;
+}
+
+
+.coursenavbox .ant-form-item-label{
+    margin-left:10px;
+}
+.coursenavbox .ant-checkbox-wrapper{
+    font-size: 14px !important;
+}
+
+.coursenavbox .ant-form-item-control-wrapper{
+    padding-left:10px;
+}
+
+.coursesselect{
+    font-size: 12px;
+    color: #989898;
+    padding:0px;
+    margin-left: -8px;
+}
+
+.ant-col-offset-5{
+    margin-left: 2% !important;
+    margin-top: -43px;
+}
+
+.coursenavbox  .ant-form-item-children-icon{
+    display: none;
+}
+
+.coursenavboxtow .ant-input {
+    margin-left:0px !important;
+}
+.ant-form-explain{
+    padding-left: 13px;
+}
+
+.exercise .ant-form-item-label{
+   margin-left:20px;
+}
+
+#coursesNew_startTime{
+    width:210px !important;
+}
+
+#coursesNew_startTime .ant-input{
+    width:210px !important;
+}
+
+#coursesNew_endTime{
+    width:210px !important;
+}
+
+#coursesNew_endTime .ant-input{
+    width:210px !important;
+}
+
+.exerciseselect{
+    font-size: 12px;
+    color: #989898;
+    padding:0px;
+    margin-left: 20px;
+}
+
+.ml28{
+    margin-left: 28px;
+}
+.ant-calendar-picker-clear, .ant-calendar-picker-icon{
+    right: 12px !important;
+}
+.exercise  .ant-form-item-children-icon{
+    display: none;
+}
+
+.pd60{
+    padding-left: 60px;
+}
+
+.pd28{
+    padding-left: 28px;
+}
+
+.exerciselist .ant-form-explain{
+    display:none;
+}
+
+.exerciselist .ant-input{
+    border: 1px solid #d9d9d9 !important;
+}
+
+.exercisetime .ant-form-explain{
+   margin-left:107px;
+}
+
+.ant-input-search-icon:hover{
+    color: #4CACFF !important;
+}
+
+.coursehomework:hover .activity-title{
+    color: #4CACFF !important;
+}
+
+.martopf2{
+    margin-top:-2px;
+}
+/* AboutInputForm---设置from表单的整体样式，适用于新建编辑等页面-----begin */
+.searchViewAfter{
+    width: 100%;
+    height: 40px;
+}
+.searchViewAfter.ant-input{
+    line-height: 40px;
+    height: 40px;
+    border-right: none!important;
+    box-shadow: none!important;
+}
+/* 这个加了干嘛的？影响到了带addonAfter的input  */
+.searchViewAfter,.searchViewAfter:focus,.searchViewAfter .ant-input:hover,.searchViewAfter .ant-input-group .ant-input:focus{
+    border-right: none!important;
+  }
+  .AboutInputForm .ant-form-item-label{
+    overflow:unset;
+    margin-bottom: 18px;
+  }
+  .AboutInputForm .ant-form-item label{
+    font-size: 16px;
+  }
+  .AboutInputForm{
+    background: #fff;
+  }
+  .AboutInputForm.ant-form-item,.AboutInputForm .ant-form-item{
+    padding:20px 30px 30px 30px!important;
+    position: relative;
+    border-bottom: 1px solid #EDEDED;
+    margin-bottom: 0px;
+  }
+  .AboutInputForm:last-child{
+    border-bottom: none!important;
+  }
+  .AboutInputForm .ant-form-item-required:before{
+    position: absolute;
+    left: -15px;
+    top: 4px;
+    color: #FE4F4C;
+  }
+
+  /* 毕设任务 */
+  .graduationTaskMenu>a{
+      display: block;
+      position: relative;
+      line-height: 72px;
+      font-size: 16px;
+      margin-right: 30px;
+      float: left;
+  }
+  .graduationTaskMenu>a.active:after{
+      position: absolute;
+      left: 0px;
+      height: 2px;
+      width: 100%;
+      content: '';
+      background: #4CACFF;
+      bottom: 0px;
+      font-weight:400;
+  }
+  .graduationTaskMenu>a.active{
+      color: #4CACFF!important;
+  }
+
+  /* end */
+/* form表单，包含多个item时 */
+.createPage{
+    padding:20px 30px 30px;
+    position: relative;
+    border-bottom: 1px solid #EDEDED;
+    margin-bottom: 0px;
+  }
+  .createPage .ant-form-item{
+    margin-bottom: 0px;
+  }
+  .createPage:last-child{
+    border-bottom: none!important;
+  }
+  .createPage{
+    background: #fff;
+  }
+  .createPage .ant-form-item-label{
+    overflow:unset;
+    margin-bottom: 10px;
+  }
+  .createPage .ant-form-item label{
+    font-size: 16px;
+  }
+  .createPage .ant-form-explain{
+    padding-left: 0px;
+  }
+
+  .has-error .ant-input-group-addon{
+    border-color:#f5222d!important;
+  }
+  .createPage .ant-form-item-required{
+      margin-left: -10px;
+  }
+  /* 新建编辑 */
+.signPoint{
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    color: #FE4F4C;
+  }
+
+  .searchView{
+    width: 248px;
+    height: 40px;
+  }
+  .searchView .ant-input{
+    background-color: #fafafa!important;
+  }
+  .searchView .ant-input-affix-wrapper{
+    height: 40px;
+  }
+  .ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled){
+    border:1px solid #d9d9d9!important;
+  }
+  .ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix {
+    background: #fafafa!important;
+  }
+  .ant-input:hover{
+    border:1px solid #d9d9d9!important;
+  }
+  .ant-input:focus{
+    box-shadow:none!important;
+    background-color: #fff!important;
+  }
+  .ant-input:focus + .ant-input-group-addon{
+    background-color: #fff!important;
+  }
+  .ant-input-group-addon{
+    color: #666!important;
+    font-size: 12px;
+    border: 1px solid #d9d9d9!important;
+    border-left: none!important;
+  }
+
+  .check_on{
+      background: #4CACFF;
+      color: #ffffff!important;
+      border-radius: 12px;
+  }
+
+  .ant-table-thead tr th div{
+    font-size: 14px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(102,102,102,1);
+  }
+
+/* 右侧搜索区域*/
+.searchFor .searchCon {
+    width: 215px;
+}
+
+.search-new {
+    width:237px!important;
+    height: 30px;
+    margin-bottom: 30px;
+    /*margin-right: 35px;*/
+}
+.search-new-input {
+    padding-left: 16px;
+    height: 30px;
+    width: 210px;
+}
+.search-span {
+    border-radius: 17px;
+}
+
+
+/* 右侧 热门标签 */
+.HotLabelList a{display: block;float: left;padding: 0px 9px;height: 28px;line-height: 28px;border-radius: 14px;background-color: #f5f5f5;color: #666;margin-right: 10px;margin-bottom: 9px;}
+.HotLabelList a.selected {
+    background: #4CACFF;
+    color: #fff;
+}
+
+
+
+/* 右侧 热门问题 */
+.hotQuestionItem{padding:20px 0px;border-bottom: 1px solid #eee;}
+.questiontName{max-width: 100%;display: block;}
+
+
+
+/* 用户信息-UserSection*/
+.user_default_btn {width: 114px;}
+.userPrivateName{line-height: 25px;margin-bottom: 9px;}
+.userPrivatePost{line-height: 20px;}
+.noteDetailTitle{line-height: 38px;font-size: 24px;font-weight: normal;text-align:justify }
+
+.noteDetailNum{float: left;padding:0px 12px;position: relative;color: #999!important;height: 28px;line-height: 26px;}
+.noteDetailNum.rightline:after{position: absolute;content: '';right: 0px;width: 1px;background-color: #EAEAEA;height: 8px;top:10px;}
+
+/*帖子详情点赞*/
+.noteDetailPoint{width: 100px;height: 70px;background-color: #4cacff;border-radius: 35px;color: #FFFFff;text-align: center;margin: 0px auto;-webkit-box-sizing: border-box;box-sizing: border-box;padding: 2px 0px;cursor: pointer;    line-height: 22px;
+    padding-top: 12px;}
+.Pointed{background-color:#f0f0f0;color: #b3b3b3; cursor: default}
+.notefileDownload{height: 25px;line-height: 22px;}
+
+/* 评论：隐藏二级回复用户头像 */
+.comments_hideSecondReplyUserHeader .imageFuzzy{
+    display: none;
+}
+
+.comments_hideSecondReplyUserHeader .editormd {
+    width: 100%;
+}
+
+.comments_hideSecondReplyUserHeader .orig_reply {
+    margin-bottom: 6px;
+}
+
+.color9B9B{color:#9B9B9B;}
+.color656565{color:#656565;}
+
+.h20{height: 20px;}
+
+.xingrequired:before{  display: inline-block;
+    margin-right: 4px;
+    color: #f5222d;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+}
+
+
+.pl30 {
+    padding-left: 30px !important;
+}
+
+.pl36{
+    padding-left: 36px !important;
+}
+
+.ml87{
+    margin-left: 87px;
+}
+.textcenter{
+    text-align: center;
+}
+
+.members{
+    width: 416px;
+    height: 400px;
+    background: rgba(244,250,255,1);
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.youjiangboxs{
+    height: 400px;
+    width: 56px;
+    color: #9A9A9A;
+    float: left;
+    text-align: center;
+    line-height: 400px;
+}
+
+.Association{
+    width: 100%;
+    height: 240px;
+    margin-top: 14px;
+    overflow: auto;
+}
+
+.click_adds{
+    text-align: center;
+    height: 90px;
+    line-height: 90px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+/* 问卷新建编辑 */
+.selectAnswer{
+    color: #666;
+    background-color: #ededed;
+    float: left;
+    padding:0px 15px;
+    border-radius: 12px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 14px;
+}
+
+/* antd的datepicker组件 隐藏掉disable了的item，参考CommonWorkSetting.js */
+.hideDisable .ant-calendar-time-picker-select-option-disabled {
+    display: none
+}
+/* 附件名称最长30个字符 */
+.upload_item {
+    max-width: 432px;
+}
+/* antd上传附件按钮样式 */
+.uploadBtn.ant-btn {
+    border: none;
+    color: #4CACFF;
+    box-shadow: none;
+    background: transparent;
+    padding: 0 6px;
+    padding-left: 0px;
+}
+    .uploadBtn.ant-btn i {
+        display: none
+    }
+    .uploadBtn.ant-btn span{
+        margin-left: 0px;
+    }
+    .upload_1 .ant-upload-list {
+        width: 350px;
+    }
+
+
+/* tip英文未换行 */
+.ant-tooltip-inner{
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+/* List列表页的公共样式---------------------------------------------- START */
+.padding02010{
+    padding: 10px 30px 0px 30px;
+    cursor: pointer;
+}
+.ant-checkbox-group > div .boardsList {
+    border-top: 1px solid transparent;
+    padding: 10px 0px 20px!important;
+}
+.padding02010:hover{
+    box-shadow: 0px 2px 6px rgba(51,51,51,0.09);
+    opacity: 1;
+    border-radius: 2px;
+}
+
+/* 下拉 ---------------- START */
+
+/* 公用下拉菜单 */
+.drop_down{
+    position: relative;
+  }
+  .drop_down > i{
+    cursor: pointer;
+  }
+  .drop_down_menu,.drop_down_normal{
+    display: none;
+    position: absolute;
+    left:0px;
+    top:99%;
+    background-color: #fff;
+    box-shadow:0px 0px 6px 0px rgba(76,76,76,0.2);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    z-index: 1000;
+  }
+  .drop_down:hover .drop_down_menu,.drop_down:hover .drop_down_normal{
+    /* display: block; */
+    display: flex;
+    flex-direction: column;
+  }
+  /* 单选下拉列表（超出十条数据带搜索、且有添加按钮） */
+  .drop_down_menu li{
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+    padding:0px 20px;
+    height: 34px;
+    line-height: 34px;
+    width: 262px;
+    color: #333333;
+    display: block;
+    float: none;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .drop_down_search{
+    margin:0px 18px 10px;
+  }
+  .drop_down_menu li:hover,.drop_down_normal li:hover{
+    background-color: #f0f0f0;
+  }
+  .drop_down_menu .drop_down_btn{
+    left: unset;
+    display: block;
+    margin:0px 20px;
+    border-top: 1px solid #ebebeb;
+    height: 48px;
+    line-height: 48px;
+    color: #666666;
+  }
+
+/* 下拉 ---------------- END */
+
+/* List列表页的公共样式---------------------------------------------- END */
+
+.task_menu_ul .ant-menu-horizontal{
+    border-bottom: none !important;
+}
+
+.shixunreporttitle{
+    /*overflow: hidden;*/
+    max-width: 1060px;
+    /*line-height: 76px;*/
+    padding-left: 5px;
+    text-align: justify;
+}
+.shixunreporttitles{
+    /*max-height: 76px;*/
+    /*line-height: 76px;*/
+    padding-left: 5px;
+}
+.padding10200{
+    padding: 10px 20px;
+}
+.padding1020{
+    padding: 10px 20px 10px;
+}
+.height100px{
+    height:100px;
+}
+.coursesselects{
+    font-size: 12px;
+    color: #989898;
+    padding: 0px;
+    margin-left: 10px;
+}
+/* 覆盖antd样式，设计得form都为灰色背景 */
+.ant-input-number-input {
+    background: #F4F4F4;
+}
+input.ant-input-number-input:focus {
+    background: #fff;
+}
+.FAFAFA{
+    background: #fafafa;
+}
+.has-success.has-feedback .ant-form-item-children:after{
+    display: none;
+}
+.noticeTip{
+    border:1px solid #FF0000;
+    border-radius: 5px;
+}
+
+@media screen and (min-width: 1400px) {
+    .ant-modal-wrap{
+        overflow: hidden;
+    }
+}
+/* 设置了浏览器宽度不小于1201px时 abc 显示1200px宽度 */
+
+@media screen and (max-width: 1400px) {
+
+}
+/* 设置了浏览器宽度不大于1200px时 abc 显示900px宽度 */
+
+@media screen and (max-width: 900px) {
+
+}
+/* 设置了浏览器宽度不大于900px时 abc 显示200px宽度 */
+
+@media screen and (max-width: 500px) {
+
+}
+/* 设置了浏览器宽度不大于500px时 abc 显示100px宽度 */
+
+
+/* 试卷答题 */
+.stageTable .ant-table-tbody tr:last-child td,.stageTable .ant-table-thead > tr > th{
+    border-bottom: none!important;
+}
+
+/* md代码类样式渲染 */
+.new_li .markdown-body ul > li{ list-style-type: disc!important;margin-bottom: 0!important; }
+.new_li .markdown-body ol > li{ list-style-type: decimal!important; }
+.new_li li{ margin-bottom: 0!important; }
+
+/* 有不少问题，没有出现'数据已于 09:24:53 保存'时靠太近，和红字提示重叠 */
+.upload_under_markdown_editor {
+    /* margin-top: -32px;
+    display: block; */
+}
+
+.ant-table-thead > tr > th{
+    border-bottom: 1px solid transparent !important;
+}
+
+
+/* 指引 */
+.guidePanel{
+    position: fixed;
+    top:0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10000;
+}
+.guideFirstRight{
+    position: absolute;
+    right: -90px;
+}
+.guideFirstLeft{
+    position: absolute;
+    left: -95px;
+    top:120px;
+}
+
+/*.yslnobinput input{*/
+/*    width: 280px;*/
+/*    height: 40px !important;*/
+/*    background-color: #fafafa!important;*/
+/*}*/
+/*.yslnobinput .ant-input-number-input-wrap{*/
+/*    width: 280px;*/
+/*    height: 40px !important;*/
+/*    background-color: #fafafa!important;*/
+/*}*/
+.yslinputcourput .ant-form-explain{
+    padding-left: 0px !important;
+}
+.wechatloginfont{
+    font-size: 14px;
+    font-family: PingFangSC-Regular,PingFangSC;
+    font-weight: 400;
+    color: #555555;
+    line-height: 20px;
+    margin-top: 10px;
+}
+
+.wechatdiv{
+    margin-top: 40px !important;
+    /*width: 800px !important;*/
+}
+
+.wechatdivs{
+    margin-top: 40px !important;
+    width: 800px !important;
+}
+
+.wechatContent{
+    padding: 0px 50px;
+    text-align: center;
+}
+
+.wechatContents{
+    padding: 0px 50px;
+}
+
+.wechatpass{
+    width: 300px;
+    height: 46px;
+}
+
+.wechatnewchat{
+    width: 62px;
+    height: 62px;
+    background: rgba(255,170,170,1);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 62px;
+    color: #fff;
+    margin: 0 auto;
+}
+.wechatweoldchat{
+    width: 62px;
+    height: 62px;
+    background:rgba(164,211,255,1);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 62px;
+    color: #fff;
+    margin: 0 auto;
+}
+
+.daishenp{
+    color: #F79946 !important;
+    text-decoration: underline !important;
+}
+.pointertooltip{
+  background: #DDDDDD;
+
+}

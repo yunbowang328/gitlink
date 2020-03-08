@@ -1,0 +1,54 @@
+<table class="table table-hover text-center mirror-repository-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="6%">ID</th>
+    <th width="6%">类别</th>
+    <th width="12%" class="text-left">镜像别名</th>
+    <th width="16%" class="text-left">镜像名称</th>
+    <th width="22%" class="text-left">镜像描述</th>
+    <th width="14%">修改时间</th>
+    <th width="6%">脚本</th>
+    <th width="6%">状态</th>
+    <th width="12%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if mirrors.present? %>
+    <% mirrors.each do |mirror| %>
+      <tr class="mirror-repository-item-<%= mirror.id %>">
+        <td><%= mirror.id %></td>
+        <td><%= mirror_type_tag(mirror) %></td>
+        <td class="text-left"><%= display_text(mirror.type_name) %></td>
+        <td class="text-left"><%= overflow_hidden_span mirror.name, width: 150 %></td>
+        <td class="text-left"><%= overflow_hidden_span mirror.description, width: 240 %></td>
+        <td><%= mirror.updated_at.strftime('%Y-%m-%d %H:%M') %></td>
+        <td>
+          <% if mirror.main_type == "1" %>
+            <%= link_to admins_mirror_repository_mirror_scripts_path(mirror) do %>
+              <i class="fa fa-file-text <%= mirror.mirror_scripts.blank? ? 'text-danger' : 'text-success' %>" aria-hidden="true" data-toggle="tooltip" data-title="查看脚本"></i>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= mirror_status_tag mirror %></td>
+        <td class="action-container">
+          <%= link_to '编辑', edit_admins_mirror_repository_path(mirror), class: 'action edit-action' %>
+
+          <% if mirror.status == 2 %>
+            <%= link_to '同步', new_admins_choose_mirror_repository_path(mirror_id: mirror.id), remote: true, class: 'action sync-action' %>
+          <% end %>
+
+          <%= javascript_void_link '替换', class: 'action replace-action', data: { toggle: 'modal', target: '.admin-replace-mirror-modal', id: mirror.id, name: mirror.name } %>
+
+          <% if mirror.deletable? %>
+            <%= delete_link '删除', admins_mirror_repository_path(mirror, element: ".mirror-repository-item-#{mirror.id}"), class: 'delete-mirror-repository-action' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: mirrors } %>

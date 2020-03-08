@@ -1,0 +1,93 @@
+/* 登录注册 */
+.new_login{ width:100%;  color:#666; padding-bottom:50px; font-size:14px;}
+.new_login_con{ width:1200px;  margin:0 auto; background:#fff; border:1px  solid #e8e8e8; padding:100px 0;  }
+.new_login_box{width:350px; padding:30px; border-radius:5px;  margin:0 auto; border:solid 1px #fff;}
+.new_login_h2{ font-size:18px;   border-bottom:1px solid #fff;  font-weight:normal;  padding-bottom:5px;  margin-bottom:30px;}
+.new_login_h2 a{font-size:12px; background:url(/images/icons_login.png) 0 -69px no-repeat;  padding-left:10px;}
+input.new_loggin_input{ -webkit-box-shadow: 0 0 0px 1000px white inset;  outline: none;width:295px; height:43px; border-radius:5px; padding-left:5px; line-height: 43px; font-size:14px; border: none; color:#666;}
+input.new_loggin_input_test{ -webkit-box-shadow: 0 0 0px 1000px white inset;  outline: none;width:260px; height:45px; border-radius:5px; padding-left:5px; line-height: 45px; font-size:14px; border:1px solid #ccc;}
+.new_loggin_users{width:100%;height:43px;border-radius:5px;  border:1px solid #ccc; position: relative; }
+.new_login_lock{background:#fff url(/images/icons_login.png) 8px -28px no-repeat; width:265px;  height:45px; border-radius:5px; border:none;}
+.new_register_li{background:#fff; width:265px; height:45px;  border-radius:5px; border:none;}
+.new_login_form ul li{ margin-bottom:20px; }
+.new_login_check{  width:15px;  height:15px;  border:1px solid #fff;  border-style:none;  margin-right:5px;  vertical-align: -2px;}
+.new_login_form  a{  text-decoration:underline;}
+.new_register{ width:100%; height:550px; background:#46484c; padding-top:80px;}
+.new_register_con{width:1200px; height:550px; margin:0 auto;  }
+.new_login_txt{width:450px; height:140px; padding:30px 12px 0; color:#fff; margin:100px 0 0 100px;}
+.new_login_txt h3{  font-size:24px; text-align:center; margin-bottom:20px;}
+.new_login_txt p{  line-height:2.0; font-size: 16px;}
+.new_register_left{  margin-top:150px;}
+.new_login_tishi{ color: #fff; }
+/* 展示内容 */
+.new-container{ width: 100%; min-width:1200px;}
+.new-container-inner{width:1200px; margin:0px auto; padding:100px 0;}
+.inner-txt{ width:300px;}
+.inner-txt-h3{ font-size: 18px; color: #333; margin-bottom:20px;}
+.inner-txt-p{font-size: 14px; color: #666; margin-bottom:20px;}
+.back-color-grey{ background:#f5f5f5;}
+.guanzhu-box{ position: relative;}
+.img-guanzhu{ position: absolute; top:0; left: 0;}
+.guanzhu-img-box{ display: none;}
+.guanzhu-box  li:hover ul{display:block; }
+/* 微信登录扫描新增20170103byLB */
+.new_login_weixin {border-bottom:1px solid #ddd; width: 100%;}
+.new_login_weixin li {float:left;  width:50%; padding:5px 0; display:inline-block;  text-align:center; }
+.new_login_weixin li a{font-size:18px;}
+.login_weixin_nav_hover{border-bottom:3px solid #29bd8b; }
+.undis {display:none;}
+.dis {display:block;}
+.code_wxbox{ width:350px; text-align: center; padding:30px 0;}
+.wx_img{ width: 150px; margin:10px auto 10px; }
+a:hover.wx_help{ text-decoration: underline;}
+/* 新版内页 */
+.inner-c_blue{ color:#3b94d6;}
+a.btn-blue{ display: block; width:265px; height:40px; line-height: 40px; background:#3b94d6;  color:#fff!important; font-size:14px; border-radius:5px;  text-align:center;border: 3px solid #3b94d6; font-weight: bold; }
+a:hover.btn-blue{background: #2384cd; border: 3px solid #2384cd;}
+a.btn-blue-line{ display: block; width:265px; height:40px; line-height: 40px; border: 3px solid #3b94d6; color:#3b94d6!important; font-size:14px; border-radius:5px;  text-align:center; font-weight: bold; }
+a:hover.btn-blue-line{background: #3b94d6; color:#fff!important;}
+.inner-btnbox{ width: 580px; margin: 30px auto;}
+.innner-banner-bottom{ width: 300px; text-align: left; float: left; margin-top: 50px; font-size: 14px;}
+.inner-border{ display: block; width: 100px; border-top:3px solid #fff; margin-bottom: 15px;}
+.new-container-inner-h3{ font-size:40px; font-weight: normal; color: #333; text-align: center; margin-bottom: 20px;}
+.innerbox-txt{ width:300px;}
+.innerbox-txt-h3{ font-size:24px; color: #333; margin-bottom:20px;}
+.innerbox-txt-p{font-size: 16px; color: #666; margin-bottom:20px;}
+.back-color-black{ background:#47494d;}
+.inner-t-c{ text-align: center;}
+.inner-user-info{ border-radius:3px; background:#fff; padding:15px;box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); width:305px; display:block; width:300px; display: none;}
+.inner-user-info font{ border: 1px solid #dddddd;   display: block; border-width: 8px; position: absolute; top:289px;left: 110px; border-style:solid; border-color:transparent transparent #fff  transparent;font-size: 0;line-height: 0;  box-shadow:2px rgba(146, 153, 169, 0.5); }
+.inner-user-info li a{ display: block; height: 30px; line-height: 30px; color: #fff; width: 200px; }
+
+.inner-img02{ width: 1000px; margin:0 auto;}
+.inner-txtbox02{width: 800px; margin:0 auto;}
+.inner-txtbox02 p{ display: block; width: 200px; font-size: 20px; float: left; margin-top:30px; text-align: center; color:#666;}
+.innerbox-txt-h3{ font-size:28px; color: #333; margin-bottom:20px;}
+.innerbox-txt-p{font-size: 20px; color: #666; margin-bottom:20px;}
+/*邮件激活*/
+.task-email-box{ width:450px; margin:0 auto; background:#fff;}
+.task-email-box-pd{ padding:30px; color:#666;}
+.task-mail-img{ width:40px; height: 40px; border-radius:100px; border:2px solid #ccc; }
+.task-name{ display: inline-block; max-width: 100px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.task-img-box{ width:265px;}
+
+.new-login-header{ width: 1200px; margin:0 auto; height:70px;}
+.new-login-header h2{  line-height: 70px; color:#666;}
+.new-login-error{ display: inline-block; background-color:#fffafa; box-shadow: 0px 2px 8px rgba(255, 217, 217, 0.5);  border:1px solid #ffd9d9; padding:5px; border-radius:5px; color:#dd6f75; width: 235px; position: absolute; left:360px; top:3px;}
+.password-header{ width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e8e8e8; border-bottom:none; padding:15px 0;}
+.new-loggin-other{ width:350px; text-align: center; padding-top:30px; border-top: 1px solid #e8e8e8;}
+.task-img-weixin{ width: 50px; height: 50px; border-radius:100px; background:#ccc; }
+.task-img-weixin:hover{ background:#86c610;}
+.new-login-success{ text-align: center;}
+
+
+
+/*注册新版------------------------20180108bycs*/
+.new_login_header{height: 80px;line-height: 80px;background: #171616;width:100%;text-align: center;color: #fff;font-size: 45px;font-family: serif;}
+.newedition_form{width: 1200px;margin: 0 auto;}
+.newedition_form_main{width: 1000px;margin: 0 auto;;background: #fff}
+.newedition_form_main .new_login_box{width: 487px;padding: 30px 60px 50px 30px}
+.newedition_form_main .new_login_box .new_loggin_users{width: 350px;}
+.newedition_form_main .new_login_box li label{height: 45px;line-height: 45px;width: 120px;text-align: right;padding-right: 15px;font-size: 16px}
+.newedition_form_main .new_login_box .drag_slider{width: 350px}
+.newedition_form_main .new_login_box .login_btn{width: 350px;float: right}

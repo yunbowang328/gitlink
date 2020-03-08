@@ -1,0 +1,556 @@
+@charset "utf-8";
+/* CSS Document */
+/*课程主页css*/
+.homepageCoursesType {width:75px; background-color:#ffffff; float:left; list-style:none; position:absolute; border:1px solid #eaeaea; border-radius:5px; top:15px; padding:5px 10px; left:-65px; font-size:12px; color:#4b4b4b; line-height:2; z-index:9999; display:none;}
+/*20150820课程作业 LB*/
+.HomeWork {width:718px; background-color:#ffffff; padding:15px; border:1px solid #dddddd; float:right;}
+.RightBanner {font-size:16px; width:733px;  color:#4b4b4b; padding:10px 0 0 15px; margin-bottom:10px; background:#fff; border:1px solid #dddddd;height:34px;}
+select.InputBox,input.InputBox,textarea.InputBox{ border:1px solid #d9d9d9; color:#888888; height:28px; line-height:28px; padding-left:5px; font-size:14px;}
+a.FilesBtn{  background: url(../images/homepage_icon.png) 0px -373px no-repeat; width:38px; height:20px; display:block; padding-left:20px; color:#888888;}
+a:hover.FilesBtn{background: url(../images/homepage_icon.png) -89px -372px no-repeat; color:#3598db;}
+a.ProBtn{background: url(../images/homepage_icon.png) -86px -396px no-repeat; width:30px; height:20px; display:block; padding-left:20px; color:#888888;}
+a:hover.ProBtn{background: url(../images/homepage_icon.png) -86px -426px no-repeat; color:#3598db;}
+a.DropBtn{background: url(../images/homepage_icon.png) -125px -339px no-repeat; width:85px; height:20px; display:block;  color:#888888; font-size:14px;}
+a:hover.DropBtn{background: url(../images/homepage_icon.png) -125px -370px no-repeat;}
+.DropLine{border-top:1px solid #d9d9d9; float:left; width:623px; height:10px; margin-top:10px;}
+/*20150820提交作业 LB*/
+.HomeWorkBox{ background:#f6f6f6; padding:10px;}
+.c_grey{ color:#888888;}
+.HomeWorkP{ width:690px; font-size:14px;}
+.HomeWorkP p{background-color: transparent !important;}
+.HomeWorkP div{background-color: transparent !important;}
+.ProResult{width:748px; background-color:#fff;  border:1px solid #dddddd;border-bottom:none; }
+.ProResultTop{ height:38px; line-height:38px; border-bottom:1px solid #dddddd; background:#f2f2f2; padding:0 10px;}
+.ProResultCon{ padding:10px; color:#888888; line-height:24px; border-bottom:1px solid #dddddd; }
+.ProResultTable{ color:#888888;}
+.SearchIcon{background:url(../images/homepage_icon2.png) 676px -393px no-repeat; }
+.SearchIcon:hover{background:url(../images/homepage_icon2.png) 676px -419px no-repeat; }
+a.link_file{ background:url(/images/pic_file.png) 0 2px no-repeat; padding-left:20px; }
+a:hover.link_file{ background:url(/images/pic_file.png) 0 -25px no-repeat; color:#3ca5c6;}
+a.FilesName{ max-width:540px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis; display:block;}
+a.FilesName02{ max-width:665px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis; display:block;}
+.ProResultUl span { display:block; float:left;}
+.ProResultUl>div{  line-height:35px;  border-bottom:1px solid #dddddd; }
+.DateBorder{border:1px solid #d9d9d9; border-left:none; padding:7px 6px 6px 6px;}
+a.UsersEditBtn{ display:block; width:55px; height:20px; border:1px solid #6d6d6d; color:#fff; background:#888888 url(/images/homepage_icon.png) -11px -35px no-repeat; padding-left:25px; line-height:1.9;-moz-border-radius:2px;  -webkit-border-radius:2px;  border-radius:2px;}
+a:hover.UsersEditBtn{ color:#484848;  background:#888888 url(/images/homepage_icon2.png) -11px -74px no-repeat;}
+a.UsersAttBtn{ display:block; width:55px; height:20px; border:1px solid #d3d3d3; color:#888888; background:#f2f3f3 url(/images/homepage_icon2.png) -9px -6px no-repeat; padding-left:25px; line-height:1.9;-moz-border-radius:2px;  -webkit-border-radius:2px;  border-radius:2px;}
+a:hover.UsersAttBtn{border:1px solid #888888; }
+a.UsersApBtn{ display:block; width:55px; height:20px; border:1px solid #d3d3d3; color:#888888; background:#f2f3f3 url(/images/homepage_icon2.png) -177px -6px no-repeat; padding-left:25px; line-height:1.9;-moz-border-radius:2px;  -webkit-border-radius:2px;  border-radius:2px;}
+a:hover.UsersApBtn{border:1px solid #888888; }
+/*20150906关联项目LB*/
+a.RalationIcon{  background: url(../images/homepage_icon.png) -183px -396px  no-repeat; height:20px; display:block; padding-left:20px; color:#888888;}
+a:hover.RalationIcon{background: url(../images/homepage_icon.png) -183px -428px no-repeat; color:#3598db;}
+a.SetUpIcon{background: url(../images/homepage_icon.png) 0px -453px  no-repeat; width:20px; height:20px; display:block;  color:#888888;}
+a:hover.SetUpIcon{background: url(../images/homepage_icon.png) 0px -486px no-repeat; color:#3598db;}
+/*20151130课程项目集成Tim*/
+.proRelateWrap {width:38px; height:38px; border:1px solid #cecece; border-radius:3px; background-color:#f1f1f1;}
+.proHelp {background:url(/images/course/hwork_icon.png) -5px -124px no-repeat; display:inline-block; width:15px; height:15px; display:inline-block;}
+.hworkPrName {width:80px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkPrName2 {width:150px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.captainName {max-width:65px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; display: inline-block;}
+.relatePInfo {text-align: left; position:absolute; background-color:#ffffff; padding:3px 8px; white-space:nowrap; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5); z-index:999; color:#585858; cursor:pointer; display:none;}
+/* 创建作品 work */
+.Newwork{ width:668px;}
+.N_top{ float:right; margin-left:390px; }
+.N_con{ color:#484747; font-weight:bold; width:660px; margin-top:10px; }
+.N_con p{ }
+.bo{height:26px; border:1px solid #CCC; padding-left:5px; background:#fff;width:470px;  }
+.bo02{height:26px; border:1px solid #CCC; padding-left:5px; background:#fff;width:480px; margin-left:2px; color: #999;  }
+.hwork_txt{ width:560px; padding-left:5px; background:#fff;}
+a.tijiao{ height:28px; display:block; width:80px; color:#fff; background:#15bccf; text-align:center; padding-top:4px; float:left; margin-right:10px;}
+a:hover.tijiao{ background:#0f99a9;}
+.members_left{ float:left; width:410px;  margin-right:20px; text-align:center;}
+.members_left{}
+.members_left ul li{ height:30px; border-bottom:1px solid #E4E4E4;  width:410px; padding-top:10px; }
+.members_left ul li a{ float:left; text-align:center;}
+.members_left ul li span{ float:left; text-align:center; color:#484747;}
+.width150{width:150px;min-height: 10px;}
+.width120{width:120px;min-height: 10px;}
+.members_right label{ margin-left:15px;}
+.N_search{ height:20px; border:1px solid #999;}
+.project_r_h{ width:670px; height:40px; background:#eaeaea; margin-bottom:10px;}
+.project_r_h02{ width:920px; height:40px; background:#eaeaea; margin-bottom:10px;}
+.link_file_a{ display:block; max-width:450px;overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.link_file_a{ display:block; max-width:450px;overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.ul_grey li {color:#909090; list-style-position:inside; padding-left:1px;list-style-image:url('/images/news_dot2.png')}
+.ul_normal_color li {list-style-position:inside; padding-left:1px; list-style-image:url('/images/news_dot.png')}
+span.author { font-size: 0.9em; color: #888; }
+.ReplyToMessageInputContainer {width: 582px;float: left;}
+.ReplyToMessageContainer {border-bottom:1px solid #e3e3e3; width:632px; margin:0px auto; margin-top:15px; min-height:60px;}
+/*我的课程*/
+.courses_top{ height:27px; border-bottom:3px solid #ebebeb;}
+.courses_h2{ font-size:16px; font-weight:bold; color:#64bddb; border-bottom:3px solid #64bddb; padding-bottom:3px; padding-right:3px;}
+.courses_select{}
+a.select_btn{ border:1px solid #acacac; padding:0px 10px; color:#989898; display:block;}
+a.select_btn:hover{ background:#64bddb; color:#fff;}
+a.select_btn_select{ background:#64bddb; color:#fff;}
+.courses_list_pic{ border:1px solid #ede7e9; width:64px; height:64px; padding:1px;}
+.courses_list_pic:hover{border:1px solid #3b94d6;}
+.courses_list_title{ max-width:500px;overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.pic_eye_blue{display:block; background:url(/images/pic_uersall.png) -372px 3px no-repeat; width:16px; height:15px; }
+.pic_eye_grey{display:block; background:url(/images/pic_uersall.png) -372px -10px no-repeat; width:16px; height:15px; }
+.courses_list{ padding-bottom:10px;}
+.courses_list_table{ color:#6e6e6e;}
+/*课程动态*/
+.line_box{ width:728px; border:1px solid #d9d9d9; padding-bottom:10px;}
+.users_courses_list{ height:24px; border-bottom:1px dashed #CCC; margin-bottom:10px;}
+.users_coursename{max-width:135px; font-weight:bold; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; margin-right:5px; }
+.course_name{max-width:60px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.users_courses_txt{max-width:330px;  overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.users_top{ height:39px; border-bottom:1px solid #d9d9d9; margin-bottom:10px;}
+.users_h4{border-bottom:1px solid #d9d9d9; height:29px; padding:10px 0 0 10px; margin-bottom:10px; }
+/* 新建作品*/
+.fans_sign{ width:560px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.newhwork_div ul li{ margin-bottom:10px; font-size:14px; color:#666;}
+.newhwork_div input,.newhwork_div select{ height:26px;border:1px solid #CCC; }
+.newhwork_div textarea{border:1px solid #CCC;}
+div.content{padding-top:10px;}
+.pcontent>.school_list,.content>.school_list { padding-left: 5px;}
+/* 作业列表 */
+.ttl{ }
+.ctt{clear:both; }
+#contentbox{float:right;clear:both;width:670px;/*滑动门的宽度*/}
+/*学生作品列表*/
+.ctt2{clear:both; }
+.hworkListBanner {width:720px; height:40px; background:#eaeaea; margin-bottom:10px;}
+.hworkListContainer {float:left; clear:both; width:720px;}
+.showHwork{ border:1px solid #eaeaea; width:696px; padding:10px; color:#666666; padding-bottom:0px; box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); }
+.showHworkP{ width:630px; float:left;}
+.showHwork ul li {margin-bottom: 5px;}
+.hworkPingText{ float:left; border:1px solid #e4e4e4; padding:5px; width:618px; height:35px;}
+.pingBox{ width:676px; padding:10px; background:#f5f3f3;}
+.pingBoxTit{ float:left; width:625px; margin-left:10px;}
+.pingText{border:1px solid #CCCCCC; margin:5px; padding:5px; width:610px; height:20px; }
+.pingBackTit{ float:left; width:573px; margin-left:10px; }
+.hworkUl{ height:30px;width:720px; border-bottom:1px solid #eaeaea; line-height:30px; vertical-align:middle; background-color: #f6f6f6;}
+.hworkH30 {height:30px !important; line-height:30px !important;}
+.hworkListRow {height:65px; border-bottom:1px dashed #eaeaea; line-height:65px; vertical-align:middle; position: relative;}
+.hworkListRow:hover {background-color:#f6f6f7;}
+.hworkUl li{ float:left;}
+.hworkListRow li{ float:left;}
+.hworkTip{position:absolute; padding:3px 5px; border:1px solid #eaeaea; display:block; right:-118px; top:-15px; background-color:#ffffff; line-height:20px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5);}
+.hworkTip em {display:block; border-width:8px; position:absolute; bottom:4px; left:-16px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.hworkTip span {display:block; border-width:8px; position:absolute; bottom:4px; left:-15px; border-style:dashed solid dashed dashed; border-color:transparent #FFF transparent transparent; font-size:0; line-height:0;}
+.hworkList340 {width:335px; text-align:left; height:50px; line-height:50px;padding-left:5px;}
+.hworkList30 {width:30px; text-align:center;}
+.hworkList40 {width:40px; text-align:center;}
+.hworkList50 {width:50px; text-align:center;}
+.hworkList60 {width:60px; text-align:center;}
+.hworkList70 {width:70px; text-align:center;}
+.hworkList80 {width:80px; text-align:center;}
+.hworkList90 {width:90px; text-align:center;}
+.hworkList100 {width:100px; text-align:center;}
+.hworkList110 {width:110px; text-align:center;}
+.hworkList130 {width:130px; text-align:center;}
+.hworkList140 {width:140px; text-align:center;}
+.hworkList150 {width:150px; text-align:center;}
+.hworkList160 {width:160px; text-align:center;}
+.hworkList190 {width:190px; text-align:center;}
+.hworkList200 {width:200px; text-align:center;}
+.hworkList210 {width:210px; text-align:center;}
+.hworkList230 {width:230px; text-align:left;}
+.hworkList260 {width:260px; text-align:left;}
+.hworkList270 {width:270px; text-align:left;}
+.hworkList280 {width:280px; text-align:left;}
+.hworkList290 {width:290px; text-align:left;}
+.hworkList340 {width:340px; text-align:left;}
+.hworkList390 {width:390px; text-align:left;}
+.hworkList420 {width:400px; text-align:left;}
+.codeList{ float:right; font-size:12px; color:#484848; padding:0px 3px;  width:714px; margin-bottom:10px; }
+.hworkName {width:80px; float:left; line-height:18px;}
+.hworkName div{max-height: 36px;overflow: hidden;}
+.hworkStName {width:60px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStName100 {width:100px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStName110 {width:110px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStName130 {width:130px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStID {width:80px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStID90 {width:90px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStID100 {width:100px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkStID130 {width:130px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:65px; line-height:65px; vertical-align:middle; font-size:12px; color:#888888; text-align:center;}
+.hworkDate {max-width:150px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; float:left; height:14px; line-height:14px; font-size:12px; color:#888888;}
+.hworkMenu {width:100px; background-color:#ffffff; float:left; list-style:none; position:absolute; border:1px solid #eaeaea; border-radius:5px; top:15px; padding:10px 20px; left:-110px; font-size:12px; color:#888888; display:none; line-height:2; z-index:99;}
+a.hworkExport {background:url(/images/homepage_icon2.png) -10px -401px no-repeat; padding-left:23px;}
+a.hworkSetting {background:url(/images/homepage_icon2.png) -10px -450px no-repeat; padding-left:23px;}
+.hworkInfor {font-size:12px; color:#269ac9; width:80px; height:40px; vertical-align:middle; float:left; line-height:40px; text-align:center; font-weight:bold;}
+.infoNi{ width:100px; padding:5px;-moz-border-radius:3px;  -webkit-border-radius:3px;  border-radius:3px; box-shadow:0px 0px 5px #194a81; color:#666; background:#fff; text-align:left; line-height:2; position:absolute; margin-top:-24px;margin-left: 40px; z-index:99;}
+.g_infoNi{ width:100px; padding:5px;-moz-border-radius:3px;  -webkit-border-radius:3px;  border-radius:3px; box-shadow:0px 0px 5px #194a81; color:#666; background:#fff; text-align:left; line-height:2; position:absolute; left:0; z-index:99;}
+.problemTxt {width:660px; margin-left:10px; color:#777777; position:relative;}
+.rTxtTit{width:560px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;color:#15bccf; float:left; color:#269ac9; font-size:14px;}
+.hworkSearchBox {border:1px solid #e6e6e6; width:185px; float:left; background-color:#ffffff;}
+.hworkSearchInput {border:none; outline:none; background-color:#ffffff; width:145px; height:25px; padding-left:10px; display:block; float:left;}
+.hworkSearchIcon {width:30px; height:25px; background:url(../images/nav_icon.png) -8px -1px no-repeat; float:left;}
+a.hworkSearchIcon:hover {background:url(../images/nav_icon.png) -49px -1px no-repeat;}
+.classSplit {border:1px solid #e7e7e7; height:27px; line-height:27px; display:inline-block; margin-left:10px; padding-left:5px; cursor:pointer; outline:none; width:95px; max-width:95px;}
+.classList {width:45px; border:1px solid #e7e7e7; float:left; position:absolute; background-color:#ffffff; left:-1px;}
+.hworkPortrait {float:left; width:40px;}
+.HomeworkNameTitle{width: 285px;text-align: left;margin-left: 50px;}
+.HomeworkStuTitle{width: 80px;text-align: center;}
+.StudentName{display: table-cell;width: 115px;vertical-align: middle;text-align: left;height: 40px;}
+.score-tip {width:140px; color:#666; position:absolute; padding:3px 5px; border:1px solid #eaeaea; right:-223px; top:-30px; background-color:#ffffff; line-height:20px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5); white-space:nowrap;}
+.score-tip em {display:block; border-width:8px; position:absolute; bottom:32px; left:-16px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.score-tip font {display:block; border-width:8px; position:absolute; bottom:31px; left:-15px; border-style:dashed solid dashed dashed; border-color:transparent #FFF transparent transparent; font-size:0; line-height:0;}
+.anonymous-tip {width:100px;color:#666; position:absolute; padding:3px 5px; border:1px solid #eaeaea; right:-253px; top:-1px; background-color:#ffffff; line-height:20px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5);}
+.anonymous-tip em {display:block; border-width:8px; position:absolute; bottom:25px; left:-16px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.anonymous-tip font {display:block; border-width:8px; position:absolute; bottom:26px; left:-15px; border-style:dashed solid dashed dashed; border-color:transparent #FFF transparent transparent; font-size:0; line-height:0;}
+/*作业信息*/
+.homeworkInfo {background:#F6F6F6; padding:10px;}
+.homeworkDetail {line-height:18px; font-size:12px; color:#484848; overflow:hidden;}
+.homeworkDetail p,.homeworkDetail div,.homeworkDetail em, .homeworkDetail span{text-align: justify; text-justify:inter-ideograph; word-break: normal !important; word-wrap: break-word !important; line-height: 18px !important;}
+.homeworkState {padding:3px 5px; background-color:#28be6c; border-radius:3px; float:left; margin-left:15px; color:#ffffff;}
+.homeworkClose {padding:3px 5px; background-color:#b2b2b2; border-radius:3px; float:left; margin-left:15px; color:#ffffff;}
+/* 新建项目 */
+.pro_new{ }
+.pro_new ul li{ margin-bottom:5px; width:auto; padding:2px 5px;}
+/* 新建项目弹框*/
+.table_left{ width:90px; text-align:right; color:#4c4c4c; font-weight:bold;}
+/* 创建课程courses*/
+.courses_input{ border:1px solid #ddd; height:16px; width:532px; background:#fff; margin-bottom:10px; padding:5px;}
+.courses_input_w{ width:300px;}
+.courses_text{ border:1px solid #3b94d6; height:100px;width:532px; background:#fff; margin-left:5px; padding:5px; margin-bottom:10px;}
+.upimg{ border:1px solid  #eaeaea; display:block; width:60px; height:60px; padding:1px;}
+.upimg:hover{ border:1px solid #3b94d6; }
+a.member_search_edit {width: 43px;background: #15bccf;color: #fff;text-align: center;text-decoration: none;padding: 2px;}
+.min_search_edit {width: 150px;height: 20px;border: 1px solid #d0d0d0 !important;color: #666;}
+.r_txt_tit{max-width:450px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;color:#15bccf; float:left; color:#09658c; font-size:14px;}
+/* 功能倒计时*/
+.w_img{ float:left; margin:10px 10px 15px 0px;}
+.w_p{ float:left; color:#15bccf; font-size:16px; font-weight:bold; margin-top:70px; }
+/*作业批次下拉*/
+div#menu_r {height:41px; font-size:14px; font-weight:bold; margin-bottom:10px;}
+div#menu_r ul {float: left;}
+div#menu_r ul.menu_r { background: #3b94d6; padding:0 10px; height:40px; }
+div#menu_r li {position: relative; z-index: 9; margin: 0; display: block; float: left; }
+div#menu_r li:hover>ul { left: -2px;}
+div#menu_r a {position: relative;z-index: 10; height: 41px; display: block; float: left;line-height: 41px; text-decoration: none; font-size:14px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; }
+div#menu_r ul  a.parent  {background: url(/images/item.png) -30px -30px no-repeat;  width:50px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+div#menu_r ul  a.parent:hover  {background: url(/images/item.png) -30px -60px no-repeat;}
+div#menu_r ul ul a.parent  {background: url(/images/item.png) -20px 6px no-repeat;}
+div#menu_r ul ul a.parent:hover  {background: url(/images/item.png) -20px -11px no-repeat;}
+.menu_arrow  {background: url(/images/sort_desc.png) 40px 17px no-repeat;  width:50px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.menu_arrow:hover  {background: url(/images/sort_asc.png) 40px 17px no-repeat;}
+/* menu::level1 */
+div#menu_r a { padding: 5px 12px 0 10px;line-height: 30px; color: #fff;}
+/*div#menu_r li { background: url(images/main-delimiter.png) 98% 4px no-repeat; }*/
+div#menu_r li.last { background: none; }
+/* menu::level2 */
+div#menu_r ul ul li { background: none; }
+div#menu_r ul ul { position: absolute;top: 38px; left: -999em; min-width: 90px; max-width: 360px; padding: 5px 0 0 0; background:#fff;box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); margin-top:1px;}
+div#menu_r ul ul a {padding: 0 0 0 15px; height: auto; float: none;display: block; line-height: 24px; font-size:12px; font-weight:normal;color:#269ac9;}
+div#menu_r ul ul a:hover { background:#3b94d6; color:#fff;}
+div#menu_r ul ul li.last { margin-left:15px; }
+div#menu_r ul ul li {width: 100%;}
+/* 20150414*/
+.dis ul li.wname_st a{ width:260px; font-size:14px; color:#595959; padding:10px 0 0 0px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.dis ul li.wname_st a:hover{ color:#41a8c8;}
+.no_zan{color:#999999;}
+.vi_zan{color:#28be6c;}
+.newwork_btn a{background:#3b94d6;color:#fff;font-size:14px; font-weight:normal; padding:2px 10px; display:block; text-align:center; float:right;}
+.newwork_btn a:hover{ background:#329cbd;}
+.files_tag{ width:670px; min-height:22px;margin-bottom:10px;}/* overflow:hidden; */
+/*padding:1px 10px 修改原因，padding会导致内部输入框和外边框有边距*/
+/* 20150423作业评分*/
+.hwork_new_set{border:1px dashed #CCC; background:#f5f5f5; text-align:center; padding:10px 0; margin-bottom:10px;}
+.hwork_new_grey{background:#dbdbdb; width:610px; padding:10px 20px; margin:0 auto; text-align:left; margin-bottom:5px;}
+.hwork_new_left{ width:220px; float:left; }
+.hwork_new_right{ width:350px; float:left; margin-left:40px;}
+.icon_add{background:url(../images/icons.png) 0px -310px no-repeat; width:16px; height:27px; display:block;float:left; margin-right:5px;}
+a:hover.icon_add{background:url(../images/icons.png) -20px -310px no-repeat;}
+.icon_remove{background:url(../images/icons.png) 0px -338px no-repeat; width:16px; height:27px; display:block;float:left;}
+a:hover.icon_remove{background:url(../images/icons.png) -20px -338px no-repeat;}
+/* 20150512作品展示*/
+.hwork_ul{ height:24px; padding-top:10px;}
+.hwork_ul li{ float:left;}
+.hwork_tit{ width:210px; float:left; }
+.hwork_tit a{ width:255px;  display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; }
+.hwork_tit02{ width:235px; float:left; }
+.hwork_tit02 a{ width:230px;  display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; }
+.hwork_code{ width:56px; text-align:center;  }
+.hwork_code02{ width:32px; text-align:center;  }
+.hwork_tit_e{ width:420px; float:left; }
+.hwork_tit_e a{ width:405px;  display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis; }
+.hwork_num{ width:90px;  display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;min-height: 1px;}
+.mr18{ margin-right:18px;}
+a.hwork_center{ display:block; width:60px; text-align:center; margin-right:5px;}
+.show_hwork{ border:2px solid #3b94d6; width:646px; padding:10px; color:#666666; padding-bottom:0px; }
+.show_hwork ul li{ margin-bottom:5px;}
+.show_hwork_arrow{ position:relative; top:1px; left:165px;background:url(/images/course/arrow_up.jpg) 0 0 no-repeat; width:20px; height:11px;}
+.tit_fb{ font-weight:bold; width:66px; text-align:right; display:block; float:left;}
+.show_hwork_p{ width:630px; float:left;}
+.hwork_ping_text{ float:left; border:1px solid #e4e4e4; padding:5px; width:615px; height:35px;}
+.ping_box{ width:676px; padding:10px; background:#f5f3f3;  }
+a.ping_pic{ display:block; width:34px; height:34px; padding:2px; border:1px solid #e3e3e3;}
+a:hover.ping_pic{border:1px solid #3b94d6;}
+.ping_box_tit{ float:left; width:575px; margin-left:10px;}
+.ping_box_ul{}
+.ping_line{ border-bottom:1px dashed #CCCCCC; padding-bottom:8px; margin-bottom:8px;}
+.ping_text{border:1px solid #CCCCCC; margin:5px; padding:5px; width:610px; height:20px; }
+.ping_back_tit{ float:left; width:578px; margin-left:10px; }
+a.down_btn{ border:1px solid #CCC; color:#999; padding:0px 5px; font-size:12px; text-align:center; display:block;}
+a:hover.down_btn{ background:#14ad5a; color:#fff; border:1px solid #14ad5a;}
+.min_search{ width:200px; height:20px; border:1px solid #d0d0d0; color:#666; background:url(/images/public_icon.png) 185px -193px no-repeat; cursor:pointer;}
+.li_min_search{ float:right; margin-right:-10px;}
+.info_ni{ width:100px; padding:5px;-moz-border-radius:3px;  -webkit-border-radius:3px;  border-radius:3px; box-shadow:0px 0px 5px #194a81; color:#666; background:#fff; text-align:left;}
+.hwork_num{ width:90px; text-align:center; display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.hwork_name{width:80px; text-align:center;}
+/*返回顶部*/
+.to_top{width: 19px;height: 74px;position: fixed;top: 50px;right: 1px;color: white;background: #15bccf; line-height: 1.2; padding-top: 10px;padding-left: 5px;font-size: 14px;cursor: pointer;}
+.hwork_num_ab{ width:120px;  display:block; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;min-height: 1px;}
+.hwork_name_ab{ display:block;width:340px; overflow: hidden;white-space: nowrap; text-overflow:ellipsis;min-height: 1px;}
+.hwork_time{ display:block;width:40px; overflow: hidden;white-space: nowrap; text-overflow:ellipsis;min-height: 1px;}
+.hwork_time_c{width:40px;color: #6d6d6d}
+.hwork_score{ width:62px; text-align:center;  }
+.absence{width: 50px;text-align: center;}
+/* 评分插件 */
+input#score{ width:40px;}
+.ui-slider{position:relative;width:200px;float:left;margin-right:10px;height:14px; margin-top:2px;background:#e2e2e2; }
+.ui-slider .ui-slider-handle{position:absolute;z-index:2;width:0.5em;height:1.6em;top:-.2em;margin-left:-.5em;cursor:pointer;background:#3b94d6;}
+.ui-slider .ui-slider-handle:hover,.ui-slider .ui-slider-handle:focus{background:#3b94d6;}
+.ui-slider .ui-slider-handle:active{background-image:none;}
+.ui-slider .ui-slider-range{position:absolute;z-index:1;font-size:.7em;display:block;border:0;top:0;height:100%;background:#3b94d6;left:0;}
+/* 编程作品 */
+.border_ce{ border:1px solid #e4e4e4; }
+.border_ce tr td{ height:26px; }
+.td_tit{width:155px; text-align:center;}
+.td_50{width:50px; text-align:center;}
+a.work_list_tit{width:580px;  display:block; overflow:hidden; font-size:14px;  font-weight:bold; white-space: nowrap; text-overflow:ellipsis;}
+.work_list_pro{ width:670px;}
+.border_l{border-left:1px solid #e4e4e4;}
+.border_t{ border-top:1px solid #e4e4e4;}
+.td_end{border-top:1px solid #e4e4e4; height:auto; padding:5px; }
+.wl{text-align: left;}
+.vt{vertical-align: top;}
+.td_board_left{border-right: 1px solid #e4e4e4;}
+.c_w{ color:#fff;}
+.filename { background: url(/images/pic_file.png) 0 -25px no-repeat;color: #3ca5c6;border: none; padding-left: 20px; white-space: nowrap; text-overflow:ellipsis;}
+.evaluation{position: relative;}
+.evaluation_submit{position: absolute;right: 0px;bottom: 0px;}
+.student_work_search{background-color: #3b94d6;color: white !important;padding: 2px 7px;margin-left: 10px;cursor: pointer; }
+.test_result_block{border-bottom: 1px solid #dddddd; line-height: 35px;}
+/* 与我相关 */
+a.about_me{text-align:center;font-size:16px; color:#3b94d6; margin:10px 0 0 10px;}
+a:hover.about_me{ color:#0781b4;}
+.mb5 li{width:200px; word-wrap:break-word; word-break:normal;}
+#homework_work_test_show{margin-left: 35px;width: 94%;}
+/* 课程主页 */
+.rside_nav{ background:#eaebec; padding:10px 10px;}
+.rside_box{  width:730px; border:1px solid #e7edf0;}
+.rside_top{ height:24px; background:#f5f8fa; border-bottom:1px solid #e7edf0; padding:8px 10px;}
+.rside_work_list{margin:10px;  border-bottom:1px dashed #e5e5e5;}
+.imageWrapper {width:50px; height:auto; float:left; color:#999999; text-align:center;}
+.img_blue_icon{ background:url(/images/course/icons.png) 0 -400px no-repeat; width:37px; height:18px; color:#fff; font-size:12px; padding-left:7px; color:#fff;  }
+.img_green_icon{ background:url(/images/course/icons.png) 0 -425px no-repeat; width:37px; height:18px; color:#fff; font-size:12px; padding-left:7px; color:#fff;  }
+a.rside_work_tit{ font-size:14px; font-weight:bold; color:#3e4040; max-width:430px;overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+a:hover.rside_work_tit{ color:#0781b4;}
+.bgrey_icon{ color:#9b9b9b; border:1px solid #b6b6b6; background:#f0f0f0; font-size:12px; padding:0px 3px; }
+.dgrey_icon{ color:#717171; border:1px solid #717171;  font-size:12px; padding:0px 3px;}
+.yellow_icon{ color:#ff5c60; border:1px solid #ff5c60; background:#ffffd5; font-size:12px; padding:0px 3px;}
+.arrow_r{background:url(/images/course/icons.png) 0 -450px no-repeat; width:22px; height:13px; }
+.c_dgreen{ color:#0e9e4f;}
+.list_more{ text-align:center; margin:10px 0;}
+.rside_massage_txt{ width:650px; margin-left:10px; }
+a.massage_tit{ max-width:530px;overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+a.rside_name{ display:block; max-width:80px;}
+.rside_talk_txt{ width:650px; margin-left:10px; color:#333;}
+.rside_talk_tit{ color:#0781b4; width:490px; display:block; }
+.rside_talkWrapArrow{ display:block; float:right; margin-right:10px;background:url(/images/course/arrow.png) 0 0 no-repeat; height:7px; width:13px;}
+.rside_talkWrapBox{ width:650px; margin-left:60px; }
+.rside_Msg_txt{ float:left; width:580px; margin-left:10px;}
+.rside_talkWrapMsg{ background:#f2f2f2; padding:10px;}
+.rside_talkWrapMsg ul li{}
+.rside_inputFeint{ border:1px solid #d9d9d9; background:#fff; width:623px; height:40px; margin:10px;  margin-bottom:5px;color:#666;}
+a.icon_face{background:url(/images/public_icon.png) 0px -671px no-repeat;  display:block; height:25px; width:40px;  padding-left:25px; padding-top:3px; }
+a:hover.icon_face{background:url(/images/public_icon.png) -79px -671px no-repeat; }
+a.pro_mes_w{ height:20px; display:block; color:#999999;}
+.info_list{ border-top:1px solid #F2F2F2; padding:5px 0;}
+.info_list_r li{ height:20px;}
+.pai_box{background:#fff; padding:10px 0 10px 10px;width:230px; color:#3e4040; }
+.rside_work_con{ width:650px;}
+.last_time{width:auto; text-align:right; margin-right:70px;}
+.link_file_box{ width:360px;}
+/*课程大纲图标样式20151028Tim*/
+.syllabusIcon {background:url("/images/course/syllabus.png") 0px 0px no-repeat; width: 17px; height: 16px; display: inline-block;}
+.syllabusSetting {background:url("/images/course/syllabus.png") 0px -16px no-repeat; width: 20px; height: 16px; display: inline-block;}
+.syllabusSettingIcon {background:url(/images/course/syllabus_setting.png) 0px 0px no-repeat; width:20px; height:20px;}
+.syllabusSettingIcon:hover {cursor: pointer}
+.pic_files{display:block; background:url(/images/public_icon.png) 0px -578px no-repeat; width:20px; height:15px;}
+/*确定按钮*/
+input.sendSourceText { font-size: 14px; color: #ffffff;  background-color: #269ac9; cursor: pointer; outline: none; border: none; width: 50px; height: 25px;}
+/*20151117在线测验byTim*/
+.testContainer {width:698px; border:1px solid #cbcbcb;background:#eeeeee; padding:10px; margin-bottom:10px;}
+.testTitle{ width:678px; height:40px; padding:0 10px; text-align:center; font-size:16px; font-weight:bold; background:#fff;border-style:solid; border:1px solid #CBCBCB;}
+.testDes{ width:678px; height:60px; padding:10px; margin-bottom:10px; background:#fff; border-style:solid; border:1px solid #CBCBCB; resize:none;}
+.btn_submit{ width:56px; height:24px;  padding-top:4px;background:#269ac9; color:#fff; text-align:center; display:block; float:left; margin-right:10px;}
+a:hover.btn_submit{background:#297fb8;}
+.btn_cancel{width:54px; height:22px;  padding-top:4px;background:#fff; color:#999; border:1px solid #999; text-align:center; display:block; float:left; }
+a:hover.btn_cancel{ color:#666;}
+.testQuestion{ width:708px; height: auto; border:1px solid #cbcbcb; padding:10px 0 0 10px; margin-bottom:10px;}
+.questionContainer {width:698px; border:1px solid #cbcbcb;background:#eeeeee; padding:10px; margin-bottom:10px;}
+.questionLabel {vertical-align:top; display:inline-block;}
+.questionTitle{ width:644px; height:30px; line-height:30px; border:1px solid #cbcbcb; padding-left:5px; background:#fff;}
+.formatContainer {white-space:pre-wrap; display:inline-block;}
+.examTime {width:90px; border:1px solid #cbcbcb; outline:none; height:28px; text-align:center; padding-left:0px; }
+.testStatus{width:698px; border:1px solid #cbcbcb; padding:10px; margin-bottom:10px; background:#ffffff; position:relative; color:#767676;}
+.testEdit{ background:url(../images/icons.png) 0px -272px no-repeat; width:16px; height:27px; display:block;float:right; bottom:10px; right:10px; position:absolute;}
+a:hover.testEdit{ background:url(../images/icons.png) -21px -272px  no-repeat;}
+.testDesEdit {width:670px; overflow:hidden; white-space:pre-wrap;}
+.testEditTitle{ padding:10px 0px ; float:left; width:564px; }
+.exercise_title{padding: 10px 0px;}
+.questionEditContainer {border:1px solid #cbcbcb;background:#eeeeee; padding:10px; margin-bottom:10px; margin-top:10px;}
+.fillInput {border:1px solid #cbcbcb; padding-left:5px; background-color:#ffffff; width:693px; height:30px; color:#888888;}
+.ur_button_submit{ display:block; width:106px; height:31px; margin:0 auto; background:#15bccf; color:#fff; font-size:16px; text-align:center; padding-top:4px; margin-bottom:10px; }
+/*20151123课程排行榜Tim*/
+.courseMenuSetting {background:url(/images/homepage_icon2.png) -190px -365px no-repeat; width:15px; height:15px; margin-top:3px; float:right; margin-right:5px;}
+.courseMenuSetting:hover {background:url(/images/homepage_icon2.png) -190px -407px no-repeat;}
+.rankList {width:208px; background: #fff; border: 1px solid #e5e5e5; border-bottom: none; padding:10px 15px;}
+.rankList li {width:68px; padding:8px 0px 0px 0px; text-align:center; float:left; position:relative;}
+.rankList li p {width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; color:#585858;word-wrap: normal; word-break: normal;}
+.rankPortrait {border-radius:50%; width:35px; height:35px;}
+.numIntro {position:absolute; text-align:left; z-index:999; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5); border:1px solid #eaeaea; background-color:#ffffff; padding:3px 5px; left:15px; color:#585858; white-space: nowrap;}
+.font_cus {font-family: "微软雅黑","宋体"; font-size: 12px; line-height: 1.5;}
+/*20151130课程项目集成Tim*/
+a.testBtn{background: url(/images/course/hwork_icon.png) -2px -5px no-repeat !important; height:20px; display:block; padding-left:20px; color:#888888; -moz-transition :all 0s linear 0s; -webkit-transition :all 0s linear 0s; -o-transition:all 0s linear 0s; transition:all 0s linear 0s;}
+a:hover.testBtn{background: url(/images/course/hwork_icon.png) -81px -5px no-repeat !important; color:#3598db; -moz-transition :all 0s linear 0s; -webkit-transition :all 0s linear 0s; -o-transition:all 0s linear 0s; transition:all 0s linear 0s;}
+a.groupBtn{  background: url(/images/course/hwork_icon.png) -2px -61px no-repeat !important; height:20px; display:block; padding-left:20px; color:#888888; -moz-transition :all 0s linear 0s; -webkit-transition :all 0s linear 0s; -o-transition:all 0s linear 0s; transition:all 0s linear 0s;}
+a:hover.groupBtn{background: url(/images/course/hwork_icon.png) -80px -61px no-repeat !important; color:#3598db; -moz-transition :all 0s linear 0s; -webkit-transition :all 0s linear 0s; -o-transition:all 0s linear 0s; transition:all 0s linear 0s;}
+.groupPopUp {border:3px solid #269ac9; width:290px; height:auto;  padding:15px; background-color:#ffffff; position:fixed !important;left:50%;top:50%;margin:-100px 0 0 -150px;  -moz-border-radius:5px;}
+.popClose {background:url(/images/resource_icon_list.png) 0px -40px no-repeat; width:20px; height:20px; display:inline-block; position: absolute; z-index: 1000; right:2px; top:3px;}
+a.memberBtn{  background: url(/images/course/hwork_icon.png) -7px -90px no-repeat !important; height:20px; display:block; padding-left:20px; color:#888888; -moz-transition :all 0s linear 0s; -webkit-transition :all 0s linear 0s; -o-transition:all 0s linear 0s; transition:all 0s linear 0s;}
+a:hover.memberBtn{background: url(/images/course/hwork_icon.png) -80px -90px no-repeat !important; color:#3598db; -moz-transition :all 0s linear 0s; -webkit-transition :all 0s linear 0s; -o-transition:all 0s linear 0s; transition:all 0s linear 0s;}
+.addMemberC {float:left; max-height:150px; margin-bottom:10px; overflow:auto; overflow-x:hidden; width:227px; background-color:#f1f1f1; min-height:150px; padding-top:10px;}
+.addMemberC li {padding-left:10px; line-height:18px;}
+.addMemberC li:hover {cursor:pointer; background-color:#cccccc;}
+.addMemberCP {width:514px; height:auto; border:3px solid #269ac9; padding-left:16px; padding-bottom:16px; background-color:#ffffff; position:fixed !important;left:50%;top:50%;margin:-100px 0 0 -150px;  -moz-border-radius:5px;}
+.rightArrow {margin:50px 15px 0px 15px; float:left;}
+.maxHeight100 {max-height:100px; overflow-x:hidden; overflow-y:auto;}
+.resubAtt {border-top:1px solid #dddddd; position:relative; margin-top:15px;}
+.resubTitle {position:absolute; top:-10px; left:5px; background-color:#ffffff; display:block; font-weight:bold; padding:0px 2px;}
+a.blueCir{ display:inline-block; padding:2px 5px; background-color:#ffffff;border:1px solid #3598db; color:#3598db;  -moz-border-radius:5px;  -webkit-border-radius:5px;  border-radius:5px;}
+a:hover.blueCir{ background:#3598db; color:#fff;}
+.proList {background-color:#eaeaea; padding:5px 10px; display:block; max-width:655px; float:left;}
+.reCon{ margin:5px; width:710px;}
+.reTop{width:99%; height:40px; background:#eaeaea; padding:5px; }
+.filesTag{ width:auto;background:#e2f3f9; color:#54aeca; border:1px solid #bbe2ef; padding:1px 5px; float:left; margin-right:10px;cursor: pointer }
+.fileTagWrap{ width:710px;}
+.boxShadow {box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5);}
+.fn {font-weight:normal}
+.boutiqueP {position:absolute; left:0px; top:0px;}
+.relatePWrap{max-height: 210px;overflow:hidden;}/*160114课程推荐*/
+.courseR {width:220px; padding:10px; background-color:#ffffff; margin-top:10px;}
+/*20160310分班样式*/
+.select-class-option {width:100px;}
+/*20160520作品列表table*/
+.hwork-table-wrap {width:720px; border-collapse:collapse; vertical-align:middle; table-layout:fixed;}
+.hwork-table-wrap th {font-size:14px; color:#2d2d2d; border-bottom:1px solid #e1e1e1; text-align:center;}
+/*20160901作品信息确认*/
+#worksDescription p {word-wrap:break-word;}
+/*20160907作业详情更改*/
+.homework-type-option {border:1px solid #d9d9d9; width:138px; height:28px; color:#888; font-size:14px;}
+.homework-detail-tab {font-size:14px; color:#484848; overflow:hidden;}
+.homework-detail-tab li {float:left; width:100px; text-align:center; padding:3px 0; border-bottom:2px solid #ddd;}
+.homework-detail-tab li.selected {border-bottom:2px solid #3b94d6;}
+.test-set-table, .test-set-table tr, .test-set-table th, .test-set-table td {border-collapse:collapse; text-align:left; border:1px solid #ddd; color:#484848;}
+.test-set-table th, .test-set-table td {padding:2px 5px;}
+/*20160912问卷调查*/
+.new-question {width:324px; height:30px; color:#888; background-color:#fff; padding-left:5px; margin-left:46px; cursor:pointer;}
+.new-subjective {width:550px; height:30px; color:#888; background-color:#fff; padding-left:5px; margin-left:96px; cursor:pointer;}
+.questionnaire-input {height:30px; border:1px solid #cbcbcb; padding-left:5px;}
+/*20161026问卷调查增加toolbar*/
+.poll-container {width:718px; border:1px solid #ddd; margin-bottom:10px; background-color:#fff; position:relative; color:#767676; border:1px solid #ddd;}
+.poll-tool-bar {width:50px; position:absolute; top:0; left:0; text-align:center;}
+.poll-content {min-height:150px; margin-left:50px; padding:10px; border-left:1px solid #ddd;}
+.poll-up{ background:url(/images/course/icons.png) 0px -479px no-repeat; width:16px; height:20px; display:block; margin-left:auto; margin-right:auto;}
+.poll-up:hover{background:url(/images/course/icons.png) -23px -479px no-repeat;}
+.poll-down{ background:url(/images/course/icons.png) 0px -502px no-repeat; width:16px; height:20px; display:block; margin-left:auto; margin-right:auto;}
+.poll-down:hover{background:url(/images/course/icons.png) -23px -502px no-repeat;}
+.poll-add{ background:url(/images/course/icons.png) 2px -317px no-repeat; width:16px; height:20px; display:block; margin-left:auto; margin-right:auto;}
+.poll-add:hover{background:url(/images/course/icons.png) -18px -317px no-repeat;}
+.poll-delete{ background:url(/images/course/icons.png) 3px -343px no-repeat; width:16px; height:20px; display:block; margin-left:auto; margin-right:auto;}
+.poll-delete:hover{ background:url(/images/course/icons.png) -17px -343px no-repeat;}
+.poll-edit{ background:url(/images/course/icons.png) 0px -272px no-repeat; width:16px; height:27px; display:block;float:right;}
+.poll-edit:hover{ background:url(/images/course/icons.png) -21px -272px  no-repeat;}
+.poll-add-menu {border:1px solid #eaeaea; background:#fff; padding:5px 8px; width:50px; left:0px; top:20px; position:absolute; z-index:9999; line-height:2; box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); display:none;}
+.poll-multiple-limit {width:70px; outline: none;}
+/*黄色边框的提示信息 */
+.ye_tips_box_inner{ position: absolute;line-height: 1.5;padding: 5px 10px; white-space: nowrap; background-color: #FFFEF4; left:30px; top: -5px; border: solid 1px #F3DDB3;}
+.ye_tips_box_inner span { display: block; border-width: 10px;position: absolute;top: 15px; left: -18px; border-style: dashed solid dashed dashed;border-color: transparent #FFFEF4 transparent transparent;font-size: 0;line-height: 0;}
+.ye_tips_box_inner em { display: block; border-width: 10px;position: absolute;top: 42px; left: -20px; border-style: dashed solid dashed dashed;border-color: transparent #F3DDB3 transparent transparent;font-size: 0;line-height: 0;}
+/*分组作业评分提示框*/
+.group_work_tip_box {width:200px; position:absolute; padding:5px 10px; white-space:nowrap; background-color:#fff; right:-255px; top:-90px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5);}
+.group_work_tip_box em {display:block; border-width:10px; position:absolute;top:26px; left:-20px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.group_work_tip_box span {display:block; border-width:10px; position:absolute;top:26px; left:-18px; border-style:dashed solid dashed dashed; border-color:transparent #fff transparent transparent; font-size:0; line-height:0;}
+/*试卷*/
+.exercise_list_div{ padding-left:10px; border-bottom:1px dashed #c9c9c9; height:62px; padding-top:8px;}
+.exercise_status_nop{ display:block; width:33px; height:22px; background:url(/images/sy/icons_sy.png) 0 -636px no-repeat; color:#fff; font-size:12px; padding-left:10px; line-height: 22px;}
+.exercise_status_pub{ display:block; width:33px; height:22px; background:url(/images/sy/icons_sy.png) 0 -613px no-repeat; color:#fff; font-size:12px; padding-left:10px; line-height: 22px;}
+.exercise_status_end{ display:block; width:33px; height:22px; background:url(/images/sy/icons_sy.png) 0 -659px no-repeat; color:#fff; font-size:12px; padding-left:10px; line-height: 22px;}
+.exercise_status_com{ display:block; width:33px; height:22px; background:url(/images/sy/icons_sy.png) 0 -681px no-repeat; color:#fff; font-size:12px; padding-left:10px; line-height: 22px;}
+.exercise_status_nocom{ display:block; width:33px; height:22px; background:url(/images/sy/icons_sy.png) 0 -705px no-repeat; color:#fff; font-size:12px; padding-left:10px; line-height: 22px;}
+a.ex_icon_de{ background:url(/images/course/icons.png) 0px -342px no-repeat; width:16px; height:25px; display:block;float:right;}
+a:hover.ex_icon_de{ background:url(/images/course/icons.png) -20px -342px no-repeat;}
+.ex_icon_edit{ background:url(/images/course/icons.png) 0px -276px no-repeat; width:16px; height:25px; display:block;float:right; margin-right:10px;}
+a:hover.ex_icon_edit{ background:url(/images/course/icons.png) -21px -276px  no-repeat;}
+/*首页课程列表归档按钮提示*/
+/*分组作业评分提示框*/
+.archive_course_notice {width:220px; position:absolute; padding:5px 10px; white-space:nowrap; background-color:#fff; right:-265px; top:-15px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5);}
+.archive_course_notice em {display:block; border-width:10px; position:absolute;top:26px; left:-20px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.archive_course_notice span {display:block; border-width:10px; position:absolute;top:26px; left:-18px; border-style:dashed solid dashed dashed; border-color:transparent #fff transparent transparent; font-size:0; line-height:0;}
+.teacher_member_img{width:50px; height:50px; border: 1px solid #fff;-webkit-border-radius:50px;-moz-border-radius:50px;-o-border-radius:50px;border-radius:50px;}
+
+/* 设置页的头像更换 */
+.banner-course-avatar { width: 64px; height: 62px; position: relative; overflow: hidden;}
+.banner-course-inner {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    text-align: center;
+    opacity: 0.3;
+    -moz-transition: top ease 200ms;
+    -o-transition: top ease 200ms;
+    -webkit-transition: top ease 200ms;
+    transition: top ease 200ms;
+}
+a.banner-course-notice {position: absolute; font-size: 12px; line-height: 20px; top: 102px; left: 10px; color: #fff;}
+.banner-course-avatar:hover .banner-course-inner { top: 0;}
+.banner-course-avatar:hover .banner-course-notice { top: 20px;}
+
+.course_setting_org_fl {width: 49%; border-right: 1px solid #e5e5e5;}
+.course_setting_org_fr {width: 49%;}
+
+/*20161222班级统计*/
+.game-setting-h3{ width: 100%; height: 40px; line-height: 40px; font-size: 14px; color: #666; font-weight: normal; background: #fff; border-bottom: 10px solid #eaebec;}
+.t-center{ text-align: center;}
+.table-td-w20{ width: 18%;}
+.table-td-w9{ width: 9%;}
+.table-td-w10{ width: 10%;}
+.table-td-w10-5{ width: 10.5%;}
+.table-td-w30{ width: 30%;}
+.new_project_title_width {font-size: 12px;color: #666; max-width: 170px;font-weight: normal;white-space: nowrap;overflow: hidden; text-overflow: ellipsis;}
+.syllabus_class_property { font-size: 12px; padding: 0 5px;border-radius: 3px;line-height: 14px;}
+.syllabus_class_private {color: #ff4a1b;border: 1px solid #ff4a1b;}
+.syllabus_class_open { color: #7dd26c; border: 1px solid #7dd26c;}
+.st_tips_box_inner{ position: absolute;line-height: 2.0;padding: 5px 10px; white-space: nowrap; background-color: #fff; left:100px; top: -5px; box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5);}
+.st_tips_box_inner span { display: block; border-width: 10px;position: absolute;top: 15px; left: -18px; border-style: dashed solid dashed dashed;border-color: transparent #fff transparent transparent;font-size: 0;line-height: 0;}
+.course_class_users_st_name{ display: inline-block;width:120px; overflow:hidden;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.program_input_pre{font-family: '微软雅黑','宋体'; max-width:450px; word-wrap:break-word; white-space:pre-wrap;}
+.homeworkInfo .program_input_ul li{list-style-type: none; margin-left: 0;}
+.homework_base_setting{border: 1px solid #d9d9d9; background: #F5F5F5; color: #d9d9d9;}
+
+/* 新版测验 */
+a.question_choice_white{ background: #fff; color: #000000; width: 34px; height: 30px; border: 1px solid #ddd; text-align: center; -moz-border-radius:5px;  -webkit-border-radius:5px;  border-radius:5px;}
+a.question_choice_blue{ background: #3b94d6; color: #fff; width: 34px; height: 30px; border: 1px solid #ddd; text-align: center; -moz-border-radius:5px;  -webkit-border-radius:5px;  border-radius:5px;}
+.question_choice_dash{ background: #fff; color: #000000; width: 34px; height: 30px; border: 1px dashed #ddd; text-align: center; -moz-border-radius:5px;  -webkit-border-radius:5px;  border-radius:5px;}
+.question_answer_span{ background: #fff; color: #000000; padding: 6px 10px; border: 1px solid #c8cbce; text-align: center; -moz-border-radius:5px;  -webkit-border-radius:5px;  border-radius:5px;}
+.bg_blue{ background: #3b94d6;}
+.score_input{ width: 40px; border: 1px solid #d8d3d3;}
+
+
+/* comment */
+.course-message  .commentItemMDEditorView {
+    margin-top: 35px;
+}

@@ -1,0 +1,1 @@
+json.extract! @version, :id, :name, :body, :tag_name, :target_commitish, :draft, :prerelease,:version_gid

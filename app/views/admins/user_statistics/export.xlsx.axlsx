@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+wb.add_worksheet(name: '用户实训情况') do |sheet|
+  sheet.add_row %w(姓名 单位部门 学习关卡数 完成关卡数 学习实训数 完成实训数 评测次数 实战时间)
+
+  @users.each do |user|
+    data = [
+      user.real_name,
+      [user.school_name.presence, user.department_name.presence].compact.join(' - '),
+      user.display_extra_data(:study_challenge_count),
+      user.display_extra_data(:finish_challenge_count),
+      user.display_extra_data(:study_shixun_count),
+      user.display_extra_data(:finish_shixun_count),
+      user.display_extra_data(:evaluate_count),
+      Util.display_cost_time(user.display_extra_data(:cost_time)),
+    ]
+    sheet.add_row(data)
+  end
+end

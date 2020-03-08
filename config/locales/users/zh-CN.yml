@@ -1,0 +1,21 @@
+'zh-CN':
+  activerecord:
+    models:
+      user: '用户'
+    attributes:
+      user:
+        phone: '手机号'
+        mail: '邮箱'
+  user:
+    identity:
+      teacher: 教师
+      student: 学生
+      professional: 专业人士
+      developer: 从业者
+      enterprise: 组织
+      unselect: 未选择
+      "0": 教师
+      "1": 学生
+      "2": 专业人士
+      "3": 从业者
+      "4": 组织

@@ -1,0 +1,2 @@
+class UserDayCertification < ApplicationRecord
+end

@@ -1,0 +1,8 @@
+<%
+  define_admin_breadcrumbs do
+    add_admin_breadcrumb('镜像管理', admins_mirror_repositories_path)
+    add_admin_breadcrumb('新建镜像')
+  end
+%>
+
+<%= render partial: 'admins/mirror_repositories/shared/form', locals: { mirror: @mirror, form_action: 'create' } %>

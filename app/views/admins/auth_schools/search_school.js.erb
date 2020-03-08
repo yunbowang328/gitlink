@@ -1,0 +1,3 @@
+if($("#add-schools-list").length > 0){
+  $("#add-schools-list").html("<%= j render partial: "admins/auth_schools/shared/add_schools_list", locals: {schools: @schools} %>")
+}

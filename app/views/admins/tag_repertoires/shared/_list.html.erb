@@ -1,0 +1,25 @@
+<table class="table table-hover text-center tag-repertoire-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="6%">序号</th>
+    <th width="42%" class="text-left">知识标签</th>
+    <th width="16%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @tag_repertoires.present? %>
+    <% @tag_repertoires.each_with_index do |tag, index| %>
+      <tr class="tag-repertoire-item tag-repertoire-item-<%= tag.id %>">
+        <td><%= index + 1 %></td>
+        <td class="text-left"><%= tag.name %></td>
+        <td>
+          <%= link_to '编辑', edit_admins_tag_repertoire_path(tag), remote: true, class: 'action' %>
+          <%= delete_link '删除', admins_tag_repertoire_path(tag, element: ".tag-repertoire-item-#{tag.id}"), class: 'delete-tag-repertoire-action' %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,6 @@
+<div class="paginate-container">
+  <% if objects && objects.size.nonzero? %>
+    <div class="paginate-total"><%= page_entries_info objects %></div>
+  <% end %>
+  <%= paginate objects, views_prefix: 'admins', remote: true %>
+</div>

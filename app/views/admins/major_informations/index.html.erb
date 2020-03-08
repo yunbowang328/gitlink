@@ -1,0 +1,7 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('本科专业目录') %>
+<% end %>
+
+<div class="box admin-list-container major-informations-list-container">
+  <%= render(partial: 'admins/major_informations/shared/list', locals: { majors: @disciplines }) %>
+</div>

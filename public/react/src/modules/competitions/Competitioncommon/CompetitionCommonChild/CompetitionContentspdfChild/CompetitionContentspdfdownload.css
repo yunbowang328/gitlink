@@ -1,0 +1,24 @@
+.pdfdownload {
+    max-width: 791px;
+    height: 40px;
+    background: rgba(249, 249, 249, 1);
+    line-height: 40px;
+    padding-left: 15px;
+}
+
+.pdfpicture {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 1);
+}
+
+.pdfdownloadfont4CACFF {
+    color: #4CACFF !important;
+}
+
+.pdfdownloadfont00CC5F {
+    color: #00CC5F;
+}
+
+.pdfdownloadfontFF6602 {
+    color: #FF6602;
+}

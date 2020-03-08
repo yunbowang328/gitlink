@@ -1,0 +1,45 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('云上实验室', admins_laboratories_path) %>
+  <% add_admin_breadcrumb("#{current_laboratory.name} - 实践课程") %>
+<% end %>
+
+
+<div class="box search-form-container laboratory-subject-list-form">
+  <%= form_tag(admins_laboratory_laboratory_subjects_path(current_laboratory), method: :get, class: 'form-inline search-form', remote: true) do %>
+    <div class="form-group mr-1">
+      <label for="status">状态：</label>
+      <% status_options = [['全部', ''], ['编辑中', 0], ['审核中', 1], ['已发布', 2]] %>
+      <%= select_tag(:status, options_for_select(status_options), class: 'form-control') %>
+    </div>
+
+    <div class="form-group col-12 col-md-3">
+      <label for="school_name">单位：</label>
+      <%= select_tag :school_id, options_for_select([''], params[:school_id]), class: 'form-control school-select flex-1' %>
+    </div>
+
+    <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-12 col-md-2 mr-3', placeholder: '创建者/课程名称检索') %>
+
+    <div class="form-check mr-2">
+      <%= hidden_field_tag(:homepage, false, id:'') %>
+      <%= check_box_tag(:homepage, true, params[:homepage].to_s == 'true', class: 'form-check-input') %>
+      <label class="form-check-label" for="homepage">只看首页展示</label>
+    </div>
+
+    <div class="form-check mr-2">
+      <%= hidden_field_tag(:ownership, false, id:'') %>
+      <%= check_box_tag(:ownership, true, params[:ownership].to_s == 'true', class: 'form-check-input') %>
+      <label class="form-check-label" for="ownership">只看自建</label>
+    </div>
+
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+    <%= link_to '清空', admins_laboratory_laboratory_subjects_path(current_laboratory), class: 'btn btn-default','data-disable-with': '清空中...' %>
+  <% end %>
+
+  <%= javascript_void_link('添加课程', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-add-laboratory-subject-modal' }) %>
+</div>
+
+<div class="box admin-list-container laboratory-subject-list-container" data-id="<%= current_laboratory.id %>">
+  <%= render partial: 'admins/laboratory_subjects/shared/list', locals: { laboratory_subjects: @laboratory_subjects } %>
+</div>
+
+<%= render partial: 'admins/laboratory_subjects/shared/add_laboratory_subject_modal' %>

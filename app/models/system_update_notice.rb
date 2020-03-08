@@ -1,0 +1,2 @@
+class SystemUpdateNotice < ApplicationRecord
+end

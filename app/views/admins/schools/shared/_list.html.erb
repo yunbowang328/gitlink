@@ -1,0 +1,50 @@
+<table class="table table-hover text-center school-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="4%">序号</th>
+    <th width="6%">ID</th>
+    <th width="6%">LOGO</th>
+    <th width="8%">标识码</th>
+    <th width="14%" class="text-left">单位名称</th>
+    <th width="6%">地区</th>
+    <th width="6%">城市</th>
+    <th width="16%" class="text-left">详细地址</th>
+    <th width="6%"><%= sort_tag('用户数', name: 'users_count', path: admins_schools_path) %></th>
+    <th width="6%">部门数</th>
+    <th width="12%"><%= sort_tag('创建时间', name: 'created_at', path: admins_schools_path) %></th>
+    <th width="10%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if schools.present? %>
+    <% schools.each_with_index do |school, index| %>
+      <tr class="school-item-<%= school.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td><%= school.id %></td>
+        <td>
+          <% if Util::FileManage.exists?(school) %>
+            <%= image_tag(Util::FileManage.source_disk_file_url(school).to_s + "?#{Time.now.to_i}", width: 40, height: 40, class: 'preview-image') %>
+          <% else %>
+            <%= content_tag(:span, '--', class: 'text-secondary') %>
+          <% end %>
+        </td>
+        <td><%= display_text school.identifier %></td>
+        <td class="text-left"><%= school.name %></td>
+        <td><%= school.province %></td>
+        <td><%= school.city %></td>
+        <td class="text-left"><%= school.address %></td>
+        <td><%= school.users_count %></td>
+        <td><%= @department_count.fetch(school.id, 0) %></td>
+        <td><%= school.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td>
+          <%= delete_link '删除', admins_school_path(school, element: ".school-item-#{school.id}"), class: 'delete-school-action' %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: schools } %>

@@ -1,0 +1,27 @@
+<table class="table" cellspacing="0" cellpadding="0">
+  <thead>
+  <th width="8%">序号</th>
+  <th width="82%">通用标准</th>
+  <th width="10%">操作</th>
+  </thead>
+  <tbody>
+  <% if standards.size > 0 %>
+    <% standards.each_with_index do |standard, index| %>
+      <tr id="standard-item-<%= standard.id %>">
+        <td><%= list_index_no(@params_page.to_i, index) %></td>
+        <td><%= standard.content %></td>
+        <td>
+          <%= javascript_void_link "<i class='fa fa-edit color-grey-c fa-fw font-18 padding10-5'></i>".html_safe, class: 'standard-create-modal',
+                                   data: { toggle: 'modal', target: '.graduation-standards-add', id: "#{standard.id}", content: "#{standard.content}", msg: "编辑" }, title: "编辑" %>
+
+          <%= link_to "<i class='fa fa-trash-o color-grey-c fa-fw font-18 padding10-5'></i>".html_safe, admins_graduation_standard_path(standard), method: :delete, data: {confirm: "确认删除吗？"}, remote: true, title: "删除" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: standards } %>

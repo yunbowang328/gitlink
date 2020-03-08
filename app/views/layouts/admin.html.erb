@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EduCoder后台管理</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'admin', media: 'all','data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'admin', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <% body_class = [params[:controller].gsub(/\//, '-').gsub('_', '-'), params[:action], 'page'].join('-') %>
+  <body class="<%= body_class %>">
+    <!-- Sidebar  -->
+    <%= render partial: 'admins/shared/sidebar' %>
+
+    <!-- Page Content  -->
+    <div class="admin-body-container">
+      <div class="admin-alert-container">
+        <%= render 'shared/flash_notice' %>
+      </div>
+
+      <div class="breadcrumb-container">
+        <%= yield :setup_admin_breadcrumb %>
+        <%= render(partial: 'shared/breadcrumb') %>
+      </div>
+
+      <div class="content">
+        <%= yield %>
+      </div>
+    </div>
+
+    <div class="admin-modal-container"></div>
+
+    <!-- message modal -->
+    <%= render 'admins/shared/modal/message_modal' %>
+  </body>
+</html>

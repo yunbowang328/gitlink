@@ -1,0 +1,15 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('导入模板管理') %>
+<% end %>
+
+<div class="box search-form-container ec-templates-list-form">
+  <%= javascript_void_link '新增', class: 'btn btn-primary', data: { toggle: 'modal', target: '.ec-templates-new-add' } %>
+</div>
+
+
+<div class="box admin-list-container ec-templates-list-container">
+  <%= render(partial: 'admins/ec_templates/shared/list', locals: { templates: @templates }) %>
+</div>
+
+<%= render partial: "admins/ec_templates/shared/templates_add_modal" %>
+<%#= render partial: "admins/auth_schools/shared/user_add_modal" %>

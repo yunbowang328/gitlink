@@ -1,0 +1,15 @@
+/*新版讨论区*/
+.discuss-tab a:hover{border-bottom: 2px solid #FC7033!important; color:#000;}
+._forum_tab{position:absolute;width:100%;bottom:-1px}
+.discuss-tab a.active{border-bottom: 2px solid #FC7033!important; color:#000;}
+.discuss-lh40{ line-height:40px;}.discuss-lh16{ line-height:16px}
+.discuss-bor-l{ border-left:4px solid #ff7500;}
+.discuss-box-shadow{ -webkit-box-shadow:1px 1px 1px #eee; -moz-box-shadow:1px 1px 1px #eee; box-shadow:1px 1px 1px #eee;}
+
+span.forum_type{cursor: pointer;}
+span.forum_type:hover{border: 1px solid #fff; background: #ff7500; color: #fff;}
+.forum_type_active{border: 1px solid #fff; background: #ff7500; color: #fff;}
+.language-cir-orange {color: #ff7500; font-weight: normal;border: 1px solid #ff7500;display: inline-block;padding: 0px 5px;line-height: 20px;font-size: 12px;border-radius: 3px;}
+
+.forum_filtrate_span2{width: auto; padding: 0px 6px; border-radius: 8px; background: #ccc; font-size: 12px; display: block; line-height: 15px; color: #FFFFFF;}
+.forum_filtrate_span2_bg{background: #FF7500!important;}

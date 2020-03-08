@@ -1,0 +1,222 @@
+zh-CN:
+  error:
+    record_not_found: 您访问的页面不存在或已被删除
+    forbidden: 您没有权限进行该操作
+    unauthorized: 未登录
+
+  button_test: 测试
+  button_edit: 编辑
+  button_delete: 删除
+
+  admins_apply_status:
+    status:
+      'pending': '待审批'
+      'processed': '已审批'
+      'refused': '已拒绝'
+      'agreed': '已同意'
+  trend:
+    Issue: 工单
+    PullRequest: 合并请求
+    VersionRelease: 版本发布
+    create: 创建了
+    journal: 回复了
+    close: 关闭了
+    merge: 合并了
+    push: 发布了
+
+  version:
+    draft: 草稿
+
+  journal_detail:
+    merge: 合并
+    issue_tags_value: 标签
+    lock_issue: 锁定工单
+    unlock_issue: 解锁工单
+    destroy_issue_depend: 删除依赖
+    issue_depend: 增加依赖
+    work_time: 开始工作
+    cancel_time: 取消时间跟踪
+    end_time: 停止工作
+    subject: 主题
+    description: 描述
+    is_private: 私有
+    assigned_to_id: 指派给
+    tracker_id: 类型
+    status_id: 状态
+    priority_id: 优先级
+    fixed_version_id: 里程碑
+    start_date: 开始日期
+    due_date: 结束日期
+    estimated_hours: 添加耗时
+    done_ratio: 完成度
+    t: 是
+    f: 否
+    true: 是
+    false: 否
+    issue_tag_ids: 标签
+    issue_type: 分类
+    token: 悬赏金额
+    close_issue: 工单
+  activerecord:
+    attributes:
+      user:
+        login: '登录名'
+        lastname: '姓名'
+        nickname: '昵称'
+      discuss:
+        content: '内容'
+      journals_for_message:
+        notes: '内容'
+      subject:
+        name: '课程名称'
+        description: '课程简介'
+        learning_notes: '学习须知'
+      stage:
+        name: '章节名称'
+        description: '章节描述'
+      shixun_info:
+        description: '简介'
+        fork_reason: 'fork原因'
+      challenge:
+        task_pass: '过关任务'
+      test_set:
+        input: '输入'
+        output: '输出'
+      challenge_question:
+        option_name: '选项'
+      challenge_choose:
+        subject: '题干'
+      challenge_answer:
+        contents: '答案内容'
+      memo:
+        content: '帖子内容'
+      course:
+        name: '课堂名称'
+      course_group:
+        name: '分班名称'
+      course_module:
+        module_name: '目录名称'
+      course_second_category:
+        name: '目录名称'
+      inform:
+        name: '标题'
+        description: '内容'
+      course_stage:
+        name: '章节名称'
+        description: '章节描述'
+      attachment:
+        description: '资源描述'
+      message:
+        subject: '标题'
+      message_detail:
+        content: '内容'
+      homework_common:
+        name: '标题'
+        description: '内容'
+        explanation: '内容'
+        reference_answer: '参考答案'
+      student_work:
+        description: '内容'
+      student_works_score:
+        comment: '评语'
+      challenge_work_score:
+        comment: '评语'
+      shixun_work_comment:
+        comment: '评语'
+        hidden_comment: '隐藏评语'
+      graduation_topic:
+        name: '选题名称'
+        description: '选题简介'
+      graduation_task:
+        name: '任务标题'
+        description: '内容'
+      graduation_work:
+        description: '作品内容'
+      graduation_work_score:
+        comment: '评语'
+      poll:
+        polls_name: '问卷标题'
+        polls_description: '问卷须知'
+      poll_question:
+        question_title: '题干'
+      poll_answer:
+        answer_text: '选项'
+      poll_vote:
+        vote_text: '内容'
+      exercise:
+        exercise_name: '试卷标题'
+        exercise_description: '试卷须知'
+      exercise_question:
+        question_title: '题干'
+      exercise_choice:
+        choice_text: '选项'
+      exercise_answer:
+        answer_text: '答案'
+      exercise_standard_answer:
+        answer_text: '参考答案'
+      exercise_answer_comment:
+        comment: '评语'
+      homework_bank:
+        name: '标题'
+        description: '内容'
+        reference_answer: '参考答案'
+      gtask_bank:
+        name: '任务标题'
+        description: '内容'
+      gtopic_bank:
+        name: '选题名称'
+        description: '选题简介'
+      exercise_bank:
+        name: '试卷标题'
+        description: '试卷须知'
+      exercise_bank_question:
+        question_title: '题干'
+      exerise_bank_choice:
+        choice_text: '选项'
+      exercise_bank_standard_answer:
+        answer_text: '参考答案'
+      library:
+        title: '标题'
+        content: '内容'
+        author_name: '作者姓名'
+        author_school_name: '作者单位名称'
+      competition:
+        introduction: '简介'
+      competition_module_md_content:
+        content: '内容'
+      chart_rule:
+        content: '内容'
+      project_package:
+        title: '标题'
+      examination_bank:
+        name: '试卷名称'
+      item_bank:
+        name: '题干'
+      item_analysis:
+        analysis: '解析'
+      item_choice:
+        choice_text: '选项'
+      hack:
+        name: '任务名称'
+        description: '描述'
+      hack_set:
+        input: '测试集输入'
+        output: '测试集输出'
+      hack_user_lastest_code:
+        notes: '笔记'
+      trustie_hack:
+        description: '描述'
+      discipline:
+        name: '名称'
+      sub_discipline:
+        name: '名称'
+      tag_discipline:
+        name: '名称'
+      live_link:
+        description: '说明'
+        url: '链接'
+        course_name: '课程名称'
+        platform: '直播平台'
+        live_time: '开播时间'
+        duration: '直播时长'
+    close_pr: 合并请求

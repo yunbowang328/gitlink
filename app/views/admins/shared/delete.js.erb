@@ -1,0 +1,28 @@
+var deleteRow = $('<%= params[:element] %>');
+var refreshUrl = '<%= params[:refresh_url] %>';
+var notRefresh = <%= !!params[:not_refresh] %>;
+
+$.notify({ message: '操作成功' },{ type: 'success' });
+
+if (!notRefresh) {
+  var refreshFunc = function(url) {
+    $.ajax({
+      url: url.length > 0 ? url : window.location.href,
+      method: 'GET',
+      dataType: "script"
+    })
+  }
+
+  if(deleteRow.length > 0){
+    var needRefresh = deleteRow.siblings().length == 0;
+
+    deleteRow.remove();
+
+    if(needRefresh){ refreshFunc(refreshUrl); }
+  } else {
+    refreshFunc(refreshUrl);
+  }
+} else {
+  deleteRow.remove();
+}
+$(document).trigger('delete_success');

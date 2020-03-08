@@ -1,0 +1,88 @@
+.userbluebgfont{
+    color:#fff !important;
+}
+
+.kaike{
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255);
+    padding: 0px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    width: 120px;
+    text-align: center;
+    height: 40px;
+    line-height: 40px!important;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.userNavs{
+    line-height: 75px;
+    background: #fff;
+    height:96px;
+    background:rgba(255,255,255,1);
+    box-shadow:3px 5px 11px 1px rgba(230,230,230,0.5);
+    border-radius:4px;
+}
+
+.userNavs li {
+    display: inline-block;
+    padding: 0 30px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.newbianji1{
+    font-size: 16px !important;
+    margin-right: 10px;
+    color: #4CACFF;
+    margin-bottom: 3px;
+    display: inline-block;
+}
+
+.solidright{
+    border-right:1px solid #CDCDCD;
+    height: 42px;
+}
+.ant-modal-title {
+    height: 38px;
+    line-height:38px !important;
+}
+.ant-modal-title {
+    font-size: 16px;
+    font-weight: 500!important;
+    color: #333;
+    text-align: center;
+}
+
+.pd4020{
+    padding: 0 40px 0 20px !important;
+}
+
+.bannername780{
+    max-width: 780px;
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 40px;
+}
+
+.mb100{
+    margin-bottom: 100px !important;
+}
+.task-btn-28BE6C{
+    background: #28BE6C !important;
+    color: #fff!important;
+}
+.mt43{
+    margin-top: 43px;
+}
+
+.mb120{
+    margin-bottom: 120px !important;
+}
+
+.mb80{
+    margin-bottom: 80px !important;
+}

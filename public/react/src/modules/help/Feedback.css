@@ -1,0 +1,7 @@
+.feedback-container {
+
+}
+.feedback-container .feedback-message {
+  line-height: 26px;
+  color: #999999;
+}

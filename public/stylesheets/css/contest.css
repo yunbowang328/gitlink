@@ -1,0 +1,51 @@
+/* 新版项目配置*/
+.pro_new_setting_leftnav{ width: 162px; border:1px solid #ddd; background-color:#fff; padding:3px; padding-bottom: 0;}
+.pro_new_setting_leftnav ul li a{ display: block; height: 40px; line-height: 40px; border-bottom:3px solid #fff;  text-align: center; width:162px;}
+.pro_new_setting_leftnav ul li a:hover,.pro_new_setting_leftnav .active{   color: #3b94d6; background: #f3faff; }
+.pro_new_setting_conbox{ background: #fff; width: 818px;  border:1px solid #ddd; padding-top: 15px;}
+.pro_new_setting_conbox input,.pro_new_setting_conbox select{ border:1px solid #c8c8c8; color: #888;}
+.pro_new_setting_conbox label{width: 100px; text-align: right; display: inline-block;}
+.w690{width: 690px; }
+.pro_new_upimg{ width: 60px; height: 58px; border:1px solid #ddd; padding:1px;}
+.pro_newsetting_title{ font-size: 14px;  color: #3b94d6;}
+.mt12{ margin-top:12px;}
+.pro_new_idbox{ width: 40%; padding-left: 30px;}
+.pro_new_idlist{ width: 50%; border-right: 1px solid #e5e5e5; padding-right: 30px; min-height: 100px;}
+.pro_new_idname{display:block;width:160px; overflow:hidden;white-space: nowrap; text-overflow:ellipsis;}
+.pro_new_school_name{display:block;width:130px; overflow:hidden;white-space: nowrap; text-overflow:ellipsis;}
+.sy_new_tchbox p{ line-height: 30px;}
+.pro_newsetting_con p,.pro_newsetting_con { line-height: 30px;}
+.w650{ width: 650px;}
+.pro_new_prompt{  border:1px solid #f6d0b1; padding:10px; background: #fff9e9; color: #ee4a20; text-align: center;}
+p.pro_new_grey{ line-height: 1.9; }
+/* 竞赛设置tab*/
+.game-setting-tab{border:1px solid #fff; }
+#game-setting-tab-nav {border-bottom:1px solid #d0d0d0;}
+#game-setting-tab-nav li {float:left; padding:10px 15px; text-align:center; }
+#game-setting-tab-nav li a{font-size:14px; color:#444;}
+.game-setting-nav-hover{border-bottom:3px solid #3498db; font-weight:bold;  }
+.game-setting-nav-nomall {border-bottom:none; }
+.undis {display:none;}
+.game-dis {display:block;}
+/* 竞赛*/
+.banner-game { width: 968px; height: 110px; position: relative; overflow: hidden;}
+.banner-inner { display: block; position: absolute; left: 0; top: 100%; width: 100%; height: 100%; background: #000; text-align: center;  opacity: 0.3; -moz-transition: top ease 200ms;
+    -o-transition: top ease 200ms; -webkit-transition: top ease 200ms;  transition: top ease 200ms;}
+a.banner-notice {position: absolute; font-size: 16px; line-height: 20px; top: 152px; left: 394px; color: #fff; padding:2px 5px;}
+.banner-game:hover .banner-inner { top: 0;}
+.banner-game:hover .banner-notice { top: 42px;}
+.sy_new_table tbody tr td.game-text-right{ text-align: right;}
+.sy_new_table tbody tr td.game-text-left{ text-align: left;}
+.game-setting-h3{ width: 100%; height: 40px; line-height: 40px; font-size: 14px; color: #666; font-weight: normal; background: #fff;  border-bottom: 10px solid #eaebec;}
+.w695{width: 695px; }
+.w625{width: 625px; }
+.w621{width: 623px; }
+.description_div{width: 720px; padding: 15px;}
+.contestRightBanner {width:718px; margin:0px auto; float:right; background-color: #ffffff; padding:10px 15px;}
+.sy_new_table tbody tr th{ height:40px; line-height:40px; border-bottom:1px solid #e5e5e5;  color:#888;}
+.contest-score-tip {width:140px; color:#666; position:absolute; padding:3px 5px; border:1px solid #eaeaea; right:-223px; top:18px; background-color:#ffffff; line-height:20px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5); white-space:nowrap;}
+.contest-score-tip em {display:block; border-width:8px; position:absolute; top:6px; left:-16px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.contest-score-tip font {display:block; border-width:8px; position:absolute; top:6px; left:-15px; border-style:dashed solid dashed dashed; border-color:transparent #FFF transparent transparent; font-size:0; line-height:0;}
+.contest-group-score-tip {width:140px; color:#666; position:absolute; padding:3px 5px; border:1px solid #eaeaea; right:-193px; top:-4px; background-color:#ffffff; line-height:20px; box-shadow:0px 2px 8px rgba(146, 153, 169, 0.5); white-space:nowrap;}
+.contest-group-score-tip em {display:block; border-width:8px; position:absolute; top:6px; left:-16px; border-style:dashed solid dashed dashed; border-color:transparent #eaeaea transparent transparent; font-size:0; line-height:0;}
+.contest-group-score-tip font {display:block; border-width:8px; position:absolute; top:6px; left:-15px; border-style:dashed solid dashed dashed; border-color:transparent #FFF transparent transparent; font-size:0; line-height:0;}

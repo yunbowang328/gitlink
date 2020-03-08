@@ -1,0 +1,14 @@
+目录：
+coursesHome
+  课堂的首页以及组件
+publicNav
+  课堂详情头部导航以及组件
+
+文件：
+index.js
+  路由组件的控制
+CoursesDetail.js
+  详情总页面
+
+CoursesBanner.js
+  顶部banner

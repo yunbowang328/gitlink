@@ -1,0 +1,15 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/apply_trail_form:
+        user: ''
+        phone: 手机号
+        code: 验证码
+        reason: 申请原因
+    errors:
+      models:
+        users/apply_trail_form:
+          attributes:
+            user:
+              already_trial: 已经处于试用状态了
+

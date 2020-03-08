@@ -1,0 +1,24 @@
+.admins-departments-index-page {
+  .department-list-table {
+    .member-container {
+      .member-user {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+
+        .member-user-item {
+          display: flex;
+          align-items: center;
+          height: 22px;
+          line-height: 22px;
+          padding: 2px 5px;
+          margin: 2px 2px;
+          border: 1px solid #91D5FF;
+          background-color: #E6F7FF;
+          color: #91D5FF;
+          border-radius: 4px;
+        }
+      }
+    }
+  }
+}

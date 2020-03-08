@@ -1,0 +1,21 @@
+/*问吧新增20161223*/
+.wenba-rightbar{ border: 1px solid #ddd;background-color:#fff; width: 238px;}
+.wenba-h3-top{ font-size: 14px; color: #666; }
+.wenba-rightbar-top{ height: 40px; line-height: 40px; border-bottom:1px solid #ddd; }
+.wenba-rightbar-li{ padding:10px 0; color: #999;}
+.wenba-rightbar-title{ font-size: 14px; width: 145px; overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+.right-line{ border-right:1px solid #ddd;}
+.wenba-rightbar-ul{ width: auto; text-align: center; display: block}
+.wenba-rightbar-more{ padding:10px 0 ; text-align: center; display: block;}
+.wenba-tiwenbox{border: 1px solid #ddd;background-color:#fff; width: 718px; padding:15px;}
+.wenba-tiwen-con{ width: 100%; }
+input.wenba-tiwen-input{ width:705px; height: 30px; line-height: 30px; padding:0 5px;}
+textarea.wenba-tiwen-textarea{ padding:5px;width:705px; height: 150px;}
+a.wenba-tiwen-tag{background-color: #E4EFF6;border-bottom: 1px solid #B1D3EB; border-right: 1px solid #B1D3EB;-webkit-text-size-adjust: none; color: #3E6D8E; font-size:12px;line-height: 2.4; padding: 5px 10px;text-decoration: none; white-space: nowrap;width: 200px;}
+a:hover.wenba-tiwen-tag,a.wenba-tiwen-tag-active{ background: #3b94d6; color: #fff;border-bottom: 1px solid #2e76ab; border-right: 1px solid #2e76ab;}
+.wenba-tagbox li{ float: left; margin:0 5px 5px 0;}
+.wenba-tagbox h3{ font-weight: normal; color: #333;}
+/*大提交按钮*/
+.btn-big-blue{display: block; width: 240px; height: 55px; line-height: 55px; text-align: center; color: white; font-weight: bold; background: #3b94d6;font-size: 14px;}
+.btn-big-blue:hover{display: block; width: 240px; height: 55px; line-height: 55px; text-align: center; color: white; font-weight: bold; background: #2788d0;font-size: 14px;}
+.banner-big {width:968px; background-color: #ffffff; padding:10px 15px; border:1px solid #dddddd;}

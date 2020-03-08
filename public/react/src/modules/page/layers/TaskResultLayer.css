@@ -1,0 +1,140 @@
+.taskResultLayer {
+	color: #666666;
+    z-index: 99999999999999;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background:rgba(0,0,0,0.8);
+    top: 0px;
+    overflow: hidden;
+}   
+    .taskResultLayer .closeIcon{
+        position: absolute;
+        right: 100px;
+        top: 46px;
+        font-size: 28px;
+        z-index: 999999;
+        color: rgb(255,255,255,0.7);
+        cursor: pointer;
+    }
+    .taskResultLayer .closeIcon:hover {
+        color: #4CACFF;
+    }
+    .taskResultLayer .expGold {
+        color: #b27919 ;
+    }
+    .taskResultLayer .rateLabel {
+        color: #fff ;
+        font-size: 14px;
+    }
+    .taskResultLayer .rc-rate-star {
+        font-size: 24px;
+        color: rgb(192, 192, 192);
+    }
+    .taskResultLayer .rc-rate-star:nth-child(5) {
+        margin-right: 0px;
+    }
+
+/*  ImageLayer -----------------  Start */
+.passContent{
+    justify-content: center;
+    align-items: center;
+    display: -webkit-flex;
+    height: 100%;
+    text-align: center;
+}
+.passImg{
+    max-width: 86%;
+    max-height: 100%;
+    user-select: none;
+    min-width: 300px;
+}
+/*  ImageLayer -----------------  End */
+
+.passTaskContent{
+    width: 652px;
+    height:100%;
+    margin:0px auto;
+    margin-top: 4%;
+}
+.passTaskImg{
+    position: absolute;
+    z-index: 2;
+    user-select: none;
+}
+
+.winpPerson{
+    position: absolute;
+    width: 100%;
+    z-index: 3;
+    color: #D1A448;
+    text-align: center;
+    margin-top:304px;
+    font-size: 18px;
+}
+.winPanel{
+    position: absolute;
+    width: 308px;
+    z-index: 5;
+    height: 356px;
+    border-radius: 10px;
+    margin:0px auto;
+    top:435px;
+    left: 50%;
+    margin-left: -154px;
+    text-align: center;
+}
+.inlines{
+    display: inline-block;
+    width: auto;
+    line-height: 26px;
+    font-size: 16px;
+}
+.inline.exp {
+    margin-left: 18px;
+}
+    /*.inline img{*/
+        /*margin-right: 8px;*/
+    /*}*/
+.goldring{
+    margin-right: 8px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: #FFD633;
+    display: block;
+    float: left;
+    margin-top: 5px;
+}
+.passNext{
+    width:120px;
+    height:30px;
+    line-height:30px;
+    border-radius: 2px;
+    display: block;
+    background-color:#CCC;
+    color:#fff!important;
+    margin: 0px auto;
+}
+.passed{
+    width:120px;
+    height:30px;
+    line-height:30px;
+    border-radius: 2px;
+    display: block;
+    color:#fff!important;
+    margin: 0px auto;
+    margin-top: 12px;
+    background-color: #CCCCCC;
+}
+.passed.stared {
+    background-color:#4CACFF;
+    opacity: 0.8;
+}
+.passed.stared:hover {
+    opacity: 1;
+}
+
+.vertical4{
+    vertical-align: -4px;
+}

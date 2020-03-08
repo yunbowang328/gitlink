@@ -1,0 +1,2 @@
+module VersionReleasesHelper
+end

@@ -1,0 +1,107 @@
+/* 共用 后期再添加至公共样式 bylinda*/
+/*a:link,a:visited{text-decoration:none;color:#333; }*/
+a.link-color-grey{color:#aaa!important;}
+a:hover.link-color-grey{color:#5faee3!important;}
+.edu-name-dark{  max-width:100px; display: block; }
+.edu-info-dark{  max-width:345px; display: block; }
+.edu-color-grey{ color:#666;}
+.edu-color-grey:hover{color:#5faee3;}
+.edu-btn-search{ position: absolute; top:0; right:15px;}
+.edu-bg-light-blue{ background:#f7f9fd; padding:5px;}
+.edu-max-h200{ height:200px; overflow: auto;}
+.edu-position{ position: relative;}
+.edu-h200-auto{ max-height:200px; overflow:auto;}
+.edu-h300-auto{ max-height:300px; overflow:auto;}
+.edu-h350-auto{ max-height:350px; overflow:auto;}
+.edu-txt-w240{ width:240px; display: block;}
+.edu-txt-w200{ width:200px; display: block;}
+.edu-con-top{ padding:10px 0; background:#fff; border-bottom:1px solid #eee;font-size:16px; }
+.edu-con-top h2{ font-size:16px;}
+.edu-form-label{display: inline-block; width:60px;text-align: right; line-height: 40px; font-weight: normal;}
+.edu-form-border{ border:1px solid #ddd;}
+.edu-form-noborder,input.edu-form-noborder{ border:none; outline:none;}
+a.edu-btn{display: inline-block;border:none; padding:0 12px;color: #666!important;border:1px solid #ccc; text-align:center;font-size: 14px;  height: 29px;line-height: 29px; border-radius:3px; font-weight: bold;letter-spacing:1px;}
+a:hover.edu-btn{ border:1px  solid #FF7500; color: #FF7500!important;}
+
+/*a.edu-filter-cir-grey{display: inline-block; padding:0px 15px; color:#666; border:1px solid #ddd; text-align: center; border-radius:3px; font-size:12px; height:25px; line-height:25px;}
+a:hover.edu-filter-cir-grey,a.edu-filter-cir-grey.active{ border:1px solid #3498db;  color:#3498db; }*/
+
+/*.edu-filter-btn{display: inline-block; padding:0px 10px; color:#666; background:#eee; text-align: center; border-radius:3px; font-size:12px; height:25px; line-height:25px;}
+.edu-filter-btn-blue{background:#ebf6fe; color:#3498db;}
+.edu-filter-btn-orange{background:#ffeee8; color:#ff5055;}
+.edu-filter-btn-red{background:#fee4e5; color:#d72e36;}
+.edu-filter-btn-green{background:#e4f3ec; color:#6fbb9d;}
+.edu-filter-btn-yellow{background:#fdefde; color:#ef9324;}
+.edu-filter-btn-danger{background:#d72e36; color:#fff;}*/
+
+.alert-red{background-color: #f2dede;border-color: #eed3d7; color: #d14f4d; text-align: left!important;}
+.eud-pointer{ cursor:pointer;}
+.edu-bg-grey{ background:#f6f6f6; width:90%; min-width:700px;color:#666;}
+
+/* 与课程通用框架和tab   17/05/11 bylinda*/
+.edu-class-con{ width:50%; margin:0px auto; font-size:14px; padding:50px 0;}
+.edu-con-bg01{ width: 100%; background:#fff;}
+.edu-class-box{ width:100%;}
+.edu-class-container{ width: 1200px; margin:10px auto 20px;}
+.edu-class-top{ background:#fff; padding:20px;}
+.edu-class-top-img{ width:260px; height: 140px;}
+/* tab */
+/*.edu-tab{ width: 100%;    background:#fff;  }
+#edu-tab-nav{height:47px;background: #fff; }
+#edu-tab-nav li {float:left; width: 170px;  text-align:center;height: 47px;line-height: 47px; position: relative; }
+.edu-tab-fa{ position: absolute; top:27px; left:81px; color: #fff;}
+#edu-tab-nav li a{font-size:14px; }
+.edu-tab-hover {border-bottom:3px solid #5faee3; background: #fff; }
+.edu-tab-hover .edu-tab-fa{ color: #5faee3;}
+.edu-tab-hover a{ color:#5faee3; font-weight:bold;}
+.edu-tab-con-box{ padding:15px; max-height:1200px; overflow: auto; color:#666; line-height: 2.0; background:#fff;}*/
+
+
+
+/* 审核  17/05/11 bylinda*/
+.admin-con-box { padding:15px;}
+.edu-ad-user img{width:80px; height: 80px; border-radius:100px;}
+.edu-renzheng-img{ width:200px;}
+.admin-bg-grey{ background:#fafbfb; }
+
+/* 试用授权用户列表  17/06/05 bylinda*/
+.edu-admin-nav{ width:100%; background:#fff; height: 52px; box-sizing: border-box;display: flex}
+.edu-admin-nav-li{flex: 1; text-align: center; border-bottom:3px solid #fff; height:47px; line-height:47px;}
+.edu-admin-nav-li:hover,.edu-admin-nav-li.active{border-bottom:3px solid #5faee3;}
+a.edu-admin-nav-a{ display: block; height: 24px; border-right:1px solid #ddd; line-height:24px; margin-top:13px; color:#333;}
+a:hover.edu-admin-nav-a,.active a.edu-admin-nav-a{color: #5faee3;}
+.edu-admin-nav-inner{ border:1px solid #ccc; border-top:none;top:50px; position:absolute; background:#fff; z-index:999; display: none;}
+.edu-admin-nav-inner li{ width:108px; height: 40px; line-height: 40px; border-bottom:none;}
+.edu-admin-nav-inner li:hover{ background:#eee;}
+.edu-admin-nav-inner li a{  height: 40px; line-height:40px; }
+.edu-admin-nav-li:hover .edu-admin-nav-inner{ display: block;}
+
+.edu-admin-select{ border:1px solid #eee; height: 38px; line-height: 38px; text-align: center; width: 200px;}
+.edu-admin-option{ position:absolute; top:39px; background:#fff;box-shadow: 0px 2px 8px rgba(146, 153, 169, 0.5); width: 100%; display:none; z-index: 999;}
+.edu-admin-option li{height: 30px; line-height:30px; font-size:12px; color:#666; cursor: pointer;}
+.edu-admin-option li:hover{ background:#eee; }
+.edu-admin-select:hover .edu-admin-option{ display: block;}
+
+.auth_table div.admin-con-box:nth-child(odd){background:#fafbfb;}
+
+/*超级管理员实训页面*/
+.all_shixun_Item{width: 100%;padding: 0px;}
+.all_shixun_Item li{float:left;width: auto;padding: 7px 25px;}
+
+.all_shixun_Item_on{border-bottom: 3px solid #2ab6e7;color: #2ab6e7;}
+
+.operate{width: 100px;padding: 0px 10px;}
+
+/*实训下拉框*/
+.edu-dropdown-menu p{height: 35px;line-height: 35px;}
+
+.ex_container{margin-bottom: 20px;}
+.table_Name_text{padding-left: 5px;text-align: left;display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;height: 39px;width: 370px;line-height: 39px;-webkit-box-orient: vertical;}
+
+/*课程列表*/
+.only_view{font-size: 14px;margin-right: 30px;vertical-align:top;}
+
+
+/*超级管理员----技术体系*/
+.createsystem{cursor: pointer;width: 100%;height: 70px;line-height: 70px;border:1px dashed #FF7500;color: #FF7500;text-align: center;margin:15px 0px 20px 0px;border-radius: 4px;}
+.infoul li{list-style-type: disc}

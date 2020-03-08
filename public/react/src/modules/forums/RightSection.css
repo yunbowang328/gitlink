@@ -1,0 +1,61 @@
+/* 右侧搜索区域*/
+.searchFor .searchCon {
+	width: 215px;
+}
+
+.search-new {
+    width:237px!important;
+	height: 30px;
+    margin-bottom: 30px;
+    /*margin-right: 35px;*/
+}
+.search-newysl {
+
+	height: 30px;
+	margin-bottom: 30px;
+}
+.search-newyslw{
+	width:237px!important;
+}
+	.search-new-input {
+		padding-left: 16px;
+		height: 30px;
+	}
+	.search-span {
+		border-radius: 17px;
+	}
+
+.search-new img {
+	right: 10px;
+}
+
+
+/* 右侧 热门标签 */
+.HotLabelList a{display: block;float: left;padding: 0px 9px;height: 28px;line-height: 28px;border-radius: 14px;background-color: #f5f5f5;color: #666;margin-right: 10px;margin-bottom: 9px;}
+.HotLabelList a.selected {
+	background: #4CACFF;
+    color: #fff;
+}
+
+
+
+/* 右侧 热门问题 */
+.hotQuestionItem{padding:20px 0px;border-bottom: 1px solid #eee;}
+.questiontName{max-width: 100%;display: block;}
+
+
+
+/* 用户信息-UserSection*/
+.user_default_btn {width: 114px;}
+.userPrivateName{line-height: 25px;margin-bottom: 9px;}
+.userPrivatePost{line-height: 20px;}
+.noteDetailTitle{line-height: 38px;font-size: 24px;font-weight: normal;text-align:justify }
+
+.noteDetailNum{float: left;padding:0px 12px;position: relative;color: #999!important;height: 28px;line-height: 26px;}
+.noteDetailNum.rightline:after{position: absolute;content: '';right: 0px;width: 1px;background-color: #EAEAEA;height: 8px;top:10px;}
+
+/*帖子详情点赞*/
+.noteDetailPoint{width: 100px;height: 70px;background-color: #4cacff;border-radius: 35px;color: #FFFFff;text-align: center;margin: 0px auto;box-sizing: border-box;padding: 2px 0px;cursor: pointer;    line-height: 22px;
+    padding-top: 12px;}
+.Pointed{background-color:#f0f0f0;color: #b3b3b3; cursor: default}
+.notefileDownload{height: 25px;line-height: 22px;}

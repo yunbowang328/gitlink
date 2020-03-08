@@ -1,0 +1,116 @@
+.cooperative-competition-settings-index-page {
+  .competition-mode-container {
+    .row {
+      height: 35px;
+    }
+
+    .des-row {
+      height: auto;
+    }
+
+    .form-control {
+      font-size: 14px;
+    }
+
+    //.mode-input {
+    //  input {
+    //    width: 40%;
+    //  }
+    //}
+  }
+
+  .col-md-label{
+    -webkit-box-flex: 0;
+    flex: 0 0 10%;
+    max-width: 10%;
+    min-width: 30px;
+    padding-right: 15px;
+    padding-left: 15px;
+    position: relative;
+  }
+  .col-md-label-s{
+    -webkit-box-flex: 0;
+    flex: 0 0 30px;
+    padding-right: 15px;
+    padding-left: 15px;
+    position: relative;
+  }
+  .setBtn_s{
+    height: 35px;
+    line-height: 20px;
+  }
+
+  .sponsor_label{
+    border:1px solid #4CACFF;
+    border-radius: 5px;
+    background-color: rgba(76,172,255,0.3);
+    color: #333;
+    padding:0px 4px;
+    height: 30px;
+    line-height: 30px;
+    float: left;
+    margin: 4px 5px;
+
+    span{
+      display: block;
+      float: left;
+      height: 28px;
+      line-height: 28px;
+      margin-right: 5px;
+    }
+
+    a{
+      font-size: 18px;
+      float: left;
+      height: 28px;
+      line-height: 28px;
+    }
+  }
+
+  .large_panel{
+    padding:0px 15px;
+
+    .large_panel_part{
+      border-top: 1px solid #eaeaea;
+    }
+    .large_panel_part:first-child{
+      border:none;
+    }
+
+    .large_panel_part >.row ,.small_panel >.row{
+      border-bottom: 1px solid #eaeaea;
+      padding:20px 0px;
+    }
+    .small_panel{
+      margin-left: 20px;
+    }
+    .row:last-child{
+      border:none;
+    }
+
+    .task_Input_div:nth-child(3n-2) > span.col-4{
+      flex: 0 0 81px;
+      max-width: 81px;
+    }
+    .task_Input_div:nth-child(3n-2){
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+    .task_Input_div:nth-child(3n-1){
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+    .task_Input_div:nth-child(3n){
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+    .task_Input_div:nth-child(3n) > span.col-4{
+      flex: 0 0 33.3%;
+      max-width: 33.3%;
+    }
+    .task_Input_div:nth-child(3n) > div.col-6{
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+  }
+}

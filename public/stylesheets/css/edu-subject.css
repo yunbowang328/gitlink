@@ -1,0 +1,108 @@
+/*------课程实训首页---------*/
+.header-color{padding: 30px;background:linear-gradient(to right, rgb(68, 190, 164) 0%, rgb(62, 158, 207) 100%);}
+/*linear-gradient(to right, rgb(68, 190, 164) 0%, rgb(62, 158, 207) 100%)*/
+
+.box_bg_shandow{box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);}
+.active-class .content .pre_sub-con{width:23.87%;margin: 0 1.5% 40px 0px;height: 300px;}
+.active-class .content .pre_sub-con:nth-child(4n+0){margin:0 0 40px 0;}
+.active-class .content .pre_sub-con:hover{cursor: pointer;-webkit-animation: bounce-down 1s linear 1;animation: bounce-down 1s linear 1;}
+.pre-book{height: 100%;position:absolute;}
+.subject-box{padding: 20px;background: #fff;text-align: center;position: relative;}
+.unit-name{line-height: 17px;height: 17px;width:196px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.active-class .content .sub-con{box-sizing:border-box;border:1px solid #eee;width:23.87%;background:#fff;margin: 0 1.5% 30px 0px;box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);}
+.active-class .content .sub-con:nth-child(4n+0){margin:0 0 30px 0;}
+.active-class .content .sub-con:hover{box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.15);cursor: pointer;-webkit-animation: bounce-down 1s linear 1;animation: bounce-down 1s linear 1;}
+@-webkit-keyframes bounce-down {
+    25% {margin-top:-10px;}
+    50%, 100% {margin-top: 0;}
+}
+
+@keyframes bounce-down {
+    25% {margin-top:-10px;}
+    50%, 100% {margin-top: 0;}
+}
+.course-list-index-name{padding: 16px;padding-top: 30px;background: #fff;text-align: center;position: relative;height: 177px;}
+.course-list-index-title{font-weight: bold}
+.college{line-height:40px;height: 40px}
+.half-bot{text-align: center; height: 50px;background: #F5F6F7;}
+.half-bot-content{width: auto;display: inline-block;}
+.bot_li{text-align: center;}
+.bot_li li{float: left;margin:9px 4px 0px 4px;}
+.bot_li li span{display: inline-block;float: left; border: 2px solid #e8e8e8;color: #888;border-radius: 50%;text-align: center;line-height:28px;width: 28px;height: 28px;font-size: 13px}
+
+
+
+
+
+
+/*.paragraph:hover .paragraph_status,.paragraph:hover .paragraph_name,.paragraph:hover .status_sx{color: #ffffff!important;}*/
+.edu-class-right-box i:hover{color:#ff7500!important;}
+.icon-set{display: block;width: 10px;height: 5px;margin-top:1px;}
+/*------课程实训首页---------*/
+
+.course_tip_box{width: 460px;padding: 10px;background-color: #FFFFFF;}
+.course_tip_box_Item{margin: 10px 0px;}
+.course_tip_box_Item li{float: left;width: auto;padding: 5px 10px;border-radius: 4px;border: 1px solid #2292e7;margin:0px 10px 10px 0px;}
+.tip_acitve{color: #FFFFFF;background-color: #2292e7;}
+
+/*background: #16D4BE linear-gradient(304.95deg,#1aecd4 0%, #1ad8c2 50%, #009E8A 77%, #16D4BE 100%);background-image: url("../images/services-banner.jpg");*/
+
+.saved-title{margin-bottom: 10px;}
+
+.task-array{font-size: 12px;position: absolute;right: 5px;top:5px;width: 20px;height: 20px;line-height: 20px;border-radius: 50%;color: #FFFFFF;background-color: #ffbfaa;z-index: 2;text-align: center;}
+
+.stage-item{border:1px solid #eeeeee;}
+.stage{padding: 7px 10px;border-bottom:1px solid #eeeeee;}
+.stage-entry{padding: 10px 10px;}
+.stage-name{width: 91%;padding: 5px;margin-left: 10px;border-color:#eeeeee}
+.stage-name-label{width:  10%;text-align: center;line-height: 40px;}
+.add-sx{padding:0px 5px;width: 99%;height: 40px;line-height: 40px;border: 1px dashed #ffbfaa;display: inline-block;color: #cccccc;}
+.bewrite{width: 90%;margin-left: 10px;border-color: #eeeeee;padding: 5px;}
+
+.box-border{border:1px solid #e1e1e1}
+.boxborder-dashed-orange{border: 1px dashed #ffbfaa;}
+
+
+
+/*编辑部分的列表不用加浮动效果*/
+
+/*.task-index-list-box-all{ width:23.7%;margin: 6px; border-radius:2px; border:1px solid #eee;    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15); color:#666; position:relative; }*/
+
+.task-index-list-box-all{ width:31.6%;margin: 6px; border-radius:2px; border:1px solid #eee;    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15); color:#666; position:relative; }
+
+.allback{background-color:#FFFFFF}
+.last-all-count{text-align: right;}
+
+.course-option{width: 570px;padding: 10px;background-color: #FFFFFF;}
+.magic-radio + label:before, .magic-checkbox + label:before{top: 11px;left: 5px;}
+.magic-checkbox + label:after{top: 11px;left: 11px;}
+
+
+.rotate{
+    transform-origin:center center; //旋转中心要是正中间 才行
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transition: transform 0.2s; //过度时间 可调
+    -moz-transition: -moz-transform 0.2s;
+    -moz-transition: -moz-transform 0.2s;
+    -o-transition: -o-transform 0.2s;
+    -ms-transition: -ms-transform 0.2s;
+}
+
+.rotate1{
+    transform-origin:center center;
+    transform: rotate(0deg); //返回原点
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transition: transform 0.2s;
+    -moz-transition: -moz-transform 0.2s;
+    -moz-transition: -moz-transform 0.2s;
+    -o-transition: -o-transform 0.2s;
+    -ms-transition: -ms-transform 0.2s;
+}

@@ -1,0 +1,12 @@
+<div class="box edit-mirror-script-container">
+  <%= simple_form_for([:admins, mirror, script], url: { action: form_action }, html: { class: 'script-form' }) do |f| %>
+    <%= f.input :script_type, label: '名称', input_html: { class: 'col-md-6' } %>
+    <%= f.input :description, as: :text, label: '说明', input_html: { class: 'col-md-6' } %>
+    <%= f.input :script, as: :text, label: '评测脚本' %>
+
+    <div class="form-row">
+      <%= f.button :submit, value: '保存', class: 'btn-primary mr-3 px-4', 'data-disable-with': '保存中...' %>
+      <%= link_to '取消', admins_mirror_repository_mirror_scripts_path(mirror), class: 'btn btn-secondary px-4' %>
+    </div>
+  <% end %>
+</div>

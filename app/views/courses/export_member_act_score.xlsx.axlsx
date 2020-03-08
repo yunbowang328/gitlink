@@ -1,0 +1,25 @@
+wb = xlsx_package.workbook
+wb.use_shared_strings = true
+wb.styles do |s|
+  no_wrap_sz = s.add_style :border => { :style => :thin, :color =>"000000" },:alignment => {wrap_text: false,:horizontal => :center,:vertical => :center }
+  sz_all = s.add_style :border => { :style => :thin, :color =>"000000" },:alignment => {wrap_text: true,:horizontal => :center,:vertical => :center }
+  row_cell = s.add_style :bg_color=> "FAEBDC",:border => { :style => :thin, :color =>"000000" },alignment: {wrap_text: true,:horizontal => :center,:vertical => :center }
+  blue_cell = s.add_style :bg_color => "FAEBDC", :sz => 10,:height => 25,:b => true, :border => { :style => :thin, :color =>"000000" },:alignment => {wrap_text: true,:horizontal => :center,:vertical => :center}
+
+  #课堂活跃度统计
+  wb.add_worksheet(name:activity_level[0]) do |sheet|
+    sheet.sheet_view.show_grid_lines = false
+    sheet_title = activity_level[1]
+    sheet_content = activity_level[2]
+    sheet.add_row sheet_title, :height => 25,:style => blue_cell
+    if sheet_content.count > 0
+      sheet_content.each_with_index do |c,index|
+        c_1 = (index+1)
+        c_2 = [c_1] + c.values
+        sheet.add_row c_2, :height => 25, :style => sz_all  #用户id
+      end
+      sheet.column_widths *([20]*sheet.column_info.count)
+      sheet.column_info.first.width = 8
+    end
+  end  #add_worksheet
+end

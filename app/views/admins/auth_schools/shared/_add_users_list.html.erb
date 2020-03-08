@@ -1,0 +1,31 @@
+<%= form_tag(add_manager_admins_auth_schools_path, method: :post, remote: true) do %>
+  <%= hidden_field_tag("school_id",school_id) %>
+  <div class="add-school-list-item">
+    <div class="list-item-title">
+      <span class="list-item-title-1">姓名</span>
+      <span class="list-item-title-2">单位</span>
+    </div>
+    <div class="school-search-list">
+      <% if users.size > 0 %>
+        <% users.each do |user| %>
+          <div class="school-list-item">
+            <%= check_box_tag("user_id[]", user.id, false, id: "check_user_#{user.id}") %>
+            <label for="check_user_<%= user.id %>">
+              <span class="list-item-title-1">
+                <%= user.try(:show_real_name) %>
+              </span>
+              <span class="list-item-title-2">
+                <%= user.try(:school_name) %>
+              </span>
+            </label>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="padding10-5 color-grey-c">没有相关的单位</p>
+      <% end %>
+    </div>
+  </div>
+  <div class="text-right mt10">
+    <%= submit_tag("确认",class: "btn btn-primary submit-btn") %>
+  </div>
+<% end %>

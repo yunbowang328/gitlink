@@ -1,0 +1,213 @@
+.yslstatistic-header {
+    width: 100%;
+    height: 240px;
+    background-image: url('/images/educoder/statistics.jpg');
+    background-size: 100% 100%;
+}
+.yslborder{
+    border: 1px solid;
+}
+.yslstatistic-header-title{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    color: #4CACFF;
+    font-size: 32px;
+}
+.yslstatistic-header-content{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+.yslstatistic-header-item{
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+}
+.yslstatistic-header-item-label{
+    color: #989898;
+}
+
+.yslstatistic-base-item-label{
+    width: 217px;
+    text-align: center;
+    font-size: 16px;
+    height: 48px;
+    line-height: 48px;
+    color: #686868;
+    background: #F5F5F5;
+    border-top: 1px solid #EBEBEB;
+}
+.yslstatistic-base-item-labels{
+    width: 217px;
+    text-align: center;
+    height: 100px;
+    line-height: 100px;
+    background: #ffffff;
+    border-top: 1px solid #EBEBEB;
+    border-bottom: 1px solid #EBEBEB;
+}
+.yslstatistic-base-item-labelsp{
+    color: #000000;
+    font-size: 24px;
+}
+.yslstatistic-base-item-labelsspan{
+    color: #000000;
+    margin-left: 5px;
+    font-size: 16px;
+}
+.jibenshiyong100{
+    width: 100%;
+}
+
+.yslstatistic-header-item-content{
+    font-size: 24px;
+}
+/* 中间居中 */
+.intermediatecenter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+/* 简单居中 */
+.intermediatecenterysls{
+    display: flex;
+    align-items: center;
+}
+.spacearound{
+    display: flex;
+    justify-content: space-around;
+
+}
+.spacebetween{
+    display: flex;
+    justify-content: space-between;
+}
+/* 头顶部居中 */
+.topcenter{
+    display: -webkit-flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+
+/* x轴正方向排序 */
+/* 一 二 三 四 五 六 七 八 */
+.sortinxdirection{
+    display: flex;
+    flex-direction:row;
+}
+/* x轴反方向排序 */
+/* 八    七   六  五   四  三  二 一 */
+.xaxisreverseorder{
+    display: flex;
+    flex-direction:row-reverse;
+}
+/* 垂直布局 正方向*/
+/* 一
+ 二
+ 三
+ 四
+ 五
+ 六
+ 七
+ 八 */
+.verticallayout{
+    display: flex;
+    flex-direction:column;
+}
+/* 垂直布局 反方向*/
+.reversedirection{
+    display: flex;
+    flex-direction:column-reverse;
+}
+
+.h4{
+    font-size: 1.5rem;
+    font-weight: 500 !important;
+}
+.ysllinjibenshiyong{
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 2rem 1.25rem;
+    border-bottom: unset;
+    background:#fff;
+}
+.linjibenshiyong{
+    font-weight: 500;
+    line-height: 1.2;
+    padding: 2rem 1.25rem;
+    border-bottom: unset;
+    background:#fff;
+    box-shadow:0px 6px 12px 0px rgba(0,0,0,0.1);
+    border-radius:2px;
+}
+.yslslinjibenshiyong{
+    font-weight: 500;
+    line-height: 1.2;
+    border-bottom: unset;
+    box-shadow:0px 6px 12px 0px rgba(0,0,0,0.1);
+    border-radius:2px;
+}
+.yinyin{
+    background: #fff;
+    box-shadow:0px 6px 12px 0px rgba(0,0,0,0.1);
+    border-radius:2px;
+}
+.edu-back-eeee{
+    background:#EEEEEE !important;
+}
+.mt-4{
+    margin-top: 1.5rem !important;
+}
+
+.statistic-label{
+    padding: 2rem 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 400 !important;
+}
+.mb50{
+    padding-bottom: 50px !important;
+}
+.mt40{
+    margin-top: 40px;
+}
+.mb80{
+    margin-bottom: 80px;
+}
+.task-hide{overflow:hidden; white-space: nowrap; text-overflow:ellipsis;}
+a:hover{
+    color:#0056b3;
+}
+.color-blue{
+    color: #4CACFF;
+}
+
+.color-huang{
+    color:#ffc107 !important
+}
+.maxnamewidth105{
+    max-width: 105px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    cursor: default;
+}
+.maxnamewidth247{
+    max-width: 247px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    cursor: default;
+}
+.maxnamewidth340{
+    max-width: 340px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    cursor: default;
+}

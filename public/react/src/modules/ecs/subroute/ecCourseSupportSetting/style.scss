@@ -1,0 +1,44 @@
+.courseSupport .ant-form-item-children {
+    display: flex;
+}
+
+/* @media (min-width: 576px) */
+.courseSupport .ant-col-sm-offset-4 {
+    margin-left: 0;
+}
+
+.courseSupport .ant-form-explain {
+    display: none;
+}
+.courseSupport .ant-form-item {
+    margin-bottom: 6px;
+}
+.courseSupport textarea.ant-input {
+    min-height: 35px;
+}
+
+.courseSupport .ListTableLine .column-1 {
+    flex: 0 0 100px;
+}
+.courseSupport .ListTableLine .column-2 {
+    flex: 0 0 180px;
+}
+.courseSupport .ListTableLine .column-3 {
+    flex: 0 0 330px;
+}
+
+.SystemParameters {
+    min-height: 60px;
+}
+
+p {
+    margin-bottom: 0px;
+}
+
+div#show-Target-table {
+    background: #fff;
+}
+    /* 火狐select宽度会根据长度变 */
+    .courseSupport .ant-select-selection--single {
+        max-width: 317px
+    }

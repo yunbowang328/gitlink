@@ -1,0 +1,36 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb("#{@salesman.name}的渠道", admins_salesmans_path) %>
+<% end %>
+
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('数据变化报表', admins_school_statistics_path) %>
+<% end %>
+
+<div class="box search-form-container saleman-channel-list-form">
+  <form class="form-inline search-form d-flex" data-search-form-url="<%= admins_salesman_channels_path(salesman_id: @salesman.id) %>">
+    <div class="time-select">
+      <div class="form-group grow-date-container">
+        <div class="input-group input-daterange grow-date-input-daterange">
+          <%= text_field_tag :start_date, params[:start_date], class: 'form-control start-date mx-0', placeholder: '开始时间' %>
+          <div class="input-group-prepend"><span class="input-group-text">到</span></div>
+          <%= text_field_tag :end_date, params[:end_date], class: 'form-control end-date mx-0', placeholder: '结束时间' %>
+        </div>
+      </div>
+
+    </div>
+    <%= text_field_tag :keyword, params[:keyword], placeholder: 'ID/单位名称检索', class: 'form-control mx-3 search-input' %>
+
+    <%= javascript_void_link '搜索', class: 'btn btn-primary search-btn', target: '' %>
+    <input type="reset" class="btn btn-secondary clear-btn ml-3" value="清空"/>
+  </form>
+  <div class="flex-12">
+    <%= javascript_void_link '新增渠道', class: 'btn btn-primary', data: {toggle: 'modal', target: '.admin-add-salesman-channel-user-modal' } %>
+  </div>
+</div>
+
+
+<div class="box admin-list-container salesman-channel-list-container">
+  <%= render(partial: 'admins/salesman_channels/shared/list') %>
+</div>
+
+<%= render 'admins/salesman_channels/shared/add_salesman_channels_user_modal' %>

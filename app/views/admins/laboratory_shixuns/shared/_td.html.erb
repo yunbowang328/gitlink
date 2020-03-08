@@ -1,0 +1,33 @@
+<%- shixun = laboratory_shixun.shixun -%>
+
+<td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+<td class="text-left">
+  <%= link_to "/shixuns/#{shixun.identifier}", target: '_blank' do %>
+    <%= shixun.name %>
+    <span class="badge badge-pill badge-success homepage-badge" style="<%= laboratory_shixun.homepage? ? '' : 'display:none' %>">首页</span>
+    <span class="badge badge-pill badge-info ownership-badge" style="<%= laboratory_shixun.ownership ? '' : 'display:none' %>">自建</span>
+  <% end %>
+</td>
+<td><%= shixun.shixun_main_name %></td>
+<td class="text-left">
+  <% shixun.tag_repertoires.each do |tag| %>
+    <span class="badge badge-secondary"><%= tag.name %></span>
+  <% end %>
+</td>
+<td>
+  <% imageExists = Util::FileManage.exists?(shixun) %>
+  <% imageUrl = imageExists ? '/' + url_to_avatar(shixun) : '' %>
+  <%= image_tag(imageUrl, width: 60, height: 40, class: "preview-image shixun-image-#{shixun.id}", data: { toggle: 'tooltip', title: '点击预览' }, style: imageExists ? '' : 'display:none') %>
+</td>
+<td><%= link_to shixun.user&.real_name, "/users/#{shixun.user&.login}", target:'_blank' %></td>
+<td><span class="<%= shixun_status_class(shixun) %>"><%= t("shixun.status.#{shixun.status}") %></span></td>
+<td><%= shixun.excute_time %></td>
+<td class="action-container">
+  <%= link_to('去修改', admins_shixun_settings_path(id: laboratory_shixun.shixun_id)) %>
+  <%= javascript_void_link('首页展示', class: 'action homepage-show-action', data: { id: laboratory_shixun.id }, style: laboratory_shixun.homepage? ? 'display:none' : '') %>
+  <%= javascript_void_link('取消首页展示', class: 'action homepage-hide-action', data: { id: laboratory_shixun.id }, style: laboratory_shixun.homepage? ? '' : 'display:none') %>
+
+  <% unless laboratory_shixun.ownership? %>
+    <%= delete_link '删除', admins_laboratory_laboratory_shixun_path(current_laboratory, laboratory_shixun, element: ".laboratory-shixun-item-#{laboratory_shixun.id}") %>
+  <% end %>
+</td>

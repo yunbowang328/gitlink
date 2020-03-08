@@ -1,0 +1,54 @@
+<table class="table text-center laboratory-subject-list-table">
+  <thead class="thead-light">
+    <tr>
+      <th width="4%">序号</th>
+      <th width="24%" class="text-left">课程名称</th>
+      <th width="12%">技术体系</th>
+      <th width="10%">等级体系</th>
+      <th width="10%">封面</th>
+      <th width="8%">创建者</th>
+      <th width="10%">单位</th>
+      <th width="8%">状态</th>
+      <th width="14%">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if laboratory_subjects.present? %>
+      <% laboratory_subjects.each_with_index do |laboratory_subject, index| %>
+        <tr class="laboratory-subject-item-<%= laboratory_subject.id %>">
+          <%- subject = laboratory_subject.subject -%>
+
+          <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+          <td class="text-left">
+            <%= link_to(subject.name, "/paths/#{subject.id}", target: '_blank') %>
+            <span class="badge badge-pill badge-success homepage-badge" style="<%= laboratory_subject.homepage? ? '' : 'display:none' %>">首页</span>
+            <span class="badge badge-pill badge-success ownership-badge" style="<%= laboratory_subject.ownership? ? '' : 'display:none' %>">自建</span>
+          </td>
+          <td><%= display_text subject.repertoire&.name %></td>
+          <td><%= display_text subject.subject_level_system&.name %></td>
+          <td>
+            <% image_exists = Util::FileManage.exists?(subject) %>
+            <%= image_tag(image_exists ? Util::FileManage.source_disk_file_url(subject) : '', height: 40, class: "w-100 preview-image subject-image-#{subject.id}", style: image_exists ? '' : 'display:none') %>
+          </td>
+          <td><%= subject.user.real_name %></td>
+          <td><%= subject.user.school_name %></td>
+          <td><%= display_subject_status(subject) %></td>
+
+          <td class="action-container">
+            <%= link_to('去修改', admins_subjects_path(id: laboratory_subject.subject_id)) %>
+            <%= javascript_void_link('首页展示', class: 'action homepage-show-action', data: { id: laboratory_subject.id }, style: laboratory_subject.homepage? ? 'display:none' : '') %>
+            <%= javascript_void_link('取消首页展示', class: 'action homepage-hide-action', data: { id: laboratory_subject.id }, style: laboratory_subject.homepage? ? '' : 'display:none') %>
+
+            <% unless laboratory_subject.ownership? %>
+              <%= delete_link '删除', admins_laboratory_laboratory_subject_path(current_laboratory, laboratory_subject, element: ".laboratory-subject-item-#{laboratory_subject.id}") %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% else %>
+      <%= render 'admins/shared/no_data_for_table' %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: laboratory_subjects } %>

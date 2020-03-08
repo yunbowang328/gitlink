@@ -1,0 +1,104 @@
+.settingNav{
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  justify-content: center;
+}
+.settingNav li{
+  height: 46px;
+  line-height: 46px;
+  position: relative;
+  padding:0px 15px;
+  cursor: pointer;
+}
+.settingNav li.active a{
+  color: #4CACFF!important;
+}
+.settingNav li.active::after{
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  height: 2px;
+  left: 0px;
+  background: #4CACFF;
+  content: '';
+}
+.baseForm{
+  padding:15px 20px!important;
+}
+.baseForm .ant-row.ant-form-item{
+  margin-bottom: 15px;
+}
+.submitBtn{
+  display: block;
+  float: left;
+  padding:0px 12px;
+  border-radius: 4px;
+  height: 35px;
+  line-height: 35px;
+  color: #fff!important;
+  background: #4CACFF;
+}
+.small_submitBtn{
+  display: block;
+  padding:0px 12px;
+  border-radius: 4px;
+  height: 32px;
+  line-height: 32px;
+  color: #fff!important;
+  background: #4CACFF;
+}
+.addPanel{
+  display: flex;
+  padding:15px;
+}
+.red_btn{
+  display: block;
+  padding:0px 8px;
+  height: 28px;
+  line-height: 28px;
+  color: #fff;
+  background: #db2828;
+  border-radius: 3px;
+}
+.collaboratorItem{
+  display: flex;
+  border-bottom: 1px solid #f4f4f4;
+  padding:15px;
+}
+.collaboratorItem>span{
+  flex: 1;
+  display: flex;
+}
+.branchSelect{
+  width: 200px;
+  height: 32px;
+}
+
+.dangerousBox{
+  border:1px solid #efc16b;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+.dangerousTitle{
+  padding:10px;
+  background: #f9edbe;
+  line-height: 18px;
+}
+.red_deleteBtn{
+  display: block;
+  height: 38px;
+  line-height: 38px;
+  border:1px solid #db2828;
+  border-radius: 4px;
+  color: #db2828!important;
+  padding:0px 15px;
+  font-size: 16px;
+}
+.flex-a-center{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.padding15-10{
+  padding:15px 10px;
+}

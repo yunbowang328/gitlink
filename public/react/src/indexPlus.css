@@ -1,0 +1,4 @@
+/* material ui 给body加了个6px padding */
+body {
+    padding-right: 0px !important;
+}

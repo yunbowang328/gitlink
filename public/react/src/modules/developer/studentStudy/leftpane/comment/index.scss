@@ -1,0 +1,16 @@
+.task_comment_task{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: #fff;
+  padding: 0px 20px 0;
+  height: calc(100vh - 177px);
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-bottom: 1px solid rgba(244,244,244,1);
+
+  .task_comment_page{
+    padding: 10px 0;
+    text-align: center;
+  }
+}

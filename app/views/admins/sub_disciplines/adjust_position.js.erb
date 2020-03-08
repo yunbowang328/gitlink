@@ -1,0 +1,5 @@
+<% if @message.present? %>
+$.notify({ message: "<%= @message %>" });
+<% else %>
+$(".sub-discipline-list-container").html("<%= j(render :partial => 'admins/sub_disciplines/shared/list') %>");
+<% end %>

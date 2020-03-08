@@ -1,0 +1,241 @@
+'zh-CN':
+  tiding:
+    ApplyUserAuthentication:
+      Apply:
+        "1_end": "申请实名认证：%s %s"
+        "2_end": "申请职业认证：%s %s"
+      System:
+        "1_1_end": "你提交的实名认证申请，审核已通过"
+        "1_2_end": "你提交的实名认证申请，审核未通过<br/><span>原因：%{reason}</span>"
+        "2_1_end": "你提交的职业认证申请，审核已通过"
+        "2_2_end": "你提交的职业认证申请，审核未通过<br/><span>原因：%{reason}</span>"
+    CancelUserAuthentication_end: "取消了你的实名认证：%s %s"
+    CancelUserProCertification_end: "取消了你的职业认证：%s %s"
+    JoinCourse:
+      "9_end": "申请加入课堂：%s（教师）"
+      "7_end": "申请加入课堂：%s（助教）"
+    DealCourse:
+      "9_1_end": "你提交的加入课堂申请：%s（教师）, 审核已通过"
+      "9_2_end": "你提交的加入课堂申请：%s（教师）, 审核未通过"
+      "7_1_end": "你提交的加入课堂申请：%s（助教）, 审核已通过"
+      "7_2_end": "你提交的加入课堂申请：%s（助教）, 审核未通过"
+    StudentJoinCourse_end: "%s 加入了课堂：%s（学生）"
+    TeacherJoinCourse:
+      "2_end": "%s将你加入课堂：%s（教师）"
+      "3_end": "%s将你加入课堂：%s（助教）"
+      "4_end": "%s将你加入课堂：%s（学生）"
+      "9_end": "%s将你加入课堂：%s（教师）"
+      "7_end": "%s将你加入课堂：%s（助教）"
+      "10_end": "%s将你加入课堂：%s（学生）"
+    ApplyAddDepartment:
+      Apply_end: "申请添加二级单位：%s（%s）"
+      System:
+        "1_end": "你提交的添加二级单位申请：%s（%s），审核已通过"
+        "2_false_end": "你提交的添加二级单位申请：%s（%s），审核未通过<br/><span>原因：%{reason}</span>"
+        "2_true_end": "你提交的添加二级单位申请：%s（%s），审核未通过"
+        "3_end": "你提交的添加二级单位申请：%s（%s），已被更改为%{reason}"
+    ApplyAddSchools:
+      Apply_end: "申请添加单位：%s"
+      System:
+        "1_end": "你提交的添加单位申请：%{name}，审核已通过"
+        "2_false_end": "你提交的添加单位申请：%{name}，审核未通过<br/><span>原因：%{reason}</span>"
+        "2_true_end": "你提交的添加单位申请：%{name}，审核未通过"
+        "3_end": "你提交的添加单位申请：%{name}，已被更改为：%{reason}"
+    ApplyAction:
+      ApplyShixun:
+        System:
+          "1_end": "你提交的实训发布申请：%{name}，审核已通过"
+          "2_end": "你提交的实训发布申请：%{name}，审核未通过<br/><span>原因：%{reason}</span>"
+        Apply_end: "申请发布实训：%{name}"
+      ApplySubject:
+        System:
+          "1_end": "你提交的实践课程发布申请：%{name}，审核已通过"
+          "2_end": "你提交的实践课程发布申请：%{name}，审核未通过<br/><span>原因：%{reason}</span>"
+        Apply_end: "申请发布实践课程：%{name}"
+      TrialAuthorization:
+        System:
+          "1_end": "你提交的试用授权申请，审核已通过"
+          "2_end": "你提交的试用授权申请，审核未通过<br/><span>原因：%{reason}</span>"
+        Apply_end: "提交了试用授权申请"
+    Course_end: "你创建了课堂：%s"
+    DeleteCourse_end: "你删除了课堂：%s"
+    DeleteCourseMember_end: "%s 将你从课堂中删除了：%s"
+    Shixun_end: "你创建了实训：%s"
+    Subject_end: "你创建了实践课程：%s"
+    ArchiveCourse_end: "你的课堂已经归档：%s"
+    JournalsForMessage:
+      Mentioned_end: "@了你：%s"
+      Principal:
+        true_true_end: "评论了你的回复：%s"
+        true_false_end: "评论了你的留言：%s"
+        false_true_end: "给你留言：%s"
+        false_false_end: "给你私信：%s"
+      HomeworkCommon:
+        true_end: "评论了你的回复：%s"
+        false_end: "评论了你发布的作业：%s"
+      GraduationTopic:
+        true_end: "评论了你的回复：%s"
+        false_end: "评论了你发布的毕设选题：%s"
+      StudentWorksScore:
+        true_end: "评论了你的回复：%s"
+        false_end: "评论了你发布的作品评语：%s"
+    Message:
+      Mentioned_end: "@了你：%s"
+      true_true_end: "评论了你的帖子：%s"
+      true_false_end: "评论了你的回复：%s"
+      false_end: "发布了帖子：%s"
+    Memo:
+      true_true_end: "评论了你的帖子：%s"
+      true_false_end: "评论了你的回复：%s"
+      false_end: "发布了帖子：%s"
+    Watcher_end: "关注了你"
+    PraiseTread:
+      Challenge:
+        "1_end": "赞了你发布的实训任务：%s，第%s关"
+        "2_end": "踩了你发布的实训任务：%s，第%s关"
+      Hack_end: "赞了你发布的题目：%s"
+      Memo:
+        true_end: "赞了你的评论：%s"
+        false_end: "赞了发布的帖子：%s"
+      Message:
+        true_end: "赞了你的评论：%s"
+        false_end: "赞了发布的帖子：%s"
+      HomeworkCommon_end: "赞了你发布的作业：%s"
+      JournalsForMessage:
+        true_end: "赞了你的留言：%s"
+        false_end: "赞了你的评论：%s"
+      Discuss_end: "赞了你的评论：%s"
+      Issue_end: "赞了你发布的项目Issue：%s"
+      Journal_end: "赞了你的回复%s"
+    Discuss:
+      Challenge:
+        true_end: "评论了你的回复：%s"
+        false_end: "评论了你发布的实训：%s"
+      Hack:
+        true_end: "评论了你的回复：%s"
+        false_end: "评论了你发布的题目：%s"
+    Hack:
+      HackPublish_end: "你发布了题目：%s"
+      HackUnPublish_end: "你撤销发布了题目：%s"
+      HackDelete_end: "你删除了题目：%s"
+    Grade:
+      Avatar_end: "首次上传头像获得金币奖励：%s金币"
+      Phone_end: "首次绑定手机号码获得金币奖励：%s金币"
+      Attendance_end: "签到成功获得金币奖励：%s金币"
+      Mail_end: "首次绑定邮箱获得金币奖励：%s金币"
+      Account_end: "首次填写基本资料获得金币奖励：%s金币"
+      Answer:
+        true_end: "查看实训%s第%s关的参考答案消耗金币：%s金币"
+        false_end: "查看实训的参考答案消耗金币：%s金币"
+      Hack_end: "完成题目解答：%s，获得金币奖励：%s金币"
+      Game_end: "通过实训%s的第%s关获得金币奖励：%s金币"
+      Memo_end: "发布的评论或者帖子获得平台奖励：%s金币"
+      Discusses_end: "发布的评论获得金币奖励：%s金币"
+      testSet_end: "查看实训的第%s关的隐藏测试集消耗的金币：%s金币"
+      shixunPublish_end: "发布实训%s获得的奖励：%s金币"
+      Star_end: "给实训评分获得的随机奖励：%s金币"
+      Feedback_end: "反馈的问题获得平台奖励：%s金币"
+      Authentication_end: "用户首次完成实名认证获得的奖励：%s金币"
+      Professional_end: "用户首次完成职业认证获得的奖励：%s金币"
+    JoinProject:
+      3_end: "申请加入项目：%s（管理人员）"
+      4_end: "申请加入项目：%s（开发人员）"
+    DealProject:
+      3_1_end: "你提交的加入项目申请：%s（管理人员）, 审核已通过"
+      3_2_end: "你提交的加入项目申请：%s（管理人员）, 审核未通过"
+      4_1_end: "你提交的加入项目申请：%s（开发人员）, 审核已通过"
+      4_2_end: "你提交的加入项目申请：%s（开发人员）, 审核未通过"
+    ReporterJoinProject_end: "加入了项目：%s（报告人员）"
+    ManagerJoinProject:
+      3_end: "%s将你加入项目：%s（管理人员）"
+      4_end: "%s将你加入项目：%s（开发人员）"
+      5_end: "%s将你加入项目：%s（报告人员）"
+    Journal_end: "更新了Issue：%s"
+    Journal:
+      Mentioned_end: "@了你：%s"
+      Comment:
+        true_end: "评论了你的回复：%s"
+        false_end: "评论了你发布的项目issue：%s"
+    Issue_end: "指派了Issue给你：%s"
+    PullRequest:
+      Apply_end: "提交了PullRequest：%s"
+      2_end: "接受了PullRequest：%s"
+      3_end: "重新打开了PullRequest：%s"
+      4_end: "关闭了PullRequest：%s"
+    SendMessage:
+      old_end: "申请了新镜像：%s"
+      new_end: "申请了新镜像：【语言】%s；【系统环境】%s；【测试代码运行方式】%s"
+    Poll:
+      PollPublish_end: "发布了问卷：%s"
+      NearlyEnd_end: "问卷的截止时间快到啦：%s"
+      CommitPoll_end: "提交了问卷答题：%s"
+    Exercise:
+      ExercisePublish_end: "发布了试卷：%s"
+      NearlyEnd_end: "试卷的截止时间快到啦：%s"
+      CommitExercise_end: "提交了试卷答题：%s"
+      ExerciseScore_end: "评阅了你的试卷：%s"
+    StudentGraduationTopic_end: "申请选择毕设选题：%s"
+    DealStudentTopicSelect:
+      1_end: "你提交的选题申请：%s，审核已通过"
+      2_end: "你提交的选题申请：%s，审核未通过"
+    GraduationTask:
+      TaskPublish_end: "发布了毕设任务：%s"
+      NearlyEnd_end: "毕设任务的提交截止时间快到啦：%s"
+      NearlyLateEnd_end: "毕设任务的补交截止时间快到啦：%s"
+      CrossComment_end: "开启了交叉评阅：%s"
+    GraduationWork:
+      true_end: "提交了作品：%s"
+      false_end: "重新提交了作品，建议您重新评阅：%s"
+    GraduationWorkScore_end: "评阅了你的作品：%s"
+    HomeworkCommon:
+      AnonymousComment_end: "开启了作业匿评：%{name}"
+      AnonymousCommentFail_end: "开启作业匿评失败：%{name}<br/><span>原因：%{reason}</span>"
+      AnonymousAppeal_end: "开启了匿评申诉：%{name}"
+      HomeworkPublish_end: "发布了作业：%{name}"
+      NearlyEnd_end: "作业的提交截止时间快到啦：%{name}"
+      AppealNearlyEnd_end: "作品的匿评申诉时间快到啦：%{name}"
+      EvaluationNearlyEnd_end: "作业的匿评截止时间快到啦：%{name}"
+    StudentWork_end: "提交了作品：%s"
+    ResubmitStudentWork_end: "重新提交了作品，建议您重新评阅作品：%s"
+    StudentWorksScore:
+      1_end: "评阅了你的作品：%s"
+      2_end: "评阅了你的作品：%s"
+      3_end: "有人匿评了你的作品：%s"
+    AdjustScore_end: "调整了你的作品得分：%s"
+    ChallengeWorkScore_end: "调整了你的作品分数：%s"
+    StudentWorksScoresAppeal:
+      UserAppealResult:
+        1_end: "你提交的匿评申诉申请：%s，审核已通过"
+        2_end: "你提交的匿评申诉：%s，审核未通过"
+      AppealResult:
+        1_end: "别人对你的匿评发起的申诉申请：%s，审核已通过"
+        2_end: "别人对你的匿评发起的申诉申请：%s，审核未通过"
+      StudentWork:
+        Apply_end: "发起了匿评申诉申请：%s"
+        HomeworkCommon_end: "发起了匿评申诉申请：%s"
+        System_end: "有人对你的匿评发起了申诉：%s"
+    Department_end: "你选填的二级单位：%s（%s）因不符合规范,已被系统删除.请重新选择"
+    Library:
+      Apply_end: "申请发布教学案例：%s"
+      System:
+        1_end: "你提交的发布教学案例申请：%s，审核已通过"
+        2_end: "你提交的发布教学案例申请：%s，审核未通过<br/><span>原因：%{reason}</span>"
+    ProjectPackage:
+      Apply_end: "申请发布众包需求：%s"
+      System:
+        1_end: "你提交的众包需求申请：%s，审核已通过"
+        2_end: "你提交的众包需求申请：%s，审核未通过<br/><span>原因：%{reason}</span>"
+      Created_end: "你创建了众包需求：%s"
+      Destroyed_end: "你删除了众包需求：%s"
+      Bidding_end: "应征了你发布的众包任务：%s"
+      BiddingEnd_end: "你发布的众包任务：%s，已进入选标阶段，请尽快进行选择确认！"
+      BiddingWon_end: "恭喜，你应征的众包任务：%s，在评选环节中标了"
+      BiddingLost_end: "很遗憾，你应征投稿的众包任务：%s，未中标"
+    Video:
+      Apply_end: "申请发布视频：%s"
+      System:
+        1_end: "你提交的发布视频申请：%s，审核已通过"
+        2_end: "你提交的发布视频申请：%s，审核未通过<br/><span>原因：%{reason}</span>"
+    PublicCourseStart_end: "你报名参与的开放课程：%s，将于%s正式开课"
+    SubjectStartCourse_end: "您创建的开放课程：%s 已达到开课人数要求。您可以在24小时内自主开设新一期课程。如果超过24小时未开课，平台将自动开课并复制您上一期的课程内容。"
+    LiveLink_end: "%s 直播将于30分钟后开始"

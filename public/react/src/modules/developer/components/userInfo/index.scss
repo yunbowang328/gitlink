@@ -1,0 +1,26 @@
+
+.avator_nicker{
+  position: absolute;
+  color: #fff;
+  line-height: 65px;
+  left: 20px;
+  // height: 65px;
+  .student_img,
+  .student_nicker{
+  
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .student_nicker{
+    margin-left: 10px;
+  }
+
+  .student_img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-top: 15px;
+  }
+}
+

@@ -1,0 +1,53 @@
+/***** Calendar *****/
+table#calender td{padding: 2px;}
+table.cal {border-collapse: collapse; width: 100%; margin: 0px 0 6px 0;border: 1px solid #d7d7d7;}
+table.cal thead th {width: 14%; background-color:#EEEEEE; padding: 4px; }
+table.cal thead th.week-number {width: auto;}
+table.cal tbody tr {height: 100px;}
+table.cal td {border: 1px solid #d7d7d7; vertical-align: top; font-size: 0.9em;}
+table.cal td.week-number { background-color:#EEEEEE; padding: 4px; border:none; font-size: 1em;}
+table.cal td p.day-num {font-size: 1.1em; text-align:right;}
+table.cal td.odd p.day-num {color: #bbb;}
+table.cal td.today {background:#ffffdd;}
+table.cal td.today p.day-num {font-weight: bold;}
+table.cal .starting a, p.cal.legend .starting {background: url(/images/bullet_go.png) no-repeat -1px -2px; padding-left:16px;}
+table.cal .ending a, p.cal.legend .ending {background: url(/images/bullet_end.png) no-repeat -1px -2px; padding-left:16px;}
+table.cal .starting.ending a, p.cal.legend .starting.ending {background: url(/images/bullet_diamond.png) no-repeat -1px -2px; padding-left:16px;}
+p.cal.legend span {display:block;}
+
+/***** Tooltips ******/
+.tooltip{position:relative;z-index:24;}
+.tooltip:hover{z-index:25;color:#000;}
+.tooltip span.tip{display: none; text-align:left;}
+
+div.tooltip:hover span.tip{
+    display:block;
+    position:absolute;
+    top:12px; left:24px; width:270px;
+    border:1px solid #555;
+    background-color:#fff;
+    padding: 4px;
+    font-size: 0.8em;
+    color:#505050;
+}
+
+img.ui-datepicker-trigger {
+    display: block;
+    background: url(/images/public_icon.png) -31px 0 no-repeat;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-left: 5px;
+    margin-top: 5px;
+    width: 16px;
+    height: 15px;
+    float: left;
+}
+
+div.issue {background:#FFFFEC; padding:6px; margin-bottom:6px;border: 1px solid #d7d7d7;}
+.tooltip{position:relative;z-index:24;}
+.tooltip:hover{z-index:25;color:#000;}
+.tooltip span.tip{display: none; text-align:left;}
+.task.parent.marker.starting  { position: absolute; background: url(/images/task_parent_end.png) no-repeat 0 0; width: 8px; height: 16px; margin-left: -4px; left: 0px; top: -1px;}
+
+/*.icon*/
+.icon-package { background-image: url(/images/package.png); }

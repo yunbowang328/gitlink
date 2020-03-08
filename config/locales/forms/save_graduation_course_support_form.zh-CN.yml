@@ -1,0 +1,15 @@
+'zh-CN':
+  activemodel:
+    models:
+      ecs/save_graduation_course_support_form: ''
+    attributes:
+      ecs/save_graduation_course_support_form:
+        course_supports: ''
+    errors:
+      models:
+        ecs/save_graduation_course_support_form:
+          attributes:
+            course_supports:
+              weights_too_big: 权重之和不能大于1
+              not_unique: 支撑课程不能重复
+

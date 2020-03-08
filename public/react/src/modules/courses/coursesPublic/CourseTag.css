@@ -1,0 +1,24 @@
+.courseTag {
+  display: inline-block;
+  margin-right: 6px;
+  height: 20px;
+}
+.courseTag.course-tag-has-color span{
+  color: #FFF;
+}
+.courseTag span {
+  display: inline-block;
+  font-size: 12px;
+  cursor: default;
+  color: #4E7A9B;
+  background-color: #E5F3FF;
+  padding: 0px 4px;
+  height: 20px;
+  line-height: 20px;
+}
+
+.courseTag a {
+  display: inline-block;
+  margin-left: 3px;
+  color: #cccccc;
+}

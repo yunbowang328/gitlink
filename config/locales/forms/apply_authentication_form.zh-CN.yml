@@ -1,0 +1,7 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/apply_authentication_form:
+        name: 姓名
+        id_number: 身份证号
+

@@ -1,0 +1,27 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('用户实训情况') %>
+<% end %>
+
+<div class="box search-form-container user-statistic-list-form">
+  <%= form_tag(admins_user_statistics_path, method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+    <div class="form-group col-12 col-md-auto">
+      <label for="status">时间范围：</label>
+      <% data_arrs = [['不限', ''], ['最近一周', 'weekly'], ['最近一个月', 'monthly'], ['最近三个月', 'quarterly'], ['最近一年', 'yearly']] %>
+      <%= select_tag(:date, options_for_select(data_arrs, params[:date]), class: 'form-control') %>
+    </div>
+
+    <div class="form-group col-12 col-md-3">
+      <label for="school_name">所属单位：</label>
+      <%= hidden_field_tag(:school_id, params[:school_id]) %>
+      <%= select_tag :school_name, options_for_select([''], params[:school_id]), class: 'form-control school-select flex-1' %>
+    </div>
+
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+    <input type="reset" class="btn btn-secondary clear-btn" value="清空"/>
+  <% end %>
+  <%= javascript_void_link '导出', class: 'btn btn-outline-primary export-action', 'data-url': export_admins_user_statistics_path(format: :xlsx) %>
+</div>
+
+<div class="box admin-list-container user-statistic-list-container">
+  <%= render partial: 'admins/user_statistics/shared/list', locals: { users: @users } %>
+</div>

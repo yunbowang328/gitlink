@@ -1,0 +1,36 @@
+.uploadBtn {
+  margin-left: 0px;
+}
+.comment_item_cont .J_Comment_Face img {
+  width: 42px;
+  height: 42px;
+  margin-top: 2px;
+}
+.panel-comment_item .t_area {
+  font-size: 13px;
+}
+.panel-comment_item .score_area {
+  color: #FF6800;
+  margin-left: 28px;
+}
+
+.panel-comment_item .validate_area {
+  color: #999999;
+}
+
+.appraise .panel-comment_item .t_info {
+  width: 1062px;
+}
+.appraise .panel-comment_item .childrenCommentsView .t_info {
+  width: 989px;
+}
+.course-message .panel-comment_item .comment_orig_content {
+  width: 980px;
+}
+
+.course-message .panel-comment_item a.content-username {
+  max-width: 300px
+}
+.panel-comment_item{
+  min-height:50px;
+}

@@ -1,0 +1,22 @@
+.admins-shixun-settings-index-page {
+  input[type="checkbox"]{
+    font-size:18px;
+  }
+  .select2 input::-webkit-input-placeholder{
+    color:#ccc;
+  }
+  .select2 .select2-selection__choice{
+    border: 1px solid #eee !important;
+  }
+  .setting-chosen{
+    font-weight: 400;
+    font-size: 10px;
+    color:#333;
+  }
+
+  .shixun-setting-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}

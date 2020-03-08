@@ -1,0 +1,34 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('课堂列表') %>
+<% end %>
+
+<div class="box search-form-container course-list-form">
+  <%= form_tag(admins_courses_path, method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+    <div class="form-group mr-1">
+      <label for="status">状态：</label>
+      <% status_options = [['全部', ''], ["正在进行(#{@processed_courses})", 'processing'], ["已结束#{@ended_courses}", 'ended']] %>
+      <%= select_tag(:status, options_for_select(status_options), class: 'form-control') %>
+    </div>
+
+    <div class="form-group col-12 col-md-3">
+      <label for="school_name">单位：</label>
+      <%= select_tag :school_id, options_for_select([''], params[:school_id]), class: 'form-control school-select flex-1' %>
+    </div>
+
+    <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-12 col-md-2 mr-3', placeholder: '创建者/课堂名称/课程名称检索') %>
+
+    <div class="form-check mr-2">
+      <%= hidden_field_tag(:homepage_show, false, id:'') %>
+      <%= check_box_tag(:homepage_show, true, params[:homepage_show].to_s == 'true', class: 'form-check-input course-homepage-show') %>
+      <label class="form-check-label" for="homepage_show">只看首页展示</label>
+    </div>
+
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+    <input type="reset" class="btn btn-secondary clear-btn" value="清空"/>
+  <% end %>
+  <a href="javascript:void(0)" class="btn btn-primary" id="course-export" data-disable-with = '导出中...'>导出</a>
+</div>
+
+<div class="box admin-list-container course-list-container">
+  <%= render partial: 'admins/courses/shared/list', locals: { courses: @courses } %>
+</div>

@@ -1,0 +1,45 @@
+@import "bootstrap";
+@import "font-awesome-sprockets";
+@import "font-awesome";
+@import "select2.min";
+@import "select2-bootstrap4.min";
+
+@import "common";
+
+@import "colleges/*";
+
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 1);
+  font-size: 16px;
+}
+
+.box {
+  padding: 20px;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.custom-nav {
+  padding: 0 1rem;
+  display: flex;
+  border-bottom: 1px solid #EBEBEB;
+
+  &-item {
+    padding: 0 0.5rem;
+  }
+
+  &-link {
+    display: block;
+    margin-bottom: 2px;
+    padding: 0.8rem 0.5rem;
+    color: #495057;
+    font-size: 16px;
+
+    &.active {
+      margin-bottom: 0px;
+      color: #007bff;
+      border-bottom: 2px solid #007bff;
+    }
+  }
+}

@@ -1,0 +1,29 @@
+.add-major-modal {
+  .add-major-search {
+    margin-bottom: 20px;
+  }
+  .ant-modal-body {
+    padding-bottom: 0;
+
+    .major-row {
+      padding: 10px;
+    }
+    .ant-table-thead {
+      background: #fafafa;
+    }
+    .ant-table-scroll {
+      min-height: 250px;
+    }
+
+    .error {
+      height: 20px;
+      margin-top: -20px;
+      color: red;
+    }
+  }
+  .ant-modal-footer {
+    padding-bottom: 20px;
+    text-align: center;
+    border-top: unset;
+  }
+}

@@ -1,0 +1,4 @@
+$(".auth-schools-list-container").html("<%= j render partial: "admins/auth_schools/shared/list", locals: {schools: @schools} %>")
+$(".auth-schools-new-add").modal("hide")
+
+show_success_flash()

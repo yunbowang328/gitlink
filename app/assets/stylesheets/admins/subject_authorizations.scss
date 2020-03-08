@@ -1,0 +1,9 @@
+.admins-subject-authorizations-index-page {
+  .subject-authorization-list-container {
+    span {
+      &.apply-status-1 { color: #28a745; }
+      &.apply-status-2 { color: #dc3545; }
+      &.apply-status-3 { color: #6c757d; }
+    }
+  }
+}

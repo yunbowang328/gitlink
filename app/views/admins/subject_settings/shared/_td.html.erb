@@ -1,0 +1,47 @@
+<td class="subject-line-no"><%= page_no %></td>
+<td class="text-left">
+  <%= link_to(subject.name, "/paths/#{subject.id}", target: '_blank') %>
+  <span class="badge badge-pill badge-success homepage-show-badge" style="<%= subject.homepage_show? ? '' : 'display:none' %>">首页</span>
+  <span class="badge badge-pill badge-info excellent-badge" style="<%= subject.excellent? ? '' : 'display:none' %>">金课</span>
+</td>
+<td><%= display_text subject.repertoire&.name %></td>
+<td><%= display_text subject.public == 2 ? "已公开" : ((subject.public == 1 && subject.status == 2) ? "审核中" : "未发布") %></td>
+<td>
+  <%= select_tag(:sub_disciplines, options_for_select(@sub_disciplines, subject.sub_disciplines.pluck(:id)),multiple:true,class:"form-control subject-setting-form",data:{id:subject.id},id:"tags-chosen-#{subject.id}") %>
+</td>
+<td>
+  <% image_exists = Util::FileManage.exists?(subject) %>
+  <%= image_tag(image_exists ? Util::FileManage.source_disk_file_url(subject) : '', height: 40, class: "w-100 preview-image subject-image-#{subject.id}", style: image_exists ? '' : 'display:none') %>
+  <%= javascript_void_link image_exists ? '重新上传' : '上传图片', class: 'action upload-image-action', data: { source_id: subject.id, source_type: 'Subject', toggle: 'modal', target: '.admin-upload-file-modal' } %>
+</td>
+<td><%= subject.student_count %></td>
+<td class="action-container">
+  <%= check_box_tag :show_mobile, !subject.show_mobile, subject.show_mobile, remote: true,
+                    data: {id: subject.id, toggle: "tooltip", placement: "top"}, class: "subject-mobile-form mr10", title: "小程序端显示" %>
+  <%= link_to('编辑', edit_admins_subject_path(subject), remote: true, class: 'edit-action') %>
+</td>
+
+<script>
+  $("#tags-chosen-<%= subject.id %>").select2({
+      multiple: true,
+      maximumSelectionLength: 3,
+      placeholder: '请选择课程体系'});
+
+
+  $(".action-container").on("change", '.subject-mobile-form', function () {
+      var s_id = $(this).attr("data-id");
+      var s_value = $(this).val();
+      var s_name = $(this).attr("name");
+      var json = {};
+      var s_index = $(this).parent("td").siblings(".shixun-line-no").text();
+      json[s_name] = s_value;
+      json["page_no"] = s_index;
+      $.ajax({
+          url: "/admins/subject_settings/update_mobile_show?subject_id=" + s_id,
+          type: "POST",
+          dataType:'script',
+          data: json
+      });
+  });
+
+</script>

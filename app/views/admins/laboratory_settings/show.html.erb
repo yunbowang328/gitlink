@@ -1,0 +1,187 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('云上实验室', admins_laboratories_path) %>
+  <% add_admin_breadcrumb('单位定制') %>
+<% end %>
+
+<div class="box edit-laboratory-setting-container">
+  <%= simple_form_for(@laboratory, url: admins_laboratory_laboratory_setting_path(@laboratory), method: 'patch', html: { enctype: 'multipart/form-data' }) do |f| %>
+    <% setting = @laboratory.laboratory_setting %>
+
+    <div class="form-group px-2 setting-item">
+      <div class="setting-item-head"><h6>网站域名设置</h6></div>
+      <div class="dropdown-divider"></div>
+      <div class="pl-0 py-3 setting-item-body">
+        <div class="input-group col-12 col-md-4 px-0">
+          <div class="input-group-prepend">
+            <span class="input-group-text">https://</span>
+          </div>
+          <%= text_field_tag :identifier, @laboratory.identifier,
+                             maxlength: 15, class: 'form-control font-16',
+                             'onKeyUp': 'value=value.replace(/[^\w\-\/]/ig,"").toLowerCase()',
+                             style: 'text-transform:lowercase'%>
+          <div class="input-group-append">
+            <% rails_env = EduSetting.get('rails_env') %>
+            <span class="input-group-text font-14" id="site-prefix"><%= rails_env && rails_env != 'production' ? ".#{rails_env}.educoder.net" : '.educoder.net' %></span>
+          </div>
+        </div>
+        <%# if @laboratory.errors && @laboratory.errors.key?(:identifier) %>
+<!--          <span id="identifier-error" class="danger text-danger">二级域名已被使用</span>-->
+        <%# end %>
+      </div>
+    </div>
+
+    <div class="form-group px-2 setting-item">
+      <div class="setting-item-head"><h6>网站名称设置</h6></div>
+      <div class="dropdown-divider"></div>
+      <div class="pl-0 py-3 setting-item-body">
+        <%= text_field_tag :name, setting.name, placeholder: '输入20个字以内的网站名称', maxlength: 20, class: 'form-control col-12 col-md-4' %>
+      </div>
+    </div>
+
+    <div class="form-group px-2 setting-item">
+      <div class="setting-item-head"><h6>Logo设置</h6></div>
+      <div class="dropdown-divider"></div>
+      <div class="pl-0 py-3 row setting-item-body">
+        <div class="col-12 col-md-4 logo-item">
+          <% nav_logo_img = setting.nav_logo_url %>
+          <div class="logo-item-left mr-3 <%= nav_logo_img ? 'has-img' : '' %>">
+            <img class="logo-item-img nav-logo-img" src="<%= nav_logo_img %>" style="<%= nav_logo_img.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:nav_logo, accept: 'image/png,image/jpg,image/jpeg', style: 'display: none', value: params[:nav_logo]) %>
+            <label for="nav_logo" class="logo-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+          <div class="logo-item-right">
+            <div class="logo-item-title flex-1">网站导航logo</div>
+            <div>格式：PNG、JPG</div>
+            <div>尺寸：高度38px以内，宽等比例缩放</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 logo-item">
+          <% login_logo_img = setting.login_logo_url %>
+          <div class="logo-item-left mr-3 <%= login_logo_img ? 'has-img' : '' %>">
+            <img class="logo-item-img login-logo-img" src="<%= login_logo_img %>" style="<%= login_logo_img.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:login_logo, accept: 'image/png,image/jpg,image/jpeg', style: 'display: none', value: params[:login_logo]) %>
+            <label for="login_logo" class="logo-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+          <div class="logo-item-right">
+            <div class="logo-item-title flex-1">登录页面logo</div>
+            <div>格式：PNG、JPG</div>
+            <div>尺寸：高度90px以内，宽等比例缩放</div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 logo-item">
+          <% tab_logo_img = setting.tab_logo_url %>
+          <div class="logo-item-left mr-3 <%= tab_logo_img ? 'has-img' : '' %>">
+            <img class="logo-item-img tab-logo-img" src="<%= tab_logo_img %>" style="<%= tab_logo_img.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:tab_logo, accept: 'image/x-icon', style: 'display: none', value: params[:tab_logo]) %>
+            <label for="tab_logo" class="logo-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+          <div class="logo-item-right">
+            <div class="logo-item-title flex-1">浏览器导航栏logo</div>
+            <div>格式：ico</div>
+            <div>尺寸：16*16  32*32  48*48  64*64 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group px-2 setting-item">
+      <div class="setting-item-head"><h6>Banner设置</h6></div>
+      <div class="dropdown-divider"></div>
+      <div class="pl-0 py-3 row setting-item-body">
+        <div class="col-12 col-md-4 banner-item">
+          <%- subject_banner = setting.subject_banner_url -%>
+          <div class="banner-item-top">实践课程</div>
+          <div class="banner-item-bottom <%= subject_banner ? 'has-img' : '' %>">
+            <img class="banner-item-img subject-banner-img" src="<%= subject_banner %>" style="<%= subject_banner.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:subject_banner, accept: 'image/*', style: 'display: none', value: params[:subject_banner]) %>
+            <label for="subject_banner" class="banner-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 banner-item">
+          <%- course_banner = setting.course_banner_url -%>
+          <div class="banner-item-top">翻转课堂</div>
+          <div class="banner-item-bottom <%= course_banner ? 'has-img' : '' %>">
+            <img class="banner-item-img course-banner-img" src="<%= course_banner %>" style="<%= course_banner.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:course_banner, accept: 'image/*', style: 'display: none', value: params[:course_banner]) %>
+            <label for="course_banner" class="banner-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 banner-item">
+          <%- competition_banner = setting.competition_banner_url -%>
+          <div class="banner-item-top">在线竞赛</div>
+          <div class="banner-item-bottom <%= competition_banner ? 'has-img' : '' %>">
+            <img class="banner-item-img competition-banner-img" src="<%= competition_banner %>" style="<%= competition_banner.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:competition_banner, accept: 'image/*', style: 'display: none', value: params[:competition_banner]) %>
+            <label for="competition_banner" class="banner-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 banner-item">
+          <%- moop_cases_banner = setting.moop_cases_banner_url -%>
+          <div class="banner-item-top">教学案例</div>
+          <div class="banner-item-bottom <%= moop_cases_banner ? 'has-img' : '' %>">
+            <img class="banner-item-img moop-cases-banner-img" src="<%= moop_cases_banner %>" style="<%= moop_cases_banner.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:moop_cases_banner, accept: 'image/*', style: 'display: none', value: params[:moop_cases_banner]) %>
+            <label for="moop_cases_banner" class="banner-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4 banner-item">
+          <%- oj_banner = setting.oj_banner_url -%>
+          <div class="banner-item-top">开发者社区</div>
+          <div class="banner-item-bottom <%= oj_banner ? 'has-img' : '' %>">
+            <img class="banner-item-img oj-banner-img" src="<%= oj_banner %>" style="<%= oj_banner.present? ? '' : 'display: none' %>"/>
+            <%= file_field_tag(:oj_banner, accept: 'image/*', style: 'display: none', value: params[:oj_banner]) %>
+            <label for="oj_banner" class="banner-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group px-2 setting-item">
+      <div class="setting-item-head"><h6>导航设置</h6></div>
+      <div class="dropdown-divider"></div>
+      <div class="pl-0 py-3 setting-item-body">
+        <table class="table">
+          <thead class="thead-light">
+            <tr>
+              <th width="35%">导航名称</th>
+              <th width="50%">导航链接</th>
+              <th width="15%" class="text-center">是否展示</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (setting.navbar || setting.default_navbar).each do |nav| %>
+              <tr>
+                <td><%= text_field_tag('navbar[][name]', nav['name'], id: nil, class: 'form-control') %></td>
+                <td><%= text_field_tag('navbar[][link]', nav['link'], id: nil, class: 'form-control') %></td>
+                <td class="text-center">
+                  <%= check_box_tag('navbar[][hidden]', 0, !nav['hidden'], id: nil, class: 'font-16') %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="form-group px-2 setting-item">
+      <div class="setting-item-head"><h6>底部备案信息设置</h6></div>
+      <div class="dropdown-divider"></div>
+      <div class="pl-0 my-3 setting-item-body" id="laboratory-footer-editor">
+        <%= text_area_tag(:footer, setting.footer, placeholder: '请输入备案信息', class: 'form-control', style: 'display: none;') %>
+      </div>
+    </div>
+
+    <div class="error my-2 danger text-danger"></div>
+
+    <div class="form-group mt-4">
+      <%= javascript_void_link '保存', class: 'btn btn-primary mr-3 px-4 submit-btn' %>
+      <%= link_to '取消', admins_laboratories_path, class: 'btn btn-secondary px-4' %>
+    </div>
+  <% end %>
+</div>

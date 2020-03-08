@@ -1,0 +1,9 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/apply_professional_auth_form:
+        school_id: 学校/单位
+        department_id: 学院/部门
+        identity: 职业
+        extra: 职称/学号
+

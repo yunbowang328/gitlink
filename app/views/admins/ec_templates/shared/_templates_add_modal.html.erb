@@ -1,0 +1,44 @@
+<div class="modal fade ec-templates-new-add" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><span class="template_add_title">新建</span>导入模版</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <%= form_tag(create_template_admins_ec_templates_path, method: :post, remote: true ) do %>
+        <%= hidden_field_tag(:attachment_id,"-1",class:"template_attachment_id") %>
+        <%= hidden_field_tag(:template_id,"-1",class:"template_show_id") %>
+        <div class="modal-body">
+          <div class="form-group d-flex">
+            <label for="template_name" class="col-form-label mr10">模板名称:</label>
+            <div class="d-flex flex-column-reverse w-75">
+              <%= text_field_tag("name","",class: "form-control", placeholder: "请输入模版名称", id: 'template_name') %>
+            </div>
+          </div>
+          <div class="form-group d-flex">
+            <label for="template_name" class="col-form-label mr10">上传文件:</label>
+            <div class="d-flex flex-column-reverse w-75">
+              <div class="template-file-upload">
+                <span class="template_file_show hide">
+                  <span class="template_file_show_title">
+                  </span>
+                  <i class="fa fa-trash-o color-grey padding5-10 ml-5 delete-template-icon" title="删除"></i>
+                </span>
+                <span class="template-file-input">
+                  <%= file_field_tag(:file, id: "upload_template_file") %>
+                  <i class="fa fa-plus-circle font-20"></i> 上传文件
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= submit_tag("提交",class:"btn btn-primary", 'data-disable-with': "提交中...") %>
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>

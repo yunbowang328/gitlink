@@ -1,0 +1,60 @@
+@import "bootstrap";
+@import "font-awesome-sprockets";
+@import "font-awesome";
+@import "select2.min";
+@import "select2-bootstrap4.min";
+@import "bootstrap-datepicker";
+@import "bootstrap-datepicker.standalone";
+@import "jquery.mloading";
+@import "jquery-confirm.min";
+@import "bootstrap-datetimepicker.min";
+
+@import "codemirror/lib/codemirror";
+@import "editormd/css/editormd.min";
+@import "dragula/dragula";
+
+@import "common";
+@import "admins/*";
+
+body {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  font-size: 14px;
+  background: #efefef;
+  overflow: hidden;
+}
+
+.simple_form {
+  .form-group {
+    .collection_radio_buttons {
+      margin-bottom: 0px;
+    }
+
+    .form-check-inline {
+      height: calc(1.5em + 0.75rem + 2px)
+    }
+  }
+}
+
+input.form-control {
+  font-size: 14px;
+}
+
+.btn-default{
+  color: #666;
+  background: #e1e1e1!important;
+}
+.export-absolute{
+  right:20px;
+  position: absolute;
+}
+
+.export-base-absolute{
+  right:100px;
+  position: absolute;
+}
+

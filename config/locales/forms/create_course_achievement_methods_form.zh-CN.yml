@@ -1,0 +1,25 @@
+'zh-CN':
+  activemodel:
+    models:
+      ecs/create_course_achievement_methods_form: 评价方法
+    attributes:
+      ecs/create_course_achievement_methods_form:
+        course_achievement_methods: 评价方法
+      ecs/create_course_achievement_methods_form/sub_form:
+        course_evaluation_id: 考核方式
+        course_evaluation_subitem_ids: 考核方式分项
+        score: 支撑总分值
+        percentage: 评价占比
+    errors:
+      models:
+        ecs/create_course_achievement_methods_form:
+          attributes:
+            course_achievement_methods:
+              percentage_error: 评价占比总和必须在0~100范围内
+        ecs/create_course_achievement_methods_form/sub_form:
+          attributes:
+            course_evaluation_id:
+              record_not_exist: 不存在
+            course_evaluation_subitem_ids:
+              record_not_exist: 不存在
+

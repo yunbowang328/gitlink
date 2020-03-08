@@ -1,0 +1,17 @@
+.no_result{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+}
+
+.render_html{
+  padding: 20px 30px;
+}
+
+.prev_area{
+  // padding: 0 30px;
+  padding-left: 20px;
+  height: calc(100vh - 110px);
+}

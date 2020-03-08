@@ -1,0 +1,22 @@
+<div class="modal fade graduation-standards-add" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><span id="graduation-modal-type">添加</span>通用标准</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <%= form_tag(create_standard_admins_graduation_standards_path, method: :post ,remote: true) do %>
+        <%= hidden_field_tag(:graduation_id, "", id: "graduation_standard_id") %>
+        <div class="modal-body">
+          <%= text_area_tag(:content,"",placeholder: "请输入通用标准内容", rows: "3", class: "textarea-width-100") %>
+        </div>
+        <div class="modal-footer">
+          <%= submit_tag("提交",class:"btn btn-primary", 'data-disable-with': "提交中...") %>
+        </div>
+        <% end %>
+
+    </div>
+  </div>
+</div>

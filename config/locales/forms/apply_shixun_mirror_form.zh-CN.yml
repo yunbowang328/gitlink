@@ -1,0 +1,15 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      apply_shixun_mirror_form:
+        language: 语言
+        runtime: 系统环境
+        run_method: 测试代码运行方式
+        attachment_id: 测试代码附件
+    errors:
+      models:
+        apply_shixun_mirror_form:
+          attributes:
+            attachment_id:
+              attachment_not_exist: 不存在
+

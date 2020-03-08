@@ -1,0 +1,369 @@
+.width1240{
+    width:1240px;
+}
+.packinput .ant-input{
+    height: 50px;
+    width:749px;
+    border-color: #E1EDF8 !important;
+}
+
+.packinput{
+    width:749px;
+}
+
+
+.packinput .ant-input-group-addon .ant-btn{
+    width:140px !important;
+    font-size: 18px;
+    height: 50px;
+    background:rgba(76,172,255,1);
+}
+
+.setissues{
+    width:280px;
+    height:50px;
+    background:rgba(76,172,255,1);
+    border-radius:4px;
+    margin-left: 15px;
+}
+
+.pagetype li{
+    color:#8F8F8F !important;
+}
+
+.maxwidth670{
+    max-width: 670px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mbf10{
+    margin-bottom:-10px;
+}
+
+.PackageIndexNEIBanner{
+    width:1200px;
+    height:110px;
+    background:rgba(255,255,255,1);
+    box-shadow:0px 2px 6px 0px rgba(125,125,125,0.26);
+    border-radius:8px;
+}
+
+.padding110{
+    padding: 39px 110px 0px;
+    box-sizing: border-box;
+}
+
+.borderccc{
+    border: 1px solid #ccc;
+}
+
+.input-100-40s{
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.fafafas{
+    background-color: #fafafa!important;
+    height: 40px;
+}
+
+.fafafas:focus{
+    background-color: #fff!important;
+}
+
+.fafas .ant-input{
+    background-color: #fafafa!important;
+    height: 40px;
+}
+
+.fafas .ant-input:focus{
+    background-color: #fff!important;
+}
+.fafas .ant-input-group-addon .ant-btn{
+    width:140px !important;
+    font-size: 14px;
+    height: 40px;
+    background:rgba(76,172,255,1);
+}
+
+.newFormbox .upload_filename{
+    line-height: 32px;
+}
+
+.newFormbox .attachment span{
+    line-height: 23px;
+}
+
+.newFormbox .attachment .remove-upload{
+    line-height: 28px;
+}
+
+.pd26a0{
+    padding: 26px 26px 16px 26px;
+}
+
+.newFormbox .attachment .icon-fujian{
+    font-size: 14px !important;
+    line-height: 14px;
+    margin-top: 9px;
+}
+
+.newFormbox{
+    height:20px
+}
+
+.ml24{
+    margin-left:24px;
+}
+
+.defalutCancelbtns{
+    display: block;
+    border: 1px solid #4CACFF !important;
+    background-color: #fff;
+    color: #4CACFF !important;
+    width:130px;
+    height:40px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 4px;
+}
+
+.defalutSubmitbtns{
+    background-color: #4CACFF;
+    height:40px;
+}
+
+.defalutSubmitbtnmodels{
+    width:127px;
+    height:30px;
+    background-color: #4CACFF;
+}
+
+.ant-steps-item-process .ant-steps-item-icon{
+    background-color: #4CACFF !important;
+}
+
+.ant-steps-item-process .ant-steps-item-icon{
+    background-color: #4CACFF !important;
+}
+
+.padding200{
+    padding: 115px 200px 215px 200px;
+}
+
+.fontcircle{
+    font-size: 80px;
+    display: inherit;
+}
+
+.sumbtongs{
+    font-size: 24px;
+    display: inherit;
+    text-align: center;
+}
+
+.terraces{
+    font-size: 16px;
+    display: inherit;
+    text-align: center;
+    color:#999;
+}
+.padding251{
+    padding: 0px 245px;
+}
+
+.ant-modal-title{
+    text-align: center;
+}
+.ml17{
+    margin-left: 17px;
+}
+
+.project-package-items{
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: row;
+    margin:0px !important;
+    padding: 20px;
+    background: white;
+    margin-bottom:0px !important;
+    box-shadow: none  !important;
+}
+
+.mtf7{
+    margin-top:-7px;
+}
+
+.publicpart.orangeGreen {
+    border-left: 80px solid #29BD8B;
+}
+
+.publicwords{
+    left: 3px;
+    top: 18px;
+}
+
+.project-packages-list .project-package-items .item-image{
+    width:100px !important;
+}
+
+.height185{
+    height: 185px;
+}
+
+.ContacttheTA{
+    width: 80px;
+    height: 26px;
+    font-size: 14px;
+    line-height: 26px;
+    display: block;
+    border: 1px solid #4CACFF !important;
+    background-color: #fff;
+    color: #4CACFF !important;
+    text-align: center;
+    border-radius: 4px;
+}
+.ContacttheTAs{
+    width: 80px;
+    height: 26px;
+    font-size: 14px;
+    line-height: 24px;
+    /*display: block;*/
+    border: 1px solid #fff !important;
+    background-color: #4CACFF;
+    color: #fff !important;
+    text-align: center;
+    border-radius: 4px;
+}
+.ml28{
+    margin-left: 28px;
+}
+
+.longboxs{
+    font-size: 16px;
+    font-family: MicrosoftYaHei-Bold;
+    font-weight: bold;
+    color: rgba(5,16,26,1);
+    border-left: 4px solid rgba(76,172,255,1);
+    padding-left: 10px;
+    margin-bottom: 20px;
+}
+
+.padding020{
+    padding: 0px 20px 20px;
+}
+
+.mtf3{
+    margin-top:-3px;
+}
+
+.task-btn-nebules{
+    background: #fff!important;
+    color: #4CACFF!important;
+    border: 1px solid #4CACFF!important;
+    margin-left: 20px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    font-size: 14px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+}
+
+.packageabsolute{
+    position: absolute;
+    right: -16px;
+    top: -7px;
+}
+.relativef{
+    position: relative;
+}
+
+.homehove:hover .ptext{
+    color: #4CACFF!important;
+}
+
+.homehove:hover .ContacttheTAs{
+    display: block;
+}
+
+.topsj{
+    position: absolute;
+    top: -3px;
+}
+.bottomsj{
+    position: absolute;
+    bottom: -5px;
+}
+.touchSelect .ant-spin-dot-spin{
+    margin-top: 30% !important;
+}
+
+.pagenoedits{
+    margin-left: 20px;
+    color: #ccc;
+}
+
+.pagemancenter{
+    text-align: center;
+}
+
+.ml0{
+    margin-left: 0px;
+}
+.tabelcli{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 850px;
+    display: table-cell;
+}
+
+.mtf10{
+    margin-top:-10px;
+}
+
+.padding26{
+    padding: 26px;
+    box-sizing: border-box;
+}
+
+.pd26{
+    padding: 26px;
+}
+.pd30a0{
+    padding: 30px 30px 16px 30px;
+}
+
+.shaiContent li.shaiItem:hover span{
+    color: #fff !important;
+}
+
+.shaiContent li.shaiItem:hover i.iconfont{
+    color: #4CACFF!important
+}
+
+.ant-form-item-requireds::before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #f5222d;
+    font-size: 14px;
+    font-family: SimSun,sans-serif;
+    line-height: 1;
+    content: '*';
+}
+
+*, *::before, *::after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.mtf12{
+    margin-top: -12px;
+}

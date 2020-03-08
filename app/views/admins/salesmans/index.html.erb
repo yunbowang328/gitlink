@@ -1,0 +1,15 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('销售数据列表', admins_salesmans_path) %>
+<% end %>
+
+<div class="box search-form-container salesman-list-form rig">
+  <div class="flex-1">
+    <%= javascript_void_link '新增销售人员', class: 'btn btn-primary', data: { toggle: 'modal', target: '.admin-add-salesman-user-modal' } %>
+  </div>
+</div>
+
+<div class="box admin-list-container salesman-list-container">
+  <%= render(partial: 'admins/salesmans/shared/list') %>
+</div>
+
+<%= render 'admins/salesmans/shared/add_salesman_user_modal' %>

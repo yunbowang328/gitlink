@@ -1,0 +1,14 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('毕业要求通用标准') %>
+<% end %>
+
+<div class="box search-form-container graduation-standards-list-form">
+  <%= javascript_void_link '新增', class: 'btn btn-primary standard-create-modal', data: { toggle: 'modal', target: '.graduation-standards-add',
+                                                                                         id: "-1", content: "", msg: "添加" } %>
+</div>
+
+<div class="box admin-list-container graduation-standards-list-container">
+  <%= render(partial: 'admins/graduation_standards/shared/list', locals: { standards: @standards }) %>
+</div>
+
+<%= render partial: "admins/graduation_standards/shared/add_standard_modal" %>

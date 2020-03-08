@@ -1,0 +1,27 @@
+<table class="table table-hover text-center sub-repertoire-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="6%">序号</th>
+    <th width="54%" class="text-left">课程</th>
+    <th width="16%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if @sub_repertoires.present? %>
+    <% @sub_repertoires.each_with_index do |sub, index| %>
+      <tr class="sub-repertoire-item sub-repertoire-item-<%= sub.id %>">
+        <td><%= index + 1 %></td>
+        <td class="text-left">
+          <span><%= link_to sub.name, admins_tag_repertoires_path(sub_repertoire_id: sub), :title => sub.name %></span>
+        </td>
+        <td>
+          <%= link_to '编辑', edit_admins_sub_repertoire_path(sub), remote: true, class: 'action' %>
+          <%= delete_link '删除', admins_sub_repertoire_path(sub, element: ".sub-repertoire-item-#{sub.id}"), class: 'delete-sub-repertoire-action' %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>

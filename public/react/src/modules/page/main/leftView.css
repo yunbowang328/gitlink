@@ -1,0 +1,123 @@
+#tab_nav {
+	border-bottom: none;
+    /*padding: 0 1%;*/
+    display: flex;
+    height: 41px;
+}
+    #tab_nav li {
+        flex: 1;
+    }
+    #tab_nav .tab_type {
+        font-size: 16px;
+    }
+
+.task_name_section .subject {
+    margin-bottom: 0px;
+}
+
+.task_name_section {
+	background-color: #FAFAFA;
+	border-bottom: 1px solid #F3F3F3;
+	padding: 4px 0;
+	height: 45px;
+    box-sizing: border-box;
+}
+.task_name_section .subject {
+	display: inline-block;
+	margin-left: 2px;
+	max-width: 80%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* TODO 加了overflow hidden，会多出一条空白的行*/
+    overflow: hidden;
+    font-size: 18px;
+}
+
+.task_name_section .btn-cir-big {
+	margin-top: 4px;
+	background-color: #FFD633;
+}
+
+
+#game_left_contents .editormd-html-preview {
+	margin-bottom: 0px;
+}
+#game_left_contents #tab_nav {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 0px;
+}
+
+#game_left_contents .tab_hover a {
+    color: #05101A !important;
+}
+#game_left_contents .tab_hover {
+    border-bottom: 2px solid #4CACFF
+}
+
+#tab_con_1 .editormd, #tab_con_2 .editormd {
+    border: none;
+    width: 100% !important;
+}
+.editormd-html-preview p, .editormd-preview-container p {
+    font-size: 16px !important;
+    /* -webkit-font-smoothing: auto; */
+}
+.editormd-preview-active {
+    padding: 20px;
+}
+.markdown-body .circularProgress {
+    margin-top: 40% !important;
+}
+
+#game_show_content .tab-info .-layout-v.-fit {
+    /* margin: 0 6px; */
+}
+
+.edu-cir-grey1 {
+    color: #FFF !important;
+}
+/*
+	评论弹出框动画
+	transition: height 0.2s;
+
+	#
+*/
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    height: 6px;
+    width: 6px !important;
+    background: rgba(0,0,0,.1) !important;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #ccc;
+}
+::-webkit-scrollbar-thumb {
+    background: #B7B7B7 !important;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    -ms-border-radius: 6px;
+    -o-border-radius: 6px;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #e1ede1;
+}
+/* TODO 加载了2个 codemirror  用了HOC，WrappedComponent mount twice
+    react HOC extends WrappedComponent mount twice
+*/
+/*#game_ready_knowledge .CodeMirror:nth-child(3){
+    display: none !important;
+}*/
+
+
+
+#game_answer_show.editormd {
+    width: auto;
+    margin: inherit;   
+    border: none;
+}

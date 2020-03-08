@@ -1,0 +1,8 @@
+module CustomRegexp
+  PHONE = /1\d{10}/
+  EMAIL = /\A[a-zA-Z0-9]+([._\\]*[a-zA-Z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+\z/
+  LASTNAME = /\A[a-zA-Z0-9\u4e00-\u9fa5]+\z/
+  NICKNAME = /\A[\u4e00-\u9fa5_a-zA-Z0-9]+\z/
+  PASSWORD = /\A[a-z_A-Z0-9\-\.!@#\$%\\\^&\*\)\(\+=\{\}\[\]\/",'_<>~\·`\?:;|]{8,16}\z/
+  URL = /\Ahttps?:\/\/[-A-Za-z0-9+&@#\/%?=~_|!:,.;]+[-A-Za-z0-9+&@#\/%=~_|]\z/
+end

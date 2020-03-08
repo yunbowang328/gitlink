@@ -1,0 +1,3 @@
+$(".graduation-standards-add").removeClass("show").modal("hide")
+$(".graduation-standards-list-container").html("<%= j render partial: "admins/graduation_standards/shared/list", locals: { standards: @standards } %>")
+show_success_flash()

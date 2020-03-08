@@ -1,0 +1,13 @@
+/* 邮箱验证 */
+.new_content{width:1000px; margin:10px auto;padding:30px 0;background-color:#fff;	}
+.email_verify{width:580px; margin:50px auto; line-height: 1.9;}
+.email_verify_prompt{border:2px solid #dd0000;background:#ffe3e3 url(../images/icons_prompt.png) 25px 10px no-repeat;;height:35px;line-height:35px;padding-left:45px;color:#8b0000;font-size:14px;}
+.email_prompt_p{font-size:14px;color:#000;}
+.email_prompt_txt{ width:580px;}
+.email_prompt_txt li{color:#777;line-height:1.9;font-size:14px;}
+.email_prompt_mes{color:#888;border:1px solid #ccc;-webkit-border-radius:5px;-moz-border-radius:5px; -o-border-radius:5px; border-radius:5px;width:568px;height:60px;background:#fff;padding:5px;}
+.email_tanbox{ border:2px solid #3a95d7;background:#fff;width:480px;}
+.email_tancon{width:420px;margin:0 auto;text-align:center;padding:20px 30px;background:#fff;}
+.email_tan_title{font-size:18px;color:#3a95d7;font-weight:normal;margin-bottom:5px;}
+.email_tan_p{font-size:14px;color:#4c4c4c;}
+.email_verify_p{ font-size:14px; color:#3a95d7;}

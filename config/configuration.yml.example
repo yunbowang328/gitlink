@@ -1,0 +1,78 @@
+default: &default
+  # 用户登入的时候设置/登出的时候清空
+  autologin_cookie_name: 'autologin_trustie'
+
+
+  #附件上传路径
+  attachment_folder: '/tmp'
+
+  # webssh相关
+  tomcat_webssh: 'https://testwebssh.educoder.net'
+  webssh_username: ''
+  webssh_password: ''
+
+  # git服务地址
+  git_address_ip: ''
+
+  #新版git服务地址
+  git_address_domain: ''
+
+  # git管理员用户名问题, 适用于git客户端的操作
+  git_username: ''
+  git_password: ''
+
+  ucloud:
+    public_key: ''
+    private_key: ''
+    public_bucket: ''
+    public_bucket_host: ''
+    public_cdn_host: ''
+  oauth:
+    qq:
+      appid: 'test'
+      secret: 'test123456'
+    wechat:
+      appid: 'test'
+      secret: 'test'
+      scope: 'snsapi_login'
+      base_url: 'https://api.weixin.qq.com'
+    aliyun_vod:
+      access_key_id: 'test'
+      access_key_secret: 'test'
+      base_url: 'http://vod.cn-shanghai.aliyuncs.com'
+      cate_id: '-1'
+      callback_url: 'callback_url'
+      signature_key: 'test12345678'
+
+  gitea:
+    access_key_id: 'root'
+    access_key_secret: '_Trustie_10010'
+    domain: 'https://testgitea.trustie.net'
+    base_url: '/api/v1'
+
+
+production:
+  <<: *default
+  # 中间层地址
+
+  cloud_bridge: ''
+  cloud_tomcat_php: ''
+  bridge_secret_key: ''
+  cookie_domain: '.educoder.net'
+
+  attachment_folder: ''
+  host_name: 'https://testeduplus2.educoder.net'
+  old_edu_host: 'http://testbdweb.educoder.net'
+
+development:
+  <<: *default
+
+  cloud_bridge: ''
+  cloud_tomcat_php: ''
+  host_name: ''
+  old_edu_host: ''
+test:
+  <<: *default
+  cloud_tomcat_php: 'http://10.9.63.225'
+  host_name: 'https://testeduplus2.educoder.net'
+  old_edu_host: 'http://testbdweb.educoder.net'

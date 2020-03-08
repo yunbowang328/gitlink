@@ -1,0 +1,29 @@
+<table class="table table-hover text-center department-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="4%">序号</th>
+    <th width="14%" class="text-left">部门名称</th>
+    <th width="14%" class="text-left">单位名称</th>
+    <th width="6%">用户数</th>
+    <th width="6%">已职业认证</th>
+    <th width="20%">部门管理员</th>
+    <th width="8%">统计链接</th>
+    <th width="8%">云主机数</th>
+    <th width="10%"><%= sort_tag('创建时间', name: 'created_at', path: admins_departments_path) %></th>
+    <th width="14%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if departments.present? %>
+    <% departments.each_with_index do |department, index| %>
+      <tr class="department-item-<%= department.id %>">
+        <%= render partial: 'admins/departments/shared/department_item', locals: {department: department, index: index} %>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: departments } %>

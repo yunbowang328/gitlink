@@ -1,0 +1,35 @@
+<table class="table" cellspacing="0" cellpadding="0">
+  <thead>
+  <th width="8%">序号</th>
+  <th width="40%">模板名称</th>
+  <th width="40%">上传模板</th>
+  <th width="10%">操作</th>
+  </thead>
+  <tbody>
+  <% if templates.size > 0 %>
+    <% templates.each_with_index do |t, index| %>
+  <% attachment = t.attachments.first %>
+      <tr id="template-item-<%= t.id %>">
+        <td><%= list_index_no(@params_page.to_i, index) %></td>
+        <td><%= t.name %></td>
+        <td>
+          <% if attachment.present? %>
+            <%= link_to "#{attachment.try(:filename)}",attachment_path(attachment), target: "_blank"  %>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to "<i class='fa fa-edit color-grey-c fa-fw font-18 padding10-5'></i>".html_safe,
+                      "javascript:void(0)", data: {"id": "#{t.id}", "template-id": "#{attachment.present? ? attachment.id : "-1"}",
+                                                   msg: "编辑", name: "#{t.name}", "template_name": "#{attachment.try(:filename)}"}, class: "edit-template-content" %>
+
+          <%= link_to "<i class='fa fa-trash-o color-grey-c fa-fw font-18 padding10-5'></i>".html_safe, admins_ec_template_path(t.id), method: :delete, data: {confirm: "确认删除吗？"}, remote: true, title: "删除" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: templates } %>

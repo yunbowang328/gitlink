@@ -1,0 +1,7 @@
+zh-CN:
+  activerecord:
+    models:
+      laboratory: ''
+    attributes:
+      laboratory:
+        identifier: '二级域名'

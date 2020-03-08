@@ -1,0 +1,168 @@
+.shixunsdiffcult{
+  width: 40px;
+  height: 21px;
+  overflow: hidden;
+  margin-left: 8px;
+ }
+
+ .rateYo{
+  text-align: center;
+  cursor: default;
+  width: 111px;
+ }
+
+ a:link, a:visited {
+  color: #05101a;
+}
+
+a:link{text-decoration:none;}
+
+a:visited{text-decoration:none;}
+
+a:hover{text-decoration:none;}
+
+a:active{text-decoration:none;}
+
+
+.next-rating-overlay .next-icon{
+  color: #FFA800!important;
+}
+
+.displayblock{
+  display:block;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.totalScore{
+    justify-content: center;
+    align-items: center;
+    display: -webkit-flex;
+    height: 100%;
+}
+
+.next-progress-line{
+  width: 210px !important;
+  margin-left: 10px;
+  margin-top: 4px;
+}
+
+.next-progress-line-overlay-normal{
+  background-color: #FFA800  !important;
+}
+.next-rating-base-disabled{
+    cursor: default!important;
+}
+/*#challenge_begin {*/
+/*!*height: 40px !important;*!*/
+/*line-height: 30px;*/
+/*}*/
+.ant-modal-title{
+    font-size: 16px;
+    font-weight: bold !important;
+    color: #333;
+}
+
+.ml60{
+    margin-left:20px;
+}
+
+.marginauto{
+    margin:0 auto;
+}
+.margin152{
+    margin-left: 152px;
+}
+
+.margin-tp26{
+    margin-top: -26px;
+}
+.edu-h315{
+    height:315px;
+}
+
+.height39 {
+    height: 39px !important;
+}
+
+#commentsStar{
+    margin-top: -7px;
+    width: 90px;
+    height: 80px;
+}
+
+.startbtnModal .ant-modal-content{
+    background: transparent;
+    box-shadow: 0 4px 12px transparent;
+}
+
+.startbtnModal .ant-modal-content .ant-modal-body .ant-spin-spinning{
+    margin-left: 45%;
+}
+
+.mr51{
+    margin-right:51px;
+}
+
+.flexbannerright{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.width360{
+    width:360px;
+}
+
+.bannerpd201{
+    padding: 20px 20px 10px 20px;
+}
+
+.FF6802{
+    color:#FF6802;
+}
+
+.xxtjbtn{
+
+    width: 103px;
+    height: 38px;
+    background: rgba(255,255,255,1);
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,1);
+    color: #fff !important;
+    font-size: 15px !important;
+    line-height: 36px !important;
+}
+.kkbths{
+    width:103px;
+    height:38px;
+    border-radius:4px;
+    line-height: 36px !important;
+    border:1px solid rgba(255,255,255,1)!important;
+    color: #ffffff !important;
+}
+
+.kaike{
+    border-radius: 4px;
+    border: 1px solid #ffffff !important;
+    padding: 0px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    display: block;
+    width: 120px;
+    text-align: center;
+    height: 40px;
+    line-height: 40px!important;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #ffffff !important;
+}
+.forkNumst{display: block;float: left;width: 36px;text-align: center;border-left: 1px solid #ffffff !important;color: #ffffff!important; }
+.mlbanner36{
+    margin-left: 36px;
+}
+
+
+.forkfactors{
+    text-align: center;
+    color: #999999;
+}

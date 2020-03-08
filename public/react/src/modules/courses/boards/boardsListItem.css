@@ -1,0 +1,9 @@
+.directory_style {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  maxSize: 20px;
+  overflow: hidden;
+  whiteSpace: nowrap;
+  textOverflow: ellipsis
+}

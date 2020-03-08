@@ -1,0 +1,8 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('镜像管理', admins_mirror_repositories_path) %>
+  <% add_admin_breadcrumb(current_mirror.type_name, edit_admins_mirror_repository_path(current_mirror)) %>
+  <% add_admin_breadcrumb('脚本列表', admins_mirror_repository_mirror_scripts_path(current_mirror)) %>
+  <% add_admin_breadcrumb('新建脚本') %>
+<% end %>
+
+<%= render partial: 'admins/mirror_scripts/shared/form', locals: { mirror: current_mirror, script: @script, form_action: 'create' } %>

@@ -1,0 +1,6 @@
+'zh-CN':
+  bidding_user:
+    status:
+      pending: 竞标中
+      bidding_won: 已中标
+      bidding_lost: 未中标
