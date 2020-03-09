@@ -9,7 +9,6 @@
 /bundle
 
 # Ignore lock config file
-*.lock
 *.log
 
 # mac
@@ -27,6 +26,7 @@
 
 /node_modules
 /yarn-error.log
+public/react/yarn.lock
 
 # /public/assets
 .byebug_history
