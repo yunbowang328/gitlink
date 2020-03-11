@@ -9,8 +9,8 @@ class Project < ApplicationRecord
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
   belongs_to :owner, class_name: 'User', foreign_key: :user_id
-  belongs_to :project_category , :counter_cache => true
-  belongs_to :project_language , :counter_cache => true
+  belongs_to :project_category, optional: true , :counter_cache => true
+  belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
 
   has_many :commits, dependent: :destroy
@@ -73,7 +73,7 @@ class Project < ApplicationRecord
       }
       user_member = Member.new(member_params)
       if user_member.save
-        MemberRole.create(member_id: user_member.id ,role_id: 3)
+        MemberRole.create!(member_id: user_member.id ,role_id: 3)
       end
     end
   end

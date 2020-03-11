@@ -27,6 +27,7 @@ class Gitea::UserForm
 
   private
   def check_username
+    Rails.logger.info("#######_______username________#################{username}")
     # errors.add(:login, :exist)
     raise "#{username} 已使用." if User.exists?(login: username.strip)
   end

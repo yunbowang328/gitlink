@@ -2,7 +2,9 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+  mount Sidekiq::Web => '/sidekiq'
+
+  # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
@@ -11,6 +13,7 @@ Rails.application.routes.draw do
   get 'auth/cas/callback', to: 'oauth/cas#create'
 
   scope '/api' do
+    resources :sync_forge, only: [:create]  #同步用户
     resources :composes do
       resources :compose_projects, only: [:create, :destroy]
     end
