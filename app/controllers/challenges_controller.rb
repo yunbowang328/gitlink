@@ -10,11 +10,10 @@ class ChallengesController < ApplicationController
   # 关卡访问的权限控制
   before_action :shixun_access_allowed, only: [:index]
 
-  include ShixunsHelper
   include ChallengesHelper
 
 
-  
+
 
   # 新建实践题
   def new
@@ -163,7 +162,7 @@ class ChallengesController < ApplicationController
     @shixun.increment!(:visits)
   end
 
-  
+
 
   def show
     @tab = params[:tab].nil? ? 1 : params[:tab].to_i

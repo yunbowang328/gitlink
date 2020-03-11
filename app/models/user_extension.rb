@@ -15,8 +15,8 @@ class UserExtension < ApplicationRecord
   private
 
   def set_laboratory_school
-    return unless new_record?
+    # return unless new_record?
 
-    self.school_id = Laboratory.current.school_id if school_id.blank? && !Laboratory.current.main_site?
+    # self.school_id = Laboratory.current.school_id if school_id.blank? && !Laboratory.current.main_site?
   end
 end

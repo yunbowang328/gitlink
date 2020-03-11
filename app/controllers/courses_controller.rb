@@ -1,6 +1,5 @@
 class CoursesController < ApplicationController
   include MessagesHelper
-  include ExportHelper
   include CustomSortable
 
   # model validation error

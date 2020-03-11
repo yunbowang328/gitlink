@@ -73,7 +73,8 @@ class Project < ApplicationRecord
       }
       user_member = Member.new(member_params)
       if user_member.save
-        MemberRole.create!(member_id: user_member.id ,role_id: 3)
+        role_id = Role.select(:id,:position).where(position: 3)&.first&.id
+        MemberRole.create!(member_id: user_member.id ,role_id: role_id)
       end
     end
   end
