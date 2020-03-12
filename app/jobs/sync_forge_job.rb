@@ -93,7 +93,7 @@ class SyncForgeJob < ApplicationJob
               identifier: project["identifier"]
             }
             Repositories::CreateService.new(new_user, new_project, repository_params).call
-            project_score = project_score["project_role"] if platform == "trustie" #trustie上需要
+            project_score = project_score["project_score"] if platform == "trustie" #trustie上需要
             if project_score.present?
               ProjectScore.create!(project_score&.except!(*score_to_delete).merge(project_id: new_project.id))
             end
