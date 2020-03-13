@@ -3,7 +3,7 @@ class User < ApplicationRecord
   include Likeable
   include BaseModel
   include ProjectOperable
-  include Searchable::Dependents::User
+  # include Searchable::Dependents::User
 
   # Account statuses
   STATUS_ANONYMOUS  = 0

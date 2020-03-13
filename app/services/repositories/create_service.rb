@@ -49,8 +49,8 @@ class Repositories::CreateService < ApplicationService
     hash = {
       name: params[:identifier],
       private: !params[:hidden],
-      readme: "ReadMe"
-      # "auto_init": true,
+      # readme: "ReadMe",
+      "auto_init": true,
       # "description": "string",
       # "gitignores": "string",
       # "issue_labels": "string",

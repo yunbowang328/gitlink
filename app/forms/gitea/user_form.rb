@@ -1,12 +1,13 @@
 class Gitea::UserForm
   include ActiveModel::Model
-  EMAIL_REGEX = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+  EMAIL_REGEX = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_\-.]+(\.[a-zA-Z0-9_-]+)+$/
 
   include ActiveModel::Model
   attr_accessor :username, :email, :password
 
   validates :username, presence: true
   validates :email, presence: true, format: { with: EMAIL_REGEX, multiline: true }
+
   validates :password, presence: true
 
   validate :check_username, :check_email
