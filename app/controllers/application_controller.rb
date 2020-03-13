@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 	include RenderExpand
 	include RenderHelper
 	include ControllerRescueHandler
-	# include LaboratoryHelper
+	include LaboratoryHelper
 	include GitHelper
 	include LoggerHelper
 	include LoginHelper
