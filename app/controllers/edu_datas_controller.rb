@@ -1,7 +1,7 @@
 class EduDatasController < ApplicationController
   before_action :find_game
   skip_before_action :user_setup
-  skip_before_action :setup_laboratory
+  # skip_before_action :setup_laboratory
   # layout :false
   include GitHelper
 
