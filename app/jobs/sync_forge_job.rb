@@ -62,38 +62,41 @@ class SyncForgeJob < ApplicationJob
 
     owner_params = owner_params&.except!(*keys_to_delete)
     user_password = random_password
-    if User.exists?(login: owner_params["login"])
-      new_user = User.find_by(login: owner_params["login"])
-    else
-      new_user = User.new(owner_params.merge(platform: platform))
-      interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
-      if interactor.success?
-        gitea_user = interactor.result
-        new_user.gitea_uid = gitea_user['id']
+    new_user = []
+    if owner_params.present?
+      if User.exists?(login: owner_params["login"])
+        new_user = User.find_by(login: owner_params["login"])
       else
-        response = Gitea::User::GetTokenService.new("#{owner_params["login"]}").call
-        if response.status == 200
-          user_id = JSON.parse(response.body)["id"]
-          new_user.gitea_uid = user_id
+        new_user = User.new(owner_params.merge(platform: platform))
+        interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
+        if interactor.success?
+          gitea_user = interactor.result
+          new_user.gitea_uid = gitea_user['id']
         else
-          new_user.gitea_uid = ""
+          response = Gitea::User::GetTokenService.new("#{owner_params["login"]}").call
+          if response.status == 200
+            user_id = JSON.parse(response.body)["id"]
+            new_user.gitea_uid = user_id
+          else
+            new_user.gitea_uid = ""
+          end
+        end
+        if new_user.gitea_uid.present?
+          result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
+          new_user.gitea_token = result['sha1']
+        end
+
+        if new_user.save!
+          if owner_extension_params.present?
+            owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
+            owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
+            UserExtension.create!(owner_extension_params)
+          end
         end
       end
-      if new_user.gitea_uid.present?
-        result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
-        new_user.gitea_token = result['sha1']
-      end
-
-      if new_user.save!
-        if owner_extension_params.present?
-          owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
-
-          owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
-          UserExtension.create!(owner_extension_params)
-        end
-      end
+      Rails.logger.info("#######______sync_user_end__########")
     end
-    Rails.logger.info("#######______sync_user_end__########")
+
     new_user
   end
 
