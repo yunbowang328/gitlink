@@ -23,23 +23,23 @@ class ApplicationController < ActionController::Base
 
 	# 所有请求必须合法签名
 	def check_sign
-		if !Rails.env.development?
-			Rails.logger.info("66666  #{params}")
-			# suffix = request.url.split(".").last.split("?").first
-			# suffix_arr = ["xls", "xlsx", "pdf", "zip"] # excel文件先注释
-			# unless suffix_arr.include?(suffix)
-				if params[:client_key].present?
-					randomcode = params[:randomcode]
-					# tip_exception(501, "请求不合理") unless (Time.now.to_i - randomcode.to_i).between?(0,5)
-
-					sign = Digest::MD5.hexdigest("#{OPENKEY}#{randomcode}")
-					Rails.logger.info("2222  #{sign}")
-					tip_exception(501, "请求不合理") if sign != params[:client_key]
-				else
-					tip_exception(501, "请求不合理")
-				end
-			# end
-		end
+		# if !Rails.env.development?
+		# 	Rails.logger.info("66666  #{params}")
+		# 	# suffix = request.url.split(".").last.split("?").first
+		# 	# suffix_arr = ["xls", "xlsx", "pdf", "zip"] # excel文件先注释
+		# 	# unless suffix_arr.include?(suffix)
+		# 		if params[:client_key].present?
+		# 			randomcode = params[:randomcode]
+		# 			# tip_exception(501, "请求不合理") unless (Time.now.to_i - randomcode.to_i).between?(0,5)
+		#
+		# 			sign = Digest::MD5.hexdigest("#{OPENKEY}#{randomcode}")
+		# 			Rails.logger.info("2222  #{sign}")
+		# 			tip_exception(501, "请求不合理") if sign != params[:client_key]
+		# 		else
+		# 			tip_exception(501, "请求不合理")
+		# 		end
+		# 	# end
+		# end
 	end
 
 	# 全局配置参数
