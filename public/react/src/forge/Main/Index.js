@@ -201,7 +201,7 @@ class Index extends Component{
       </div>:""
     )
     return(
-      <div style={{background:"#fafafa",height:"100vh"}}>
+      <div style={{background:"#fafafa"}}>
         <p className="t_project_banner"></p>
         <div className="main ProjectListIndex">
           <div className="list-left">
