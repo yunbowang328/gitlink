@@ -33,7 +33,7 @@ CREATE TABLE `api_keys` (
   PRIMARY KEY (`id`),
   KEY `index_api_keys_on_user_id` (`user_id`),
   KEY `index_api_keys_on_access_token` (`access_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=2906 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for applied_contests
@@ -50,7 +50,7 @@ CREATE TABLE `applied_contests` (
   PRIMARY KEY (`id`),
   KEY `index_applied_contests_on_contest_id` (`contest_id`),
   KEY `index_applied_contests_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for applied_messages
@@ -70,7 +70,7 @@ CREATE TABLE `applied_messages` (
   `role` int(11) DEFAULT NULL,
   `project_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6190 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for applied_projects
@@ -83,7 +83,7 @@ CREATE TABLE `applied_projects` (
   `role` int(11) DEFAULT '0',
   `status` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=859 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for apply_actions
@@ -105,7 +105,7 @@ CREATE TABLE `apply_actions` (
   `reject_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_apply_actions_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11521 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for apply_add_departments
@@ -125,7 +125,7 @@ CREATE TABLE `apply_add_departments` (
   KEY `index_apply_add_departments_on_department_id` (`department_id`),
   KEY `index_apply_add_departments_on_school_id` (`school_id`),
   KEY `index_apply_add_departments_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=733 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- ----------------------------
@@ -141,7 +141,7 @@ CREATE TABLE `apply_project_masters` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for apply_resources
@@ -159,7 +159,7 @@ CREATE TABLE `apply_resources` (
   `content` text,
   `apply_user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for apply_user_authentications
@@ -178,7 +178,7 @@ CREATE TABLE `apply_user_authentications` (
   `is_delete` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `index_apply_user_authentications_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1258 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for ar_internal_metadata
@@ -209,7 +209,7 @@ CREATE TABLE `attachment_group_settings` (
   KEY `index_attachment_group_settings_on_attachment_id` (`attachment_id`),
   KEY `index_attachment_group_settings_on_course_group_id` (`course_group_id`),
   KEY `index_attachment_group_settings_on_course_id` (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for attachment_histories
@@ -239,7 +239,7 @@ CREATE TABLE `attachment_histories` (
   `publish_time` date DEFAULT NULL,
   `cloud_url` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for attachments
@@ -277,7 +277,7 @@ CREATE TABLE `attachments` (
   KEY `index_attachments_on_course_second_category_id` (`course_second_category_id`),
   KEY `index_attachments_on_quotes` (`quotes`),
   KEY `index_attachments_on_is_public` (`is_public`)
-) ENGINE=InnoDB AUTO_INCREMENT=206590 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for attachmentstypes
@@ -288,7 +288,7 @@ CREATE TABLE `attachmentstypes` (
   `typeId` int(11) NOT NULL,
   `typeName` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for auth_sources
@@ -335,7 +335,7 @@ CREATE TABLE `authentications_users` (
   `user_id` int(11) DEFAULT NULL,
   `authentication_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1959 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for bidding_users
@@ -367,7 +367,7 @@ CREATE TABLE `biding_projects` (
   `updated_at` datetime NOT NULL,
   `reward` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for bids
@@ -393,7 +393,7 @@ CREATE TABLE `bids` (
   `evaluation_num` int(11) DEFAULT '3',
   `open_anonymous_evaluation` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=761 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- ----------------------------
@@ -411,7 +411,7 @@ CREATE TABLE `code_review_assignments` (
   `action_type` varchar(255) DEFAULT NULL,
   `changeset_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for code_review_project_settings
@@ -431,7 +431,7 @@ CREATE TABLE `code_review_project_settings` (
   `lock_version` int(11) NOT NULL DEFAULT '0',
   `tracker_in_review_dialog` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=481 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for code_review_user_settings
@@ -470,7 +470,7 @@ CREATE TABLE `code_reviews` (
   `file_count` int(11) NOT NULL DEFAULT '0',
   `diff_all` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for code_tests
@@ -487,7 +487,7 @@ CREATE TABLE `code_tests` (
   `updated_at` datetime NOT NULL,
   `student_work_id` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=759267 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for comments
@@ -507,7 +507,7 @@ CREATE TABLE `comments` (
   PRIMARY KEY (`id`),
   KEY `index_comments_on_commented_id_and_commented_type` (`commented_id`,`commented_type`),
   KEY `index_comments_on_author_id` (`author_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4799 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for commit_issues
@@ -521,7 +521,7 @@ CREATE TABLE `commit_issues` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for commits
@@ -605,7 +605,7 @@ CREATE TABLE `coo_imgs` (
   `updated_at` datetime NOT NULL,
   `position` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for coop_imgs
@@ -634,7 +634,7 @@ CREATE TABLE `cooperations` (
   `updated_at` datetime NOT NULL,
   `user_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for data_exceptions
@@ -663,7 +663,7 @@ CREATE TABLE `department_members` (
   PRIMARY KEY (`id`),
   KEY `index_department_members_on_department_id` (`department_id`),
   KEY `index_department_members_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for departments
@@ -681,7 +681,7 @@ CREATE TABLE `departments` (
   `is_delete` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `index_departments_on_school_id` (`school_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=727 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for diff_record_contents
@@ -729,7 +729,7 @@ CREATE TABLE `documents` (
   KEY `documents_project_id` (`project_id`),
   KEY `index_documents_on_category_id` (`category_id`),
   KEY `index_documents_on_created_on` (`created_on`)
-) ENGINE=InnoDB AUTO_INCREMENT=222 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for dts
@@ -769,7 +769,7 @@ CREATE TABLE `editor_of_documents` (
   `org_document_comment_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1663 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for edu_settings
@@ -784,7 +784,7 @@ CREATE TABLE `edu_settings` (
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_edu_settings_on_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for enabled_modules
@@ -797,7 +797,7 @@ CREATE TABLE `enabled_modules` (
   `course_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `enabled_modules_project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38126 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for enumerations
@@ -816,7 +816,7 @@ CREATE TABLE `enumerations` (
   PRIMARY KEY (`id`),
   KEY `index_enumerations_on_project_id` (`project_id`),
   KEY `index_enumerations_on_id_and_type` (`id`,`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for error_checks
@@ -828,7 +828,7 @@ CREATE TABLE `error_checks` (
   `login` varchar(255) DEFAULT NULL,
   `path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=864 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for evaluate_records
@@ -858,7 +858,7 @@ CREATE TABLE `evaluate_records` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_evaluate_records_on_identifier` (`identifier`),
   KEY `index_evaluate_records_on_game_id` (`game_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1084209 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for first_pages
@@ -878,7 +878,7 @@ CREATE TABLE `first_pages` (
   `show_course` int(11) DEFAULT '1',
   `show_contest` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for gitlab_urls
@@ -892,7 +892,7 @@ CREATE TABLE `gitlab_urls` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16162 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for groups_users
@@ -917,7 +917,7 @@ CREATE TABLE `homepages` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_homepages_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23796 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- ----------------------------
@@ -932,7 +932,7 @@ CREATE TABLE `invite_lists` (
   `updated_at` datetime NOT NULL,
   `mail` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- ----------------------------
@@ -949,7 +949,7 @@ CREATE TABLE `issue_relations` (
   UNIQUE KEY `index_issue_relations_on_issue_from_id_and_issue_to_id` (`issue_from_id`,`issue_to_id`),
   KEY `index_issue_relations_on_issue_from_id` (`issue_from_id`),
   KEY `index_issue_relations_on_issue_to_id` (`issue_to_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for issue_statuses
@@ -966,7 +966,7 @@ CREATE TABLE `issue_statuses` (
   KEY `index_issue_statuses_on_position` (`position`),
   KEY `index_issue_statuses_on_is_closed` (`is_closed`),
   KEY `index_issue_statuses_on_is_default` (`is_default`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for issue_tags
@@ -986,7 +986,7 @@ CREATE TABLE `issue_tags` (
   `gitea_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_issue_tags_on_user_id_and_name_and_project_id` (`user_id`,`name`,`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for issue_tags_relates
@@ -1067,7 +1067,7 @@ CREATE TABLE `issues` (
   KEY `index_issues_on_author_id` (`author_id`),
   KEY `index_issues_on_created_on` (`created_on`),
   KEY `index_issues_on_root_id_and_lft_and_rgt` (`root_id`,`lft`,`rgt`)
-) ENGINE=InnoDB AUTO_INCREMENT=11839 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for journal_details
@@ -1082,7 +1082,7 @@ CREATE TABLE `journal_details` (
   `value` text,
   PRIMARY KEY (`id`),
   KEY `journal_details_journal_id` (`journal_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24527 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for journal_replies
@@ -1117,7 +1117,7 @@ CREATE TABLE `journals` (
   KEY `index_journals_on_user_id` (`user_id`),
   KEY `index_journals_on_journalized_id` (`journalized_id`),
   KEY `index_journals_on_created_on` (`created_on`)
-) ENGINE=InnoDB AUTO_INCREMENT=19600 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for journals_for_messages
@@ -1145,7 +1145,7 @@ CREATE TABLE `journals_for_messages` (
   PRIMARY KEY (`id`),
   KEY `index_journals_for_messages_on_root_id` (`root_id`),
   KEY `index_journals_for_messages_on_jour_id` (`jour_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=80534 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for kindeditor_assets
@@ -1162,7 +1162,7 @@ CREATE TABLE `kindeditor_assets` (
   `updated_at` datetime NOT NULL,
   `owner_type` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24663 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mark_downs
@@ -1189,7 +1189,7 @@ CREATE TABLE `member_roles` (
   PRIMARY KEY (`id`),
   KEY `index_member_roles_on_member_id` (`member_id`),
   KEY `index_member_roles_on_role_id` (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=66133 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for members
@@ -1210,7 +1210,7 @@ CREATE TABLE `members` (
   KEY `index_members_on_user_id` (`user_id`),
   KEY `index_members_on_project_id` (`project_id`),
   KEY `index_members_on_course_id` (`course_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=64571 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mirror_migrate_errors
@@ -1223,7 +1223,7 @@ CREATE TABLE `mirror_migrate_errors` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mirror_operation_records
@@ -1241,7 +1241,7 @@ CREATE TABLE `mirror_operation_records` (
   `old_tag` varchar(255) DEFAULT NULL,
   `new_tag` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=529 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mirror_repositories
@@ -1266,7 +1266,7 @@ CREATE TABLE `mirror_repositories` (
   `repertoire_id` int(11) DEFAULT NULL,
   `sub_repertoire_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mirror_repository_types
@@ -1296,7 +1296,7 @@ CREATE TABLE `mirror_scripts` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for mirror_types
@@ -1377,7 +1377,7 @@ CREATE TABLE `notificationcomments` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for oauth_configs
@@ -1392,7 +1392,7 @@ CREATE TABLE `oauth_configs` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for oauths
@@ -1428,7 +1428,7 @@ CREATE TABLE `onclick_times` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_onclick_times_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29038 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for open_id_authentication_associations
@@ -1474,7 +1474,7 @@ CREATE TABLE `open_source_projects` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=488570 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for open_users
@@ -1542,7 +1542,7 @@ CREATE TABLE `option_numbers` (
   `updated_at` datetime NOT NULL,
   `project_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22601 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_activities
@@ -1558,7 +1558,7 @@ CREATE TABLE `org_activities` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58541 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_courses
@@ -1570,7 +1570,7 @@ CREATE TABLE `org_courses` (
   `course_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_document_comments
@@ -1593,7 +1593,7 @@ CREATE TABLE `org_document_comments` (
   `root_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_org_document_comments_on_root_id` (`root_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6511 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_member_roles
@@ -1604,7 +1604,7 @@ CREATE TABLE `org_member_roles` (
   `org_member_id` int(11) DEFAULT NULL,
   `role_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=634 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_members
@@ -1617,7 +1617,7 @@ CREATE TABLE `org_members` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=637 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_messages
@@ -1636,7 +1636,7 @@ CREATE TABLE `org_messages` (
   `updated_at` datetime NOT NULL,
   `status` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=233 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_projects
@@ -1648,7 +1648,7 @@ CREATE TABLE `org_projects` (
   `project_id` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for org_subfield_messages
@@ -1679,7 +1679,7 @@ CREATE TABLE `org_subfields` (
   `hide` int(11) DEFAULT '0',
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=717 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for organizations
@@ -1699,7 +1699,7 @@ CREATE TABLE `organizations` (
   `show_mode` int(11) DEFAULT '0',
   `allow_teacher` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=150 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for outputs
@@ -1724,7 +1724,7 @@ CREATE TABLE `outputs` (
   KEY `game` (`game_id`,`query_index`),
   KEY `index_outputs_on_test_set_position` (`test_set_position`),
   KEY `index_outputs_on_created_at` (`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=3983977 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for phone_app_versions
@@ -1737,7 +1737,7 @@ CREATE TABLE `phone_app_versions` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for platform_samples
@@ -1750,7 +1750,7 @@ CREATE TABLE `platform_samples` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for praise_tread_caches
@@ -1765,7 +1765,7 @@ CREATE TABLE `praise_tread_caches` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9872 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for praise_treads
@@ -1781,7 +1781,7 @@ CREATE TABLE `praise_treads` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `praise_tread` (`praise_tread_object_id`,`praise_tread_object_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=31568 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for principal_activities
@@ -1796,7 +1796,7 @@ CREATE TABLE `principal_activities` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69584 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for private_messages
@@ -1815,7 +1815,7 @@ CREATE TABLE `private_messages` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_private_messages_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=157 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for professional_levels
@@ -1841,7 +1841,7 @@ CREATE TABLE `project_infos` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4926 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- ----------------------------
@@ -1869,7 +1869,7 @@ CREATE TABLE `project_package_categories` (
   `name` varchar(255) DEFAULT NULL,
   `position` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for project_packages
@@ -1919,7 +1919,7 @@ CREATE TABLE `project_scores` (
   `commit_time` datetime DEFAULT NULL,
   `pull_request_num` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3094 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for project_statuses
@@ -1935,7 +1935,7 @@ CREATE TABLE `project_statuses` (
   `course_ac_para` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `index_project_statuses_on_grade` (`grade`)
-) ENGINE=InnoDB AUTO_INCREMENT=3135 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for projecting_softapplictions
@@ -2000,7 +2000,7 @@ CREATE TABLE `projects` (
   PRIMARY KEY (`id`),
   KEY `index_projects_on_lft` (`lft`),
   KEY `index_projects_on_rgt` (`rgt`)
-) ENGINE=InnoDB AUTO_INCREMENT=3305 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for projects_trackers
@@ -2062,7 +2062,7 @@ CREATE TABLE `pull_requests` (
   `base` varchar(255) DEFAULT NULL,
   `issue_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=312 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for quality_analyses
@@ -2081,7 +2081,7 @@ CREATE TABLE `quality_analyses` (
   `language` varchar(255) DEFAULT NULL,
   `sonar_name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=237 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for queries
@@ -2135,7 +2135,7 @@ CREATE TABLE `rep_statics` (
   `updated_at` datetime NOT NULL,
   `changeset` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1475 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for repertoires
@@ -2147,7 +2147,7 @@ CREATE TABLE `repertoires` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for repositories
@@ -2175,7 +2175,7 @@ CREATE TABLE `repositories` (
   KEY `index_repositories_on_project_id` (`project_id`),
   KEY `index_repositories_on_identifier` (`identifier`),
   KEY `index_repositories_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=75110 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for resource_banks
@@ -2206,7 +2206,7 @@ CREATE TABLE `resource_banks` (
   PRIMARY KEY (`id`),
   KEY `index_resource_banks_on_course_id` (`course_id`),
   KEY `index_resource_banks_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8801 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for roles
@@ -2221,7 +2221,7 @@ CREATE TABLE `roles` (
   `permissions` text,
   `issues_visibility` varchar(30) NOT NULL DEFAULT 'default',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for run_code_messages
@@ -2258,7 +2258,7 @@ CREATE TABLE `settings` (
   `updated_on` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_settings_on_name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for shares
@@ -2276,7 +2276,7 @@ CREATE TABLE `shares` (
   `user_id` int(11) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for shield_activities
@@ -2291,7 +2291,7 @@ CREATE TABLE `shield_activities` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=153 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for shield_wechat_messages
@@ -2306,7 +2306,7 @@ CREATE TABLE `shield_wechat_messages` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for softapplications
@@ -2330,7 +2330,7 @@ CREATE TABLE `softapplications` (
   `deposit_project` varchar(255) DEFAULT NULL,
   `project_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for sonar_errors
@@ -2344,7 +2344,7 @@ CREATE TABLE `sonar_errors` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for ssos
@@ -2363,7 +2363,7 @@ CREATE TABLE `ssos` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_ssos_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for subject_members
@@ -2380,7 +2380,7 @@ CREATE TABLE `subject_members` (
   PRIMARY KEY (`id`),
   KEY `index_subject_members_on_subject_id` (`subject_id`),
   KEY `index_subject_members_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for subject_records
@@ -2438,7 +2438,7 @@ CREATE TABLE `subjects` (
   KEY `index_subjects_on_course_list_id` (`course_list_id`),
   KEY `index_subjects_on_major_id` (`major_id`),
   KEY `index_subjects_on_subject_level_system_id` (`subject_level_system_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for system_messages
@@ -2453,7 +2453,7 @@ CREATE TABLE `system_messages` (
   `description` text,
   `subject` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for system_update_notices
@@ -2517,7 +2517,7 @@ CREATE TABLE `tag_repertoires` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for taggings
@@ -2542,7 +2542,7 @@ CREATE TABLE `taggings` (
   KEY `index_taggings_on_context` (`context`),
   KEY `index_taggings_on_tagger_id_and_tagger_type` (`tagger_id`,`tagger_type`),
   KEY `taggings_idy` (`taggable_id`,`taggable_type`,`tagger_id`,`context`)
-) ENGINE=InnoDB AUTO_INCREMENT=907234 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tags
@@ -2553,7 +2553,7 @@ CREATE TABLE `tags` (
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `taggings_count` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=135640 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for teacher_course_groups
@@ -2592,7 +2592,7 @@ CREATE TABLE `team_members` (
   KEY `index_team_members_on_competition_team_id` (`competition_team_id`),
   KEY `index_team_members_on_user_id` (`user_id`),
   KEY `index_team_members_on_competition_id` (`competition_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tidings
@@ -2618,7 +2618,7 @@ CREATE TABLE `tidings` (
   PRIMARY KEY (`id`),
   KEY `index_tidings_on_user_id` (`user_id`),
   KEY `index_tidings_on_container_id` (`container_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=115117 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for time_entries
@@ -2644,7 +2644,7 @@ CREATE TABLE `time_entries` (
   KEY `index_time_entries_on_activity_id` (`activity_id`),
   KEY `index_time_entries_on_user_id` (`user_id`),
   KEY `index_time_entries_on_created_on` (`created_on`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for tokens
@@ -2659,7 +2659,7 @@ CREATE TABLE `tokens` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `tokens_value` (`value`),
   KEY `index_tokens_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116541 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for trackers
@@ -2673,7 +2673,7 @@ CREATE TABLE `trackers` (
   `is_in_roadmap` tinyint(1) NOT NULL DEFAULT '1',
   `fields_bits` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for trustie_hackathons
@@ -2721,7 +2721,7 @@ CREATE TABLE `user_actions` (
   `ip` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_user_actions_on_ip` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=1257592 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_activities
@@ -2738,7 +2738,7 @@ CREATE TABLE `user_activities` (
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_act_index` (`act_id`,`act_type`,`container_id`,`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=137953 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_agents
@@ -2769,7 +2769,7 @@ CREATE TABLE `user_day_certifications` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_user_day_certifications_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=315 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_extensions
@@ -2800,7 +2800,7 @@ CREATE TABLE `user_extensions` (
   KEY `index_user_extensions_on_user_id` (`user_id`),
   KEY `index_user_extensions_on_department_id` (`department_id`),
   KEY `index_user_extensions_on_school_id_and_user_id` (`school_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=36009 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_feedback_messages
@@ -2817,7 +2817,7 @@ CREATE TABLE `user_feedback_messages` (
   PRIMARY KEY (`id`),
   KEY `index_user_feedback_messages_on_user_id_and_created_at` (`user_id`,`created_at`),
   KEY `index_user_feedback_messages_on_journals_for_message_id` (`journals_for_message_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30409 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_grades
@@ -2834,7 +2834,7 @@ CREATE TABLE `user_grades` (
   KEY `index_user_grades_on_grade` (`grade`),
   KEY `index_user_grades_on_project_id` (`project_id`),
   KEY `index_user_grades_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7672 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_hidden_modules
@@ -2848,7 +2848,7 @@ CREATE TABLE `user_hidden_modules` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_user_hidden_modules_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=932 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_interests
@@ -2872,7 +2872,7 @@ CREATE TABLE `user_levels` (
   `user_id` int(11) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6329 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for user_preferences
@@ -2886,7 +2886,7 @@ CREATE TABLE `user_preferences` (
   `time_zone` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_user_preferences_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34275 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_score_details
@@ -2908,7 +2908,7 @@ CREATE TABLE `user_score_details` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55089 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_scores
@@ -2924,7 +2924,7 @@ CREATE TABLE `user_scores` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10128 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_searches
@@ -2939,7 +2939,7 @@ CREATE TABLE `user_searches` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_user_searches_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1283 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_sources
@@ -2974,7 +2974,7 @@ CREATE TABLE `user_statuses` (
   KEY `index_user_statuses_on_changesets_count` (`changesets_count`),
   KEY `index_user_statuses_on_watchers_count` (`watchers_count`),
   KEY `index_user_statuses_on_grade` (`grade`)
-) ENGINE=InnoDB AUTO_INCREMENT=35184 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_system_notices
@@ -2988,7 +2988,7 @@ CREATE TABLE `user_system_notices` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_user_system_notices_on_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1211 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for user_wechats
@@ -3014,7 +3014,7 @@ CREATE TABLE `user_wechats` (
   `updated_at` datetime NOT NULL,
   `bindtype` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2424 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for users
@@ -3069,7 +3069,7 @@ CREATE TABLE `users` (
   KEY `index_users_on_laboratory_id` (`laboratory_id`),
   KEY `index_users_on_login` (`login`),
   KEY `index_users_on_mail` (`mail`)
-) ENGINE=InnoDB AUTO_INCREMENT=36408 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for users_authentications
@@ -3098,7 +3098,7 @@ CREATE TABLE `verification_codes` (
   PRIMARY KEY (`id`),
   KEY `by_phone` (`phone`),
   KEY `by_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=27763 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for version_releases
@@ -3146,7 +3146,7 @@ CREATE TABLE `versions` (
   PRIMARY KEY (`id`),
   KEY `versions_project_id` (`project_id`),
   KEY `index_versions_on_sharing` (`sharing`)
-) ENGINE=InnoDB AUTO_INCREMENT=456 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for visitors
@@ -3162,7 +3162,7 @@ CREATE TABLE `visitors` (
   KEY `index_visitors_user_id` (`user_id`),
   KEY `index_visitors_master_id` (`master_id`),
   KEY `index_visitors_updated_on` (`updated_on`)
-) ENGINE=InnoDB AUTO_INCREMENT=61456 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for watchers
@@ -3177,7 +3177,7 @@ CREATE TABLE `watchers` (
   KEY `watchers_user_id_type` (`user_id`,`watchable_type`),
   KEY `index_watchers_on_user_id` (`user_id`),
   KEY `index_watchers_on_watchable_id_and_watchable_type` (`watchable_id`,`watchable_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=36653 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for weapp_settings
@@ -3206,7 +3206,7 @@ CREATE TABLE `web_footer_companies` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for web_footer_oranizers
@@ -3219,7 +3219,7 @@ CREATE TABLE `web_footer_oranizers` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for websshes
@@ -3248,7 +3248,7 @@ CREATE TABLE `wechat_logs` (
   `created_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `index_wechat_logs_on_openid` (`openid`)
-) ENGINE=InnoDB AUTO_INCREMENT=119051 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wiki_content_versions
@@ -3267,7 +3267,7 @@ CREATE TABLE `wiki_content_versions` (
   PRIMARY KEY (`id`),
   KEY `wiki_content_versions_wcid` (`wiki_content_id`),
   KEY `index_wiki_content_versions_on_updated_on` (`updated_on`)
-) ENGINE=InnoDB AUTO_INCREMENT=264 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wiki_contents
@@ -3284,7 +3284,7 @@ CREATE TABLE `wiki_contents` (
   PRIMARY KEY (`id`),
   KEY `wiki_contents_page_id` (`page_id`),
   KEY `index_wiki_contents_on_author_id` (`author_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wiki_pages
@@ -3301,7 +3301,7 @@ CREATE TABLE `wiki_pages` (
   KEY `wiki_pages_wiki_id_title` (`wiki_id`,`title`),
   KEY `index_wiki_pages_on_wiki_id` (`wiki_id`),
   KEY `index_wiki_pages_on_parent_id` (`parent_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wiki_redirects
@@ -3316,7 +3316,7 @@ CREATE TABLE `wiki_redirects` (
   PRIMARY KEY (`id`),
   KEY `wiki_redirects_wiki_id_title` (`wiki_id`,`title`),
   KEY `index_wiki_redirects_on_wiki_id` (`wiki_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for wikis
@@ -3329,7 +3329,7 @@ CREATE TABLE `wikis` (
   `status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `wikis_project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2825 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for project_categories
@@ -3345,7 +3345,7 @@ CREATE TABLE `project_categories` (
   `ancestry` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_project_categories_on_ancestry` (`ancestry`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for zip_packs
@@ -3366,7 +3366,7 @@ CREATE TABLE `zip_packs` (
   `container_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index_zip_packs_on_container_id_and_container_type` (`container_id`,`container_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=25831 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for laboratories
@@ -3384,7 +3384,7 @@ CREATE TABLE `laboratories` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `index_laboratories_on_identifier` (`identifier`),
   KEY `index_laboratories_on_school_id` (`school_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for laboratory_settings
@@ -3396,7 +3396,7 @@ CREATE TABLE `laboratory_settings` (
   `config` text,
   PRIMARY KEY (`id`),
   KEY `index_laboratory_settings_on_laboratory_id` (`laboratory_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for laboratory_users
