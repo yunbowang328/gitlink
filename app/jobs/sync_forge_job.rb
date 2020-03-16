@@ -91,7 +91,7 @@ class SyncForgeJob < ApplicationJob
           new_user.gitea_token = result['sha1']
         end
 
-        if new_user.save!
+        if new_user.save(:validate => false)
           if owner_extension_params.present?
             owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
             owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
@@ -141,7 +141,7 @@ class SyncForgeJob < ApplicationJob
           end
           unless project_exists
             new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
-            if new_project.save!
+            if new_project.save!(:validate => false)
               if project_identifier.present?
                 unless Repository.exists?(project_id: new_project.id, user_id: new_user.id, identifier: project_identifier)
                   repository_params = {
@@ -274,7 +274,7 @@ class SyncForgeJob < ApplicationJob
                 member = member["member"] if old_version_source.include?(platform) #trustie上需要
                 unless Member.exists?(user_id: u.id, project_id: project_id)
                   new_member = Member.new(member&.except!(*member_to_delete).merge(project_id: project_id, user_id: u.id))
-                  if new_member.save!
+                  if new_member.save!(:validate => false)
                     sync_user_issues(project_id, u.id, member["user_id"],member_issues, platform)
                     sync_member_roles(new_member.id, member_roles,platform)
                   end
@@ -334,7 +334,7 @@ class SyncForgeJob < ApplicationJob
                 assgin_user = new_user_id
               end
               issue = Issue.new(issue_params&.except!(*issue_to_delete).merge(project_id: project_id, author_id: new_user_id, assigned_to_id: assgin_user))
-              if issue.save!
+              if issue.save!(:validate => false)
                 sync_journals(new_user_id, issue.id, jours_params, platform)
                 sync_commit_issues(issue.id,project_id, commit_params, platform)
               else
