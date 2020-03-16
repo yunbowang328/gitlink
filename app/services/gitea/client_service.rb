@@ -125,6 +125,7 @@ class Gitea::ClientService < ApplicationService
         {status: 200}
       end
     when 401
+      ""
       raise Error, mark + "401"
     when 422
       result = JSON.parse(response&.body)

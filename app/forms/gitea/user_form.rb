@@ -5,11 +5,12 @@ class Gitea::UserForm
   include ActiveModel::Model
   attr_accessor :username, :email, :password
 
-  # validates :username, presence: true
+  validates :username, presence: true
   # validates :email, presence: true, format: { with: EMAIL_REGEX, multiline: true }
-  #
-  # validates :password, presence: true
-  #
+  validates :email, presence: true
+
+  validates :password, presence: true
+
   # validate :check_username, :check_email
 
   attr_reader :record
@@ -17,7 +18,7 @@ class Gitea::UserForm
   def persist
     @record = id ? User.find(id) : User.new
 
-    if true   #valid?
+    if valid?
       @record.attributes = attributes.except(:password_confirmation, :id)
       @record.save!
       true

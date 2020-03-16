@@ -43,11 +43,6 @@ class SyncForgeJob < ApplicationJob
           end
         end
       else
-        failed_dic = "public/sync_failed_users.dic"
-        File.open(failed_dic,"a") do |file|
-          file.puts "id---#{user_params["id"]},login--#{user_params["login"]}"
-        end
-
         Rails.logger.info("############___________________########{user_params["login"]}创建失败")
       end
     end
@@ -71,36 +66,39 @@ class SyncForgeJob < ApplicationJob
     if owner_params.present?
       if User.exists?(login: owner_params["login"])
         new_user = User.find_by(login: owner_params["login"])
+      elsif  User.exists?(mail: owner_params["mail"])
+        new_user = User.find_by(mail: owner_params["mail"])
       else
         new_user = User.new(owner_params.merge(platform: platform))
+        new_user.save(:validate => false)
+
         interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
         if interactor.success?
           gitea_user = interactor.result
-          new_user.gitea_uid = gitea_user['id']
+          gitea_uid =  gitea_user['id']
+          # new_user.gitea_uid = gitea_user['id']
         else
           response = Gitea::User::GetTokenService.new("#{owner_params["login"]}").call
           if response.status == 200
-            user_id = JSON.parse(response.body)["id"]
-            new_user.gitea_uid = user_id
+            gitea_uid = JSON.parse(response.body)["id"]
+            # new_user.gitea_uid = user_id
           else
-            new_user.gitea_uid = ""
+            gitea_uid =  ""
           end
         end
-        if new_user.gitea_uid.present?
-          result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
-          if result != 401
-            new_user.gitea_token = result.result['sha1']
-          else
-            new_user.gitea_token = ""
-          end
+        result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
+        if result != 401
+          gitea_token = result.result['sha1']
+          # new_user.gitea_token = result.result['sha1']
+        else
+          gitea_token = ""
         end
+        new_user.update_attributes(gitea_uid: gitea_uid, gitea_token: gitea_token)
 
-        if new_user.save(:validate => false)
-          if owner_extension_params.present?
-            owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
-            owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
-            UserExtension.create!(owner_extension_params)
-          end
+        if owner_extension_params.present?
+          owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
+          owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
+          UserExtension.create!(owner_extension_params)
         end
       end
       Rails.logger.info("#######______sync_user_end__########")
@@ -110,7 +108,7 @@ class SyncForgeJob < ApplicationJob
   end
 
   def random_password
-    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..12].join
+    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..8].join
   end
 
   #同步项目
@@ -139,10 +137,6 @@ class SyncForgeJob < ApplicationJob
             project_identifier = repo_params["identifier"]
           end
 
-          # project_exists = false
-          # if project_identifier.present?
-          #   project_exists = Project.exists?(user_id: new_user.id, identifier:project_identifier)
-          # end
           new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
           if new_project.save!(:validate => false)
             if project_identifier.present?
@@ -152,15 +146,6 @@ class SyncForgeJob < ApplicationJob
                 identifier: project_identifier
               }
               Repositories::CreateService.new(new_user, new_project, repository_params).call
-              # unless Repository.exists?(project_id: new_project.id, user_id: new_user.id, identifier: project_identifier)
-              #   repository_params = {
-              #     hidden: project["is_public"],
-              #     user_id: new_user.id,
-              #     identifier: project_identifier
-              #   }
-              #   Repositories::CreateService.new(new_user, new_project, repository_params).call
-              #   # SyncRepositoryJob.perform_later(new_user.login, project["identifier"])  #暂时不迁移版本库
-              # end
             end
 
             if project_score.present?
