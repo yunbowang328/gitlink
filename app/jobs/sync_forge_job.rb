@@ -43,7 +43,12 @@ class SyncForgeJob < ApplicationJob
           end
         end
       else
-        Rails.logger.info("############___________________########{owner_params["login"]}创建失败")
+        failed_dic = "public/sync_failed_users.dic"
+        File.open(failed_dic,"a") do |file|
+          file.puts "id---#{user_params["id"]},login--#{user_params["login"]}"
+        end
+
+        Rails.logger.info("############___________________########{user_params["login"]}创建失败")
       end
     end
   end
@@ -124,17 +129,29 @@ class SyncForgeJob < ApplicationJob
 
         if project.present?
           project = project["project"] if old_version_source.include?(platform)
-          unless Project.exists?(user_id: new_user.id, identifier: project["identifier"])
+
+          project_identifier = project["identifier"]
+          if repo_params.present?
+            project_identifier = repo_params["identifier"]
+          end
+
+          project_exists = false
+          if project_identifier.present?
+            project_exists = Project.exists?(user_id: new_user.id, identifier:project_identifier)
+          end
+          unless project_exists
             new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
             if new_project.save!
-              unless Repository.exists?(user_id: new_user.id,identifier: project["identifier"]) || repo_params.blank?
-                repository_params = {
-                  hidden: project["is_public"],
-                  user_id: new_user.id,
-                  identifier: project["identifier"]
-                }
-                Repositories::CreateService.new(new_user, new_project, repository_params).call
-                # SyncRepositoryJob.perform_later(new_user.login, project["identifier"])  #暂时不迁移版本库
+              if project_identifier.present?
+                unless Repository.exists?(project_id: new_project.id, user_id: new_user.id, identifier: project_identifier)
+                  repository_params = {
+                    hidden: project["is_public"],
+                    user_id: new_user.id,
+                    identifier: project_identifier
+                  }
+                  Repositories::CreateService.new(new_user, new_project, repository_params).call
+                  # SyncRepositoryJob.perform_later(new_user.login, project["identifier"])  #暂时不迁移版本库
+                end
               end
 
               if project_score.present?
