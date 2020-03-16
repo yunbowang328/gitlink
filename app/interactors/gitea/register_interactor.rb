@@ -26,10 +26,6 @@ module Gitea
       render_result(response)
     rescue Exception => exception
       Rails.logger.info "Exception ===========> #{exception.message}"
-      failed_dic = "public/sync_failed_users.dic"
-      File.open(failed_dic,"a") do |file|
-        file.puts "user_info---#{params},errors--#{exception.message}"
-      end
       fail!(exception.message)
     end
 
