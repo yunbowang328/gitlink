@@ -88,7 +88,11 @@ class SyncForgeJob < ApplicationJob
         end
         if new_user.gitea_uid.present?
           result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
-          new_user.gitea_token = result['sha1']
+          if result != 401
+            new_user.gitea_token = result.result['sha1']
+          else
+            new_user.gitea_token = ""
+          end
         end
 
         if new_user.save(:validate => false)
@@ -106,7 +110,7 @@ class SyncForgeJob < ApplicationJob
   end
 
   def random_password
-    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..8].join
+    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..12].join
   end
 
   #同步项目
@@ -135,38 +139,42 @@ class SyncForgeJob < ApplicationJob
             project_identifier = repo_params["identifier"]
           end
 
-          project_exists = false
-          if project_identifier.present?
-            project_exists = Project.exists?(user_id: new_user.id, identifier:project_identifier)
-          end
-          unless project_exists
-            new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
-            if new_project.save!(:validate => false)
-              if project_identifier.present?
-                unless Repository.exists?(project_id: new_project.id, user_id: new_user.id, identifier: project_identifier)
-                  repository_params = {
-                    hidden: project["is_public"],
-                    user_id: new_user.id,
-                    identifier: project_identifier
-                  }
-                  Repositories::CreateService.new(new_user, new_project, repository_params).call
-                  # SyncRepositoryJob.perform_later(new_user.login, project["identifier"])  #暂时不迁移版本库
-                end
-              end
-
-              if project_score.present?
-                project_score = project_score["project_score"] if old_version_source.include?(platform) #trustie上需要
-                ProjectScore.create!(project_score&.except!(*score_to_delete).merge(project_id: new_project.id))
-              end
-
-              sync_user_issues(new_project.id, new_user.id,old_user_id,issue_params, platform)
-              sync_members(new_project.id, member_params,platform)
-              sync_commits(new_project.id,new_project.gpid, commit_params,platform)
-              sync_pull_requests(new_project.id,new_user.id, pr_params,platform)
-              sync_versions(new_project.id, new_user.id, version_params,platform)
-              sync_watchers(new_project.id, watchers_params, platform)
-              sync_praises(new_project.id,praise_trends_params,platform)
+          # project_exists = false
+          # if project_identifier.present?
+          #   project_exists = Project.exists?(user_id: new_user.id, identifier:project_identifier)
+          # end
+          new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
+          if new_project.save!(:validate => false)
+            if project_identifier.present?
+              repository_params = {
+                hidden: project["is_public"],
+                user_id: new_user.id,
+                identifier: project_identifier
+              }
+              Repositories::CreateService.new(new_user, new_project, repository_params).call
+              # unless Repository.exists?(project_id: new_project.id, user_id: new_user.id, identifier: project_identifier)
+              #   repository_params = {
+              #     hidden: project["is_public"],
+              #     user_id: new_user.id,
+              #     identifier: project_identifier
+              #   }
+              #   Repositories::CreateService.new(new_user, new_project, repository_params).call
+              #   # SyncRepositoryJob.perform_later(new_user.login, project["identifier"])  #暂时不迁移版本库
+              # end
             end
+
+            if project_score.present?
+              project_score = project_score["project_score"] if old_version_source.include?(platform) #trustie上需要
+              ProjectScore.create!(project_score&.except!(*score_to_delete).merge(project_id: new_project.id))
+            end
+
+            sync_user_issues(new_project.id, new_user.id,old_user_id,issue_params, platform)
+            sync_members(new_project.id, member_params,platform)
+            sync_commits(new_project.id,new_project.gpid, commit_params,platform)
+            sync_pull_requests(new_project.id,new_user.id, pr_params,platform)
+            sync_versions(new_project.id, new_user.id, version_params,platform)
+            sync_watchers(new_project.id, watchers_params, platform)
+            sync_praises(new_project.id,praise_trends_params,platform)
           end
         end
       end
