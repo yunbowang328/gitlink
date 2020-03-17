@@ -18,8 +18,8 @@ class SyncForgeJob < ApplicationJob
         ActiveRecord::Base.transaction do
           begin
             user_params = user_params["user"] if old_version_source.include?(platform)
-            Watcher&.where(user_id: user_params["user_id"]).update_all(user_id: new_user.id)
-            ProjectTrend&.where(user_id: user_params["user_id"]).update_all(user_id: new_user.id)
+            Watcher&.where(user_id: user_params["id"]).update_all(user_id: new_user.id)
+            ProjectTrend&.where(user_id: user_params["id"]).update_all(user_id: new_user.id)
             sync_roles(roles_params, platform)
             if all_target_params.present?
               all_target_params.each do |project|
@@ -35,7 +35,7 @@ class SyncForgeJob < ApplicationJob
                   watchers_params: project["watchers_params"],
                   praise_trends_params: project["praise_trends_params"]
                 }
-                sync_projects(new_user, user_params["user_id"],target_params, platform)
+                sync_projects(new_user, user_params["id"],target_params, platform)
               end
             end
           rescue Exception => e
@@ -60,7 +60,7 @@ class SyncForgeJob < ApplicationJob
       begin
         Rails.logger.info("#######______sync_user_start__########")
         keys_other_delete = %w(id created_at updated_at user_id)
-        keys_to_delete = %w(user_id created_on updated_on platform)
+        keys_to_delete = %w(id created_on updated_on platform)
         owner_params = owner_params["user"] if old_version_source.include?(platform)   #trustie上需要
 
         owner_params = owner_params&.except!(*keys_to_delete)
