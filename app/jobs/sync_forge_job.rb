@@ -8,18 +8,20 @@ class SyncForgeJob < ApplicationJob
 
     all_target_params = sync_params["target_params"]
     roles_params = sync_params["roles"]
+
     user_params = sync_params["user_params"]["user_params"]
     owner_extension_params = sync_params["user_params"]["user_extension_params"]
     platform = sync_params["platform"]
 
     if user_params.present?
+      user_old_id = user_params["user"]["id"]
       new_user = sync_user(user_params, owner_extension_params,platform)
       if new_user.present?
         ActiveRecord::Base.transaction do
           begin
-            user_params = user_params["user"] if old_version_source.include?(platform)
-            Watcher&.where(user_id: user_params["id"]).update_all(user_id: new_user.id)
-            ProjectTrend&.where(user_id: user_params["id"]).update_all(user_id: new_user.id)
+
+            Watcher&.where(user_id: user_old_id).update_all(user_id: new_user.id)
+            ProjectTrend&.where(user_id: user_old_id).update_all(user_id: new_user.id)
             sync_roles(roles_params, platform)
             if all_target_params.present?
               all_target_params.each do |project|
@@ -35,7 +37,7 @@ class SyncForgeJob < ApplicationJob
                   watchers_params: project["watchers_params"],
                   praise_trends_params: project["praise_trends_params"]
                 }
-                sync_projects(new_user, user_params["id"],target_params, platform)
+                sync_projects(new_user, user_old_id,target_params, platform)
               end
             end
           rescue Exception => e
@@ -44,7 +46,7 @@ class SyncForgeJob < ApplicationJob
           end
         end
       else
-        Rails.logger.info("############___________________########{user_params["login"]}创建失败")
+        Rails.logger.info("############___________________########{user_old_id}创建失败")
       end
     end
   end
@@ -66,6 +68,8 @@ class SyncForgeJob < ApplicationJob
         owner_params = owner_params&.except!(*keys_to_delete)
         user_password = random_password
         new_user = []
+        new_user = User.new(owner_params.merge(platform: platform))
+        interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
         if owner_params.present?
           if User.exists?(login: owner_params["login"])
             new_user = User.find_by(login: owner_params["login"])
@@ -80,7 +84,7 @@ class SyncForgeJob < ApplicationJob
               new_user.gitea_token = result['sha1']
               new_user.gitea_uid = gitea_user['id']
             end
-            if new_user.save(:validate => false)
+            if new_user.save!
               if owner_extension_params.present?
                 owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
                 owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
@@ -93,8 +97,8 @@ class SyncForgeJob < ApplicationJob
         new_user
       rescue Exception => e
         failed_dic = "public/sync_failed_users.dic"
-        File.open(failed_dic,"a") do |file|
-          file.puts "user_info---#{owner_params},errors--#{e}"
+        File.open(failed_dic,"a+") do |file|
+          file.puts "[\nTime---#{Time.now}\nuser_info---#{owner_params}\nerrors--#{e}]\n "
         end
       end
     end
@@ -350,7 +354,8 @@ class SyncForgeJob < ApplicationJob
             jours_params.each do |i|
               if i.present?
                 i = i["journal"] if old_version_source.include?(platform) #trustie上需要
-                Journal.create!(i&.except!(*jour_to_delete).merge(journalized_id: issue_id, user_id: user_id))
+                new_journal = Journal.new(i&.except!(*jour_to_delete).merge(journalized_id: issue_id, user_id: user_id))
+                new_journal.save(:validate => false)
               end
 
             end
@@ -376,7 +381,8 @@ class SyncForgeJob < ApplicationJob
             commit_params.each do |i|
               if i.present?
                 i = i["commit_issues"] if old_version_source.include?(platform) #trustie上需要
-                CommitIssue.create!(i&.except!(*commit_to_delete).merge(issue_id: issue_id, project_id: project_id))
+                new_commit = CommitIssue.new(i&.except!(*commit_to_delete).merge(issue_id: issue_id, project_id: project_id))
+                new_commit.save(:validate => false)
               end
 
             end
@@ -402,7 +408,8 @@ class SyncForgeJob < ApplicationJob
             pull_params.each do |i|
               if i.present?
                 i = i["pull_request"] if old_version_source.include?(platform) #trustie上需要
-                PullRequest.create!(i&.except!(*commit_to_delete).merge(user_id: user_id, project_id: project_id))
+                newpr = PullRequest.new(i&.except!(*commit_to_delete).merge(user_id: user_id, project_id: project_id))
+                newpr.save(:validate => false)
               end
 
             end
@@ -427,7 +434,8 @@ class SyncForgeJob < ApplicationJob
             commit_params.each do |i|
               if i.present?
                 i = i["commit"] if old_version_source.include?(platform) #trustie上需要
-                Commit.create!(i&.except!(*commit_to_delete).merge(repository_id: repository_id, project_id: project_id))
+                new_commit = Commit.new(i&.except!(*commit_to_delete).merge(repository_id: repository_id, project_id: project_id))
+                new_commit.save(:validate => false)
               end
 
             end
@@ -452,7 +460,8 @@ class SyncForgeJob < ApplicationJob
             version_params.each do |i|
               if i.present?
                 i = i["version"] if old_version_source.include?(platform) #trustie上需要
-                Version.create!(i&.except!(*version_to_delete).merge(user_id: new_user_id, project_id: project_id))
+                new_v = Version.new(i&.except!(*version_to_delete).merge(user_id: new_user_id, project_id: project_id))
+                new_v.save(:validate => false)
               end
             end
           end
