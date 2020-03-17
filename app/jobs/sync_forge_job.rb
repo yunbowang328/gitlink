@@ -18,8 +18,8 @@ class SyncForgeJob < ApplicationJob
         ActiveRecord::Base.transaction do
           begin
             user_params = user_params["user"] if old_version_source.include?(platform)
-            Watcher&.where(user_id: user_params["id"]).update_all(user_id: new_user.id)
-            ProjectTrend&.where(user_id: user_params["id"]).update_all(user_id: new_user.id)
+            Watcher&.where(user_id: user_params["user_id"]).update_all(user_id: new_user.id)
+            ProjectTrend&.where(user_id: user_params["user_id"]).update_all(user_id: new_user.id)
             sync_roles(roles_params, platform)
             if all_target_params.present?
               all_target_params.each do |project|
@@ -35,7 +35,7 @@ class SyncForgeJob < ApplicationJob
                   watchers_params: project["watchers_params"],
                   praise_trends_params: project["praise_trends_params"]
                 }
-                sync_projects(new_user, user_params["id"],target_params, platform)
+                sync_projects(new_user, user_params["user_id"],target_params, platform)
               end
             end
           rescue Exception => e
@@ -73,34 +73,13 @@ class SyncForgeJob < ApplicationJob
             new_user = User.find_by(mail: owner_params["mail"])
           else
             new_user = User.new(owner_params.merge(platform: platform))
-            new_user.save(:validate => false)
-
             interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
-
             if interactor.success?
               gitea_user = interactor.result
-              # gitea_uid =  gitea_user['id']
+              result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
+              new_user.gitea_token = result['sha1']
               new_user.gitea_uid = gitea_user['id']
-            else
-              response = Gitea::User::GetTokenService.new("#{owner_params["login"]}").call
-              if response.status == 200
-                gitea_uid = JSON.parse(response.body)["id"]
-                new_user.gitea_uid = user_id
-              else
-                # gitea_uid =  ""
-                new_user.gitea_uid = ""
-              end
             end
-            result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
-            if result != 401
-              # gitea_token = result.result['sha1']
-              new_user.gitea_token = result.result['sha1']
-            else
-              # gitea_token = ""
-              new_user.gitea_token = ""
-            end
-
-            # new_user.update_attributes!(gitea_uid: gitea_uid, gitea_token: gitea_token)
             if new_user.save(:validate => false)
               if owner_extension_params.present?
                 owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
