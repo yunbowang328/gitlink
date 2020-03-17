@@ -96,7 +96,7 @@ class SyncForgeJob < ApplicationJob
         new_user
       rescue Exception => e
         failed_dic = "public/sync_failed_users.dic"
-        File.open(failed_dic,"a+") do |file|
+        File.open(failed_dic,"a") do |file|
           file.puts "[\nTime---#{Time.now}\nuser_info---#{owner_params}\nerrors--#{e}]\n "
         end
       end
