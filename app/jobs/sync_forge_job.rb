@@ -60,7 +60,7 @@ class SyncForgeJob < ApplicationJob
       begin
         Rails.logger.info("#######______sync_user_start__########")
         keys_other_delete = %w(id created_at updated_at user_id)
-        keys_to_delete = %w(id created_on updated_on platform)
+        keys_to_delete = %w(user_id created_on updated_on platform)
         owner_params = owner_params["user"] if old_version_source.include?(platform)   #trustie上需要
 
         owner_params = owner_params&.except!(*keys_to_delete)
