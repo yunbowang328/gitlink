@@ -79,37 +79,39 @@ class SyncForgeJob < ApplicationJob
 
             if interactor.success?
               gitea_user = interactor.result
-              gitea_uid =  gitea_user['id']
-              # new_user.gitea_uid = gitea_user['id']
+              # gitea_uid =  gitea_user['id']
+              new_user.gitea_uid = gitea_user['id']
             else
               response = Gitea::User::GetTokenService.new("#{owner_params["login"]}").call
               if response.status == 200
                 gitea_uid = JSON.parse(response.body)["id"]
-                # new_user.gitea_uid = user_id
+                new_user.gitea_uid = user_id
               else
-                gitea_uid =  ""
+                # gitea_uid =  ""
+                new_user.gitea_uid = ""
               end
             end
             result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
             if result != 401
-              gitea_token = result.result['sha1']
-              # new_user.gitea_token = result.result['sha1']
+              # gitea_token = result.result['sha1']
+              new_user.gitea_token = result.result['sha1']
             else
-              gitea_token = ""
+              # gitea_token = ""
+              new_user.gitea_token = ""
             end
-            new_user.update_attributes(gitea_uid: gitea_uid, gitea_token: gitea_token)
 
-            if owner_extension_params.present?
-              owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
-              owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
-              UserExtension.create!(owner_extension_params)
+            # new_user.update_attributes!(gitea_uid: gitea_uid, gitea_token: gitea_token)
+            if new_user.save(:validate => false)
+              if owner_extension_params.present?
+                owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
+                owner_extension_params = owner_extension_params&.except!(*keys_other_delete).merge(user_id: new_user.id)
+                UserExtension.create!(owner_extension_params)
+              end
             end
           end
           Rails.logger.info("#######______sync_user_end__########")
         end
-
         new_user
-
       rescue Exception => e
         failed_dic = "public/sync_failed_users.dic"
         File.open(failed_dic,"a") do |file|
@@ -121,7 +123,7 @@ class SyncForgeJob < ApplicationJob
   end
 
   def random_password
-    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..8].join
+    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..8].join + ['$','#','&','*','@','_'].shuffle[0..2].join
   end
 
   #同步项目
