@@ -68,8 +68,7 @@ class SyncForgeJob < ApplicationJob
         owner_params = owner_params&.except!(*keys_to_delete)
         user_password = random_password
         new_user = []
-        new_user = User.new(owner_params.merge(platform: platform))
-        interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
+
         if owner_params.present?
           if User.exists?(login: owner_params["login"])
             new_user = User.find_by(login: owner_params["login"])
