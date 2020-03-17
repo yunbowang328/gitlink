@@ -1,6 +1,7 @@
 :concurrency: <%= ENV["sidekiq_threads"] || 20 %>
 :pidfile: tmp/pids/sidekiq.pid
 :logfile: log/sidekiq.log
+:timeout: 30
 :queues:
   - [default, 3]
   - [searchkick, 10]

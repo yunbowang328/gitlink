@@ -19,7 +19,6 @@ class SyncForgeJob < ApplicationJob
       if new_user.present?
         ActiveRecord::Base.transaction do
           begin
-
             Watcher&.where(user_id: user_old_id).update_all(user_id: new_user.id)
             ProjectTrend&.where(user_id: user_old_id).update_all(user_id: new_user.id)
             sync_roles(roles_params, platform)
@@ -41,12 +40,12 @@ class SyncForgeJob < ApplicationJob
               end
             end
           rescue Exception => e
-            Rails.logger.info("#######_________user__sync__failed__#########{e}")
+            Rails.logger.info("#######_______forge_new_user_sync_failed___#########{e}")
             raise ActiveRecord::Rollback
           end
         end
       else
-        Rails.logger.info("############___________________########{user_old_id}创建失败")
+        Rails.logger.info("############____forge_new_user_create_failed_____#######old_user_id:-#{user_old_id}")
       end
     end
   end
