@@ -13,6 +13,11 @@ Rails.application.routes.draw do
   get 'auth/cas/callback', to: 'oauth/cas#create'
 
   scope '/api' do
+    resources :attachments do
+      collection do
+        delete :destroy_files
+      end
+    end
     resources :sync_forge, only: [:create]  #同步用户
     resources :composes do
       resources :compose_projects, only: [:create, :destroy]
@@ -318,12 +323,6 @@ Rails.application.routes.draw do
       end
     end
 
-
-    resources :attachments do
-      collection do
-        delete :destroy_files
-      end
-    end
 
     resources :repertoires, only: [:index]
 
