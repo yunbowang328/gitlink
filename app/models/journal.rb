@@ -19,7 +19,7 @@ class Journal < ApplicationRecord
       details = self.journal_details.select(:property, :prop_key, :old_value, :value).pluck(:property, :prop_key, :old_value, :value)
       if details.size > 0
         details.each do |de|
-          unless de[1] == "description"
+          unless de[1].to_s == "description"
             if de[0] == "attr"
               content = ""
             else
