@@ -1,5 +1,5 @@
 class VersionReleasesController < ApplicationController
-  before_action :find_project
+  before_action :find_project_with_id
   before_action :set_user_and_project
   before_action :require_login, except: [:index]
   before_action :find_version , only: [:edit, :update, :destroy]
