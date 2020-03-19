@@ -1,10 +1,11 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
-  before_action :find_user, :find_repository, :authorizate!
+  before_action :find_project_identifier
+  before_action :find_repository_with_project
+  before_action :find_user, :authorizate!
   before_action :require_login, only: %i[edit]
 
   def show
-    @project = @repo.project
     @branches_count = Gitea::Repository::BranchesService.new(@user, @repo.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@user, @repo.identifier).call[:total_count]
     @result = Gitea::Repository::GetService.new(@user, @repo.identifier).call
@@ -14,7 +15,7 @@ class RepositoriesController < ApplicationController
   end
 
   def entries
-    @repo.project.increment!(:visits)
+    @project.increment!(:visits)
     @ref = params[:branch] || "master"
     @entries = Gitea::Repository::Entries::ListService.new(@user, @repo.identifier, ref:@ref).call
     @entries = @entries.sort_by{ |hash| hash['type'] }
@@ -52,5 +53,15 @@ class RepositoriesController < ApplicationController
     if @repo.hidden? && @repo.user != current_user
       render_forbidden
     end
+  end
+
+  def find_project_identifier
+    @project = Project.find_by(id: params[:repo_identifier])
+    render_not_found("未找到’#{params[:repo_identifier]}’相关的项目") unless @project
+  end
+
+  def find_repository_with_project
+    @repo = @project.repository
+    render_not_found("未找到’#{params[:repo_identifier]}’相关的仓库") unless @repo
   end
 end
