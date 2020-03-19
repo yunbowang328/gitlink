@@ -79,4 +79,25 @@ class Project < ApplicationRecord
     end
   end
 
+
+  def self.init_bluck_repository
+    Project.includes(:repository).find_each do |project|
+      puts project.id
+      next if project.owner.blank?
+      if project.repository.blank?
+        Repository.create!(project_id: project.id, identifier: Project.generate_identifier, user_id: project&.owner&.id)
+      end
+    end
+  end
+
+  def self.generate_identifier
+    str_arr = (("a".."z").to_a + ("A".."Z").to_a)
+
+    str = str_arr.shuffle[0..8].join
+    while Repository.exists?(identifier: str)
+      str = str_arr.shuffle[0..8].join
+    end
+    str
+  end
+
 end
