@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   before_action :require_login, except: [:index, :show]
-  before_action :find_project
+  before_action :find_project_issue
   before_action :set_project_and_user
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
   before_action :check_issue_permission, except: [:index, :show, :index_chosen]
@@ -429,5 +429,11 @@ class IssuesController < ApplicationController
       end
     end
     all_branches
+  end
+
+  def find_project_issue
+    project_id = params[:id]
+    @project = Project.find_by(id: project_id)
+    render_not_found("未找到’#{project}’相关的项目") unless @project
   end
 end
