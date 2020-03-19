@@ -1,6 +1,6 @@
 class IssuesController < ApplicationController
   before_action :require_login, except: [:index, :show]
-  before_action :find_project
+  before_action :find_project_with_id
   before_action :set_project_and_user
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
   before_action :check_issue_permission, except: [:index, :show, :index_chosen]

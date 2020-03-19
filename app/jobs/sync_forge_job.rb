@@ -142,7 +142,7 @@ class SyncForgeJob < ApplicationJob
           if Project.exists?(identifier: project_identifier)
             failed_dic = "public/sync_failed_users.dic"
             File.open(failed_dic,"a") do |file|
-              file.puts "[\nTime---#{Time.now}\nproject_info---#{project}\n---]\n "
+              file.puts "[\nTime---#{Time.now}\nproject_info---#{project}\nerrors---exists the same project:#{project_identifier}]\n "
             end
           else
             new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
