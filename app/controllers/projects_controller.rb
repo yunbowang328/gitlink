@@ -36,7 +36,7 @@ class ProjectsController < ApplicationController
   end
 
   def group_type_list
-    @project_group_list = Project.visible.group(:project_type).select('project_type, count(*) AS projects_count')
+    @project_group_list = Project.visible.group(:project_type).select('project_type, count(project_type) AS projects_count').having("count(project_type) > ?", 0)
   end
 
   def update
