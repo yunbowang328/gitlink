@@ -14,7 +14,7 @@ class Projects::ListQuery < ApplicationQuery
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
-      .includes(:project_category, :project_language, :repository, :owner)
+      .includes(:project_category, :project_language, :owner)
 
     custom_sort(scope, params[:sort_by], params[:sort_direction])
   end
