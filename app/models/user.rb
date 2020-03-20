@@ -34,7 +34,7 @@ class User < ApplicationRecord
   LOGIN_CHARS = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z).freeze
 
   # FIX Invalid single-table inheritance type
-  self.inheritance_column = nil
+  # self.inheritance_column = nil
 
   # educoder: 来自Educoder平台
   # trustie: 来自Trustie平台
