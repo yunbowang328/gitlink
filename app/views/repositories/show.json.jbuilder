@@ -1,4 +1,5 @@
 json.identifier @project.identifier
+json.name @project.name
 json.project_id @project.id
 json.issues_count @project.issues_count
 json.pull_requests_count @project.pull_requests_count
