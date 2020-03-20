@@ -186,7 +186,7 @@ function generateNewIndexJsp() {
   // combinedStream.append(htmlContent);
   // combinedStream.pipe(fs2.createWriteStream( filePath ));
 
-  var outputPath = paths.appBuild  + '/../../../public/react/build/index.html'
+  var outputPath = paths.appBuild  + '/../../../index.html'
   fs2.readFile(filePath, 'utf8', function (err,data) {
     if (err) {
       return console.log(err);
@@ -195,14 +195,14 @@ function generateNewIndexJsp() {
     let cdnHost = 'https://shixun.educoder.net'
     cdnHost = 'https://ali-cdn.educoder.net'
     cdnHost = ''
-    
 
-    var mainRegex = /<script type="text\/javascript" src="\/react\/build\/.\/static\/js\/main.([a-zA-Z0-9]{8,}).js"><\/script>/
+
+    var mainRegex = /<script type="text\/javascript" src="\/forgeplus-react\/build\/.\/static\/js\/main.([a-zA-Z0-9]{8,}).js"><\/script>/
     var matchResult = data.match(mainRegex)
     var code = `
       <script>
          (function() {
-            var _host = '/react/build/'
+            var _host = '/forgeplus-react/build/'
             /**/
             if (window.location.host == 'pre-newweb.educoder.net') {
                 _host = 'https://testali-cdn.educoder.net/react/build/'
@@ -230,7 +230,7 @@ function generateNewIndexJsp() {
         .replace(mainRegex, '')
         // .replace('/react/build/./static/css/main', `${cdnHost}/react/build/./static/css/main`)
         // .replace('/react/build/./static/js/main', `${cdnHost}/react/build/./static/js/main`)
-       
+
         // .replace(/https:\/\/testeduplus2.educoder.net/g, '');
         // .replace(/http:\/\/testbdweb.educoder.net/g, '');
 

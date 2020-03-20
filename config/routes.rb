@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
+  resources :edu_settings
 
   scope '/api' do
     resources :attachments do

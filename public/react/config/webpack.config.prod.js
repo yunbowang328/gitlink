@@ -83,7 +83,7 @@ module.exports = {
 		// cdn
 		// publicPath: 'https://shixun.educoder.net/react/build/', //publicPath,   https://cdn.educoder.net
 		// publicPath: 'https://cdn-testeduplus2.educoder.net/react/build/', //publicPath,   https://cdn.educoder.net
-		publicPath: '/react/build/', //publicPath,   https://cdn.educoder.net
+		publicPath: '/forgeplus-react/build/', //publicPath,   https://cdn.educoder.net
 
 		// Point sourcemap entries to original disk location (format as URL on Windows)
 		devtoolModuleFilenameTemplate: info =>
