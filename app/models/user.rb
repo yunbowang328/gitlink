@@ -22,7 +22,7 @@ class User < ApplicationRecord
   EDU_NORMAL = 8  # 普通用户
 
   VALID_EMAIL_REGEX = /^[a-zA-Z0-9]+([.\-_\\]*[a-zA-Z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/i
-  # VALID_PHONE_REGEX = /^1\d{10}$/
+  VALID_PHONE_REGEX = /^1\d{10}$/
   # 身份证
   VALID_NUMBER_REGEX = /(^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^([A-Z]\d{6,10}(\(\w{1}\))?)$)/
 
