@@ -85,6 +85,7 @@ class Project < ApplicationRecord
       puts project.id
       next if project.owner.blank?
       if project.repository.blank?
+        puts  "########### start create repositoy #############"
         Repository.create!(project_id: project.id, identifier: Project.generate_identifier, user_id: project&.owner&.id)
       end
     end

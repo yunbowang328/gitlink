@@ -10,7 +10,7 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-    scope = Project.like(params[:search])
+    scope = Project.visible.like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
