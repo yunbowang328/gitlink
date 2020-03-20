@@ -14,8 +14,9 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
+
     @ref = params[:branch] || "master"
-    @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref:@ref).call
+    @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref: @ref).call
     @entries = @entries.sort_by{ |hash| hash['type'] }
   end
 

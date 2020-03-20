@@ -38,14 +38,15 @@ class Attachment < ApplicationRecord
   end
 
   def title
-    title = filename
-    if container && container.is_a?(StudentWork) && author_id != User.current.id
-      course = container&.homework_common&.course
-      unless User.current.teacher_of_course?(course)
-        title = "#{Time.now.strftime('%Y%m%d%H%M%S')}_#{DCODES.sample(8).join}" + File.extname(filename)
-      end
-    end
-    title
+    filename
+    # title = filename
+    # if container && container.is_a?(StudentWork) && author_id != User.current.id
+    #   course = container&.homework_common&.course
+    #   unless User.current.teacher_of_course?(course)
+    #     title = "#{Time.now.strftime('%Y%m%d%H%M%S')}_#{DCODES.sample(8).join}" + File.extname(filename)
+    #   end
+    # end
+    # title
   end
 
   def downloads_count
