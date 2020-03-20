@@ -23,7 +23,7 @@ module Gitea
 
     def run
       Contents::CreateForm.new(valid_params).validate!
-      response = Gitea::Repository::Entries::CreateService.new(user, @params[:repo_identifier], @params[:filepath], file_params).call
+      response = Gitea::Repository::Entries::CreateService.new(user, @params[:identifier], @params[:filepath], file_params).call
       render_result(response)
     rescue Exception => exception
       Rails.logger.info "Exception ===========> #{exception.message}"
@@ -45,8 +45,6 @@ module Gitea
 
     def valid_params
       {
-        login: @params[:login],
-        repo_identifier: @params[:repo_identifier],
         filepath: @params[:filepath],
         branch: @params[:branch],
         new_branch: @params[:new_branch]

@@ -180,23 +180,17 @@ Rails.application.routes.draw do
       end
     end
 
-    get '/:login/:repo_identifier', to: 'repositories#show'
-    get '/:login/:repo_identifier/edit', to: 'repositories#edit'
-    resources :repositories, path: '/:login/:repo_identifier', only: [:index] do
-      collection do
+    resources :repositories, only: [:index, :show, :edit] do
+      member do
         get :entries
         match :sub_entries, :via => [:get, :put]
         get :commits
         get :single_commit
         post :files
         get :tags
-      end
-    end
-
-    resources :contents, path: '/:login/:repo_identifier/contents', only: [:create] do
-      collection do
-        put 'files/update', :action => 'update_file'
-        delete 'files/delete', :action => 'delete_file'
+        post :create_file
+        put :update_file
+        delete :delete_file
       end
     end
 

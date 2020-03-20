@@ -9,7 +9,7 @@ json.array! @entries do |entry|
   # json.commit entry['commit']
 
   if entry['name'] == "README.md"
-    readme_md = Gitea::Repository::Entries::GetService.new(@user, @repo.identifier, entry['path'], ref:@ref).call
+    readme_md = Gitea::Repository::Entries::GetService.new(@project.owner, @project.identifier, entry['path'], ref:@ref).call
     json.name readme_md['name']
     json.path readme_md['path']
     json.sha readme_md['sha']

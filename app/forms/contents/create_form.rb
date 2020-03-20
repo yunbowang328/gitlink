@@ -1,7 +1,7 @@
 class Contents::CreateForm < BaseForm
-  attr_accessor :login, :repo_identifier, :filepath, :branch, :new_branch
+  attr_accessor :filepath, :branch, :new_branch
 
-  validates :login, :repo_identifier, :filepath, presence: true
+  validates :filepath, presence: true
 
   validate :check_branch
 
