@@ -486,7 +486,7 @@ class App extends Component {
 			oldLink = document.getElementById('dynamic-favicon');
 		link.id = 'dynamic-favicon';
 		link.rel = 'shortcut icon';
-		link.href = "/react/build/./favicon.ico";
+		link.href = "/forgeplus-react/build/./favicon.ico";
 		if (oldLink) {
 			document.head.removeChild(oldLink);
 		}
