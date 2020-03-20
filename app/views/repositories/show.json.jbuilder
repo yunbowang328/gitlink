@@ -3,8 +3,8 @@ json.project_id @project.id
 json.issues_count @project.issues_count
 json.pull_requests_count @project.pull_requests_count
 json.project_identifier @project.identifier
-json.praises_count @rproject.praises_count
-json.forked_count @rproject.forked_count
+json.praises_count @project.praises_count
+json.forked_count @project.forked_count
 json.watchers_count @project.watchers_count
 json.branches_count @branches_count
 json.commits_count @commits_count
