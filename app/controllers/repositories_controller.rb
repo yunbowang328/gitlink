@@ -15,9 +15,15 @@ class RepositoriesController < ApplicationController
   end
 
   def entries
+    Rails.logger.info("##############_________project_id_________############{@project.id}")
     @project.increment!(:visits)
+    Rails.logger.info("##############___________@repo.identifier_______############{@repo.identifier}")
+    Rails.logger.info("##############___________@user_______############{@user.login}")
+
     @ref = params[:branch] || "master"
     @entries = Gitea::Repository::Entries::ListService.new(@user, @repo.identifier, ref:@ref).call
+    Rails.logger.info("##############__________@entries______############{@entries}")
+
     @entries = @entries.sort_by{ |hash| hash['type'] }
   end
 
