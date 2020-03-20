@@ -20,4 +20,4 @@ json.empty @result['empty']
 json.full_name @result['full_name']
 json.mirror @result['mirror']
 json.private @result['private']
-json.partial! 'author', locals: { user: @project.user }
+json.partial! 'author', locals: { user: @project.owner }
