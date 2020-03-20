@@ -1,9 +1,6 @@
 class User < ApplicationRecord
   include Watchable
-  include Likeable
-  include BaseModel
-  include ProjectOperable
-  # include Searchable::Dependents::User
+  include Searchable::Dependents::User
 
   # Account statuses
   STATUS_ANONYMOUS  = 0
@@ -22,7 +19,7 @@ class User < ApplicationRecord
   EDU_NORMAL = 8  # 普通用户
 
   VALID_EMAIL_REGEX = /^[a-zA-Z0-9]+([.\-_\\]*[a-zA-Z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/i
-  # VALID_PHONE_REGEX = /^1\d{10}$/
+  VALID_PHONE_REGEX = /^1\d{10}$/
   # 身份证
   VALID_NUMBER_REGEX = /(^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^([A-Z]\d{6,10}(\(\w{1}\))?)$)/
 
@@ -32,14 +29,6 @@ class User < ApplicationRecord
   MIX_PASSWORD_LIMIT = 8
 
   LOGIN_CHARS = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z).freeze
-
-  # FIX Invalid single-table inheritance type
-  self.inheritance_column = nil
-
-  # educoder: 来自Educoder平台
-  # trustie: 来自Trustie平台
-  # forge: 平台本身注册的用户
-  enum platform: [:forge, :educoder, :trustie]
 
   belongs_to :laboratory, optional: true
 
@@ -58,8 +47,6 @@ class User < ApplicationRecord
   has_many :study_shixuns, through: :myshixuns, source: :shixun   # 已学习的实训
   has_many :course_messages
   has_many :courses, foreign_key: 'tea_id', dependent: :destroy
-  has_many :versions
-  has_many :issue_times, :dependent => :destroy
 
   #试卷
   has_many :exercise_banks, :dependent => :destroy
@@ -131,8 +118,8 @@ class User < ApplicationRecord
   has_many :manage_courses, through: :manage_course_members, source: :course
 
   # 关注
-  has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
-  has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
+  # has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
+  # has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
 
   # 认证
   has_many :apply_user_authentication
@@ -155,9 +142,6 @@ class User < ApplicationRecord
   # 项目
   has_many :applied_projects, dependent: :destroy
 
-  has_many :projects, dependent: :destroy
-  has_many :repositories, dependent: :destroy
-
   # 教学案例
   has_many :libraries, dependent: :destroy
 
@@ -170,27 +154,22 @@ class User < ApplicationRecord
   has_many :hacks, dependent: :destroy
   has_many :hack_user_lastest_codes, dependent: :destroy
 
-  has_many :composes, dependent: :destroy
-  has_many :compose_users, dependent: :destroy
-
-  has_many :project_trends, dependent: :destroy
   # 题库
   has_many :item_banks, dependent: :destroy
   has_many :item_baskets,  -> { order("item_baskets.position ASC") }, dependent: :destroy
   has_many :examination_banks, dependent: :destroy
   has_many :examination_intelligent_settings, dependent: :destroy
 
+  has_many :teacher_group_records, dependent: :destroy
+
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
-  scope :like, lambda { |keywords|
-    where("LOWER(concat(lastname, firstname, login)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
-  }
 
   attr_accessor :password, :password_confirmation
 
   delegate :gender, :department_id, :school_id, :location, :location_city, :technical_title, to: :user_extension, allow_nil: true
 
-  before_save :update_hashed_password
+  before_save :update_hashed_password, :set_laboratory
   after_create do
     SyncTrustieJob.perform_later("user", 1) if allow_sync_to_trustie?
   end
@@ -198,11 +177,10 @@ class User < ApplicationRecord
   #
   # validations
   #
-  validates :platform, inclusion: { in: %w(forge educoder trustie) }
   validates_presence_of :login, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }, case_sensitive: false
   validates_uniqueness_of :login, :if => Proc.new { |user| user.login_changed? && user.login.present? }, case_sensitive: false
   validates_uniqueness_of :mail, :if => Proc.new { |user| user.mail_changed? && user.mail.present? }, case_sensitive: false
-  # validates_uniqueness_of :phone, :if => Proc.new { |user| user.phone_changed? && user.phone.present? }, case_sensitive: false
+  validates_uniqueness_of :phone, :if => Proc.new { |user| user.phone_changed? && user.phone.present? }, case_sensitive: false
   validates_length_of :login, maximum: LOGIN_LENGTH_LIMIT
   validates_length_of :mail, maximum: MAIL_LENGTH_LMIT
   validate :validate_sensitive_string
@@ -219,10 +197,6 @@ class User < ApplicationRecord
 
   def git_mail
     mail.blank? ? "#{login}@educoder.net" : mail
-  end
-
-  def project_manager?(project)
-    project.manager_members.exists?(user: self) || self.admin?
   end
 
   # 学号
@@ -273,12 +247,12 @@ class User < ApplicationRecord
   # 实名认证状态
   def auth_status
     status = if authentication
-              "已认证"
-            elsif process_real_name_apply.present?
-              "待审核"
-            else
-              "未认证"
-            end
+               "已认证"
+             elsif process_real_name_apply.present?
+               "待审核"
+             else
+               "未认证"
+             end
   end
 
   # 职业认证状态
@@ -365,7 +339,7 @@ class User < ApplicationRecord
   # 实训管理员：实训合作者、admin
   def manager_of_shixun?(shixun)
     logger.info("############id: #{id}")
-     shixun.shixun_members.exists?(role: [1,2], user_id: id) || admin? || business?
+    shixun.shixun_members.exists?(role: [1,2], user_id: id) || admin? || business?
   end
 
   # 实训管理员
@@ -444,21 +418,21 @@ class User < ApplicationRecord
   # 实训用户身份
   def shixun_identity(shixun)
     @identity =
-        if admin?
-          User::EDU_ADMIN
-        elsif business?
-          User::EDU_BUSINESS
-        elsif creator_of_shixun?(shixun)
-          User::EDU_SHIXUN_MANAGER
-        elsif member_of_shixun?(shixun)
-          User::EDU_SHIXUN_MEMBER
-        elsif is_certification_teacher
-          User::EDU_CERTIFICATION_TEACHER
-        elsif is_teacher?
-          User::EDU_TEACHER
-        else
-          User::EDU_NORMAL
-        end
+      if admin?
+        User::EDU_ADMIN
+      elsif business?
+        User::EDU_BUSINESS
+      elsif creator_of_shixun?(shixun)
+        User::EDU_SHIXUN_MANAGER
+      elsif member_of_shixun?(shixun)
+        User::EDU_SHIXUN_MEMBER
+      elsif is_certification_teacher
+        User::EDU_CERTIFICATION_TEACHER
+      elsif is_teacher?
+        User::EDU_TEACHER
+      else
+        User::EDU_NORMAL
+      end
     return @identity
   end
 
@@ -466,23 +440,23 @@ class User < ApplicationRecord
   def game_identity(game)
     shixun = game.myshixun.shixun
     @identity =
-        if admin?
-          User::EDU_ADMIN
-        elsif business?
-          User::EDU_BUSINESS
-        elsif creator_of_shixun?(shixun)
-          User::EDU_SHIXUN_MANAGER
-        elsif member_of_shixun?(shixun)
-          User::EDU_SHIXUN_MEMBER
-        elsif is_certification_teacher
-          User::EDU_CERTIFICATION_TEACHER
-        elsif creator_of_game?(game)
-          User::EDU_GAME_MANAGER
-        elsif is_teacher?
-          User::EDU_TEACHER
-        else
-          User::EDU_NORMAL
-        end
+      if admin?
+        User::EDU_ADMIN
+      elsif business?
+        User::EDU_BUSINESS
+      elsif creator_of_shixun?(shixun)
+        User::EDU_SHIXUN_MANAGER
+      elsif member_of_shixun?(shixun)
+        User::EDU_SHIXUN_MEMBER
+      elsif is_certification_teacher
+        User::EDU_CERTIFICATION_TEACHER
+      elsif creator_of_game?(game)
+        User::EDU_GAME_MANAGER
+      elsif is_teacher?
+        User::EDU_TEACHER
+      else
+        User::EDU_NORMAL
+      end
     return @identity
   end
 
@@ -590,7 +564,7 @@ class User < ApplicationRecord
     anonymous_user = AnonymousUser.unscoped.take
     if anonymous_user.nil?
       anonymous_user = AnonymousUser.unscoped.create(lastname: 'Anonymous', firstname: '', login: '',
-                                                     mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platforms[:forge])
+                                                     mail: '358551897@qq.com', phone: '13333333333', status: 0)
       raise "Unable to create the anonymous user： error_info:#{anonymous_user.errors.messages}" if anonymous_user.new_record?
     end
     anonymous_user
@@ -618,8 +592,8 @@ class User < ApplicationRecord
   # 工程认证的学校
   def ec_school
     school_id = self.ec_school_users.pluck(:school_id).first ||
-        self.ec_major_schools.pluck(:school_id).first ||
-        (self.ec_course_users.first && self.ec_course_users.first.try(:ec_course).try(:ec_year).try(:ec_major_school).try(:school_id))
+      self.ec_major_schools.pluck(:school_id).first ||
+      (self.ec_course_users.first && self.ec_course_users.first.try(:ec_course).try(:ec_year).try(:ec_major_school).try(:school_id))
   end
 
   # 登录，返回用户名与密码匹配的用户
@@ -683,6 +657,7 @@ class User < ApplicationRecord
 
   # 邮箱：w***l@qq.com
   def hidden_mail
+    Rails.logger.info("######-----: #{mail}")
     Util.conceal(mail, :email).to_s
   end
 
@@ -754,8 +729,8 @@ class User < ApplicationRecord
   end
 
   def validate_sensitive_string
-    raise("真实姓名包含敏感词汇，请重新输入") if lastname && !HarmoniousDictionary.clean?(lastname)
-    raise("昵称包含敏感词汇，请重新输入") if nickname && !HarmoniousDictionary.clean?(nickname)
+    raise("真实姓名包含敏感词汇，请重新输入#{lastname}") if lastname && !HarmoniousDictionary.clean?(lastname)
+    raise("昵称包含敏感词汇，请重新输入#{nickname}") if nickname && !HarmoniousDictionary.clean?(nickname)
   end
 
   def set_laboratory
