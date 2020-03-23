@@ -78,7 +78,7 @@ class RepositoriesController < ApplicationController
 
   def find_project
     @project = Project.find params[:id]
-    # render_not_found("未找到相关的仓库") unless @project
+    render_not_found("未找到相关的仓库") unless @project
   end
 
   def authorizate!
