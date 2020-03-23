@@ -1,0 +1,19 @@
+webpackJsonp([280],{
+
+/***/ 4900:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_antd_lib_select_style_css__ = __webpack_require__(322);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_antd_lib_select_style_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_antd_lib_select_style_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_antd_lib_select__ = __webpack_require__(320);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_antd_lib_select___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_antd_lib_select__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_react__);
+var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}var Option=__WEBPACK_IMPORTED_MODULE_1_antd_lib_select___default.a.Option;var Branch=function(_Component){_inherits(Branch,_Component);function Branch(props){_classCallCheck(this,Branch);var _this=_possibleConstructorReturn(this,(Branch.__proto__||Object.getPrototypeOf(Branch)).call(this,props));_this.resetSetting=function(){};_this.state={userDataSource:undefined};return _this;}// 更新仓库设置
+_createClass(Branch,[{key:'render',value:function render(){var branchList=this.props.branchList;var branchListRender=branchList&&branchList.map(function(item,key){return __WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement(Option,{value:item.name},item.name);});return __WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement('div',{className:'normalBox'},__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement('div',{className:'normalBox-title font-16'},'\u5206\u652F\u5217\u8868'),__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement('p',{className:'pl15 pt15'},'\u8BF7\u9009\u62E9\u4E00\u4E2A\u9ED8\u8BA4\u7684\u5206\u652F\u7528\u4E8E\u5408\u5E76\u8BF7\u6C42\u548C\u63D0\u4EA4\uFF1A'),__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement('div',{className:'addPanel'},__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_antd_lib_select___default.a,{className:'branchSelect'},branchListRender),__WEBPACK_IMPORTED_MODULE_2_react___default.a.createElement('a',{className:'small_submitBtn ml20',onClick:this.resetSetting},'\u66F4\u65B0\u4ED3\u5E93\u8BBE\u7F6E')));}}]);return Branch;}(__WEBPACK_IMPORTED_MODULE_2_react__["Component"]);/* harmony default export */ __webpack_exports__["default"] = (Branch);
+
+/***/ })
+
+});
