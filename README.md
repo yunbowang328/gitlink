@@ -503,11 +503,11 @@ curl -X GET http://localhost:3000/api/projects/3263  | jq
 
 #### 编辑仓库信息
 ```
-GET /api/:login/:repo_identifier/edit.json
+GET  /api/repositories/:id/edit.json
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/18816895620/mirror_demo/edit.json | jq
+curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 ```
 
 *返回参数说明:*
@@ -828,20 +828,19 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 #### 获取代码目录列表
 ```
-POST api/:login/:repo_identifier/entries
+POST /api/repositories/:id/entries.json
 ```
 *示例*
 ```
 curl -X GET \
 -d "ref=develop" \
-http://localhost:3000/api/18816895620/mirror_demo/entries  | jq
+http://localhost:3000//api/repositories/3687/entries.json  | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login           |是|string |用户标识(login)  |
-|repo_identifier |是|string |仓库标识(identifier)  |
+|id           |是|int |项目id  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
 
@@ -896,21 +895,20 @@ http://localhost:3000/api/18816895620/mirror_demo/entries  | jq
 
 #### 获取子目录代码列表/编辑某个具体的文件
 ```
-GET api/:login/:repo_identifier/sub_entries
+GET /api/repositories/:id/sub_entries
 ```
 *示例*
 ```
 curl -X GET \
 -d "ref=master" \
 -d "filepath=test1_create_file.rb" \
-http://localhost:3000/api/18816895620/mirror_demo/sub_entries | jq
+http://localhost:3000/api/repositories/87/sub_entries.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login           |是|string |用户标识(login)  |
-|repo_identifier |是|string |仓库标识(identifier)  |
+|id              |是|int |项目id  |
 |filepath        |是|string |文件夹、文件的相对路径  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
@@ -1306,17 +1304,17 @@ curl -X GET http://localhost:3000/api/projects/mirror_demo/branches | jq
 
 ### 获取版本列表
 ```
-GET /api/:login/:repo_identifier/tags
+GET  /api/repositories/:id/tags
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/18816895620/mirror_demo/tags | jq
+curl -X GET http://localhost:3000/api/repositories/124/tags.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|identifier               |是|string |项目标识  |
+|id               |是|int |项目id  |
 
 
 *返回参数说明:*
@@ -1387,19 +1385,18 @@ curl -X GET http://localhost:3000/api/18816895620/mirror_demo/tags | jq
 
 ## 仓库详情
 ```
-GET /api/:login/:repo_identifier/
+GET /api/repositories/:id
 ```
 *示例*
 ```
 curl -X GET \
-http://localhost:3000/api/18816895620/mirror_demo | jq
+http://localhost:3000/api/repositories/23.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login             |是|string |用户标识  |
-|repo_identifier   |是|string |仓库标识  |
+|id             |是|string |项目id  |
 
 
 *返回参数说明:*
@@ -1469,21 +1466,20 @@ http://localhost:3000/api/18816895620/mirror_demo | jq
 
 ## 获取提交记录列表
 ```
-GET /api/:login/:repo_identifier/commits
+GET  /api/repositories/:id/commits
 ```
 *示例*
 ```
 curl -X GET \
 -d "sha=develop" \
 -d "page=1" \
-http://localhost:3000/api/18816895620/mirror_demo/commits | jq
+http://localhost:3000/api/repositories/89/commits.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login             |是|string |用户标识  |
-|repo_identifier   |是|string |仓库标识  |
+|id                |是|int |项目id  |
 |sha               |否|string |分支名称、提交记录的sha标识，默认为master分支  |
 |page              |否|int |页数， 默认为1  |
 
@@ -1813,7 +1809,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 
 ### 仓库新建文件
 ```
-DELETE /api/:login/:repo_identifier/contents
+POST /api/repositories/:id/create_file
 ```
 *示例*
 ```
@@ -1828,8 +1824,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login          |是|string |用户标识  |
-|repo_identifier|是|string |仓库标识  |
+|id             |是|string |项目id  |
 |filepath       |是|string |文件相对于仓库的路径 |
 |content        |否|string |内容  |
 |message        |否|string |提交说明 |
@@ -1882,7 +1877,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 
 ### 更新仓库中的文件
 ```
-PUT /api/:login/:repo_identifier/contents/files/update
+PUT /api/repositories/:id/update_file.json
 ```
 *示例*
 ```
@@ -1893,14 +1888,13 @@ curl -X PUT \
 -d 'message=更改提交信息' \
 -d 'from_path=text.rb' \
 -d "sha=57426eb21e4ceabdf4b206f022077e0040" \
-http://localhost:3000/api/18816895620/mirror_demo/contents/files/update.json | jq
+http://localhost:3000/api/repositories/3938/update_file.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login          |是|string |用户标识  |
-|repo_identifier|是|string |仓库标识  |
+|id             |是|int |项目id  |
 |filepath       |是|string |文件相对于仓库的路径(或修改后的文件路径) |
 |from_path      |是|string |原文件相对于仓库的路径, 只有当需要修改原文件名称时，才需要该参数 |
 |sha            |是|string |文件的sha标识值 |
@@ -1954,7 +1948,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents/files/update.json | j
 
 ### 删除仓库中的文件
 ```
-DELETE /api/:login/:repo_identifier/contents/files/delete
+DELETE /api/repositories/:id/delete_file
 ```
 *示例*
 ```
@@ -1962,14 +1956,13 @@ curl -X DELETE \
 -d 'filepath=test1_create_file12.rb' \
 -d 'test delete file' \
 -d 'sha=7b70509105b587e71f5692b9e8ab70851e321f64' \
-http://localhost:3000/api/18816895620/mirror_demo/contents/files/delete | jq
+http://localhost:3000/api//api/repositories/3868/delete_file | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 -|-|-|-
-|login          |是|string |用户标识  |
-|repo_identifier|是|string |仓库标识  |
+|id          |是|int |项目id  |
 |filepath       |是|string |文件相对于仓库的路径 |
 |message        |否|string |提交说明 |
 |branch         |否|string |分支名称, 默认为master分支|
