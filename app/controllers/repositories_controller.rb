@@ -57,6 +57,7 @@ class RepositoriesController < ApplicationController
   end
 
   def update_file
+    Rails.logger.info("##################_________params_____________#########{params}")
     interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier).compact)
     if interactor.success?
       @file = interactor.result
