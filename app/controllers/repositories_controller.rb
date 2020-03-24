@@ -57,10 +57,10 @@ class RepositoriesController < ApplicationController
   end
 
   def update_file
-    Rails.logger.info("##################_________params_____________#########{params}")
     interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
+      render_result(1, "更新成功")
     else
       render_error(interactor.error)
     end
@@ -70,6 +70,7 @@ class RepositoriesController < ApplicationController
     interactor = Gitea::DeleteFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
+      render_result(1, "文件删除成功")
     else
       render_error(interactor.error)
     end
