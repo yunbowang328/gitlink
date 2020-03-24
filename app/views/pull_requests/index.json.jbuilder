@@ -6,6 +6,7 @@ json.assign_me_count @assign_to_me_size
 json.my_published_count @my_published_size
 json.search_count @issues_size
 json.limit @limit
+json.user_admin_or_member @user_admin_or_member
 
 json.issues do
   json.array! @issues.to_a do |issue|

@@ -16,6 +16,8 @@ class PullRequestsController < ApplicationController
     @close_issues_size = issues.where(status_id: 5).size
     @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
     @my_published_size = issues.where(author_id: current_user&.id).size
+    @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
+
 
     status_type = params[:status_type] || "1"  #issue状态的选择
     search_name = params[:search].to_s
