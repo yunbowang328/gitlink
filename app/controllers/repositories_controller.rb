@@ -58,7 +58,7 @@ class RepositoriesController < ApplicationController
 
   def update_file
     Rails.logger.info("##################_________params_____________#########{params}")
-    interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier).compact)
+    interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
     else
@@ -67,7 +67,7 @@ class RepositoriesController < ApplicationController
   end
 
   def delete_file
-    interactor = Gitea::DeleteFileInteractor.call(current_user, params.merge(identifier: @project.identifier).compact)
+    interactor = Gitea::DeleteFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
     else
