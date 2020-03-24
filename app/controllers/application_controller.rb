@@ -233,8 +233,6 @@ class ApplicationController < ActionController::Base
 	# 未授权的捕捉407，弹试用申请弹框
 	def require_login
 		#6.13 -hs
-		Rails.logger.info("########____________________########{User.current.login}")
-		Rails.logger.info("########____________________########{User.current.logged?}")
 
 		tip_exception(401, "请登录后再操作") unless User.current.logged?
 	end
