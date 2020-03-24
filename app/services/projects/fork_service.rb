@@ -25,7 +25,7 @@ class Projects::ForkService < ApplicationService
 
       result = Gitea::Repository::ForkService.new(@project.owner, @target_owner, @project.identifier, @organization).call
 
-      @project.update_column('forked_count', @project.forked_count + 1)
+      @project.update_column('forked_count', @project&.forked_count.to_i + 1)
       new_repository.update_column('url', result['clone_url']) if result
 
       clone_project
