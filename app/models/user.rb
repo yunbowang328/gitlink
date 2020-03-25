@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  extend Enumerize
+
   include Watchable
   include Likeable
   include BaseModel
@@ -39,7 +41,7 @@ class User < ApplicationRecord
   # educoder: 来自Educoder平台
   # trustie: 来自Trustie平台
   # forge: 平台本身注册的用户
-  enum platform: [:forge, :educoder, :trustie]
+  enumerize :platform, in: [:forge, :educoder, :trustie], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
 
@@ -198,7 +200,6 @@ class User < ApplicationRecord
   #
   # validations
   #
-  validates :platform, inclusion: { in: %w(forge educoder trustie) }
   validates_presence_of :login, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }, case_sensitive: false
   validates_uniqueness_of :login, :if => Proc.new { |user| user.login_changed? && user.login.present? }, case_sensitive: false
   validates_uniqueness_of :mail, :if => Proc.new { |user| user.mail_changed? && user.mail.present? }, case_sensitive: false
