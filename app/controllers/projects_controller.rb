@@ -6,7 +6,9 @@ class ProjectsController < ApplicationController
   before_action :authorizate_user_can_edit_project!, only: %i[update]
 
   def index
-    scope = Projects::ListQuery.call(params)
+    is_admin = current_user && current_user&.admin?
+
+    scope = Projects::ListQuery.call(params.merge(is_admin: is_admin))
     @total_count = scope.size
     @projects = paginate(scope)
   end
@@ -36,7 +38,15 @@ class ProjectsController < ApplicationController
   end
 
   def group_type_list
-    @project_group_list = Project.visible.group(:project_type).select('project_type, count(project_type) AS projects_count').having("count(project_type) > ?", 0)
+    is_admin = current_user && current_user&.admin?
+    if is_admin
+      projects = Project.all
+    elsif current_user&.logged?
+      projects = Project.joins(:members).where.not("projects.is_public = ? and (projects.user_id != ? or members.user_id != ?)", false, current_user.id,current_user.id ).distinct
+    else
+      projects = Project.visible
+    end
+    @project_group_list = projects.group(:project_type).select('project_type, count(project_type) AS projects_count').having("count(project_type) > ?", 0)
   end
 
   def update

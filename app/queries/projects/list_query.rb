@@ -10,7 +10,14 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-    scope = Project.visible.like(params[:search])
+    if params[:is_admin]
+      projects = Project.all
+    elsif params[:user_id].to_i != 2
+      projects = Project.joins(:members).where.not("projects.is_public = ? and (projects.user_id != ? or members.user_id != ?)", false, params[:user_id].to_i,params[:user_id].to_i ).distinct
+    else
+      projects = Project.visible
+    end
+    scope = projects.like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
