@@ -1,4 +1,3 @@
-json.identifier @project.identifier
 json.project_id @project.id
 json.project_name @project.name
 json.project_identifier @project.identifier
