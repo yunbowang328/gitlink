@@ -9,7 +9,7 @@ json.forked_count @project.forked_count
 json.watchers_count @project.watchers_count
 json.branches_count @branches_count
 json.commits_count @commits_count
-json.permission render_edit_project_permission(current_user, @project)
+json.permission render_edit_project_permission(current_user, @project) if current_user
 json.mirror_url @project&.repository.mirror_url
 json.watched current_user&.watched?(@project)
 json.praised current_user&.liked?(@project)
