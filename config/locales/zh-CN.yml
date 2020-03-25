@@ -28,6 +28,7 @@ zh-CN:
     draft: 草稿
 
   journal_detail:
+    close_pr: 合并
     merge: 合并
     issue_tags_value: 标签
     lock_issue: 锁定工单
