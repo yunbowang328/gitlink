@@ -6,7 +6,9 @@ class ProjectsController < ApplicationController
   before_action :authorizate_user_can_edit_project!, only: %i[update]
 
   def index
-    scope = Projects::ListQuery.call(params)
+    is_admin = current_user && current_user&.admin?
+
+    scope = Projects::ListQuery.call(params.merge(is_admin: is_admin))
     @total_count = scope.size
     @projects = paginate(scope)
   end
