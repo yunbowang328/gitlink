@@ -2,9 +2,9 @@ module ProjectOperable
   extend ActiveSupport::Concern
 
   included do
-    has_many :members
-    # has_many :except_owner_members, -> { members.where("members.use_id != ? ", self.owner.id ) }
-    has_many :manager_members, -> { joins(:roles).where(roles: { name: 'Manager' }) }, class_name: 'Member'
+    has_many :members, dependent: :destroy
+    has_many :except_owner_members, -> { joins(:roles).where.not(roles: { name: 'Manager' }) }, class_name: 'Member'
+    has_many :manager_members,      -> { joins(:roles).where(roles: { name: 'Manager' }) }, class_name: 'Member'
   end
 
   def add_member!(user_id, role_name='Developer')
