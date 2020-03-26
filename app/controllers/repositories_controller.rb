@@ -62,8 +62,8 @@ class RepositoriesController < ApplicationController
         }
         requests_params = local_params.merge({
                                                assignee: current_user.try(:login),
-                                               assignees: "",
-                                               labels: "",
+                                               assignees: [],
+                                               labels: [],
                                                due_date: Time.now
                                              })
 
@@ -72,9 +72,9 @@ class RepositoriesController < ApplicationController
           project_id: @project.id,
           subject: params[:message],
           description: params[:content],
-          assigned_to_id: "",
-          fixed_version_id: "",
-          issue_tags_value: "",
+          assigned_to_id: nil,
+          fixed_version_id: nil,
+          issue_tags_value: nil,
           issue_classify: "pull_request",
           issue_type: "1",
           tracker_id: 2,
