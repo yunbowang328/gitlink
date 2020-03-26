@@ -13,7 +13,7 @@ class Projects::ListQuery < ApplicationQuery
     if params[:is_admin]
       projects = Project.all
     elsif params[:user_id].to_i != 2
-      projects = Project.joins(:members).where.not("projects.is_public = ? and (projects.user_id != ? or members.user_id != ?)", false, params[:user_id].to_i,params[:user_id].to_i ).distinct
+      projects = Project.list_user_projects(params[:user_id])
     else
       projects = Project.visible
     end
