@@ -46,7 +46,9 @@ class ProjectsController < ApplicationController
     else
       projects = Project.visible
     end
-    @project_group_list = projects.group(:project_type).select('project_type, count(project_type) AS projects_count').having("count(project_type) > ?", 0)
+    @project_group_list = projects.group(:project_type).size
+
+    # @project_group_list = projects.group(:project_type).select('project_type, count(project_type) AS projects_count').having("count(project_type) > ?", 0)
   end
 
   def update

@@ -12,8 +12,7 @@ class ProjectCategoriesController < ApplicationController
     else
       projects = Project.visible
     end
-    @category_group_list =
-      projects.joins(:project_category).group(:project_category_id)
-        .select("project_category_id, count(*) AS projects_count, project_categories.name")
+    # @category_group_list = projects.joins(:project_category).group(:project_category_id).select("project_category_id, count(*) AS projects_count, project_categories.name")
+    @category_group_list = projects.joins(:project_category).group("project_categories.name", "project_categories.id").size
   end
 end
