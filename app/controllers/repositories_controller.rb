@@ -51,6 +51,48 @@ class RepositoriesController < ApplicationController
     interactor = Gitea::CreateFileInteractor.call(current_user, content_params)
     if interactor.success?
       @file = interactor.result
+      if params[:new_branch].present? && params[:new_branch] != params[:branch]
+        local_params = {
+          title: params[:message],  #标题
+          body:	params[:content],  #内容
+          head: params[:new_branch],  #源分支
+          base: params[:branch],  #目标分支
+          milestone: 0  #里程碑,未与本地的里程碑关联
+
+        }
+        requests_params = local_params.merge({
+                                               assignee: current_user.try(:login),
+                                               assignees: "",
+                                               labels: "",
+                                               due_date: Time.now
+                                             })
+
+        issue_params = {
+          author_id: current_user.id,
+          project_id: @project.id,
+          subject: params[:message],
+          description: params[:content],
+          assigned_to_id: "",
+          fixed_version_id: "",
+          issue_tags_value: "",
+          issue_classify: "pull_request",
+          issue_type: "1",
+          tracker_id: 2,
+          status_id: 1,
+          priority_id: 1
+        }
+        pull_issue = Issue.new(issue_params)
+        if pull_issue.save!
+          local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: pull_issue.id))
+          if local_requests.save
+            gitea_request = Gitea::PullRequest::CreateService.new(current_user, @project.try(:identifier), requests_params).call
+            if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
+              local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
+            end
+          end
+        end
+      end
+
     else
       render_error(interactor.error)
     end

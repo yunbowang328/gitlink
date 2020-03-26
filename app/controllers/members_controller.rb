@@ -15,7 +15,7 @@ class MembersController < ApplicationController
   end
 
   def index
-    scope = @project.except_owner_members.includes(:roles, user: :user_extension)
+    scope = @project.members.includes(:roles, user: :user_extension)
     @total_count = scope.size
     @members = paginate(scope)
   end

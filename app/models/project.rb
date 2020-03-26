@@ -17,8 +17,6 @@ class Project < ApplicationRecord
 
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy
-  has_many :issue_tags, dependent: :destroy
-  has_many :issue_statuses, dependent: :destroy
   has_many :pull_requests, dependent: :destroy
 
   has_many :issues, dependent: :destroy
