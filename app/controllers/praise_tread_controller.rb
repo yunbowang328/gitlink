@@ -11,7 +11,7 @@ class PraiseTreadController < ApplicationController
     begin
       return normal_status(2, "你已点过赞了") if current_user.liked?(@project)
       current_user.like!(@project)
-      render_ok
+      render_ok({praises_count: @project.praises_count, praised: current_user.liked?(@project)})
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
@@ -23,7 +23,7 @@ class PraiseTreadController < ApplicationController
     begin
       return normal_status(2, "你还没有点过赞噢") unless current_user.liked?(@project)
       current_user.unlike!(@project)
-      render_ok
+      render_ok({praises_count: @project.praises_count, praised: current_user.liked?(@project)})
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
@@ -37,6 +37,11 @@ class PraiseTreadController < ApplicationController
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
+  end
+
+  private
+  def render_result
+
   end
 
 end
