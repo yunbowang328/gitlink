@@ -1,5 +1,5 @@
 class PullRequestsController < ApplicationController
-  before_action :require_login
+  before_action :require_login, except: [:index, :show]
   before_action :find_project_with_id
   before_action :set_repository
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge]
@@ -243,7 +243,7 @@ class PullRequestsController < ApplicationController
   end
 
   def show
-    @user_permission = current_user.present? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
+    @user_permission = current_user.logged? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
     @issue_attachments = @issue.attachments
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
