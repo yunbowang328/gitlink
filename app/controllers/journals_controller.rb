@@ -16,8 +16,6 @@ class JournalsController < ApplicationController
     notes = params[:content]
     if notes.blank?
       normal_status(-1, "评论内容不能为空")
-    elsif current_user.logged?
-      normal_status(-1, "请登录")
     else
       journal_params = {
         journalized_id: @issue.id ,
