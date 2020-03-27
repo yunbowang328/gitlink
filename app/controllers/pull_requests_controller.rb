@@ -1,5 +1,5 @@
 class PullRequestsController < ApplicationController
-  before_action :require_login
+  before_action :require_login, except: [:index, :show]
   before_action :find_project_with_id
   before_action :set_repository
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge]

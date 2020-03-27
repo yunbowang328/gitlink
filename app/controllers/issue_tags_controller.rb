@@ -1,5 +1,5 @@
 class IssueTagsController < ApplicationController
-  before_action :require_login
+  before_action :require_login, except: [:index]
   before_action :find_project_with_id
   before_action :set_project
   before_action :check_issue_permission, except: :index
