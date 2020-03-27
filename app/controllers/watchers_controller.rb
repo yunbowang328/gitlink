@@ -11,7 +11,7 @@ class WatchersController < ApplicationController
     begin
       return normal_status(2, "你还没有关注哦") unless current_user.watched?(@project)
       current_user.unwatch!(@project)
-      render_ok
+      render_ok({watchers_count: @project.watchers_count, watched: current_user.watched?(@project)})
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
@@ -23,7 +23,7 @@ class WatchersController < ApplicationController
     begin
       return normal_status(2, "你已关注了") if current_user.watched?(@project)
       current_user.watch!(@project)
-      render_ok
+      render_ok({watchers_count: @project.watchers_count, watched: current_user.watched?(@project)})
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
