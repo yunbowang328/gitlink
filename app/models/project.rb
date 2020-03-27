@@ -100,7 +100,7 @@ class Project < ApplicationRecord
   end
 
   def self.list_user_projects(user_id)
-    user_not_show = Project.joins(:members).where("projects.is_public = ? and (projects.user_id != ? or members.user_id != ?)", false, user_id,user_id).pluck(:id).uniq
+    user_not_show = Project.joins(:members).where("projects.is_public = ? and projects.user_id != ? and members.user_id != ?", false, user_id,user_id).pluck(:id).uniq
     Project.where.not(id: user_not_show)
   end
 

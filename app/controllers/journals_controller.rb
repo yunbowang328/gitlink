@@ -1,5 +1,5 @@
 class JournalsController < ApplicationController
-  before_action :require_login
+  before_action :require_login, except: :index
   before_action :set_issue
   before_action :check_issue_permission
   before_action :set_journal, only: [:destroy, :edit, :update]
@@ -16,6 +16,8 @@ class JournalsController < ApplicationController
     notes = params[:content]
     if notes.blank?
       normal_status(-1, "评论内容不能为空")
+    elsif current_user.logged?
+      normal_status(-1, "请登录")
     else
       journal_params = {
         journalized_id: @issue.id ,

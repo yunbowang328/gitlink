@@ -11,7 +11,7 @@ class IssuesController < ApplicationController
   include TagChosenHelper
 
   def index
-    @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
+    @user_admin_or_member = current_user.logged? && (current_user.admin || @project.member?(current_user))
     issues = @project.issues.issue_issue.includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)
     issues = issues.where(is_private: false) unless @user_admin_or_member
     @all_issues_size = issues.size
@@ -276,7 +276,7 @@ class IssuesController < ApplicationController
   end
 
   def show
-    @user_permission = current_user.present? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
+    @user_permission = current_user.logged? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
     @issue_attachments = @issue.attachments
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
