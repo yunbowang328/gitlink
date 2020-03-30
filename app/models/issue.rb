@@ -90,11 +90,11 @@ class Issue < ApplicationRecord
   end
 
   def change_versions_count
-    if self.version.present?
+    if self.version.present? && self.saved_change_to_status_id?
       if self.status_id == 5
         percent = self.version.issues_count == 0 ? 0.0 : ((self.version.closed_issues_count + 1).to_f / self.version.issues_count)
         self.version.update_attributes(closed_issues_count: (self.version.closed_issues_count + 1), percent: percent)
-      else
+      elsif self.status_id_before_last_save == 5
         percent = self.version.issues_count == 0 ? 0.0 : ((self.version.closed_issues_count - 1).to_f / self.version.issues_count)
         self.version.update_attributes(closed_issues_count: (self.version.closed_issues_count - 1), percent: percent)
       end
