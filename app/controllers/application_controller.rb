@@ -682,7 +682,8 @@ class ApplicationController < ActionController::Base
 
 	def find_user_with_id
 		@user = User.find_by_id params[:user_id]
-    render_not_found("未找到’#{params[:login]}’相关的用户") unless @user
+    # render_not_found("未找到’#{params[:login]}’相关的用户") unless @user
+		render_error("未找到相关的用户") unless @user
 	end
 
 	def find_repository
