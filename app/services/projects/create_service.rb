@@ -39,7 +39,7 @@ class Projects::CreateService < ApplicationService
 
   def repository_params
     {
-      hidden: get_is_public,
+      hidden: repo_is_public,
       user_id: params[:user_id],
       identifier: params[:repository_name]
     }
@@ -47,5 +47,9 @@ class Projects::CreateService < ApplicationService
 
   def get_is_public
     params[:private] || true
+  end
+
+  def repo_is_public
+    !get_is_public
   end
 end
