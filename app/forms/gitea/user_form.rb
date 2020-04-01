@@ -10,7 +10,7 @@ class Gitea::UserForm
 
   validates :password, presence: true
 
-  validate :check_username, :check_email
+  # validate :check_username, :check_email
 
   attr_reader :record
 

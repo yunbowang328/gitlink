@@ -41,7 +41,8 @@ class User < ApplicationRecord
   # educoder: 来自Educoder平台
   # trustie: 来自Trustie平台
   # forge: 平台本身注册的用户
-  enumerize :platform, in: [:forge, :educoder, :trustie], default: :forge, scope: :shallow
+  # military: 军科的用户
+  enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
 

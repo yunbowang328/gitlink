@@ -2,12 +2,17 @@ class SyncForgeJob < ApplicationJob
   queue_as :default
 
   def perform(sync_params)
+    @change_issue_ids = []
+    @change_journal_ids =[]
+    @change_watcher_ids = []
+    @change_pr_ids = []
+    @change_praise_trend_ids = []
+    @change_version_ids = []
 
     Rails.logger.info("#######______sync__start__########")
     sync_params = ActiveSupport::JSON.decode(sync_params)
 
     all_target_params = sync_params["target_params"]
-    roles_params = sync_params["roles"]
 
     user_params = sync_params["user_params"]["user_params"]
     owner_extension_params = sync_params["user_params"]["user_extension_params"]
@@ -19,8 +24,6 @@ class SyncForgeJob < ApplicationJob
       if new_user.present?
         ActiveRecord::Base.transaction do
           begin
-
-            sync_roles(roles_params, platform)
             if all_target_params.present?
               all_target_params.each do |project|
                 target_params = {
@@ -38,13 +41,6 @@ class SyncForgeJob < ApplicationJob
                 sync_projects(new_user, user_old_id,target_params, platform)
               end
             end
-            Issue.select(:id, :assigned_to_id).where(assigned_to_id: user_old_id)&.update_all(assigned_to_id: new_user.id)
-            Issue.select(:id, :author_id).where(author_id: user_old_id)&.update_all(author_id: new_user.id)
-            Journal.select(:id,:user_id).where(user_id: user_old_id)&.update_all(user_id: new_user.id)
-            Watcher.select(:id,:user_id).where(user_id: user_old_id)&.update_all(user_id: new_user.id)
-            ProjectTrend.select(:id,:user_id).where(user_id: user_old_id)&.update_all(user_id: new_user.id)
-            PullRequest.select(:id,:user_id).where(user_id: user_old_id)&.update_all(user_id: new_user.id)
-            Version.select(:id,:user_id).where(user_id: user_old_id)&.update_all(user_id: new_user.id)
           rescue Exception => e
             Rails.logger.info("#######_______forge_new_user_sync_failed___#########{e}")
             raise ActiveRecord::Rollback
@@ -57,7 +53,7 @@ class SyncForgeJob < ApplicationJob
   end
 
   def old_version_source
-    %w(trustie)
+    %w(trustie military)
   end
 
   private
@@ -66,28 +62,21 @@ class SyncForgeJob < ApplicationJob
     ActiveRecord::Base.transaction do
       begin
         Rails.logger.info("#######______sync_user_start__########")
-        keys_other_delete = %w(id created_at updated_at user_id)
-        keys_to_delete = %w(id created_on updated_on platform)
+        keys_other_delete = %w(id created_at updated_at user_id province)
+        keys_to_delete = %w(id created_on updated_on platform admin_role enterprise_certification)
         owner_params = owner_params["user"] if old_version_source.include?(platform)   #trustie上需要
-
         owner_params = owner_params&.except!(*keys_to_delete)
-        user_password = random_password
         new_user = []
 
         if owner_params.present?
           if User.exists?(login: owner_params["login"])
             new_user = User.find_by(login: owner_params["login"])
-          elsif  User.exists?(mail: owner_params["mail"])
-            new_user = User.find_by(mail: owner_params["mail"])
           else
-            new_user = User.new(owner_params.merge(platform: platform))
-            interactor = Gitea::RegisterInteractor.call({username: owner_params["login"], email: owner_params["mail"], password: user_password})
-            if interactor.success?
-              gitea_user = interactor.result
-              result = Gitea::User::GenerateTokenService.new(owner_params["login"], user_password).call
-              new_user.gitea_token = result['sha1']
-              new_user.gitea_uid = gitea_user['id']
+            user_mail = owner_params["mail"]
+            unless user_mail.present?
+              user_mail = "#{owner_params["login"]}_example@example.com"
             end
+            new_user = User.new(owner_params.merge(platform: platform,mail: user_mail))
             if new_user.save!
               if owner_extension_params.present?
                 owner_extension_params = owner_extension_params["user_extensions"] if old_version_source.include?(platform)  #trustie上需要
@@ -109,14 +98,10 @@ class SyncForgeJob < ApplicationJob
 
   end
 
-  def random_password
-    [*('a'..'z'),*(0..9),*('A'..'Z')].shuffle[0..8].join + ['$','#','&','*','@','_'].shuffle[0..2].join
-  end
-
   #同步项目
-  def sync_projects(new_user,old_user_id, targets,platform)
+  def sync_projects(new_user,user_old_id, targets,platform)
     Rails.logger.info("#######__projects_sync__start__########")
-    keys_to_delete = %w(id created_on updated_on user_id language)
+    keys_to_delete = %w(id created_on updated_on user_id language homepage_show image_url image_status audit_status_cd)
     score_to_delete = %w(id created_at updated_at project_id)
     begin
       if targets.present?
@@ -127,53 +112,44 @@ class SyncForgeJob < ApplicationJob
         version_params = targets[:versions_params]
         member_params = targets[:member_params]
         project_score = targets[:project_score_params]
-        repo_params = targets[:repo_params]
         praise_trends_params = targets[:praise_trends_params]
         watchers_params = targets[:watchers_params]
-
         if project.present?
           project = project["project"] if old_version_source.include?(platform)
 
-          project_identifier = project["identifier"]
-          if repo_params.present?
-            project_identifier = repo_params["identifier"]
-          end
+          new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
+          if new_project.save!(:validate => false)
 
-          if Project.exists?(identifier: project_identifier)
-            failed_dic = "public/sync_failed_users.dic"
-            File.open(failed_dic,"a") do |file|
-              file.puts "[\nTime---#{Time.now}\nproject_info---#{project}\nerrors---exists the same project:#{project_identifier}]\n "
+            if project_score.present?
+              project_score = project_score["project_score"] if old_version_source.include?(platform) #trustie上需要
+              ProjectScore.create!(project_score&.except!(*score_to_delete).merge(project_id: new_project.id))
             end
-          else
-            new_project = Project.new(project&.except!(*keys_to_delete).merge(user_id: new_user.id))
-            if new_project.save!(:validate => false)
-              if project_identifier.present?
-                repository_params = {
-                  hidden: project["is_public"],
-                  user_id: new_user.id,
-                  identifier: project_identifier
-                }
-                Repositories::CreateService.new(new_user, new_project, repository_params).call
-              end
 
-              if project_score.present?
-                project_score = project_score["project_score"] if old_version_source.include?(platform) #trustie上需要
-                ProjectScore.create!(project_score&.except!(*score_to_delete).merge(project_id: new_project.id))
-              end
+            sync_user_issues(new_project.id, issue_params, platform)
+            sync_members(new_project.id, member_params,platform)
+            sync_commits(new_project.id,new_project.gpid, commit_params,platform)
+            sync_pull_requests(new_project.id,new_user.id, pr_params,platform)
+            sync_versions(new_project.id, new_user.id, version_params,platform)
+            sync_watchers(new_project.id, watchers_params, platform)
+            sync_praises(new_project.id,praise_trends_params,platform)
 
-              sync_user_issues(new_project.id, issue_params, platform)
-              sync_members(new_project.id, member_params,platform)
-              sync_commits(new_project.id,new_project.gpid, commit_params,platform)
-              sync_pull_requests(new_project.id,new_user.id, pr_params,platform)
-              sync_versions(new_project.id, new_user.id, version_params,platform)
-              sync_watchers(new_project.id, watchers_params, platform)
-              sync_praises(new_project.id,praise_trends_params,platform)
-            end
+            Issue.select(:id, :assigned_to_id).where(id:@change_issue_ids, assigned_to_id: user_old_id)&.update_all(assigned_to_id: new_user.id)
+            Issue.select(:id, :author_id).where(id:@change_issue_ids, author_id: user_old_id)&.update_all(author_id: new_user.id)
+            Journal.select(:id,:user_id).where(id: @change_journal_ids, user_id: user_old_id)&.update_all(user_id: new_user.id)
+            Watcher.select(:id,:user_id).where(id: @change_watcher_ids, user_id: user_old_id)&.update_all(user_id: new_user.id)
+            PraiseTread.select(:id,:user_id).where(id: @change_praise_trend_ids, user_id: user_old_id)&.update_all(user_id: new_user.id)
+            PullRequest.select(:id,:user_id).where(id: @change_pr_ids, user_id: user_old_id)&.update_all(user_id: new_user.id)
+            Version.select(:id,:user_id).where(id: @change_version_ids, user_id: user_old_id)&.update_all(user_id: new_user.id)
           end
         end
       end
     rescue Exception => e
+      failed_dic = "public/sync_failed_users.dic"
+      File.open(failed_dic,"a") do |file|
+        file.puts "[\nTime---#{Time.now}\nproject_create_exception---\nerrors---project_created_failed:#{e}]\n "
+      end
       Rails.logger.info("#######_______projects_sync__failed__#########{e}")
+
       raise ActiveRecord::Rollback
     end
   end
@@ -191,6 +167,7 @@ class SyncForgeJob < ApplicationJob
                 r = r["watcher"] if old_version_source.include?(platform)
                 new_wathcer = Watcher.new(r&.except!(*roles_other_delete).merge(watchable_id: project_id))
                 new_wathcer.save(:validate => false)
+                @change_watcher_ids.push(new_wathcer.id)
               end
             end
           end
@@ -217,6 +194,7 @@ class SyncForgeJob < ApplicationJob
                 r = r["praise_tread"] if old_version_source.include?(platform)  #trustie上需要
                 new_tread = PraiseTread.new(r&.except!(*roles_other_delete).merge(praise_tread_object_id: project_id))
                 new_tread.save(:validate => false)
+                @change_praise_trend_ids.push(new_tread.id)
               end
             end
           end
@@ -224,34 +202,6 @@ class SyncForgeJob < ApplicationJob
         Rails.logger.info("#######______sync_praises_end__#######")
       rescue Exception => e
         Rails.logger.info("#######_______sync_praises__failed__#########{e}")
-        raise ActiveRecord::Rollback
-      end
-    end
-
-  end
-
-  def sync_roles(roles,platform)
-    Rails.logger.info("#######______sync_roles_start__#######")
-    roles_other_delete = %w(id)
-    ActiveRecord::Base.transaction do
-      begin
-
-        if roles.present?
-          Role.transaction do
-            roles.each do |r|
-              if r.present?
-                r = r["role"] if old_version_source.include?(platform)  #trustie上需要
-                unless Role.exists?(name: r["name"])
-                  Role.create!(r&.except!(*roles_other_delete))
-                end
-              end
-            end
-          end
-        end
-        Rails.logger.info("#######______sync_roles_end__#######")
-
-      rescue Exception => e
-        Rails.logger.info("#######_______sync_roles__failed__#########{e}")
         raise ActiveRecord::Rollback
       end
     end
@@ -331,6 +281,7 @@ class SyncForgeJob < ApplicationJob
               issue_params = issue_params["issue"] if old_version_source.include?(platform) #trustie上需要
               issue = Issue.new(issue_params&.except!(*issue_to_delete).merge(project_id: project_id))
               if issue.save!(:validate => false)
+                @change_issue_ids.push(issue.id)
                 sync_journals(issue.id, jours_params, platform)
                 sync_commit_issues(issue.id,project_id, commit_params, platform)
               else
@@ -363,7 +314,7 @@ class SyncForgeJob < ApplicationJob
                 new_journal = new_journal["journal"] if old_version_source.include?(platform) #trustie上需要
                 new_journal = Journal.new(new_journal&.except!(*jour_to_delete).merge(journalized_id: issue_id))
                 if new_journal.save(:validate => false)
-
+                  @change_journal_ids.push(new_journal.id)
                   if new_journal_detail.present?
                     sync_journal_details(new_journal_detail, new_journal.id, platform)
                   end
@@ -445,8 +396,8 @@ class SyncForgeJob < ApplicationJob
                 i = i["pull_request"] if old_version_source.include?(platform) #trustie上需要
                 newpr = PullRequest.new(i&.except!(*commit_to_delete).merge(project_id: project_id))
                 newpr.save(:validate => false)
+                @change_pr_ids.push(newpr.id)
               end
-
             end
           end
         end
@@ -497,6 +448,7 @@ class SyncForgeJob < ApplicationJob
                 i = i["version"] if old_version_source.include?(platform) #trustie上需要
                 new_v = Version.new(i&.except!(*version_to_delete).merge(project_id: project_id))
                 new_v.save!(:validate => false)
+                @change_version_ids.push(new_v.id)
               end
             end
           end
