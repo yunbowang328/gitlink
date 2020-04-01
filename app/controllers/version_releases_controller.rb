@@ -37,7 +37,7 @@ class VersionReleasesController < ApplicationController
           version_params = {
             body:	params[:body],
             draft: params[:draft] || false,
-            name: params[:name],
+            name: params[:name].to_s.first(32),
             prerelease: params[:prerelease] || false,
             tag_name: params[:tag_name],
             target_commitish: params[:target_commitish] || "master"  #分支

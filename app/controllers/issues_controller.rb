@@ -218,7 +218,7 @@ class IssuesController < ApplicationController
       estimated_hours: params[:estimated_hours],
       done_ratio: params[:done_ratio],
       closed_on: (params[:status_id].to_i == 5) ? Time.now : nil,
-      issue_type: params[:issue_type],
+      issue_type: params[:issue_type] || "1",
       issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",").to_s : "",
       token: params[:token],
       branch_name: params[:branch_name].to_s
