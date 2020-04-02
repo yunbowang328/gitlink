@@ -14,31 +14,6 @@
   <!-- Sidebar Links -->
   <ul class="list-unstyled components">
     <li><%= sidebar_item(admins_path, '概览', icon: 'dashboard', controller: 'admins-dashboards') %></li>
-    <li>
-      <%= sidebar_item_group('#school-submenu', '学校统计', icon: 'area-chart') do %>
-        <li><%= sidebar_item(admins_daily_school_statistics_path, '统计总表', icon: 'bar-chart', controller: 'admins-daily_school_statistics') %></li>
-        <li><%= sidebar_item(admins_school_statistics_path, '数据变化报表', icon: 'line-chart', controller: 'admins-school_statistics') %></li>
-      <% end %>
-    </li>
-
-    <li>
-      <%= sidebar_item_group('#shixun-submenu', '实训管理', icon: 'window-restore') do %>
-        <li><%= sidebar_item(admins_shixuns_path, '实训列表', icon: 'jsfiddle', controller: 'admins-shixuns') %></li>
-        <li><%= sidebar_item(admins_shixun_settings_path, '实训配置', icon: 'cog', controller: 'admins-shixun_settings') %></li>
-        <li><%= sidebar_item(admins_mirror_repositories_path, '镜像管理', icon: 'cubes', controller: 'admins-mirror_repositories') %></li>
-        <li><%= sidebar_item(admins_shixun_modify_records_path, '实训修改记录', icon: 'eraser', controller: 'admins-shixun_modify_records') %></li>
-        <li><%= sidebar_item(admins_shixun_recycles_path, '实训回收站', icon: 'recycle', controller: 'admins-shixun_recycles') %></li>
-      <% end %>
-    </li>
-
-    <li>
-      <%= sidebar_item_group('#subject-submenu', '实践课程', icon: 'th-list') do %>
-      <li><%= sidebar_item(admins_subjects_path, '课程列表', icon: 'cog', controller: 'admins-subjects') %></li>
-      <li><%= sidebar_item(admins_subject_settings_path, '课程配置', icon: 'cog', controller: 'admins-subject_settings') %></li>
-    <% end %>
-    </li>
-
-    <li><%= sidebar_item(admins_disciplines_path, '课程体系', icon: 'sitemap', controller: 'admins-disciplines') %></li>
 
     <li>
       <%= sidebar_item_group('#course-submenu', '课堂管理', icon: 'book') do %>
@@ -107,7 +82,6 @@
       <% end %>
     </li>
 
-    <li><%= sidebar_item(admins_competitions_path, '竞赛', icon: 'trophy', controller: 'admins-competitions') %></li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
 
     <li>
@@ -120,13 +94,6 @@
       <% end %>
     </li>
 
-    <li>
-      <%= sidebar_item_group('#weapp-setting-submenu', '小程序设置', icon: 'id-badge') do %>
-        <li><%= sidebar_item(admins_weapp_carousels_path, '轮播图', icon: 'image', controller: 'admins-weapp_carousels') %></li>
-        <li><%= sidebar_item(admins_weapp_adverts_path, '广告栏', icon: 'paper-plane', controller: 'admins-weapp_adverts') %></li>
-      <% end %>
-
-    </li>
     <li><%= sidebar_item('/', '返回主站', icon: 'sign-out', controller: 'root') %></li>
   </ul>
 </nav>
