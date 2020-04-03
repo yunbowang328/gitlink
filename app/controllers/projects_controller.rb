@@ -38,18 +38,23 @@ class ProjectsController < ApplicationController
   end
 
   def group_type_list
-    is_admin = current_user && current_user&.admin?
-    if is_admin
-      projects = Project.all
-    elsif current_user&.logged?
-
-      projects = Project.list_user_projects(current_user.id)
+    # is_admin = current_user && current_user&.admin?
+    # if is_admin
+    #   projects = Project.all
+    # elsif current_user&.logged?
+    #
+    #   projects = Project.list_user_projects(current_user.id)
+    # else
+    #   projects = Project.visible
+    # end
+    #
+    if params[:user_id].to_i != 2
+      projects = Project.list_user_projects(params[:user_id])
     else
       projects = Project.visible
     end
+    # projects = Project.visible
     @project_group_list = projects.group(:project_type).size
-
-    # @project_group_list = projects.group(:project_type).select('project_type, count(project_type) AS projects_count').having("count(project_type) > ?", 0)
   end
 
   def update

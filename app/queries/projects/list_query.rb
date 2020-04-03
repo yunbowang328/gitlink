@@ -10,9 +10,14 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-    if params[:is_admin]
-      projects = Project.all
-    elsif params[:user_id].to_i != 2
+    # if params[:is_admin]
+    #   projects = Project.all
+    # elsif params[:user_id].to_i != 2
+    #   projects = Project.list_user_projects(params[:user_id])
+    # else
+    #   projects = Project.visible
+    # end
+    if params[:user_id].to_i != 2
       projects = Project.list_user_projects(params[:user_id])
     else
       projects = Project.visible
