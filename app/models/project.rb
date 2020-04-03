@@ -100,11 +100,11 @@ class Project < ApplicationRecord
   end
 
   def self.list_user_projects(user_id)
-    projects = Project.is_private.select(:id)
-    user_not_show_1 = projects.where(user_id: user_id).pluck(:id).uniq
+    projects = Project.is_private.select(:id,:user_id)
+    user_not_show_1 = projects.where("user_id != ?",user_id).pluck(:id).uniq
 
     user_show_2 = projects.joins(:members).where("members.user_id = ?", user_id).pluck(:id).uniq
-    Project.where.not(id: (user_not_show_1 - user_show_2.uniq))
+    Project.where.not(id: (user_not_show_1 - user_show_2).uniq)
   end
 
 end
