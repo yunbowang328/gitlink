@@ -48,8 +48,8 @@ class ProjectsController < ApplicationController
     #   projects = Project.visible
     # end
     #
-    if params[:user_id].to_i != 2
-      projects = Project.list_user_projects(params[:user_id])
+    if current_user&.logged?
+      projects = Project.list_user_projects(current_user.id)
     else
       projects = Project.visible
     end
