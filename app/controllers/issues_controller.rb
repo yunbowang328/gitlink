@@ -3,7 +3,7 @@ class IssuesController < ApplicationController
   before_action :find_project_with_id
   before_action :set_project_and_user
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
-  before_action :check_issue_permission, except: [:index, :show, :index_chosen]
+  before_action :check_issue_permission, except: [:index, :show, :index_chosen, :create]
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
   before_action :get_branches, only: [:new, :edit]
 
