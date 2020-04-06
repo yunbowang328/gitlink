@@ -42,7 +42,7 @@ class Issue < ApplicationRecord
         new_attachment_name = self.attachments.select(:filename,:id).where(id: issue_files).pluck(:filename).join(",")
         journal.journal_details.create(property: "attachment", prop_key: "#{issue_files.size}", old_value: old_attachment_names, value: new_attachment_name)
       end
-      change_values = %w(subject description is_private assigned_to_id tracker_id status_id priority_id fixed_version_id start_date due_date estimated_hours done_ratio issue_tags_value issue_type token branch_name)
+      change_values = %w(subject is_private assigned_to_id tracker_id status_id priority_id fixed_version_id start_date due_date estimated_hours done_ratio issue_tags_value issue_type token branch_name)
       change_values.each do |at|
         if self.send("saved_change_to_#{at}?")
           journal.journal_details.create(property: "attr", prop_key: "#{at}", old_value: self.send("#{at}_before_last_save"), value: self.send(at))
