@@ -389,7 +389,7 @@ class IssuesController < ApplicationController
   end
 
   def check_issue_permission
-    if !@project.is_public && (@project.member?(current_user) || current_user.admin? || (@project.user_id == current_user.id))
+    unless @project.is_public || (current_user.present? && (@project.member?(current_user) || current_user&.admin? || (@project.user_id == current_user&.id)))
       normal_status(-1, "您没有权限")
     end
   end
