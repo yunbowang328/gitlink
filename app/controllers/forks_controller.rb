@@ -9,7 +9,7 @@ class ForksController < ApplicationController
   private
   def authenticate_project!
     return if current_user != @project.owner
-    render_result(1, "自己不能fork自己的项目")
+    render_result(-1, "自己不能fork自己的项目")
   end
 
   def authenticate_user!

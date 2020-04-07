@@ -13,6 +13,15 @@ json.permission render_edit_project_permission(current_user, @project) if curren
 json.mirror_url @project&.repository.mirror_url
 json.watched current_user&.watched?(@project)
 json.praised current_user&.liked?(@project)
+json.forked_from_project_id @project_fork_id
+json.fork_info do
+  if @fork_project.present?
+    json.fork_form_name @fork_project.try(:name)
+    json.fork_project_user_login @fork_project_user.try(:login)
+    json.fork_project_user_name @fork_project_user.try(:show_real_name)
+  end
+end
+
 json.size @result['size']
 json.ssh_url @result['ssh_url']
 json.clone_url @result['clone_url']

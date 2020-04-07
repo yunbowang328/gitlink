@@ -7,6 +7,11 @@ class RepositoriesController < ApplicationController
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier).call[:total_count]
     @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
+    @project_fork_id = @project.try(:forked_from_project_id)
+    if @project_fork_id.present?
+      @fork_project = Project.find_by(id: @project_fork_id)
+      @fork_project_user = @fork_project.owner
+    end
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
