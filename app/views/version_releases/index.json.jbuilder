@@ -5,8 +5,8 @@ json.releases do
   json.array! @version_releases.to_a.each do |re|
     user = User.select(:login, :lastname,:firstname, :nickname).find_by_gitea_uid(re["author"]["id"])
     version = VersionRelease.select(:id).find_by_version_gid(re["id"])
-    json.version_id version.try(:id)
     if @user_permission && re["draft"]
+      json.version_id version.try(:id)
       json.id re["id"]
       json.tag_name re["tag_name"]
       json.target_commitish re["target_commitish"]
@@ -22,6 +22,7 @@ json.releases do
       json.user_avatar user.present? ? url_to_avatar(user) : ""
     else
       unless re["draft"]
+        json.version_id version.try(:id)
         json.id re["id"]
         json.tag_name re["tag_name"]
         json.target_commitish re["target_commitish"]
