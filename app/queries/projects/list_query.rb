@@ -17,16 +17,16 @@ class Projects::ListQuery < ApplicationQuery
     # else
     #   projects = Project.visible
     # end
-    if params[:user_id].to_i != 2 && params[:user_id].to_i != 0
-      projects = Project.list_user_projects(params[:user_id])
-    else
-      projects = Project.visible
-    end
-    scope = projects.includes(:repository, owner: :user_extension).like(params[:search])
+    # if params[:user_id].to_i != 2 && params[:user_id].to_i != 0
+    #   projects = Project.list_user_projects(params[:user_id])
+    # else
+    #   projects = Project.visible
+    # end
+    projects = Project.visible
+    scope = projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
-      .includes(:project_category, :project_language, :owner)
 
     custom_sort(scope, params[:sort_by], params[:sort_direction])
   end
