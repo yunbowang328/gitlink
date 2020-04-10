@@ -27,9 +27,10 @@ class Projects::ListQuery < ApplicationQuery
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
 
-    sort = parms[:sort_by] || "updated_on"
+    sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
     scope = scope.order("projects.#{sort} #{sort_direction}")
+    scope
     # custom_sort(scope, params[:sort_by], params[:sort_direction])
   end
 end
