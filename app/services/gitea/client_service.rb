@@ -116,6 +116,9 @@ class Gitea::ClientService < ApplicationService
   end
 
   def render_status(response)
+    Rails.logger.info("###############____response__#{response}")
+    Rails.logger.info("###############____response_status_#{response.status}")
+    Rails.logger.info("###############____response_body_#{response.body}")
     mark = "[gitea] "
     case response.status
     when 201, 200, 202
