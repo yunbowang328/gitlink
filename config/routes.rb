@@ -56,6 +56,7 @@ Rails.application.routes.draw do
         member do
           post :pr_merge
           post :check_merge
+          post :simple_update
         end
         collection do
           post :check_can_merge

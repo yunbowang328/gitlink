@@ -242,6 +242,35 @@ class PullRequestsController < ApplicationController
 
   end
 
+  def simple_update
+    ActiveRecord::Base.transaction do
+      begin
+        issue_params = {
+          assigned_to_id: params[:assigned_to_id].to_s,
+          fixed_version_id: params[:fixed_version_id],
+          issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
+        }
+
+        if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
+          @issue&.issue_tags_relates&.destroy_all
+          params[:issue_tag_ids].each do |tag|
+            IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
+          end
+        end
+
+        if @issue.update_attributes(issue_params)
+          normal_status(0, "PullRequest更新成功")
+        else
+          normal_status(-1, "PullRequest更新成功")
+        end
+      rescue => e
+        normal_status(-1, e.message)
+        raise ActiveRecord::Rollback
+      end
+    end
+
+  end
+
   def show
     @user_permission = current_user.present? && current_user.logged? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
     @issue_attachments = @issue.attachments
