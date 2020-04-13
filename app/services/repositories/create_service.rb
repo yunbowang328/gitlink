@@ -48,7 +48,7 @@ class Repositories::CreateService < ApplicationService
   def gitea_repository_params
     hash = {
       name: params[:identifier],
-      private: !params[:hidden],
+      private: params[:hidden],
       # readme: "ReadMe",
       "auto_init": true,
       # "description": "string",
