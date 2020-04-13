@@ -8,8 +8,13 @@ class ForksController < ApplicationController
 
   private
   def authenticate_project!
-    return if current_user != @project.owner
-    render_result(-1, "自己不能fork自己的项目")
+    if current_user&.id == @project.user_id
+      render_result(-1, "自己不能fork自己的项目")
+    elsif Project.exists?(user_id: current_user.id, identifier: @project.identifier)
+      render_result(-1, "fork失败，你已拥有了这个项目")
+    end
+    # return if current_user != @project.owner
+    # render_result(-1, "自己不能fork自己的项目")
   end
 
   def authenticate_user!
