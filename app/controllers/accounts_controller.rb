@@ -40,8 +40,8 @@ class AccountsController < ApplicationController
   # 其他平台修改用户的信息，这边同步修改
   def remote_update
     ActiveRecord::Base.transaction do
-      user_params = params[:user_params].compact
-      user_extension_params = params[:user_extension_params].compact
+      user_params = params[:user_params]
+      user_extension_params = params[:user_extension_params]
 
       u = User.find_by(login: params[:old_user_login])
       user_mail = u.try(:mail)
