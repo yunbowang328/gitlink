@@ -37,6 +37,43 @@ class AccountsController < ApplicationController
     tip_exception(-1, e.message)
   end
 
+  # 其他平台修改用户的信息，这边同步修改
+  def remote_update
+    ActiveRecord::Base.transaction do
+      user_params = params[:user_params].compact
+      user_extension_params = params[:user_extension_params].compact
+
+      u = User.find_by(login: params[:old_user_login])
+      user_mail = u.try(:mail)
+
+      if u.present?
+        u.update_attributes(user_params)
+        u.user_extension.update_attributes(user_extension_params)
+      end
+
+      sync_params = {}
+
+      if user_params["mail"] && user_params["mail"] != user_mail
+        sync_params.merge(email: user_params["mail"])
+      end
+      if user_params["login"] && user_params["login"] != params[:old_user_login]
+        sync_params.merge(username: user_params["login"])
+      end
+
+      sync_params = sync_params.compact
+      if sync_params.present?
+        admin_user = User.find(1)
+        update_gitea = Gitea::User::UpdateService.call(admin_user, sync_params)
+        Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
+      end
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(-1, e.message)
+  end
+
+
+
   # 用户注册
   # 注意：用户注册需要兼顾本地版，本地版是不需要验证码及激活码以及使用授权的，注册完成即可使用
   # params[:login] 邮箱或者手机号

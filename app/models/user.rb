@@ -592,7 +592,7 @@ class User < ApplicationRecord
     anonymous_user = AnonymousUser.unscoped.take
     if anonymous_user.nil?
       anonymous_user = AnonymousUser.unscoped.create(lastname: 'Anonymous', firstname: '', login: '',
-                                                     mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platforms[:forge])
+                                                     mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platform[:forge])
       raise "Unable to create the anonymous user： error_info:#{anonymous_user.errors.messages}" if anonymous_user.new_record?
     end
     anonymous_user
