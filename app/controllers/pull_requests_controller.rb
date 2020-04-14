@@ -250,6 +250,9 @@ class PullRequestsController < ApplicationController
           fixed_version_id: params[:fixed_version_id],
           issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
         }
+        if params[:issue_tag_ids].blank?
+          @issue&.issue_tags_relates&.destroy_all
+        end
 
         if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
           @issue&.issue_tags_relates&.destroy_all
