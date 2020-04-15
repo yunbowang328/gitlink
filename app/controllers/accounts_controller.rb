@@ -76,27 +76,7 @@ class AccountsController < ApplicationController
   def remote_login
     @user = User.try_to_login(params[:login], params[:password])
     if @user
-      self.logged_user = @user
-      # generate a key and set cookie if autologin
-
-      token = Token.get_or_create_permanent_login_token(@user, "autologin")
-      cookie_options = {
-        :value => token.value,
-        :expires => 1.month.from_now,
-        :path => '/',
-        :secure => false,
-        :httponly => false
-      }
-      if edu_setting('cookie_domain').present?
-        cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
-      end
-
-      cookies[autologin_cookie_name] = cookie_options
-      Rails.logger.info("cookies is #{cookies}")
-      UserAction.create(:action_id => @user.try(:id), :action_type => "Login", :user_id => @user.try(:id), :ip => request.remote_ip)
-      @user.update_column(:last_login_on, Time.now)
-      session[:"#{default_yun_session}"] = @user.id
-      # successful_authentication(@user)
+      successful_authentication(@user)
       render_ok({user: {id: @user.id, token: @user.gitea_token}})
     else
       render_error("用户不存在")
