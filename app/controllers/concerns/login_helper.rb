@@ -58,6 +58,8 @@ module LoginHelper
   def logged_user=(user)
     # reset_session
     if user && user.is_a?(User)
+      Rails.logger.info("########________logged_user___________###########{user.id}")
+
       User.current = user
       start_user_session(user)
     else
@@ -78,6 +80,7 @@ module LoginHelper
     # # end
 
     # session[:user_id] = user.id
+    Rails.logger.info("########________start_user_session___________###########{user.id}")
     session[:"#{default_yun_session}"] = user.id
     session[:ctime] = Time.now.utc.to_i
     session[:atime] = Time.now.utc.to_i
