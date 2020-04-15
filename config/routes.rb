@@ -124,6 +124,7 @@ Rails.application.routes.draw do
         post :remote_register
         post :remote_update
         post :remote_login
+        post :remote_password
       end
     end
 

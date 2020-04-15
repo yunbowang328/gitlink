@@ -44,7 +44,7 @@ module LoginHelper
   end
 
   def logout_user
-    Rails.logger.info("####################__11111______######")
+    Rails.logger.info("####################_1111_User.current_id______######{User.current.try(:id)}###___#{User.current.logged?}")
 
     if User.current.logged?
       Rails.logger.info("####################__2222_______######")
