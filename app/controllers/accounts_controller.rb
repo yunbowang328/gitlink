@@ -52,17 +52,36 @@ class AccountsController < ApplicationController
       Rails.logger.info("#########____u________#######{u&.id}")
 
       if u.present?
-        if u.update!(user_params)
-          Rails.logger.info("#####______update_success_________###########")
-        else
-          Rails.logger.info("#####______update_error_________###########{u.errors.messages}")
-        end
+        ue = u.user_extension
+        u.login = user_params["login"] if user_params["login"]
+        u.mail = user_params["mail"] if user_params["mail"]
+        u.lastname = user_params["lastname"] if user_params["lastname"]
 
-        if u.user_extension.update!(user_extension_params)
-          Rails.logger.info("#####______update_extension_+success_________###########")
-        else
-          Rails.logger.info("#####______update_extension___error_________###########{u.user_extension.errors.messages}")
-        end
+        ue.gender = user_extension_params["gender"]
+        ue.school_id = user_extension_params["school_id"]
+        ue.location = user_extension_params["location"]
+        ue.location_city = user_extension_params["location_city"]
+        ue.identity = user_extension_params["identity"]
+        ue.technical_title = user_extension_params["technical_title"]
+        ue.student_id = user_extension_params["student_id"]
+        ue.description = user_extension_params["description"]
+        ue.save!
+        u.save!
+
+
+
+
+        # if u.update!(user_params)
+        #   Rails.logger.info("#####______update_success_________###########")
+        # else
+        #   Rails.logger.info("#####______update_error_________###########{u.errors.messages}")
+        # end
+        #
+        # if u.user_extension.update!(user_extension_params)
+        #   Rails.logger.info("#####______update_extension_+success_________###########")
+        # else
+        #   Rails.logger.info("#####______update_extension___error_________###########{u.user_extension.errors.messages}")
+        # end
       end
 
       sync_params = {}
