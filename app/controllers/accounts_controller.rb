@@ -26,6 +26,7 @@ class AccountsController < ApplicationController
         @user.gitea_token = result['sha1']
         @user.gitea_uid = gitea_user['id']
         if @user.save!
+          UserExtension.create!(user_id: @user.id)
           render_ok({user: {id: @user.id, token: @user.gitea_token}})
         end
       else
@@ -50,15 +51,14 @@ class AccountsController < ApplicationController
       Rails.logger.info("#########_____update_user_extension_params________#######{user_extension_params}")
       Rails.logger.info("#########____u________#######{u&.id}")
 
-
       if u.present?
-        if u.update_attributes(user_params)
+        if u.update!(user_params)
           Rails.logger.info("#####______update_success_________###########")
         else
           Rails.logger.info("#####______update_error_________###########{u.errors.messages}")
         end
 
-        if u.user_extension.update_attributes(user_extension_params)
+        if u.user_extension.update!(user_extension_params)
           Rails.logger.info("#####______update_extension_+success_________###########")
         else
           Rails.logger.info("#####______update_extension___error_________###########{u.user_extension.errors.messages}")
