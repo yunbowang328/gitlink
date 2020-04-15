@@ -71,11 +71,11 @@ class AccountsController < ApplicationController
         Rails.logger.info("######_________user_param_login________#############{user_params["login"]}")
 
         if (user_params["mail"] && user_params["mail"] != user_mail) || (user_params["login"] && user_params["login"] != params[:old_user_login])
-          sync_params.merge(email: user_params["mail"], username: user_params["login"])
+          sync_params = sync_params.merge(email: user_params["mail"], username: user_params["login"])
         end
 
         if sync_params.present?
-          update_gitea = Gitea::User::UpdateService.call(u.gitea_token, sync_params)
+          update_gitea = Gitea::User::UpdateService.call(u.gitea_token, params[:old_user_login], sync_params)
           Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
         end
       end
