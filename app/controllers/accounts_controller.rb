@@ -65,6 +65,10 @@ class AccountsController < ApplicationController
         u.save!
 
         sync_params = {}
+        Rails.logger.info("######_________user_param_mail________#############{user_params["mail"]}")
+        Rails.logger.info("######_________user_mail________#############{user_mail}")
+
+        Rails.logger.info("######_________user_param_login________#############{user_params["login"]}")
 
         if (user_params["mail"] && user_params["mail"] != user_mail) || (user_params["login"] && user_params["login"] != params[:old_user_login])
           sync_params.merge(email: user_params["mail"], username: user_params["login"])
