@@ -46,10 +46,6 @@ class AccountsController < ApplicationController
 
       u = User.find_by(login: params[:old_user_login])
       user_mail = u.try(:mail)
-      Rails.logger.info("#########____params[:old_user_login]________#######{params[:old_user_login]}")
-      Rails.logger.info("#########_____update_user_params________#######{user_params}")
-      Rails.logger.info("#########_____update_user_extension_params________#######{user_extension_params}")
-      Rails.logger.info("#########____u________#######{u&.id}")
 
       if u.present?
         ue = u.user_extension
@@ -68,37 +64,19 @@ class AccountsController < ApplicationController
         ue.save!
         u.save!
 
+        sync_params = {}
 
+        if (user_params["mail"] && user_params["mail"] != user_mail) || (user_params["login"] && user_params["login"] != params[:old_user_login])
+          sync_params.merge(email: user_params["mail"], username: user_params["login"])
+        end
 
-
-        # if u.update!(user_params)
-        #   Rails.logger.info("#####______update_success_________###########")
-        # else
-        #   Rails.logger.info("#####______update_error_________###########{u.errors.messages}")
-        # end
-        #
-        # if u.user_extension.update!(user_extension_params)
-        #   Rails.logger.info("#####______update_extension_+success_________###########")
-        # else
-        #   Rails.logger.info("#####______update_extension___error_________###########{u.user_extension.errors.messages}")
-        # end
+        if sync_params.present?
+          update_gitea = Gitea::User::UpdateService.call(u.gitea_token, sync_params)
+          Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
+        end
       end
 
-      sync_params = {}
 
-      if user_params["mail"] && user_params["mail"] != user_mail
-        sync_params.merge(email: user_params["mail"])
-      end
-      if user_params["login"] && user_params["login"] != params[:old_user_login]
-        sync_params.merge(username: user_params["login"])
-      end
-
-      sync_params = sync_params.compact
-      if sync_params.present?
-        admin_user = User.find(1)
-        update_gitea = Gitea::User::UpdateService.call(admin_user, sync_params)
-        Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
-      end
       render_ok({})
     end
   rescue Exception => e
