@@ -163,7 +163,8 @@ class AccountsController < ApplicationController
 
     successful_authentication(@user)
     login_control.clear # 重置每日密码错误次数
-    Rails.logger.info("#########_______current_user_id________#############{User.current.try(:id)}")
+    Rails.logger.info("#########_______User_current_id________#############{User.current.try(:id)}")
+    Rails.logger.info("#########_______current_user_id________#############{current_user.try(:id)}")
 
     # session[:user_id] = @user.id
   end
