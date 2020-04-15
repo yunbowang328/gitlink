@@ -72,6 +72,17 @@ class AccountsController < ApplicationController
     tip_exception(-1, e.message)
   end
 
+  # 其他平台同步登录
+  def remote_login
+    @user = User.try_to_login(params[:login], params[:password])
+    if @user
+      successful_authentication(@user)
+      render_ok({user: {id: @user.id, token: @user.gitea_token}})
+    else
+      render_error("用户不存在")
+    end
+  end
+
 
 
   # 用户注册
@@ -162,9 +173,6 @@ class AccountsController < ApplicationController
     end
 
     successful_authentication(@user)
-    login_control.clear # 重置每日密码错误次数
-    Rails.logger.info("#########_______User_current_id________#############{User.current.try(:id)}")
-    Rails.logger.info("#########_______current_user_id________#############{current_user.try(:id)}")
 
     # session[:user_id] = @user.id
   end
