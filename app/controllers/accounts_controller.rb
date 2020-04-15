@@ -94,7 +94,7 @@ class AccountsController < ApplicationController
       cookies[autologin_cookie_name] = cookie_options
       Rails.logger.info("cookies is #{cookies}")
       UserAction.create(:action_id => @user.try(:id), :action_type => "Login", :user_id => @user.try(:id), :ip => request.remote_ip)
-      user.update_column(:last_login_on, Time.now)
+      @user.update_column(:last_login_on, Time.now)
       session[:"#{default_yun_session}"] = @user.id
       # successful_authentication(@user)
       render_ok({user: {id: @user.id, token: @user.gitea_token}})
