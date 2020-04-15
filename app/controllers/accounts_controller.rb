@@ -52,6 +52,7 @@ class AccountsController < ApplicationController
         u.login = user_params["login"] if user_params["login"]
         u.mail = user_params["mail"] if user_params["mail"]
         u.lastname = user_params["lastname"] if user_params["lastname"]
+        u.password = user_params["password"] if user_params["password"]
 
         ue.gender = user_extension_params["gender"]
         ue.school_id = user_extension_params["school_id"]
@@ -67,7 +68,7 @@ class AccountsController < ApplicationController
         sync_params = {}
 
         if (user_params["mail"] && user_params["mail"] != user_mail) || (user_params["login"] && user_params["login"] != params[:old_user_login])
-          sync_params = sync_params.merge(email: user_params["mail"], login_name: user_params["login"])
+          sync_params = sync_params.merge(email: user_params["mail"], login_name: user_params["login"], full_name: user_params["login"])
         end
 
         if sync_params.present?
