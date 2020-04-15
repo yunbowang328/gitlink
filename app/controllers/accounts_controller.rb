@@ -98,11 +98,11 @@ class AccountsController < ApplicationController
   #修改密码
   def remote_password
     @user = User.find_by(login: params[:login])
-    if @user && @user.update_attribute(:password, params[:new_password])
+    if @user && @user.update_attribute(:password, params[:password])
 
       render_ok({})
     else
-      render_error("更新是不")
+      render_error("更新失败")
     end
   end
 
