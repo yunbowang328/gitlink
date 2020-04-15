@@ -26,6 +26,7 @@ class AccountsController < ApplicationController
         @user.gitea_token = result['sha1']
         @user.gitea_uid = gitea_user['id']
         if @user.save!
+          UserExtension.create!(user_id: @user.id)
           render_ok({user: {id: @user.id, token: @user.gitea_token}})
         end
       else
@@ -47,29 +48,52 @@ class AccountsController < ApplicationController
       user_mail = u.try(:mail)
 
       if u.present?
-        u.update_attributes(user_params)
-        u.user_extension.update_attributes(user_extension_params)
+        ue = u.user_extension
+        u.login = user_params["login"] if user_params["login"]
+        u.mail = user_params["mail"] if user_params["mail"]
+        u.lastname = user_params["lastname"] if user_params["lastname"]
+        u.password = user_params["password"] if user_params["password"]
+
+        ue.gender = user_extension_params["gender"]
+        ue.school_id = user_extension_params["school_id"]
+        ue.location = user_extension_params["location"]
+        ue.location_city = user_extension_params["location_city"]
+        ue.identity = user_extension_params["identity"]
+        ue.technical_title = user_extension_params["technical_title"]
+        ue.student_id = user_extension_params["student_id"]
+        ue.description = user_extension_params["description"]
+        ue.save!
+        u.save!
+
+        sync_params = {}
+
+        if (user_params["mail"] && user_params["mail"] != user_mail) || (user_params["login"] && user_params["login"] != params[:old_user_login])
+          sync_params = sync_params.merge(email: user_params["mail"], login_name: user_params["login"], full_name: user_params["login"])
+        end
+
+        if sync_params.present?
+          update_gitea = Gitea::User::UpdateService.call("", params[:old_user_login], sync_params)
+          Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
+        end
       end
 
-      sync_params = {}
 
-      if user_params["mail"] && user_params["mail"] != user_mail
-        sync_params.merge(email: user_params["mail"])
-      end
-      if user_params["login"] && user_params["login"] != params[:old_user_login]
-        sync_params.merge(username: user_params["login"])
-      end
-
-      sync_params = sync_params.compact
-      if sync_params.present?
-        admin_user = User.find(1)
-        update_gitea = Gitea::User::UpdateService.call(admin_user, sync_params)
-        Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
-      end
+      render_ok({})
     end
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(-1, e.message)
+  end
+
+  # 其他平台同步登录
+  def remote_login
+    @user = User.try_to_login(params[:login], params[:password])
+    if @user
+      successful_authentication(@user)
+      render_ok({user: {id: @user.id, token: @user.gitea_token}})
+    else
+      render_error("用户不存在")
+    end
   end
 
 
@@ -162,7 +186,6 @@ class AccountsController < ApplicationController
     end
 
     successful_authentication(@user)
-    login_control.clear # 重置每日密码错误次数
 
     # session[:user_id] = @user.id
   end
@@ -208,6 +231,7 @@ class AccountsController < ApplicationController
     UserAction.create(:action_id => user.try(:id), :action_type => "Login", :user_id => user.try(:id), :ip => request.remote_ip)
     user.update_column(:last_login_on, Time.now)
     session[:"#{default_yun_session}"] = user.id
+    Rails.logger.info("#########_____session_default_yun_session__________###############{default_yun_session}")
     # 注册完成后有一天的试用申请(先去掉)
     # UserDayCertification.create(user_id: user.id, status: 1)
   end

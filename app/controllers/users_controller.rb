@@ -109,11 +109,11 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:nickname, :lastname, :show_realname,
+    params.require(:user).permit(:nickname, :lastname, :show_realname,:login,:mail,
                                   user_extension_attributes: [
                                   :gender, :location, :location_city,
                                   :occupation, :technical_title,
-                                  :school_id, :department_id]
+                                  :school_id, :department_id,:identity, :student_id, :description]
                                 )
   end
 

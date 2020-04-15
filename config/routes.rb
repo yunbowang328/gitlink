@@ -123,6 +123,7 @@ Rails.application.routes.draw do
         get :valid_email_and_phone
         post :remote_register
         post :remote_update
+        post :remote_login
       end
     end
 

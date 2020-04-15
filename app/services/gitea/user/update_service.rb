@@ -1,6 +1,6 @@
 class Gitea::User::UpdateService < Gitea::ClientService
-  attr_reader :admin_user, :params
-
+  # attr_reader :admin_user, :params
+  attr_reader :token, :old_login, :params
   # 只有管理员才能修改用户信息
   # params:
   # admin	boolean
@@ -18,8 +18,10 @@ class Gitea::User::UpdateService < Gitea::ClientService
   # source_id	integer($int64)
   # website	string
 
-  def initialize(admin_user, params={})
-    @admin_user = admin_user
+  def initialize(token, old_login, params={})
+    @token = token
+    @params = params
+    @old_login = old_login
   end
 
   def call
@@ -27,11 +29,12 @@ class Gitea::User::UpdateService < Gitea::ClientService
   end
 
   private
+
   def url
-    "/admin/users/#{params[:login_name]}"
+    "/admin/users/#{old_login}"
   end
 
   def data_params
-    Hash.new.merge(token: admin_user.gitea_token, data: params)
+    Hash.new.merge(token: token, data: params)
   end
 end
