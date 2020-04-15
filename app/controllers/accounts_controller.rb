@@ -163,6 +163,7 @@ class AccountsController < ApplicationController
 
     successful_authentication(@user)
     login_control.clear # 重置每日密码错误次数
+    Rails.logger.info("#########_______current_user_id________#############{User.current.try(:id)}")
 
     # session[:user_id] = @user.id
   end
@@ -208,6 +209,7 @@ class AccountsController < ApplicationController
     UserAction.create(:action_id => user.try(:id), :action_type => "Login", :user_id => user.try(:id), :ip => request.remote_ip)
     user.update_column(:last_login_on, Time.now)
     session[:"#{default_yun_session}"] = user.id
+    Rails.logger.info("#########_____session_default_yun_session__________###############{default_yun_session}")
     # 注册完成后有一天的试用申请(先去掉)
     # UserDayCertification.create(user_id: user.id, status: 1)
   end
