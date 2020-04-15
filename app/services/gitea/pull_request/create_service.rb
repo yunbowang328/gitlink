@@ -18,6 +18,7 @@ class Gitea::PullRequest::CreateService < Gitea::ClientService
   end
 
   def call
+    Rails.logger.info("######_____pr_url______#########{url}")
     post(url, request_params)
   end
 

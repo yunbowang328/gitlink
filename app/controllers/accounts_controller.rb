@@ -263,6 +263,7 @@ class AccountsController < ApplicationController
   # end
 
   def logout
+    Rails.logger.info("########___logout_current_user____________########{current_user.try(:id)}")
     UserAction.create(action_id: User.current.id, action_type: "Logout", user_id: User.current.id, :ip => request.remote_ip)
     logout_user
     render :json => {status: 1, message: "退出成功!"}
