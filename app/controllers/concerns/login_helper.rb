@@ -21,6 +21,10 @@ module LoginHelper
     if edu_setting('cookie_domain').present?
       cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
     end
+    Rails.logger.info("####_______token___________#### #{token}")
+    Rails.logger.info("####_______cookie_options__________#### #{cookie_options}")
+    Rails.logger.info("####_______autologin_cookie_name__________#### #{autologin_cookie_name}")
+
     cookies[autologin_cookie_name] = cookie_options
     Rails.logger.info("cookies is #{cookies}")
   end
