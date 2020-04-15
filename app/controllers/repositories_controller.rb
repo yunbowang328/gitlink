@@ -90,7 +90,7 @@ class RepositoriesController < ApplicationController
         if pull_issue.save!
           local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: pull_issue.id))
           if local_requests.save
-            gitea_request = Gitea::PullRequest::CreateService.new(current_user, @project.try(:identifier), requests_params).call
+            gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @project.owner, @project.try(:identifier), requests_params).call
             if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
               local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
             end
