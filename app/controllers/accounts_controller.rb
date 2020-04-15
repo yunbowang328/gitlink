@@ -45,6 +45,8 @@ class AccountsController < ApplicationController
 
       u = User.find_by(login: params[:old_user_login])
       user_mail = u.try(:mail)
+      Rails.logger.info("#########_____update_user_params________#######{user_params}")
+      Rails.logger.info("#########_____update_user_extension_params________#######{user_extension_params}")
 
       if u.present?
         u.update_attributes(user_params)

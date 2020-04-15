@@ -201,7 +201,7 @@ class User < ApplicationRecord
   #
   # validations
   #
-  validates_presence_of :login, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }, case_sensitive: false
+  # validates_presence_of :login, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }, case_sensitive: false
   validates_uniqueness_of :login, :if => Proc.new { |user| user.login_changed? && user.login.present? }, case_sensitive: false
   validates_uniqueness_of :mail, :if => Proc.new { |user| user.mail_changed? && user.mail.present? }, case_sensitive: false
   # validates_uniqueness_of :phone, :if => Proc.new { |user| user.phone_changed? && user.phone.present? }, case_sensitive: false
