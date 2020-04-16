@@ -19,7 +19,7 @@ json.releases do
       json.created_at format_time(re["created_at"].to_s.to_time)
       json.published_at format_time(re["published_at"].to_s.to_time)
       json.user_name user.present? ? user.try(:show_real_name) : ""
-      json.user_avatar user.present? ? url_to_avatar(user) : ""
+      json.image_url user.present? ? url_to_avatar(user) : ""
     else
       unless re["draft"]
         json.version_id version.try(:id)
@@ -35,7 +35,7 @@ json.releases do
         json.created_at format_time(re["created_at"].to_s.to_time)
         json.published_at format_time(re["published_at"].to_s.to_time)
         json.user_name user.present? ? user.try(:show_real_name) : ""
-        json.user_avatar user.present? ? url_to_avatar(user) : ""
+        json.image_url user.present? ? url_to_avatar(user) : ""
       end
     end
 
