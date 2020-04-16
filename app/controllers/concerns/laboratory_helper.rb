@@ -39,7 +39,8 @@ module LaboratoryHelper
       my_courses: "https://www.trustie.net/users/#{current_user.try(:login)}/user_courselist",
       my_projects: "https://www.trustie.net/users/#{current_user.try(:login)}/user_projectlist",
       my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
-      default_url: "https://www.trustie.net/"
+      default_url: "https://www.trustie.net/",
+      tiding_url: "https://www.trustie.net/users/#{current_user.try(:login)}/user_messages"
     }
   end
 end
