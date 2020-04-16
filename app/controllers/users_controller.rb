@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :load_user, only: [:show, :homepage_info]
+  before_action :load_user, only: [:show, :homepage_info, :sync_token]
   before_action :check_user_exist, only: [:show, :homepage_info]
   before_action :require_login, only: %i[me list]
   skip_before_action :check_sign, only: [:attachment_show]
@@ -101,6 +101,15 @@ class UsersController < ApplicationController
     render_ok(grade: current_user.grade, next_gold: attendance.next_gold)
   rescue Users::AttendanceService::Error => ex
     render_error(ex.message)
+  end
+
+  # 其他平台登录后，必须将token同步到forge平台，实现sso登录功能
+  def sync_token
+    return render_error('未找相关用户!')  unless @user
+
+    token = Token.get_or_create_permanent_login_token(@user, 'autologin')
+    token.update_column(:value, params[:token])
+    render_ok
   end
 
   private

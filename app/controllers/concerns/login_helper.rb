@@ -6,7 +6,7 @@ module LoginHelper
   end
 
   def autologin_cookie_name
-    edu_setting('autologin_cookie_name').presence || 'autologin'
+    edu_setting('autologin_cookie_name').presence || 'autologin_trustie'
   end
 
   def set_autologin_cookie(user)

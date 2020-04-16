@@ -362,7 +362,7 @@ class ApplicationController < ActionController::Base
 			# auto-login feature starts a new session
 			user = nil
 			Rails.logger.info("111111111111111111#{default_yun_session}, session is #{session[:"#{default_yun_session}"]} ")
-			user = User.try_to_autologin(cookies[autologin_cookie_name]) if session[:"#{default_yun_session}"]
+			user = User.try_to_autologin(cookies[autologin_cookie_name])
 			start_user_session(user) if user
 			user
 		end

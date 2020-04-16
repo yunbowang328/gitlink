@@ -146,6 +146,7 @@ Rails.application.routes.draw do
         get :system_update
         get :me
         get :list
+        post :sync_token
       end
 
       scope module: :users do
