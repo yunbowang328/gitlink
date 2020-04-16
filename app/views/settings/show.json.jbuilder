@@ -35,6 +35,7 @@ json.setting do
   json.footer default_setting.footer
 
   json.main_site current_laboratory.main_site?
+  json.new_course default_course_links
 
 
 end
