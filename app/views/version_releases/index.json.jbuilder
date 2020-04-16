@@ -3,7 +3,7 @@ json.user_permission @user_permission
 # json.releases @version_releases
 json.releases do
   json.array! @version_releases.to_a.each do |re|
-    user = User.select(:login, :lastname,:firstname, :nickname).find_by_gitea_uid(re["author"]["id"])
+    user = User.select(:id, :gitea_uid, :login, :lastname,:firstname, :nickname).find_by_gitea_uid(re["author"]["id"])
     version = VersionRelease.select(:id).find_by_version_gid(re["id"])
     if @user_permission && re["draft"]
       json.version_id version.try(:id)
