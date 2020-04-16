@@ -29,4 +29,13 @@ module LaboratoryHelper
     laboratory ||= (Laboratory.find_by_subdomain(request.subdomain) || Laboratory.find(1))
     @_default_yun_session = "#{laboratory.try(:identifier).split('.').first}_user_id"
   end
+
+  def default_course_links
+    {
+      new_syllabuses: "https://www.trustie.net/syllabuses/new",
+      new_course: "https://www.trustie.net/courses/new",
+      edit_account: "https://www.trustie.net/my/account",
+      default_url: "https://www.trustie.net/"
+    }
+  end
 end
