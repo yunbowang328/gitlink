@@ -3,7 +3,7 @@ class Admins::LaboratoriesController < Admins::BaseController
     default_sort('id', 'desc')
 
     laboratories = Admins::LaboratoryQuery.call(params)
-    @laboratories = paginate laboratories.preload(:school, :laboratory_users)
+    @laboratories = paginate laboratories.preload(:laboratory_users)
   end
 
   def create

@@ -1,4 +1,4 @@
-<% school = laboratory.school %>
+<% school = laboratory&.school %>
 <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
 <td class="text-left"><%= school&.name || 'EduCoder主站' %></td>
 <td class="text-left">

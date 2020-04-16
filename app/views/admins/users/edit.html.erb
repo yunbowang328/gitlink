@@ -88,18 +88,7 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <%= f.input :school_id, as: :hidden %>
-        <%= f.input :department_id, as: :hidden %>
-        <div class="form-group select optional col-md-2">
-          <%= f.label :school_name, label: '所属学校/单位' %>
-          <%= f.select :school_name, [@user.school_id], {}, class: 'form-control school-select optional' %>
-        </div>
-        <div class="form-group select optional col-md-2">
-          <%= f.label :department_name, label: '所属学院/部门' %>
-          <%= f.select :department_name, [@user.department_id], {}, class: 'form-control department-select optional' %>
-        </div>
-      </div>
+      
     </div>
 
     <div class="mt-4"><h6>管理</h6></div>
