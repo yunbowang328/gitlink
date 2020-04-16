@@ -7,6 +7,7 @@ module LaboratoryHelper
     helper_method :current_laboratory
     helper_method :default_setting
     helper_method :default_yun_session
+    helper_method :default_course_links
   end
 
   def current_laboratory
