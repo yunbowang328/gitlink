@@ -52,7 +52,6 @@ class AccountsController < ApplicationController
         u.login = user_params["login"] if user_params["login"]
         u.mail = user_params["mail"] if user_params["mail"]
         u.lastname = user_params["lastname"] if user_params["lastname"]
-        u.password = user_params["password"] if user_params["password"]
 
         ue.gender = user_extension_params["gender"]
         ue.school_id = user_extension_params["school_id"]
@@ -93,6 +92,17 @@ class AccountsController < ApplicationController
       render_ok({user: {id: @user.id, token: @user.gitea_token}})
     else
       render_error("用户不存在")
+    end
+  end
+
+  #修改密码
+  def remote_password
+    @user = User.find_by(login: params[:login])
+    if @user && @user.update_attribute(:password, params[:password])
+
+      render_ok({})
+    else
+      render_error("更新失败")
     end
   end
 
@@ -253,6 +263,7 @@ class AccountsController < ApplicationController
   # end
 
   def logout
+    Rails.logger.info("########___logout_current_user____________########{current_user.try(:id)}")
     UserAction.create(action_id: User.current.id, action_type: "Logout", user_id: User.current.id, :ip => request.remote_ip)
     logout_user
     render :json => {status: 1, message: "退出成功!"}

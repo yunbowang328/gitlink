@@ -44,21 +44,16 @@ module LoginHelper
   end
 
   def logout_user
-    Rails.logger.info("####################__11111______######")
+    Rails.logger.info("####################__User.current_id______######{current_user.try(:id)}###___#{current_user&.logged?}")
 
     if User.current.logged?
-      Rails.logger.info("####################__2222_______######")
       if autologin = cookies.delete(autologin_cookie_name)
-        Rails.logger.info("####################__33333______######")
 
         User.current.delete_autologin_token(autologin)
       end
-      Rails.logger.info("####################__4444444______######")
-
       User.current.delete_session_token(session[:tk])
       self.logged_user = nil
     end
-    Rails.logger.info("####################__55555______######")
 
     # 云上实验室退出清理当前session
     laboratory ||= (Laboratory.find_by_subdomain(request.subdomain) || Laboratory.find(1))

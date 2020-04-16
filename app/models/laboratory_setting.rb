@@ -61,13 +61,12 @@ class LaboratorySetting < ApplicationRecord
     {
       name: nil,
       navbar: [
-        { 'name' => '实践课程', 'link' => '/paths',        'hidden' => false },
-        { 'name' => '翻转课堂', 'link' => '/courses',      'hidden' => false },
-        { 'name' => '实训项目', 'link' => '/shixuns',      'hidden' => false },
-        { 'name' => '在线竞赛', 'link' => '/competitions', 'hidden' => false },
-        { 'name' => '教学案例', 'link' => '/moop_cases',   'hidden' => false },
-        { 'name' => '交流问答', 'link' => '/forums',       'hidden' => false },
-        { 'name' => '开发者社区', 'link' => '/problems',       'hidden' => false },
+        { 'name' => '首页', 'link' => '/projects',        'hidden' => false },
+        { 'name' => '课程', 'link' => '/courses',      'hidden' => false },
+        { 'name' => '项目', 'link' => '/projects',      'hidden' => false },
+        { 'name' => '数据', 'link' => '/datas', 'hidden' => false },
+        { 'name' => '竞赛', 'link' => '/competitions',   'hidden' => false },
+        { 'name' => '问吧', 'link' => '/forums',       'hidden' => false },
       ],
       footer: nil
     }

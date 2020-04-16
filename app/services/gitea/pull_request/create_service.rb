@@ -1,6 +1,6 @@
 
 class Gitea::PullRequest::CreateService < Gitea::ClientService
-  attr_reader :user, :repo, :params
+  attr_reader :token, :user, :repo, :params
 
   # params ex:
   # {
@@ -11,13 +11,15 @@ class Gitea::PullRequest::CreateService < Gitea::ClientService
   # }
   # 以上列子说明从develop分支合并到master分支
   # repo: 仓库名称
-  def initialize(user, repo, params={})
+  def initialize(token, user, repo, params={})
+    @token = token
     @user   = user
     @repo   = repo
     @params = params
   end
 
   def call
+    Rails.logger.info("######_____pr_url______#########{url}")
     post(url, request_params)
   end
 
@@ -29,6 +31,6 @@ class Gitea::PullRequest::CreateService < Gitea::ClientService
   end
 
   def request_params
-    Hash.new.merge(token: @user.gitea_token, data: @params)
+    Hash.new.merge(token: token, data: @params)
   end
 end
