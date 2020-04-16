@@ -16,15 +16,6 @@
     <li><%= sidebar_item(admins_path, '概览', icon: 'dashboard', controller: 'admins-dashboards') %></li>
 
     <li>
-      <%= sidebar_item_group('#course-submenu', '课堂管理', icon: 'book') do %>
-      <li><%= sidebar_item(admins_course_lists_path, '课程列表', icon: 'list', controller: 'admins-course_lists') %></li>
-      <li><%= sidebar_item(admins_courses_path, '课堂列表', icon: 'clone', controller: 'admins-courses') %></li>
-<!--      <li><%#= sidebar_item(admins_mirror_repositories_path, '镜像管理', icon: 'cubes', controller: 'admins-mirror_repositories') %></li>-->
-      <li><%= sidebar_item(admins_projects_path, '项目列表', icon: 'database', controller: 'admins-projects') %></li>
-    <% end %>
-    </li>
-
-    <li>
       <%= sidebar_item_group('#schools-submenu', '单位管理', icon: 'building') do %>
         <li><%= sidebar_item(admins_schools_path, '单位列表', icon: 'university', controller: 'admins-schools') %></li>
         <li><%= sidebar_item(admins_departments_path, '部门列表', icon: 'sitemap', controller: 'admins-departments') %></li>
@@ -45,13 +36,7 @@
         <li><%= sidebar_item(admins_professional_authentications_path, '职业认证', icon: 'drivers-license', controller: 'admins-professional_authentications') %></li>
         <li><%= sidebar_item(admins_department_applies_path, '部门审批', icon: 'newspaper-o', controller: 'admins-department_applies') %></li>
         <li><%= sidebar_item(admins_unit_applies_path, '单位审批', icon: 'building-o', controller: 'admins-unit_applies') %></li>
-        <li><%= sidebar_item(admins_shixun_authorizations_path, '实训发布', icon: 'object-ungroup', controller: 'admins-shixun_authorizations') %></li>
-        <li><%= sidebar_item(admins_subject_authorizations_path, '实践课程发布', icon: 'object-group', controller: 'admins-subject_authorizations') %></li>
-        <li><%= sidebar_item(admins_library_applies_path, '教学案例发布', icon: 'language', controller: 'admins-library_applies') %></li>
         <li><%= sidebar_item(admins_project_package_applies_path, '众包需求发布', icon: 'joomla', controller: 'admins-project_package_applies') %></li>
-        <li><%= sidebar_item(admins_video_applies_path, '视频发布', icon: 'film', controller: 'admins-video_applies') %></li>
-        <li><%= sidebar_item(admins_item_authentications_path, '试题发布', icon: 'question', controller: 'admins-item_authentications') %></li>
-        <li><%= sidebar_item(admins_examination_authentications_path, '试卷发布', icon: 'file-text-o', controller: 'admins-examination_authentications') %></li>
       <% end %>
     </li>
 
@@ -77,8 +62,6 @@
       <%= sidebar_item_group('#major-identification-submenu', '工程认证', icon: 'anchor') do %>
        <li><%= sidebar_item(admins_major_informations_path, '本科专业目录', icon: 'outdent', controller: 'admins-major_informations') %></li>
        <li><%= sidebar_item(admins_auth_schools_path, '认证单位列表', icon: 'th', controller: 'admins-auth_schools') %></li>
-      <li><%= sidebar_item(admins_graduation_standards_path, '毕业要求通用标准', icon: 'file-word-o', controller: 'admins-graduation_standards') %></li>
-      <li><%= sidebar_item(admins_ec_templates_path, '导入模板管理', icon: 'file-excel-o', controller: 'admins-ec_templates') %></li>
       <% end %>
     </li>
 
