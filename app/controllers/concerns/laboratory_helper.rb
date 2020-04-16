@@ -36,6 +36,9 @@ module LaboratoryHelper
       new_syllabuses: "https://www.trustie.net/syllabuses/new",
       new_course: "https://www.trustie.net/courses/new",
       edit_account: "https://www.trustie.net/my/account",
+      my_courses: "https://www.trustie.net/users/#{current_user.try(:login)}/user_courselist",
+      my_projects: "https://www.trustie.net/users/#{current_user.try(:login)}/user_projectlist",
+      my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
       default_url: "https://www.trustie.net/"
     }
   end
