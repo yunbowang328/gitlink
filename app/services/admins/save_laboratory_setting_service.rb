@@ -15,7 +15,11 @@ class Admins::SaveLaboratorySettingService < ApplicationService
       laboratory_setting.footer = strip params[:footer]
 
       laboratory.save!
-      laboratory_setting.save!
+      Rails.logger.info("####_____name____E####{laboratory_setting.name}")
+      Rails.logger.info("####_____navbar____E####{laboratory_setting.navbar}")
+      Rails.logger.info("####_____footer___E####{laboratory_setting.footer}")
+
+      laboratory_setting.save!(:validate =>false)
 
       deal_image_file
     end
