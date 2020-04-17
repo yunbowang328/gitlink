@@ -99,6 +99,13 @@ class AccountsController < ApplicationController
   def remote_password
     @user = User.find_by(login: params[:login])
     if @user && @user.update_attribute(:password, params[:password])
+      sync_params = {
+        password: params[:password],
+        email: @user.mail
+      }
+      update_gitea = Gitea::User::UpdateService.call("", params[:login], sync_params)
+
+      Rails.logger.info("########________update_gitea___status________###########__status:_#{update_gitea.status}")
       Rails.logger.info("######________password_update_success____######")
 
       render_ok({})
