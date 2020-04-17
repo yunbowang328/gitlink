@@ -40,7 +40,8 @@ module LaboratoryHelper
       my_projects: "/users/#{current_user.try(:login)}/projects",
       my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
       default_url: "https://www.trustie.net/",
-      tiding_url: "https://www.trustie.net/users/#{current_user.try(:login)}/user_messages"
+      tiding_url: "https://www.trustie.net/users/#{current_user.try(:login)}/user_messages",
+      register_url: "https://www.trustie.net/login?login=false"
     }
   end
 end
