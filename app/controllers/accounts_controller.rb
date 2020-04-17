@@ -99,9 +99,11 @@ class AccountsController < ApplicationController
   def remote_password
     @user = User.find_by(login: params[:login])
     if @user && @user.update_attribute(:password, params[:password])
+      Rails.logger.info("######________password_update_success____######")
 
       render_ok({})
     else
+      Rails.logger.info("######________password_update_failed____######")
       render_error("更新失败")
     end
   end
