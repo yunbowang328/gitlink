@@ -147,6 +147,7 @@ Rails.application.routes.draw do
         get :me
         get :list
         post :sync_token
+        get :projects
       end
 
       scope module: :users do
@@ -436,7 +437,6 @@ Rails.application.routes.draw do
         post :unlock
         post :active
         post :reset_login_times
-        get :projects
       end
     end
     resource :import_disciplines, only: [:create]
