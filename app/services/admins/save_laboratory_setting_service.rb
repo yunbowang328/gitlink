@@ -15,16 +15,7 @@ class Admins::SaveLaboratorySettingService < ApplicationService
       laboratory_setting.footer = strip params[:footer]
 
       laboratory.save!
-
-      begin
-        unless laboratory_setting.save!
-          Rails.logger.info("######__ddddd________#######{laboratory_setting.errors.messages}")
-        end
-      rescue => e
-        Rails.logger.info("######__________#######{e}")
-      end
-
-
+      laboratory_setting.save!
 
       deal_image_file
     end
