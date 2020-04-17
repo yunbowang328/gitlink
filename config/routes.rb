@@ -436,6 +436,7 @@ Rails.application.routes.draw do
         post :unlock
         post :active
         post :reset_login_times
+        get :projects
       end
     end
     resource :import_disciplines, only: [:create]

@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token]
   before_action :check_user_exist, only: [:show, :homepage_info]
-  before_action :require_login, only: %i[me list]
+  before_action :require_login, only: %i[me list projects]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def list
@@ -110,6 +110,13 @@ class UsersController < ApplicationController
     token = Token.get_or_create_permanent_login_token(@user, 'autologin')
     token.update_column(:value, params[:token])
     render_ok
+  end
+
+  def projects
+    scope = Projects::ListMyQuery.call(params.merge(joins: params[:joins], user_id: current_user.try(:id)))
+    @total_count = scope.size
+    @projects = paginate(scope)
+
   end
 
   private
