@@ -5,7 +5,7 @@ module RepositoriesHelper
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb)
     default_type.include?(str)
   end
 end
