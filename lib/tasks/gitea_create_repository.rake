@@ -1,5 +1,5 @@
 # 执行示例  bundle exec rake gitea_create_repository:created_repo
-
+# 线上环境执行示例  RAILS_ENV=production bundle exec rake gitea_create_repository:created_repo
 
 namespace :gitea_create_repository do
   desc "if gitea .git file not present ,and create new .git file"
