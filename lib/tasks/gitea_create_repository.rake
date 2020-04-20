@@ -19,8 +19,14 @@ namespace :gitea_create_repository do
               auto_init: true,
               private: r.hidden,
             }
-            gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, repository_params).call
-            puts "__________after_create_gitea_repository_____#{gitea_repository}______"
+            ActiveRecord::Base.transaction do
+              begin
+                gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, repository_params).call
+                puts "__________after_create_gitea_repository_____#{gitea_repository}______"
+              rescue => e
+                puts "_________create_gitea_git________file______error: #{e}"
+              end
+            end
           else
             puts "__________delete_gitea__repository_failed,status:_____#{delete_gitea.status}______"
           end
