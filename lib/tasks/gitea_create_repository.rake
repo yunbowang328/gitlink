@@ -9,9 +9,9 @@ namespace :gitea_create_repository do
     all_repositories = Repository.select(:id,:identifier, :user_id,:hidden,:project_id).includes(project: :owner)
     all_repositories.find_each do |r|
       user = r.project.owner
-      if user.gitea_token.present?   #防止用户在forge创建了repository，但是在gitea上没有创建用户
+      if user && user.try(:gitea_token).present?   #防止用户在forge创建了repository，但是在gitea上没有创建用户
         repo_status = Gitea::Repository::CheckPresentService.new(user, r.identifier).call
-        unless repo_status == 200
+        unless [200, 201, 204].include?(repo_status)
           delete_gitea = Gitea::Repository::DeleteService.new(user, r.identifier).call
           if delete_gitea.status == 204 || delete_gitea.status == 404   #删除成功或者仓库不存在，都重新创建
             repository_params= {
@@ -26,7 +26,7 @@ namespace :gitea_create_repository do
           end
         end
       else
-        puts "_________this_user_have_no_gitea_token__login:#{user.login}_________"
+        puts "_________this_user_have_no_gitea_token__login:#{user&.login}_________"
       end
     end
     puts "__________end_to_create_repository_git___________"
