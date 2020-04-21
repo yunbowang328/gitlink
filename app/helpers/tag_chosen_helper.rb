@@ -35,12 +35,14 @@ module TagChosenHelper
     project_members = project.members_user_infos
     project_members_info = []  #指派给
     project_members.each do |member|
-      user = member.user
-      real_name = user.try(:show_real_name)
-      user_id = user.id
-      is_chosen = ((user.id.to_s == issue_info[0].to_s) ? "1" : "0")
-      member_info = {id: user_id, name: real_name,avatar_url: url_to_avatar(user),is_chosen: is_chosen}
-      project_members_info.push(member_info)
+      user = member&.user
+      if user
+        real_name = user.try(:show_real_name)
+        user_id = user.id
+        is_chosen = ((user.id.to_s == issue_info[0].to_s) ? "1" : "0")
+        member_info = {id: user_id, name: real_name,avatar_url: url_to_avatar(user),is_chosen: is_chosen}
+        project_members_info.push(member_info)
+      end
     end
 
     tracker_info = Tracker&.pluck(:id, :name, :position)
