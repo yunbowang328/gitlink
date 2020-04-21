@@ -7,7 +7,9 @@ namespace :sync_forge_gitea do
   task created_repo: :environment do
     puts "__________begin_to_create_repository_git___________"
     all_repositories = Repository.select(:id,:identifier, :user_id,:hidden,:project_id,:url).includes(project: :owner)
-    all_repositories.find_each do |r|
+    success_ids = all_repositories.where("url like ?", "%gitea.trustie.net%").pluck(:id)
+    failed_repos = all_repositories.where.not(id: success_ids)
+    failed_repos.find_each do |r|
       project = r.project
       user = project.owner
       unless r.url.to_s.include?("gitea.trustie.net")
@@ -28,11 +30,12 @@ namespace :sync_forge_gitea do
                 if gitea_repository
                   r.update_attribute(:url, gitea_repository["clone_url"])
                   project.update_attributes(gpid: repo_status["id"],identifier: r.identifier)
-                  puts "__________after_create_gitea_repository_____#{gitea_repository}______"
+
                 end
+                Rails.logger.info( "__________after_create_gitea_repository_____#{gitea_repository}______")
 
               rescue => e
-                puts "_________create_gitea_git________file______error: #{e}"
+                Rails.logger.info( "_________create_gitea_git________file______error: #{e}")
               end
             end
 
