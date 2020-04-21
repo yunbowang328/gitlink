@@ -702,7 +702,7 @@ class User < ApplicationRecord
   end
 
   def projects_count
-    Project.joins(:members).where(members: { user_id: self.id })
+    Project.joins(:members).where(members: { user_id: self.id }).select(:id).size
   end
 
   # 是否已经签到
