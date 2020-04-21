@@ -6,9 +6,8 @@ json.fan_count @user.fan_count
 json.identity @user.identity
 json.brief_introduction @user.user_extension&.brief_introduction
 json.professional_certification @user.professional_certification
-json.phone_binded @user.phone_binded?
-json.email_binded @user.email_binded?
 json.followed User.current.watched?(@user)
+json.projects_count @user.projects_count
 
 # json.id @user.id
 # json.name @user.full_name

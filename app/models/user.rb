@@ -701,6 +701,10 @@ class User < ApplicationRecord
     apply.present? && !apply.status.zero?
   end
 
+  def projects_count
+    Project.joins(:members).where(members: { user_id: self.id })
+  end
+
   # 是否已经签到
   def attendance_signed?
     attendance = Attendance.find_by(user_id: id)
