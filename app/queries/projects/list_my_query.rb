@@ -1,11 +1,12 @@
 class Projects::ListMyQuery < ApplicationQuery
 
-  attr_reader :params
+  attr_reader :params, :current_user
 
   # sort_columns :updated_on, :created_on, :forked_count, :praises_count, default_by: :updated_on, default_direction: :desc
 
-  def initialize(params)
+  def initialize(params,current_user)
     @params = params
+    @current_user = current_user
   end
 
   def call
