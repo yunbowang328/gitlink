@@ -17,11 +17,11 @@ class Projects::ListQuery < ApplicationQuery
     # else
     #   projects = Project.visible
     # end
-    projects = Project.where("user_id != ?", 2)    #匿名用户的项目
+
     if params[:user_id].to_i != 2 && params[:user_id].to_i != 0
-      projects = projects.list_user_projects(params[:user_id])
+      projects = Project.list_user_projects(params[:user_id])
     else
-      projects = projects.visible
+      projects = Project.no_anomory_projects.visible    #匿名用户的项目
     end
     scope = projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
       .with_project_type(params[:project_type])
