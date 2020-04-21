@@ -12,7 +12,7 @@ json.projects do
     json.is_public project.is_public
     json.owner do
       json.real_name user.present? ? user.try(:real_name) : "未知用户"
-      json.avatar_url user.present? ? url_to_avatar(user) : "images/avatars/User/b"
+      json.avatar_url user.present? ? url_to_avatar(user) : "avatars/User/b"
       # json.school_name user.school_name
     end
     json.category do

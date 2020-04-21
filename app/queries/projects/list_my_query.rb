@@ -11,11 +11,11 @@ class Projects::ListMyQuery < ApplicationQuery
 
   def call
     if params[:category].blank?
-      projects = current_user.projects
+      projects = Project.joins(:members).where(members: { user_id: current_user.id })
     elsif params[:category].to_s == "manage"
       projects = Project.where(user_id: current_user.id)
     else
-      projects = Project.where.not(user_id: current_user.id).joins(:members).where("members.user_id = ?", current_user.id)
+      projects = Project.where.not(user_id: current_user.id).joins(:members).where(members: { user_id: current_user.id })
     end
     scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension).like(params[:search])
               .with_project_type(params[:project_type])
