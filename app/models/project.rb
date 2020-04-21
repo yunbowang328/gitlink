@@ -107,4 +107,16 @@ class Project < ApplicationRecord
     Project.where.not(id: (user_not_show_1 - user_show_2).uniq)
   end
 
+  def members_count
+    members.select(:id).size
+  end
+
+  def issues_count
+    issues.select(:id).size
+  end
+
+  def can_visited?
+    is_public? || User.current.admin? || member?(User.current)
+  end
+
 end
