@@ -16,21 +16,21 @@ json.projects do
       json.avatar_url url_to_avatar(user)
       json.school_name user.school_name
     end
-    # json.category do
-    #   if project.project_category.blank?
-    #     json.nil!
-    #   else
-    #     json.id project.project_category.id
-    #     json.name project.project_category.name
-    #   end
-    # end
-    # json.language do
-    #   if project.project_language.blank?
-    #     json.nil!
-    #   else
-    #     json.id project.project_language.id
-    #     json.name project.project_language.name
-    #   end
-    # end
+    json.category do
+      if project.project_category.blank?
+        json.nil!
+      else
+        json.id project.project_category.id
+        json.name project.project_category.name
+      end
+    end
+    json.language do
+      if project.project_language.blank?
+        json.nil!
+      else
+        json.id project.project_language.id
+        json.name project.project_language.name
+      end
+    end
   end
 end

@@ -17,7 +17,7 @@ class Projects::ListMyQuery < ApplicationQuery
       else
         projects = Project.where(user_id: params[:user_id])
       end
-      scope = projects.includes(:members,:issues,owner: :user_extension).like(params[:search])
+      scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension).like(params[:search])
                 .with_project_type(params[:project_type])
                 .with_project_category(params[:category_id])
                 .with_project_language(params[:language_id])
