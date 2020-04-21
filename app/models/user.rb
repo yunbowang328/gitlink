@@ -106,8 +106,8 @@ class User < ApplicationRecord
 
   #问卷
   has_many :course_members, :dependent => :destroy
-  has_many :poll_votes, :dependent => :destroy
-  has_many :poll_users, :dependent => :destroy
+  # has_many :poll_votes, :dependent => :destroy
+  # has_many :poll_users, :dependent => :destroy
 
   has_many :messages,foreign_key: 'author_id',:dependent => :destroy
 
@@ -117,13 +117,13 @@ class User < ApplicationRecord
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
 
   # 工程认证
-  has_many :ec_school_users,:dependent => :destroy
-  has_many :schools, :through => :ec_school_users
+  # has_many :ec_school_users,:dependent => :destroy
+  # has_many :schools, :through => :ec_school_users
 
-  has_many :ec_major_school_users, :dependent => :destroy
-  has_many :ec_major_schools, :through => :ec_major_school_users
-
-  has_many :ec_course_users
+  # has_many :ec_major_school_users, :dependent => :destroy
+  # has_many :ec_major_schools, :through => :ec_major_school_users
+  #
+  # has_many :ec_course_users
 
   has_many :department_members, dependent: :destroy #部门管理员
 
@@ -305,9 +305,9 @@ class User < ApplicationRecord
   end
 
   # 用户的学校名称
-  def school_name
-    user_extension&.school&.name || ''
-  end
+  # def school_name
+  #   user_extension&.school&.name || ''
+  # end
 
   # 用户的学院名称
   def department_name
