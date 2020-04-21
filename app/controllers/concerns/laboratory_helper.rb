@@ -33,12 +33,13 @@ module LaboratoryHelper
 
   def default_course_links
     # my_projects: "/users/#{current_user.try(:login)}/projects",
+    #       my_projects: "https://www.trustie.net/users/#{current_user.try(:login)}/user_projectlist",
     {
       new_syllabuses: "https://www.trustie.net/syllabuses/new",
       new_course: "https://www.trustie.net/courses/new",
       edit_account: "https://www.trustie.net/my/account",
       my_courses: "https://www.trustie.net/users/#{current_user.try(:login)}/user_courselist",
-      my_projects: "https://www.trustie.net/users/#{current_user.try(:login)}/user_projectlist",
+      my_projects: "/users/#{current_user.try(:login)}/projects",
       my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
       default_url: "https://www.trustie.net/",
       tiding_url: "https://www.trustie.net/users/#{current_user.try(:login)}/user_messages",
