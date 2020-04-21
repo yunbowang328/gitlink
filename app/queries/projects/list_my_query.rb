@@ -18,7 +18,7 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.where.not(user_id: current_user.id).joins(:members).where(members: { user_id: current_user.id })
     end
     unless params[:is_public].blank?
-      projects = projects.where(is_public: params[:is_public])
+      projects = projects.where(is_public: (params[:is_public].to_s == "publicly"))
     end
 
     scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension)
