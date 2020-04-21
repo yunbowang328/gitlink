@@ -10,7 +10,7 @@ namespace :sync_forge_gitea do
     all_repositories.find_each do |r|
       project = r.project
       user = project.owner
-      unless r.url.to_s.include?("http://gitea.trustie.net")
+      unless r.url.to_s.include?("gitea.trustie.net")
         if user && user.try(:gitea_token).present?
           repo_status = Gitea::Repository::GetService.new(user, r.identifier).call
           if repo_status.present?
@@ -25,9 +25,12 @@ namespace :sync_forge_gitea do
               }
               begin
                 gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, repository_params).call
-                r.update_attribute(:url, gitea_repository["clone_url"])
-                project.update_attributes(gpid: repo_status["id"],identifier: r.identifier)
-                puts "__________after_create_gitea_repository_____#{gitea_repository}______"
+                if gitea_repository
+                  r.update_attribute(:url, gitea_repository["clone_url"])
+                  project.update_attributes(gpid: repo_status["id"],identifier: r.identifier)
+                  puts "__________after_create_gitea_repository_____#{gitea_repository}______"
+                end
+
               rescue => e
                 puts "_________create_gitea_git________file______error: #{e}"
               end
