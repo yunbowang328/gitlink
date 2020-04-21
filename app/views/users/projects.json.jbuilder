@@ -1,7 +1,7 @@
 json.count @total_count
 json.projects do
   json.array! @projects do |project|
-    user = project.owner
+    user = project&.owner
     json.members_count project.members_count
     json.issues_count project.issues_count
     json.changesets_count project&.project_score&.changeset_num.to_i
@@ -11,9 +11,8 @@ json.projects do
     json.name project.name
     json.is_public project.is_public
     json.owner do
-      json.id user.id
-      json.real_name user.real_name
-      json.avatar_url url_to_avatar(user)
+      json.real_name user.present? ? user.try(:real_name) : "未知用户"
+      json.avatar_url user.present? ? url_to_avatar(user) : "images/avatars/User/b"
       # json.school_name user.school_name
     end
     json.category do
