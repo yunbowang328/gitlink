@@ -7,7 +7,7 @@ json.admin @user.admin?
 json.is_teacher @user.user_extension&.teacher?
 json.user_identity @user.identity
 json.tidding_count 0
-# json.user_phone_binded @user.phone.present?
+json.user_phone_binded @user.phone.present?
 # json.phone @user.phone
 # json.email @user.mail
 json.profile_completed @user.profile_completed?
