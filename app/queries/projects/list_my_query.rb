@@ -9,24 +9,20 @@ class Projects::ListMyQuery < ApplicationQuery
   end
 
   def call
-    if params[:user_id].to_i == 2 || params[:user_id].to_i == 0
-      return nil
+    if params[:category].blank?
+      projects = current_user.projects
+    elsif params[:category].to_s == "manage"
+      projects = Project.where(user_id: current_user.id)
     else
-      if params[:joins].present?
-        projects = Project.where.not(user_id: params[:user_id]).joins(:members).where("members.user_id = ?", params[:user_id])
-      else
-        projects = Project.where(user_id: params[:user_id])
-      end
-      scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension).like(params[:search])
-                .with_project_type(params[:project_type])
-                .with_project_category(params[:category_id])
-                .with_project_language(params[:language_id])
-
-      sort = params[:sort_by] || "updated_on"
-      sort_direction = params[:sort_direction] || "desc"
-      scope.order("projects.#{sort} #{sort_direction}")
+      projects = Project.where.not(user_id: current_user.id).joins(:members).where("members.user_id = ?", current_user.id)
     end
+    scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension).like(params[:search])
+              .with_project_type(params[:project_type])
+              .with_project_category(params[:category_id])
+              .with_project_language(params[:language_id])
 
-
+    sort = params[:sort_by] || "updated_on"
+    sort_direction = params[:sort_direction] || "desc"
+    scope.order("projects.#{sort} #{sort_direction}")
   end
 end

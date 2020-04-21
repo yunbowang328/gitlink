@@ -144,7 +144,7 @@ class User < ApplicationRecord
   has_many :apply_actions, dependent: :destroy
   has_many :trail_auth_apply_actions, -> { where(container_type: 'TrialAuthorization') }, class_name: 'ApplyAction'
 
-  has_many :attendances
+  # has_many :attendances
 
   # 兴趣
   has_many :user_interests, dependent: :delete_all
@@ -688,9 +688,9 @@ class User < ApplicationRecord
   end
 
   # 学院的url标识
-  def college_identifier
-    Department.find_by_id(department_members.pluck(:department_id).first)&.identifier
-  end
+  # def college_identifier
+  #   Department.find_by_id(department_members.pluck(:department_id).first)&.identifier
+  # end
 
   # 是否能申请试用
   def can_apply_trial?
