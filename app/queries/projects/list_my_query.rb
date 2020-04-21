@@ -17,10 +17,11 @@ class Projects::ListMyQuery < ApplicationQuery
     else
       projects = Project.where.not(user_id: current_user.id).joins(:members).where(members: { user_id: current_user.id })
     end
-    scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension).like(params[:search])
-              .with_project_type(params[:project_type])
-              .with_project_category(params[:category_id])
-              .with_project_language(params[:language_id])
+    unless params[:is_public].blank?
+      projects = projects.where(is_public: params[:is_public])
+    end
+
+    scope = projects.includes(:members,:issues,:project_category, :project_language, owner: :user_extension)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"

@@ -113,10 +113,9 @@ class UsersController < ApplicationController
   end
 
   def projects
-    scope = Projects::ListMyQuery.call(params.merge(category: params[:category]), current_user)
+    scope = Projects::ListMyQuery.call(params.merge(category: params[:category],is_public: params[:status]), current_user)
     @total_count = scope.size
     @projects = paginate(scope)
-
   end
 
   private
