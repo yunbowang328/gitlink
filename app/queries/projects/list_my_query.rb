@@ -21,7 +21,7 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = projects.where(is_public: (params[:is_public].to_s == "publicly"))
     end
 
-    scope = projects.includes(:members,:issues,:project_category,:project_score, :project_language, owner: :user_extension)
+    scope = projects.includes(:project_category,:project_score, :project_language,:owner)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
