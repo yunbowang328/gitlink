@@ -23,7 +23,7 @@ class Projects::ListQuery < ApplicationQuery
     else
       projects = Project.visible    #匿名用户的项目
     end
-    scope = projects.no_anomory_projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
+    scope = projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search]).no_anomory_projects
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
@@ -32,6 +32,7 @@ class Projects::ListQuery < ApplicationQuery
     sort_direction = params[:sort_direction] || "desc"
     scope = scope.order("projects.#{sort} #{sort_direction}")
     scope
+    Rails.logger.info("######__________scope.size______________##########{scope.size}")
     # custom_sort(scope, params[:sort_by], params[:sort_direction])
   end
 end
