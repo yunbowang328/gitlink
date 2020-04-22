@@ -24,7 +24,7 @@ class Gitea::Repository::Commits::ListService < Gitea::ClientService
   end
 
   def render_result(response)
-    body = JSON.parse(response.body)
+
     case response.status
     when 200
       result = {}
@@ -33,7 +33,8 @@ class Gitea::Repository::Commits::ListService < Gitea::ClientService
       total_count = headers["x-total"]
       result.merge(total_count: total_count.to_i, body: body)
     else
-      {status: -1, message: "#{body['message']}"}
+      nil
+      # {status: -1, message: "#{body['message']}"}
     end
   end
 end
