@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :load_user, only: [:show, :homepage_info, :sync_token]
+  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd]
   before_action :check_user_exist, only: [:show, :homepage_info]
   before_action :require_login, only: %i[me list projects]
   skip_before_action :check_sign, only: [:attachment_show]
@@ -116,6 +116,19 @@ class UsersController < ApplicationController
     scope = Projects::ListMyQuery.call(params.merge(category: params[:category],is_public: params[:status]), current_user)
     @total_count = scope.size
     @projects = paginate(scope)
+  end
+
+  # TODO 其他平台登录时同步修改gitea平台对应用户的密码
+  # 该方法主要用于：别的平台初次部署对接forge平台，同步用户后，gitea平台对应的用户密码与forge平台用户密码不一致是问题
+  def sync_gitea_pwd
+    return render_error("未找到相关的用户") if @user.blank?
+
+    sync_params = {
+      email: @user.mail,
+      password: params[:password].to_s
+    }
+    interactor = Gitea::User::UpdateInteractor.call(@user.login, sync_params)
+    interactor.success? ? render_ok : render_error(interactor.error)
   end
 
   private
