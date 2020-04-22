@@ -9,8 +9,10 @@ class ProjectsController < ApplicationController
     is_admin = current_user && current_user&.admin?
 
     scope = Projects::ListQuery.call(params.merge(is_admin: is_admin, user_id: current_user.try(:id)))
-    @total_count = scope.size
-    @projects = paginate(scope)
+
+    scope_ids = scope.pluck(:id)
+    @total_count = scope_ids.size
+    @projects = paginate(Project.where(id: scope_ids))
   end
 
   def create
