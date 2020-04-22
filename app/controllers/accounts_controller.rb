@@ -205,6 +205,9 @@ class AccountsController < ApplicationController
     end
 
     successful_authentication(@user)
+    # TODO用户密码未同步
+    Gitea::User::UpdateInteractor.call(@user.login, {email: @user.mail, password: password.to_s}) unless @user.is_sync_pwd?
+
     # session[:user_id] = @user.id
   end
 
