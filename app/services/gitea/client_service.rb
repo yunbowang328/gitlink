@@ -28,6 +28,7 @@ class Gitea::ClientService < ApplicationService
   end
 
   def get(url, params={})
+    Rails.logger.info("##########__________get_params__________########{params}")
     auth_token = authen_params(params[:token])
     conn(auth_token).get do |req|
       req.url full_url(url)
