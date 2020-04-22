@@ -52,15 +52,6 @@ class User < ApplicationRecord
   has_one :qq_open_user, class_name: 'OpenUsers::QQ'
   accepts_nested_attributes_for :user_extension, update_only: true
 
-  has_many :memos, foreign_key: 'author_id'
-  has_many :created_shixuns, class_name: 'Shixun'
-  has_many :shixun_members, :dependent => :destroy
-  has_many :shixuns, :through => :shixun_members
-  has_many :myshixuns, :dependent => :destroy
-  has_many :games, :dependent => :destroy
-  has_many :study_shixuns, through: :myshixuns, source: :shixun   # 已学习的实训
-  has_many :course_messages
-  has_many :courses, foreign_key: 'tea_id', dependent: :destroy
   has_many :versions
   has_many :issue_times, :dependent => :destroy
 
