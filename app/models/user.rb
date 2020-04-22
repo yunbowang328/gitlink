@@ -55,74 +55,15 @@ class User < ApplicationRecord
   has_many :versions
   has_many :issue_times, :dependent => :destroy
 
-  #试卷
-  has_many :exercise_banks, :dependent => :destroy
-  has_many :exercise_users, :dependent => :destroy
-  has_many :exercise_answers, :dependent => :destroy  #针对每个题目学生的答案
-  has_many :exercise_shixun_answers, :dependent => :destroy  #针对每个实训题目学生的答案
-  has_many :exercise_answer_comments, :dependent => :destroy
-  has_many :exercises, :dependent => :destroy  #创建的试卷
-
-  has_many :homework_banks, dependent: :destroy
-
-  has_many :graduation_works, dependent: :destroy
-
-  has_many :students_for_courses, foreign_key: :student_id, dependent: :destroy
   has_one :onclick_time, :dependent => :destroy
 
   # 新版私信
   has_many :private_messages, dependent: :destroy
   has_many :recent_contacts, through: :private_messages, source: :target
   has_many :tidings, :dependent => :destroy
-
-  has_many :games, :dependent => :destroy
-  has_many :created_subjects, foreign_key: :user_id, class_name: 'Subject'
-  has_many :subject_members, :dependent => :destroy
-  has_many :subjects, :through => :subject_members
-  has_many :grades, :dependent => :destroy
-  has_many :experiences, :dependent => :destroy
-  has_many :student_works, :dependent => :destroy
-  has_many :student_works_scores
-  has_many :student_works_evaluation_distributions
-
-  # 毕业设计
-  has_many :graduation_topics, :dependent => :destroy
-  has_many :student_graduation_topics, :dependent => :destroy
-
-  # 题库
-  has_many :question_banks, :dependent => :destroy
-  # 毕设任务题库
-  has_many :gtask_banks, dependent: :destroy
-  has_many :gtopic_banks, dependent: :destroy
-
-  #问卷
-  has_many :course_members, :dependent => :destroy
-  # has_many :poll_votes, :dependent => :destroy
-  # has_many :poll_users, :dependent => :destroy
-
-  has_many :messages,foreign_key: 'author_id',:dependent => :destroy
-
   has_many :journals_for_messages, :as => :jour, :dependent => :destroy
-  has_many :teacher_course_groups, :dependent => :destroy
 
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
-
-  # 工程认证
-  # has_many :ec_school_users,:dependent => :destroy
-  # has_many :schools, :through => :ec_school_users
-
-  # has_many :ec_major_school_users, :dependent => :destroy
-  # has_many :ec_major_schools, :through => :ec_major_school_users
-  #
-  # has_many :ec_course_users
-
-  has_many :department_members, dependent: :destroy #部门管理员
-
-  # 课堂
-  has_many :student_course_members, -> { course_students }, class_name: 'CourseMember'
-  has_many :as_student_courses, through: :student_course_members, source: :course
-  has_many :manage_course_members, -> { teachers_and_admin }, class_name: 'CourseMember'
-  has_many :manage_courses, through: :manage_course_members, source: :course
 
   # 关注
   has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
@@ -137,15 +78,6 @@ class User < ApplicationRecord
 
   # has_many :attendances
 
-  # 兴趣
-  has_many :user_interests, dependent: :delete_all
-  has_many :interests, through: :user_interests, source: :repertoire
-
-  # 众包
-  has_many :project_packages, foreign_key: :creator_id, dependent: :destroy
-  has_many :bidding_users, dependent: :destroy
-  has_many :bidden_project_packages, through: :bidding_users, source: :project_package
-
   # 项目
   has_many :applied_projects, dependent: :destroy
 
@@ -154,25 +86,7 @@ class User < ApplicationRecord
 
   # 教学案例
   has_many :libraries, dependent: :destroy
-
-  # 视频
-  has_many :videos, dependent: :destroy
-
-  # 客户管理
-  has_many :partner_managers, dependent: :destroy
-  # OJ编程题
-  has_many :hacks, dependent: :destroy
-  has_many :hack_user_lastest_codes, dependent: :destroy
-
-  has_many :composes, dependent: :destroy
-  has_many :compose_users, dependent: :destroy
-
   has_many :project_trends, dependent: :destroy
-  # 题库
-  has_many :item_banks, dependent: :destroy
-  has_many :item_baskets,  -> { order("item_baskets.position ASC") }, dependent: :destroy
-  has_many :examination_banks, dependent: :destroy
-  has_many :examination_intelligent_settings, dependent: :destroy
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
