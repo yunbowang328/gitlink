@@ -18,7 +18,7 @@ class ProjectsController < ApplicationController
     Rails.logger.info("##########____projects_as_json__________#############{projects.as_json}")
     @projects = projects
     Rails.logger.info("##########___@projects__________#############{@projects.as_json}")
-    @projects
+
   end
 
   def create
