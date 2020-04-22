@@ -26,7 +26,7 @@ class Projects::ListQuery < ApplicationQuery
     scope = projects.no_anomory_projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
-      .with_project_language(params[:language_id])
+      .with_project_language(params[:language_id]).distinct
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
