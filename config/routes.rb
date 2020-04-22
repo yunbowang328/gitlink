@@ -148,6 +148,8 @@ Rails.application.routes.draw do
         get :list
         post :sync_token
         get :projects
+        post :sync_gitea_pwd
+        post :sync_salt
       end
 
       scope module: :users do
