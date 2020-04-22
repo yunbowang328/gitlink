@@ -1,7 +1,6 @@
 json.total_count @total_count
 json.all_projects @projects.as_json
 json.projects do
-
   json.array! @projects.to_a do |project|
     json.partial! 'project', project: project
     json.author do

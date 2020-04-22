@@ -11,8 +11,14 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params.merge(is_admin: is_admin, user_id: current_user.try(:id)))
 
     @total_count = scope.size
+    other_projects = scope.page(params[:page]).limit(params[:limit] || 15)
+    projects = paginate(scope)
+    Rails.logger.info("##########____other_projects_projects_as_json__________#############{other_projects.as_json}")
 
-    @projects = paginate(scope)
+    Rails.logger.info("##########____projects_as_json__________#############{projects.as_json}")
+    @projects = projects
+    Rails.logger.info("##########___@projects__________#############{@projects.as_json}")
+    @projects
   end
 
   def create
