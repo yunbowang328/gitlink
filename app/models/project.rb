@@ -29,7 +29,7 @@ class Project < ApplicationRecord
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
-  scope :no_anomory_projects, -> {where("user_id != ?", 2)}
+  scope :no_anomory_projects, -> {where("projects.user_id != ?", 2)}
 
 
   # 创建者
@@ -105,7 +105,7 @@ class Project < ApplicationRecord
     user_not_show_1 = projects.where("user_id != ?",user_id).pluck(:id).uniq
 
     user_show_2 = projects.joins(:members).where("members.user_id = ?", user_id).pluck(:id).uniq
-    Project.no_anomory_projects.where("user_id != ?", 2).where.not(id: (user_not_show_1 - user_show_2).uniq)
+    Project.no_anomory_projects.where.not(id: (user_not_show_1 - user_show_2).uniq)
   end
 
   def members_count
