@@ -71,13 +71,14 @@ class AccountsController < ApplicationController
         end
 
         if sync_params.present?
-          update_gitea = Gitea::User::UpdateService.call("", params[:old_user_login], sync_params)
-          Rails.logger.info("########________update_gitea__________###########__status:_#{update_gitea.status}")
+          interactor = Gitea::User::UpdateInteractor.call(u.login, sync_params)
+          if interactor.success?
+            render_ok
+          else
+            render_error(interactor.error)
+          end
         end
       end
-
-
-      render_ok({})
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -98,20 +99,19 @@ class AccountsController < ApplicationController
   #修改密码
   def remote_password
     @user = User.find_by(login: params[:login])
-    if @user && @user.update_attribute(:password, params[:password])
-      sync_params = {
-        password: params[:password],
-        email: @user.mail
-      }
-      update_gitea = Gitea::User::UpdateService.call("", params[:login], sync_params)
+    return render_error("未找到相关用户!") if @user.blank?
 
-      Rails.logger.info("########________update_gitea___status________###########__status:_#{update_gitea.status}")
-      Rails.logger.info("######________password_update_success____######")
+    sync_params = {
+      password: params[:password].to_s,
+      email: @user.mail
+    }
 
-      render_ok({})
+    interactor = Gitea::User::UpdateInteractor.call(@user.login, sync_params)
+    if interactor.success?
+      @user.update_attribute(:password, params[:password])
+      render_ok
     else
-      Rails.logger.info("######________password_update_failed____######")
-      render_error("更新失败")
+      render_error(interactor.error)
     end
   end
 
@@ -205,7 +205,6 @@ class AccountsController < ApplicationController
     end
 
     successful_authentication(@user)
-
     # session[:user_id] = @user.id
   end
 
