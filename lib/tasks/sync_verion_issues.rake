@@ -5,10 +5,9 @@ namespace :sync_version_issues do
   desc "update version issues_count"
 
   task update_issues: :environment do
-    versions = Version.all
     puts "____________sync start________________"
 
-    versions.find_each do |q|
+    Version.all.each do |q|
       issues = Issue.select(:id, :fixed_version_id,:status_id).where(fixed_version_id: q.id)
       issues_count = issues.size
       puts "____________issues_count____________#{issues_count}____"
@@ -17,7 +16,12 @@ namespace :sync_version_issues do
       q.issues_count = issues_count
       q.closed_issues_count =  closed_issues_count
       q.percent = percent
-      q.save!(:validate=>false)
+      begin
+        q.save!
+      rescue Exception => e
+        puts "#####_______save_error______######{e}"
+      end
+
       # q.update_attributes(issues_count: issues_count, closed_issues_count: closed_issues_count, percent: percent)
       puts "____________sync success________________"
     end
