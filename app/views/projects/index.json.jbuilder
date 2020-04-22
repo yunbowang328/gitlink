@@ -1,6 +1,7 @@
 json.total_count @total_count
 json.projects do
-  json.array! @projects do |project|
+  Rails.logger.info("########__________@projects________############{@projects}")
+  json.array! @projects.each do |project|
     json.partial! 'project', project: project
     json.author do
       json.name project&.owner&.login

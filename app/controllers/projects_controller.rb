@@ -16,7 +16,6 @@ class ProjectsController < ApplicationController
     Rails.logger.info("########_________projects_ids_________________#########{projects.pluck(:id)}")
 
     @projects =projects
-    # @projects = scope.page(params[:page]).limit(params[:limit] || 15)
   end
 
   def create
