@@ -13,7 +13,7 @@ class Project < ApplicationRecord
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
 
-  has_many :commits, dependent: :destroy
+  # has_many :commits, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy

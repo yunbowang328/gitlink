@@ -23,7 +23,7 @@ class Projects::ListQuery < ApplicationQuery
     else
       projects = Project.visible    #匿名用户的项目
     end
-    scope = projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search]).no_anomory_projects
+    scope = projects.no_anomory_projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
