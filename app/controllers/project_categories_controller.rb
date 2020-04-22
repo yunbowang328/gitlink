@@ -15,8 +15,8 @@ class ProjectCategoriesController < ApplicationController
     if current_user&.logged?
       projects = Project.list_user_projects(current_user.id)
     else
-      projects = Project.no_anomory_projects.visible
+      projects = Project.visible
     end
-    @category_group_list = projects.joins(:project_category).group("project_categories.id", "project_categories.name").size
+    @category_group_list = projects.no_anomory_projects.joins(:project_category).group("project_categories.id", "project_categories.name").size
   end
 end

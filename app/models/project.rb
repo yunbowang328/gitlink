@@ -105,7 +105,7 @@ class Project < ApplicationRecord
     user_not_show_1 = projects.where("user_id != ?",user_id).pluck(:id).uniq
 
     user_show_2 = projects.joins(:members).where("members.user_id = ?", user_id).pluck(:id).uniq
-    Project.no_anomory_projects.where.not(id: (user_not_show_1 - user_show_2).uniq)
+    Project.where.not(id: (user_not_show_1 - user_show_2).uniq)
   end
 
   def members_count

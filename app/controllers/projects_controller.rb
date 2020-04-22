@@ -51,10 +51,10 @@ class ProjectsController < ApplicationController
     if current_user&.logged?
       projects = Project.list_user_projects(current_user.id)
     else
-      projects = Project.no_anomory_projects.visible
+      projects = Project.visible
     end
     # projects = Project.visible
-    @project_group_list = projects.group(:project_type).size
+    @project_group_list = projects.no_anomory_projects.group(:project_type).size
   end
 
   def update
