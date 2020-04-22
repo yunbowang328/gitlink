@@ -1,4 +1,8 @@
-unless @hash_commit[:status].present?   #如果有状态值，则表示报错了
+Rails.logger.info("#######_______@hash_commit______############{@hash_commit}")
+if @hash_commit[:status].present?   #如果有状态值，则表示报错了
+  json.total_count 0
+  json.commits []
+else
   json.total_count @hash_commit[:total_count]
   json.commits do
     json.array! @hash_commit[:body] do |commit|
