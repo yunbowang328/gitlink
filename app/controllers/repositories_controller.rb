@@ -38,7 +38,9 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier, sha: params[:sha], page: params[:page]).call
+    hash_commit = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier, sha: params[:sha], page: params[:page]).call
+    Rails.logger.info("##########__________hash_commit__________########{hash_commit}")
+    @hash_commit = hash_commit
   end
 
   def single_commit

@@ -24,6 +24,8 @@ class Gitea::Repository::Commits::ListService < Gitea::ClientService
   end
 
   def render_result(response)
+    Rails.logger.info("#####___________response.status_________##########{response.status}")
+    Rails.logger.info("#####___________response.body_________##########{response.body}")
     body = JSON.parse(response.body)
     case response.status
     when 200
