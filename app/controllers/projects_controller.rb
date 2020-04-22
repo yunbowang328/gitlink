@@ -11,11 +11,8 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params.merge(is_admin: is_admin, user_id: current_user.try(:id)))
 
     @total_count = scope.size
-    projects = paginate(scope)
-    Rails.logger.info("########_________scope_ids_________________#########{scope.pluck(:id)}")
-    Rails.logger.info("########_________projects_ids_________________#########{projects.pluck(:id)}")
 
-    @projects =projects
+    @projects = paginate(scope)
   end
 
   def create

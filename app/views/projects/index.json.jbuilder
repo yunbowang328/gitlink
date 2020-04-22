@@ -1,12 +1,11 @@
 json.total_count @total_count
 json.projects do
-  Rails.logger.info("########__________@projects________############{@projects}")
-  json.array! @projects.each do |project|
+  json.array! @projects.to_a do |project|
     json.partial! 'project', project: project
     json.author do
-      json.name project&.owner&.login
-      json.login project&.owner&.login
-      json.image_url url_to_avatar(project&.owner)
+      json.name project.owner.login
+      json.login project.owner.login
+      json.image_url url_to_avatar(project.owner)
     end
     json.category do
       if project.project_category.blank?
