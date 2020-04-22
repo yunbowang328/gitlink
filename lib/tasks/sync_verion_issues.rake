@@ -14,7 +14,11 @@ namespace :sync_version_issues do
       puts "____________issues_count____________#{issues_count}____"
       closed_issues_count = issues.where(status_id: 5).size
       percent = issues_count == 0 ? 0.0 : (closed_issues_count.to_f / issues_count)
-      q.update_attributes(issues_count: issues_count, closed_issues_count: closed_issues_count, percent: percent)
+      q.issues_count = issues_count
+      q.closed_issues_count =  closed_issues_count
+      q.percent = percent
+      q.save!(:validate=>false)
+      # q.update_attributes(issues_count: issues_count, closed_issues_count: closed_issues_count, percent: percent)
       puts "____________sync success________________"
     end
     puts "____________sync end________________"
