@@ -3,7 +3,7 @@ json.projects do
   json.array! @projects.to_a do |project|
     json.partial! 'project', project: project
     json.author do
-      json.name project.owner.login
+      json.name project.owner.try(:show_real_name)
       json.login project.owner.login
       json.image_url url_to_avatar(project.owner)
     end
