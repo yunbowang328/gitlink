@@ -131,6 +131,15 @@ class UsersController < ApplicationController
     interactor.success? ? render_ok : render_error(interactor.error)
   end
 
+  # TODO
+  # 同步trusite平台用户的salt信息，只需同步一次，同步完成后，该方法可以删除
+  def sync_salt
+    user = User.find_by_login params[:login]
+    return if user.blank?
+    user.update_column(:salt, params[:salt])
+    render_ok
+  end
+
   private
   def load_user
     @user = User.find_by_login(params[:id]) || User.find_by(id: params[:id])
