@@ -8,22 +8,19 @@ namespace :sync_version_issues do
     puts "____________sync start________________"
 
     Version.all.each do |q|
+      puts "______########{q.id}"
       issues = Issue.select(:id, :fixed_version_id,:status_id).where(fixed_version_id: q.id)
       issues_count = issues.size
-      puts "____________issues_count____________#{issues_count}____"
       closed_issues_count = issues.where(status_id: 5).size
       percent = issues_count == 0 ? 0.0 : (closed_issues_count.to_f / issues_count)
-      q.issues_count = issues_count
-      q.closed_issues_count =  closed_issues_count
-      q.percent = percent
+
       begin
-        q.save!
+        q.update!(closed_issues_count: closed_issues_count, percent: percent)
+        Version.update_counters q.id,issues_count: issues_count
+        puts "____issues_count__########{q.issues_count}"
       rescue Exception => e
         puts "#####_______save_error______######{e}"
       end
-
-      # q.update_attributes(issues_count: issues_count, closed_issues_count: closed_issues_count, percent: percent)
-      puts "____________sync success________________"
     end
     puts "____________sync end________________"
   end
