@@ -32,7 +32,6 @@ class Projects::ListQuery < ApplicationQuery
     sort_direction = params[:sort_direction] || "desc"
     scope = scope.order("projects.#{sort} #{sort_direction}")
     scope
-    Rails.logger.info("######__________scope.size______________##########{scope.size}")
     # custom_sort(scope, params[:sort_by], params[:sort_direction])
   end
 end
