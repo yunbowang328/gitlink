@@ -10,23 +10,15 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-
-    # if params[:user_id].to_i != 2 && params[:user_id].to_i != 0
-    #   projects = Project.list_user_projects(params[:user_id])
-    # else
-    #   projects = Project.visible
-    # end
     projects = Project.visible
     scope = projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
-    scope_ids = scope.no_anomory_projects.distinct.pluck(:id)
-    # scope = projects.where(id: scope_ids)
+    scope_ids = scope.select(:id,:user_id).no_anomory_projects.distinct.pluck(:id)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
     projects.where(id: scope_ids).reorder("projects.#{sort} #{sort_direction}")
-    # custom_sort(scope, "projects.#{sort}", sort_direction)
   end
 end
