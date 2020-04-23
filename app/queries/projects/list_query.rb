@@ -21,12 +21,11 @@ class Projects::ListQuery < ApplicationQuery
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
-    scope = scope.no_anomory_projects.distinct
+    scope_ids = scope.no_anomory_projects.distinct.pluck(:id)
+    scope = projects.where(id: scope_ids)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
-    scope = scope.order("projects.#{sort} #{sort_direction}")
-    scope
-    # custom_sort(scope, params[:sort_by], params[:sort_direction])
+    custom_sort(scope, "projects.#{sort}", sort_direction)
   end
 end
