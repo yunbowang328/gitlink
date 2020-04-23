@@ -1,2 +1,0 @@
-class ModuleSetting < ApplicationRecord
-end

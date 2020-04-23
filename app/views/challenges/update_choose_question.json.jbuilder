@@ -1,1 +1,0 @@
-json.challenge_choose_id @challenge_choose.try(:id)
