@@ -19,10 +19,6 @@ Rails.application.routes.draw do
         delete :destroy_files
       end
     end
-    resources :sync_forge, only: [:create]  #同步用户
-    resources :composes do
-      resources :compose_projects, only: [:create, :destroy]
-    end
     get 'home/index'
     get 'home/search'
     get 'main/first_stamp'
@@ -48,8 +44,6 @@ Rails.application.routes.draw do
     resources :project_languages, only: [:index, :show]
     resources :ignores, only: [:index, :show]
     resources :licenses, only: [:index, :show]
-    resources :disciplines, only: [:index]
-    resources :tag_disciplines, only: [:create]
 
     resources :projects do
       resources :pull_requests, except: [:destroy] do
@@ -131,6 +125,7 @@ Rails.application.routes.draw do
     resources :users do
       member do
         get :homepage_info
+        get :projects
       end
       collection do
         post :following
@@ -147,25 +142,23 @@ Rails.application.routes.draw do
         get :me
         get :list
         post :sync_token
-        get :projects
         post :sync_gitea_pwd
         post :sync_salt
       end
 
       scope module: :users do
-        resources :courses, only: [:index]
+        # resources :courses, only: [:index]
         resources :projects, only: [:index]
-        resources :subjects, only: [:index]
+        # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]
         # 私信
-        resources :private_messages, only: [:index, :create, :destroy]
-        resources :recent_contacts, only: [:index]
-        resource :private_message_details, only: [:show]
-        resource :unread_message_info, only: [:show]
+        # resources :private_messages, only: [:index, :create, :destroy]
+        # resources :recent_contacts, only: [:index]
+        # resource :private_message_details, only: [:show]
+        # resource :unread_message_info, only: [:show]
       end
 
 
-      resource :trial_apply, only: [:create]
       resources :projects, module: :users, only: [] do
         get :search, on: :collection
       end
