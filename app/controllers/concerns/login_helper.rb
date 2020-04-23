@@ -92,4 +92,18 @@ module LoginHelper
     session[:ctime] = Time.now.utc.to_i
     session[:atime] = Time.now.utc.to_i
   end
+
+  def sync_pwd_to_gitea!(user, hash={})
+    return true if user.is_sync_pwd?
+
+    sync_params = { email: user.mail }
+    interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params.merge(hash))
+    if interactor.success?
+      Rails.logger.info "########_ login is #{user.login} sync_pwd_to_gitea success _########"
+      true
+    else
+      Rails.logger.info "########_ login is #{user.login} sync_pwd_to_gitea fail!: #{interactor.error}"
+      false
+    end
+  end
 end

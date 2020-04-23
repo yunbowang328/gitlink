@@ -123,12 +123,8 @@ class UsersController < ApplicationController
   def sync_gitea_pwd
     return render_error("未找到相关的用户") if @user.blank?
 
-    sync_params = {
-      email: @user.mail,
-      password: params[:password].to_s
-    }
-    interactor = Gitea::User::UpdateInteractor.call(@user.login, sync_params)
-    interactor.success? ? render_ok : render_error(interactor.error)
+    flag = sync_pwd_to_gitea!(@user, {password: params[:password].to_s})
+    flag ? render_ok : render_error('同步失败!')
   end
 
   # TODO
