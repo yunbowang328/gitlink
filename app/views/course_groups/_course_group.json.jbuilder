@@ -1,3 +1,0 @@
-json.course_group_id attachment_group_setting.course_group.id
-json.course_group_name attachment_group_setting.course_group.name
-json.course_group_publish_time attachment_group_setting.publish_time

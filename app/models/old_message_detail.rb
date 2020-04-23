@@ -1,2 +1,0 @@
-class OldMessageDetail < ApplicationRecord
-end

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd]
+  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects]
   before_action :check_user_exist, only: [:show, :homepage_info]
   before_action :require_login, only: %i[me list projects]
   skip_before_action :check_sign, only: [:attachment_show]
@@ -113,7 +113,7 @@ class UsersController < ApplicationController
   end
 
   def projects
-    scope = Projects::ListMyQuery.call(params.merge(category: params[:category],is_public: params[:status]), current_user)
+    scope = Projects::ListMyQuery.call(params.merge(category: params[:category],is_public: params[:status]), @user)
     @total_count = scope.size
     @projects = paginate(scope)
   end

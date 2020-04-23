@@ -11,7 +11,7 @@ class Issue < ApplicationRecord
   belongs_to :issue_status, foreign_key: :status_id,optional: true
   has_many :commit_issues
   has_many :attachments, as: :container, dependent: :destroy
-  has_many :memos
+  # has_many :memos
   has_many :journals, :as => :journalized, :dependent => :destroy
   has_many :journal_details, through: :journals
   has_many :issue_tags_relates, dependent: :destroy

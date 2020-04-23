@@ -85,7 +85,7 @@ class User < ApplicationRecord
   has_many :repositories, dependent: :destroy
 
   # 教学案例
-  has_many :libraries, dependent: :destroy
+  # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
 
   # Groups and active users
