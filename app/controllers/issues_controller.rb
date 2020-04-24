@@ -51,12 +51,12 @@ class IssuesController < ApplicationController
     issues = issues.where(issue_type: params[:issue_type].to_s) if params[:issue_type].present? && params[:issue_type].to_s != "all"
     issues = issues.joins(:issue_tags).where(issue_tags: {id: params[:issue_tag_id].to_i}) if params[:issue_tag_id].present? && params[:issue_tag_id].to_s != "all"
 
-    order_type = params[:order_type] || "desc"   #或者"asc"
-    order_name = params[:order_name] || "created_on"   #或者"updated_on"
+    order_type = params[:order_type].present? ? params[:order_type] : "desc"   #或者"asc"
+    order_name = params[:order_name].present? ? params[:order_name] : "created_on"   #或者"updated_on"
 
     @page = params[:page]
     @limit = params[:limit] || 15
-    @issues = issues.order("#{order_name} #{order_type}")
+    # @issues = issues.order("#{order_name} #{order_type}")
     @issues_size = issues.size
     @issues = issues.order("#{order_name} #{order_type}").page(@page).per(@limit)
 

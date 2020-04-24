@@ -8,7 +8,7 @@ class Attachment < ApplicationRecord
   belongs_to :author, class_name: "User", foreign_key: :author_id
   # belongs_to :course, foreign_key: :container_id, optional: true
   # has_many :attachment_group_settings, :dependent => :destroy
-  has_many :attachment_histories, -> { order(version: :desc) }, :dependent => :destroy
+  # has_many :attachment_histories, -> { order(version: :desc) }, :dependent => :destroy
   # 二级目录
   # belongs_to :course_second_category, optional: true
 
