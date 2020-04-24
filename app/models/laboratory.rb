@@ -24,7 +24,7 @@ class Laboratory < ApplicationRecord
 
   def site
     rails_env = EduSetting.get('rails_env')
-    suffix = rails_env && rails_env != 'production' ? ".#{rails_env}.educoder.net" : '.educoder.net'
+    suffix = rails_env && rails_env != 'production' ? ".#{rails_env}.trustie.net" : '.trustie.net'
 
     identifier ? "#{identifier}#{suffix}" : ''
   end
