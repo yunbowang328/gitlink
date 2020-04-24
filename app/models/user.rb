@@ -91,7 +91,7 @@ class User < ApplicationRecord
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
-    where("LOWER(concat(lastname, firstname, login)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
+    where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
   attr_accessor :password, :password_confirmation

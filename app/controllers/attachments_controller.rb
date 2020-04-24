@@ -177,31 +177,14 @@ class AttachmentsController < ApplicationController
       candown = true
       unless params[:type] == 'history'
         if @file.container && current_user.logged?
-          # 课堂资源、作业、毕设相关资源的权限判断
-          if @file.container.is_a?(Course)
-            course = @file.container
-            candown = current_user.member_of_course?(course) || (course.is_public? && @file.publiced?)
-          elsif @file.container.is_a?(HomeworkCommon) || @file.container.is_a?(GraduationTask) || @file.container.is_a?(GraduationTopic)
-            course = @file.container&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(StudentWork)
-            course = @file.container&.homework_common&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(StudentWorksScore)
-            course = @file.container&.student_work&.homework_common&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(GraduationWork)
-            course = @file.container&.graduation_task&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(GraduationWorkScore)
-            course = @file.container&.graduation_work&.graduation_task&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(Issue)
+          if @file.container.is_a?(Issue)
             course = @file.container.project
             candown = course.member?(current_user)
           elsif @file.container.is_a?(Journal)
             course = @file.container.issue.project
             candown = course.member?(current_user)
+          else
+            course = nil
           end
           tip_exception(403, "您没有权限进入") if course.present? && !candown
           tip_exception(403, "您没有权限进入") if @file.container.is_a?(ApplyUserAuthentication)
