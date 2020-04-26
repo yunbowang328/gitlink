@@ -125,7 +125,7 @@ curl -X GET http://localhost:3000/api/users/me  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |user_id       |int   |用户id |
 |username      |string|用户名称|
 |admin         |boolean|是否为管理用户|
@@ -159,7 +159,7 @@ http://localhost:3000/api/users/list  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |page          |否|int |页数，第几页  |
 |limit         |否|int |每页多少条数据，默认15条  |
 |search        |否|string |用户名、登录名匹配搜索  |
@@ -168,7 +168,7 @@ http://localhost:3000/api/users/list  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |total_count    |int   |总用户条数 |
 |users          |array| |
 |-- username    |string|用户全名|
@@ -205,14 +205,14 @@ http://localhost:3000/api/project_categories/  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |name   |否|string   |类别名称  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |project_categories|array |返回数据|
 |-- id             |int   |类别id |
 |-- name           |string|类别名称|
@@ -244,14 +244,14 @@ http://localhost:3000/api/project_languages/  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |name   |否|string   |类别名称  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |project_languages|array |返回数据|
 |-- id             |int   |语言id |
 |-- name           |string|语言名称|
@@ -283,14 +283,14 @@ http://localhost:3000/api/ignores/  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |name   |否|string   |gitignore名称  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |ignores|array |返回数据|
 |-- id             |int   |id |
 |-- name           |string|gitignore名称|
@@ -322,14 +322,14 @@ http://localhost:3000/api/licenses/  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |name   |否|string   |开源许可证名称  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |licenses|array |返回数据|
 |-- id             |int   |id |
 |-- name           |string|开源许可证名称|
@@ -384,7 +384,7 @@ http://localhost:3000/api/projects/  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |user_id            |是|int    |用户id或者组织id  |
 |name               |是|string |项目名称  |
 |description        |是|string |项目描述  |
@@ -399,7 +399,7 @@ http://localhost:3000/api/projects/  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |id |
 |name           |string|项目名称|
 
@@ -432,7 +432,7 @@ http://localhost:3000/api/projects/migrate  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |user_id            |是|int    |用户id或者组织id  |
 |name               |是|string |项目名称  |
 |clone_addr         |是|string |镜像项目clone地址  |
@@ -446,7 +446,7 @@ http://localhost:3000/api/projects/migrate  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |id |
 |name           |string|项目名称|
 
@@ -471,14 +471,14 @@ curl -X GET http://localhost:3000/api/projects/3263  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id            |是|int    |项目id  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |id |
 |name           |string|项目名称|
 |identifier     |string|项目标识|
@@ -513,7 +513,7 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |identifier           |string   |仓库标识 |
 |project_id           |int|项目id|
 |project_name         |string|项目名称|
@@ -556,7 +556,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id                 |是|int    |项目id  |
 |name               |否|string |项目名称  |
 |description        |否|string |项目描述  |
@@ -568,7 +568,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id                 |int|id |
 |identifier         |string|项目标识|
 |name               |string|项目名称|
@@ -606,13 +606,13 @@ curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id                 |是|int    |项目id  |
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status          |int|返回状态， 0: 表示操作成功 |
 |message         |string|返回信息说明|
 
@@ -639,7 +639,7 @@ http://localhost:3000/api/projects/3297/members  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id            |是|int    |项目id  |
 |user_id       |是|int |用户id  |
 
@@ -647,7 +647,7 @@ http://localhost:3000/api/projects/3297/members  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status            |int   |0:添加成功， -1: 添加失败， 1: 表示已经是项目成员 |
 |message           |string|返回信息说明|
 
@@ -674,7 +674,7 @@ http://localhost:3000/api/projects/3263/members/remove  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id            |是|int    |项目id  |
 |user_id       |是|int |用户id  |
 
@@ -682,7 +682,7 @@ http://localhost:3000/api/projects/3263/members/remove  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status         |int   |0:移除成功， -1: 移除失败， 1: 表示还不是项目成员 |
 |message        |string|返回信息说明|
 
@@ -710,7 +710,7 @@ http://localhost:3000/api/projects/3263/members/change_role  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id            |是|int    |项目id  |
 |user_id       |是|int |用户id  |
 |role          |是|string |取值范围："Manager", "Developer", "Reporter"；分别为项目管理人员(拥有所有操作权限)、项目开发人员(只拥有读写权限)、项目报告人员(只拥有读权限)  |
@@ -719,7 +719,7 @@ http://localhost:3000/api/projects/3263/members/change_role  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status         |int   |0:角色更改成功， -1: 更改失败失败， 1: 表示还不是项目成员 |
 |message        |string|返回信息说明|
 
@@ -748,7 +748,7 @@ http://localhost:3000/api/projects/3263/members  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id            |是|int    |项目id  |
 |page          |否|string |页数，第几页  |
 |limit         |否|string |每页多少条数据，默认15条  |
@@ -757,7 +757,7 @@ http://localhost:3000/api/projects/3263/members  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |total_count       |int   |返回记录总条数 |
 |members           |array|项目成员信息|
 |-- id             |int|用户id|
@@ -805,14 +805,14 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |project_id        |是|int    |项目id  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |项目id |
 |identifier     |string|项目标识|
 
@@ -839,7 +839,7 @@ http://localhost:3000//api/repositories/3687/entries.json  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id           |是|int |项目id  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
@@ -847,7 +847,7 @@ http://localhost:3000//api/repositories/3687/entries.json  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |id |
 |name           |string|文件夹或文件名称|
 |path           |string|文件夹或文件相对路径|
@@ -907,7 +907,7 @@ http://localhost:3000/api/repositories/87/sub_entries.json | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id              |是|int |项目id  |
 |filepath        |是|string |文件夹、文件的相对路径  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
@@ -916,7 +916,7 @@ http://localhost:3000/api/repositories/87/sub_entries.json | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |id |
 |name           |string|文件夹或文件名称|
 |path           |string|文件夹或文件相对路径|
@@ -984,7 +984,7 @@ curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |id             |int   |项目分类id |
 |name           |string|项目分类名称|
 |projects_count |int   |项目数量|
@@ -1024,7 +1024,7 @@ curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |project_type   |string|项目类型 |
 |name           |string|项目类型名称|
 |projects_count |int   |项目数量|
@@ -1061,7 +1061,7 @@ http://localhost:3000/api/projects  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |page          |否|string |页数，第几页  |
 |limit         |否|string |每页多少条数据，默认15条  |
 |sort_by       |否|string |排序类型, 取值：updated_on \| created_on \| forked_count \| praises_count, updated_on: 更新时间排序，created_on: 创建时间排序，forked_count: fork数据排序，praises_count: 点赞数量排序，默认为updated_on更新时间排序  |
@@ -1075,7 +1075,7 @@ http://localhost:3000/api/projects  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |total_count     |int   |项目总条数 |
 |id              |string   |项目id |
 |name            |string|项目名称|
@@ -1232,14 +1232,14 @@ curl -X GET http://localhost:3000/api/projects/mirror_demo/branches | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |identifier               |是|string |项目标识  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |name            |string|分支名称|
 |user_can_push   |boolean|用户是否可push|
 |user_can_merge  |boolean|用户是否客merge|
@@ -1313,7 +1313,7 @@ curl -X GET http://localhost:3000/api/repositories/124/tags.json | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id               |是|int |项目id  |
 
 
@@ -1395,14 +1395,14 @@ http://localhost:3000/api/repositories/23.json | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id             |是|string |项目id  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |identifier      |string|仓库标识|
 |project_id      |int|项目id|
 |project_identifier|string|项目标识|
@@ -1478,7 +1478,7 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id                |是|int |项目id  |
 |sha               |否|string |分支名称、提交记录的sha标识，默认为master分支  |
 |page              |否|int |页数， 默认为1  |
@@ -1487,7 +1487,7 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |total_count|int|总记录条数|
 |commits    |array|提交记录的数组|
 |-- sha     |string|提交记录sha标识|
@@ -1540,13 +1540,13 @@ curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id   |是  |int |项目id   |
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status           |int|0:点赞成功，-1:操作失败，2:表示已经点过赞了|
 
 
@@ -1570,14 +1570,14 @@ curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id   |是  |int |项目id   |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status           |int|0:点赞成功，-1:操作失败，2:表示还未点赞|
 
 
@@ -1601,14 +1601,14 @@ curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id   |是  |int |项目id   |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status           |int|1:已点过赞，0:未点过赞, -1:请求操作失败|
 
 
@@ -1635,7 +1635,7 @@ http://localhost:3000/api/projects/3263/praise_tread | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id          |是|int |项目id  |
 |page        |否|string |页数，第几页  |
 |limit       |否|string |每页多少条数据，默认15条  |
@@ -1644,7 +1644,7 @@ http://localhost:3000/api/projects/3263/praise_tread | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |total_count           |int|总条数|
 |praises           |array|点赞数据|
 |-- name           |string|用户名称|
@@ -1679,14 +1679,14 @@ curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id          |是|int |项目id  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status           |int|0:点赞成功，-1:操作失败，2:表示已经点过赞了|
 
 
@@ -1710,14 +1710,14 @@ curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id          |是|int |项目id  |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status           |int|0:点赞成功，-1:操作失败，2:表示还未点赞|
 
 
@@ -1741,14 +1741,14 @@ curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id   |是  |int |项目id   |
 
 
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |status           |int|1:已关注，0:未关注, -1:请求操作失败|
 
 
@@ -1775,7 +1775,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id          |是|int |项目id  |
 |page        |否|string |页数，第几页  |
 |limit       |否|string |每页多少条数据，默认15条  |
@@ -1784,7 +1784,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |total_count           |int|总条数|
 |watchers           |array|关注数据|
 |-- name           |string|用户名称|
@@ -1823,7 +1823,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id             |是|string |项目id  |
 |filepath       |是|string |文件相对于仓库的路径 |
 |content        |否|string |内容  |
@@ -1835,7 +1835,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |name        |string|文件名|
 |sha         |string|提交文件的sha值|
 |size        |int|文件大小， 单位：B|
@@ -1893,7 +1893,7 @@ http://localhost:3000/api/repositories/3938/update_file.json | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id             |是|int |项目id  |
 |filepath       |是|string |文件相对于仓库的路径(或修改后的文件路径) |
 |from_path      |是|string |原文件相对于仓库的路径, 只有当需要修改原文件名称时，才需要该参数 |
@@ -1907,7 +1907,7 @@ http://localhost:3000/api/repositories/3938/update_file.json | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |name        |string|文件名|
 |sha         |string|提交文件的sha值|
 |size        |int|文件大小， 单位：B|
@@ -1961,7 +1961,7 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |id          |是|int |项目id  |
 |filepath       |是|string |文件相对于仓库的路径 |
 |message        |否|string |提交说明 |
@@ -1972,7 +1972,7 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |sha         |string|提交文件的sha值|
 |commit      |object||
 |-- message  |string|提交备注说明信息|
