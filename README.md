@@ -52,15 +52,15 @@ http://localhost:3000/projects
 
 ## 基本介绍
 
-开发API服务地址：
+### 开发API服务地址：
 
-https://testgitea.trustie.net/
+**https://testgitea.trustie.net/**
 
 
 响应状态说明:
 
 |字段|类型|说明|
--|-|-
+|-|-|-|
 |status  |int |响应状态码，0:请求成功，-1: 请求失败|
 |message |string   |响应说明 |
 
@@ -84,7 +84,7 @@ http://localhost:3000/api/accounts/remote_register  | jq
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
--|-|-|-
+|-|-|-|-|
 |email    |是|string   |邮箱  |
 |username |是|string   |登录名 |
 |password |是|string   |秘密  |
