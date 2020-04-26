@@ -60,7 +60,7 @@ https://testgitea.trustie.net/
 响应状态说明:
 
 |字段|类型|说明|
--|-|-
+|-|-|-|
 |status  |int |响应状态码，0:请求成功，-1: 请求失败|
 |message |string   |响应说明 |
 
