@@ -94,7 +94,7 @@ http://localhost:3000/api/accounts/remote_register  | jq
 *返回参数说明:*
 
 |参数名|类型|说明|
--|-|-
+|-|-|-|
 |user|json object |返回数据|
 |-- id            |int   |用户id |
 |-- token         |string|用户token|
