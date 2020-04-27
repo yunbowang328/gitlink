@@ -11,7 +11,7 @@ class Projects::ListQuery < ApplicationQuery
 
   def call
     projects = Project.visible
-    scope = projects.includes(:project_category, :project_language, :repository, owner: :user_extension).like(params[:search])
+    scope = projects.includes(:project_category, :project_language).like(params[:search])
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
@@ -19,6 +19,6 @@ class Projects::ListQuery < ApplicationQuery
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
-    projects.where(id: scope_ids).reorder("projects.#{sort} #{sort_direction}")
+    projects.where(id: scope_ids).includes(:project_category, :project_language, :repository, owner: :user_extension).reorder("projects.#{sort} #{sort_direction}")
   end
 end
