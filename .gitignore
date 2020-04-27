@@ -41,7 +41,7 @@ public/react/yarn.lock
 /public/react/config/stats.json
 /public/react/stats.json
 /public/react/.idea/*
-/public/react/.idea/build/*
+/public/react/build/*
 /public/h5build
 /public/npm-debug.log
 
