@@ -7,7 +7,7 @@ class MembersController < ApplicationController
   before_action :check_member_not_exists!, only: %i[remove change_role]
 
   def create
-    interactor = Projects::AddMemberInteractor.call(current_user, @project, @user)
+    interactor = Projects::AddMemberInteractor.call(@project.owner, @project, @user)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -21,7 +21,7 @@ class MembersController < ApplicationController
   end
 
   def remove
-    interactor = Projects::DeleteMemberInteractor.call(current_user, @project, @user)
+    interactor = Projects::DeleteMemberInteractor.call(@project.owner, @project, @user)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -29,7 +29,7 @@ class MembersController < ApplicationController
   end
 
   def change_role
-    interactor = Projects::ChangeMemberRoleInteractor.call(current_user, @project, @user, params[:role])
+    interactor = Projects::ChangeMemberRoleInteractor.call(@project.owner, @project, @user, params[:role])
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
