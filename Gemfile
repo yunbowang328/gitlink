@@ -55,6 +55,9 @@ gem 'ancestry'
 gem 'acts_as_list'
 gem 'omniauth-cas'
 
+# profiler Middleware
+gem 'rack-mini-profiler'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.8'
 end
