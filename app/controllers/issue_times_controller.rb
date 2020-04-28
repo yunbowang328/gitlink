@@ -11,7 +11,7 @@ class IssueTimesController < ApplicationController
     }
     save_issue_time = IssueTime.new(issue_time)
     if save_issue_time.save
-      @issue.custom_journal_detail("work_time",save_issue_time.id, "开始工作")
+      @issue.custom_journal_detail("work_time",save_issue_time.id, "开始工作", current_user&.id)
       normal_status(0, "开始成功")
     else
       normal_status(0, "开始失败")
@@ -27,10 +27,10 @@ class IssueTimesController < ApplicationController
     if last_work_time.update_all(end_time: end_work_time)
       if end_type == 0
         message = "取消时间跟踪"
-        @issue.custom_journal_detail("cancel_time",last_work_time&.first.try(:id), "取消时间跟踪")
+        @issue.custom_journal_detail("cancel_time",last_work_time&.first.try(:id), "取消时间跟踪", current_user&.id)
       else
         message = "停止工作"
-        @issue.custom_journal_detail("end_time",last_work_time&.first.try(:id), "停止工作")
+        @issue.custom_journal_detail("end_time",last_work_time&.first.try(:id), "停止工作", current_user&.id)
       end
       normal_status(0, message)
     else

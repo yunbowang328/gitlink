@@ -268,7 +268,7 @@ class IssuesController < ApplicationController
         @issue.issue_times.update_all(end_time: Time.now)
       end
 
-      @issue.create_journal_detail(change_files, issue_files, issue_file_ids)
+      @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
       normal_status(0, "更新成功")
     else
       normal_status(-1, "更新失败")
@@ -338,7 +338,7 @@ class IssuesController < ApplicationController
       else
         close_message = "close_pr"
       end
-      @issue.custom_journal_detail(close_message,old_message, "#{message}")
+      @issue.custom_journal_detail(close_message,old_message, "#{message}", current_user&.id)
 
       normal_status(0, message)
     else
@@ -351,9 +351,9 @@ class IssuesController < ApplicationController
       type = (params[:lock_type].to_i == 1)
       if @issue.update_attribute(:is_lock, type)
         if type
-          @issue.custom_journal_detail("lock_issue","", "因为#{params[:lock_reason].present? ? params[:lock_reason].to_s : "某种原因"}而锁定，并将对话限制为协作者")
+          @issue.custom_journal_detail("lock_issue","", "因为#{params[:lock_reason].present? ? params[:lock_reason].to_s : "某种原因"}而锁定，并将对话限制为协作者", current_user&.id)
         else
-          @issue.custom_journal_detail("unlock_issue","", "解除锁定")
+          @issue.custom_journal_detail("unlock_issue","", "解除锁定", current_user&.id)
         end
         normal_status(0, "操作成功")
       else

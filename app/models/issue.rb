@@ -30,9 +30,9 @@ class Issue < ApplicationRecord
     User.select(:login, :lastname,:firstname, :nickname)&.find_by_id(self.assigned_to_id)
   end
 
-  def create_journal_detail(change_files, issue_files, issue_file_ids)
+  def create_journal_detail(change_files, issue_files, issue_file_ids, user_id)
     journal_params = {
-      journalized_id: self.id, journalized_type: "Issue", user_id: self.author_id
+      journalized_id: self.id, journalized_type: "Issue", user_id: user_id
     }
     journal = Journal.new journal_params
 
@@ -51,9 +51,9 @@ class Issue < ApplicationRecord
     end
   end
 
-  def custom_journal_detail(prop_key, old_value, value)
+  def custom_journal_detail(prop_key, old_value, value, user_id)
     journal_params = {
-      journalized_id: self.id, journalized_type: "Issue", user_id: self.author_id
+      journalized_id: self.id, journalized_type: "Issue", user_id: user_id
     }
     journal = Journal.new journal_params
     if journal.save
