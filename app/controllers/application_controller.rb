@@ -16,6 +16,14 @@ class ApplicationController < ActionController::Base
 	before_action :user_setup
 	#before_action :check_account
 
+	# TODO
+	# check sql query time
+	before_action do
+    if request.subdomain === 'testforgeplus' || request.subdomain === "profiler"
+      Rack::MiniProfiler.authorize_request
+    end
+  end
+
 	DCODES = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z)
 	OPENKEY = "79e33abd4b6588941ab7622aed1e67e8"
 
