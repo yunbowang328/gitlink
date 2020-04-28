@@ -138,7 +138,7 @@ class PullRequestsController < ApplicationController
                 end
                 local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
                 if params[:title].to_s.include?("WIP:")
-                  pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。")
+                  pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。", current_user&.id)
                 end
                 normal_status(0, "PullRequest创建成功")
               else
@@ -224,7 +224,7 @@ class PullRequestsController < ApplicationController
                 if params[:status_id].to_i == 5
                   @issue.issue_times.update_all(end_time: Time.now)
                 end
-                @issue.create_journal_detail(change_files, issue_files, issue_file_ids)
+                @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
                 normal_status(0, "PullRequest更新成功")
               else
                 normal_status(-1, "PullRequest更新失败")
@@ -306,7 +306,7 @@ class PullRequestsController < ApplicationController
             # @pull_request.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "merge")
             @pull_request&.project_trends&.update_all(action_type: "close")
 
-            @issue&.custom_journal_detail("merge", "", "该合并请求已被合并")
+            @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
             normal_status(-1, "合并失败")
@@ -357,7 +357,7 @@ class PullRequestsController < ApplicationController
             if merge_pr
               @pull_request&.project_trends&.update_all(action_type: "close")
               # @pull_request.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "merge")
-              @issue.custom_journal_detail("merge", "", "该合并请求已被合并")
+              @issue.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
               normal_status(1, "评审成功")
             else
               normal_status(-1, "评审失败")

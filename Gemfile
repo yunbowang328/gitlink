@@ -63,6 +63,8 @@ group :development, :test do
 end
 
 group :development do
+  gem 'rubocop', '~> 0.52.0'
+  gem 'solargraph', '~> 0.38.0'
   gem 'awesome_print'
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
