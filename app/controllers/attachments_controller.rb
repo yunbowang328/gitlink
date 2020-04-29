@@ -32,7 +32,7 @@ class AttachmentsController < ApplicationController
     # 1. 本地存储
     # 2. 上传到云
     begin
-      upload_file = params["file"] || params["#{params[:file_param_name]}"] # 这里的file_param_name是为了方便其他插件名称
+      upload_file = params["file"] || params["#{params[:file_param_name]}"] || params["editormd-image-file"]# 这里的file_param_name是为了方便其他插件名称
       uid_logger("#########################file_params####{params["#{params[:file_param_name]}"]}")
       raise "未上传文件" unless upload_file
 
