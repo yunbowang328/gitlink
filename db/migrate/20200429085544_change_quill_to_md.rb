@@ -54,7 +54,7 @@ class ChangeQuillToMd < ActiveRecord::Migration[5.2]
     new_content = ""
     return "" if content.blank?
     desc = JSON.parse(content)["ops"]
-    unless desc.length > 0
+    if desc.length > 0
       desc.each do |d|
         image = d["insert"]["image"]
         if image.present?
