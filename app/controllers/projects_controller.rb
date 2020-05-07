@@ -78,7 +78,7 @@ class ProjectsController < ApplicationController
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
-  end·
+  end
 
   private
   def project_params
