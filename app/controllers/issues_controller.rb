@@ -20,54 +20,22 @@ class IssuesController < ApplicationController
     @close_issues_size = issues.where(status_id: 5).size
     @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
     @my_published_size = issues.where(author_id: current_user&.id).size
-
-
-    status_type = params[:status_type].to_s  #issue状态的选择
-    search_name = params[:search].to_s
-    start_time = params[:start_date]
-    end_time = params[:due_date]
-
-    if status_type.to_s == "1"  #表示开启中的
-      issues = issues.where.not(status_id: 5)
-    elsif status_type.to_s == "2"   #表示关闭中的
-      issues = issues.where(status_id: 5)
-    end
-
-    if search_name.present?
-      issues = issues.where("subject like ?", "%#{search_name}%")
-    end
-
-    if start_time&.present? || end_time&.present?
-      issues = issues.where("start_date between ? and ?",start_time&.present? ? start_time.to_date : Time.now.to_date, end_time&.present? ? end_time.to_date : Time.now.to_date)
-    end
-
-    issues = issues.where(author_id: params[:author_id]) if params[:author_id].present? && params[:author_id].to_s != "all"
-    issues = issues.where(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present? && params[:assigned_to_id].to_s != "all"
-    issues = issues.where(tracker_id: params[:tracker_id]) if params[:tracker_id].present? && params[:tracker_id].to_s != "all"
-    issues = issues.where(status_id: params[:status_id]) if params[:status_id].present? && params[:status_id].to_s != "all"
-    issues = issues.where(priority_id: params[:priority_id]) if params[:priority_id].present? && params[:priority_id].to_s != "all"
-    issues = issues.where(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present? && params[:fixed_version_id].to_s != "all"
-    issues = issues.where(done_ratio: params[:done_ratio].to_i) if params[:done_ratio].present? && params[:done_ratio].to_s != "all"
-    issues = issues.where(issue_type: params[:issue_type].to_s) if params[:issue_type].present? && params[:issue_type].to_s != "all"
-    issues = issues.joins(:issue_tags).where(issue_tags: {id: params[:issue_tag_id].to_i}) if params[:issue_tag_id].present? && params[:issue_tag_id].to_s != "all"
-
-    order_type = params[:order_type].present? ? params[:order_type] : "desc"   #或者"asc"
-    order_name = params[:order_name].present? ? params[:order_name] : "created_on"   #或者"updated_on"
+    scopes = Issues::ListQueryService.call(issues,params)
 
     @page = params[:page]
     @limit = params[:limit] || 15
-    # @issues = issues.order("#{order_name} #{order_type}")
-    @issues_size = issues.size
-    @issues = issues.order("#{order_name} #{order_type}").page(@page).per(@limit)
+    @issues_size = scopes.size
+    @issues = scopes.page(@page).per(@limit)
 
     respond_to do |format|
       format.json
-      format.xlsx{
-        set_export_cookies
-        export_issues(@issues)
-        export_name = "#{@project.name}_issues列表_#{Time.now.strftime('%Y%m%d_%H%M%S')}"
-        render xlsx: "#{export_name.strip}",template: "issues/index.xlsx.axlsx",locals: {table_columns:@table_columns,issues:@export_issues}
-      }
+      #导出功能暂未做，可以考虑隐藏
+      # format.xlsx{
+        # set_export_cookies
+        # export_issues(@issues)
+        # export_name = "#{@project.name}_issues列表_#{Time.now.strftime('%Y%m%d_%H%M%S')}"
+        # render xlsx: "#{export_name.strip}",template: "issues/index.xlsx.axlsx",locals: {table_columns:@table_columns,issues:@export_issues}
+      # }
     end
   end
 
@@ -142,28 +110,7 @@ class IssuesController < ApplicationController
     elsif (params[:issue_type].to_s == "2") && params[:token].to_i == 0
       normal_status(-1, "悬赏的奖金必须大于0")
     else
-      issue_params = {
-        subject: params[:subject],
-        description: params[:description],
-        is_private: params[:is_private] || false,
-        assigned_to_id: params[:assigned_to_id],
-        tracker_id: params[:tracker_id],
-        status_id: params[:status_id],
-        priority_id: params[:priority_id],
-        fixed_version_id: params[:fixed_version_id],
-        start_date: params[:start_date].to_s.to_date,
-        due_date: params[:due_date].to_s.to_date,
-        estimated_hours: params[:estimated_hours],
-        done_ratio: params[:done_ratio],
-        issue_type: params[:issue_type] || "1",
-        token: params[:token],
-        issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
-        closed_on: (params[:status_id].to_i == 5) ? Time.now : nil,
-        issue_classify: "issue",
-        branch_name: params[:branch_name].to_s,
-        author_id: current_user.id,
-        project_id: @project.id
-      }
+      issue_params = issue_send_params(params)
 
       @issue = Issue.new(issue_params)
       if @issue.save!
@@ -205,26 +152,7 @@ class IssuesController < ApplicationController
   end
 
   def update
-    issue_params = {
-      subject: params[:subject],
-      description: params[:description],
-      is_private: params[:is_private] || false,
-      assigned_to_id: params[:assigned_to_id],
-      tracker_id: params[:tracker_id],
-      status_id: params[:status_id],
-      priority_id: params[:priority_id],
-      fixed_version_id: params[:fixed_version_id],
-      start_date: params[:start_date].to_s.to_date,
-      due_date: params[:due_date].to_s.to_date,
-      estimated_hours: params[:estimated_hours],
-      done_ratio: params[:done_ratio],
-      closed_on: (params[:status_id].to_i == 5) ? Time.now : nil,
-      issue_type: params[:issue_type] || "1",
-      issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",").to_s : "",
-      token: params[:token],
-      branch_name: params[:branch_name].to_s
-    }
-
+    issue_params = issue_send_params(params).except("issue_classify", "author_id", "project_id")
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
@@ -430,5 +358,30 @@ class IssuesController < ApplicationController
       end
     end
     all_branches
+  end
+
+  def issue_send_params(params)
+    {
+        subject: params[:subject],
+        description: params[:description],
+        is_private: params[:is_private] || false,
+        assigned_to_id: params[:assigned_to_id],
+        tracker_id: params[:tracker_id],
+        status_id: params[:status_id],
+        priority_id: params[:priority_id],
+        fixed_version_id: params[:fixed_version_id],
+        start_date: params[:start_date].to_s.to_date,
+        due_date: params[:due_date].to_s.to_date,
+        estimated_hours: params[:estimated_hours],
+        done_ratio: params[:done_ratio],
+        issue_type: params[:issue_type] || "1",
+        token: params[:token],
+        issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
+        closed_on: (params[:status_id].to_i == 5) ? Time.now : nil,
+        branch_name: params[:branch_name].to_s,
+        issue_classify: "issue",
+        author_id: current_user.id,
+        project_id: @project.id
+      }
   end
 end

@@ -18,44 +18,12 @@ class PullRequestsController < ApplicationController
     @my_published_size = issues.where(author_id: current_user&.id).size
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
-
-    status_type = params[:status_type] || "1"  #issue状态的选择
-    search_name = params[:search].to_s
-    start_time = params[:start_date]
-    end_time = params[:due_date]
-
-    if status_type.to_s == "1"  #表示开启中的
-      issues = issues.where.not(status_id: 5)
-    elsif status_type.to_s == "2"   #表示关闭中的
-      issues = issues.where(status_id: 5)
-    end
-
-    if search_name.present?
-      issues = issues.where("subject like ?", "%#{search_name}%")
-    end
-
-    if start_time&.present? || end_time&.present?
-      issues = issues.where("start_date between ? and ?",start_time&.present? ? start_time.to_date : Time.now.to_date, end_time&.present? ? end_time.to_date : Time.now.to_date)
-    end
-
-    issues = issues.where(author_id: params[:author_id]) if params[:author_id].present?
-    issues = issues.where(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present? && params[:assigned_to_id].to_s != "all"
-    issues = issues.where(tracker_id: params[:tracker_id]) if params[:tracker_id].present?
-    issues = issues.where(status_id: params[:status_id]) if params[:status_id].present?
-    issues = issues.where(priority_id: params[:priority_id]) if params[:priority_id].present?
-    issues = issues.where(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present? && params[:fixed_version_id].to_s != "all"
-    issues = issues.where(done_ratio: params[:done_ratio].to_i) if params[:done_ratio].present?
-    issues = issues.where(issue_type: params[:issue_type]) if params[:issue_type].present?
-    issues = issues.joins(:issue_tags).where(issue_tags: {id: params[:issue_tag_id].to_i}) if params[:issue_tag_id].present?
-
-    order_type = params[:order_type] || "desc"   #或者"asc"
-    order_name = params[:order_name] || "created_on"   #或者"updated_on"
+    scopes = Issues::ListQueryService.call(issues,params)
 
     @page = params[:page]
     @limit = params[:limit] || 15
-    @issues = issues.order("#{order_name} #{order_type}")
-    @issues_size = issues.size
-    @issues = issues.order("#{order_name} #{order_type}").page(@page).per(@limit)
+    @issues_size = scopes.size
+    @issues = scopes.page(@page).per(@limit)
   end
 
   def new
