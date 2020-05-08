@@ -20,7 +20,7 @@ class IssuesController < ApplicationController
     @close_issues_size = issues.where(status_id: 5).size
     @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
     @my_published_size = issues.where(author_id: current_user&.id).size
-    scopes = Issues::ListQueryService.call(issues,params)
+    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?})
     @issues_size = scopes.size
     @issues = paginate(scopes)
 

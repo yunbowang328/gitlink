@@ -18,7 +18,7 @@ class PullRequestsController < ApplicationController
     @my_published_size = issues.where(author_id: current_user&.id).size
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
-    scopes = Issues::ListQueryService.call(issues,params)
+    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?})
     @issues_size = scopes.size
     @issues = paginate(scopes)
   end
