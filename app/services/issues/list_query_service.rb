@@ -41,7 +41,7 @@ class Issues::ListQueryService < ApplicationService
 
     order_type = params[:order_type] || "desc"   #或者"asc"
     order_name = params[:order_name] || "created_on"   #或者"updated_on"
-    issues.order("#{order_name} #{order_type}")
+    issues.reorder("#{order_name} #{order_type}")
 
   end
 

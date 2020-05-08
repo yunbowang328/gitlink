@@ -19,11 +19,8 @@ class PullRequestsController < ApplicationController
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
     scopes = Issues::ListQueryService.call(issues,params)
-
-    @page = params[:page]
-    @limit = params[:limit] || 15
     @issues_size = scopes.size
-    @issues = scopes.page(@page).per(@limit)
+    @issues = paginate(scopes)
   end
 
   def new

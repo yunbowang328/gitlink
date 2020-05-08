@@ -21,11 +21,8 @@ class IssuesController < ApplicationController
     @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
     @my_published_size = issues.where(author_id: current_user&.id).size
     scopes = Issues::ListQueryService.call(issues,params)
-
-    @page = params[:page]
-    @limit = params[:limit] || 15
     @issues_size = scopes.size
-    @issues = scopes.page(@page).per(@limit)
+    @issues = paginate(scopes)
 
     respond_to do |format|
       format.json
