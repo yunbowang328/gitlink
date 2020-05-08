@@ -15,10 +15,17 @@ class Projects::ListQuery < ApplicationQuery
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
-    scope_ids = scope.select(:id,:user_id).no_anomory_projects.distinct.pluck(:id)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
-    projects.where(id: scope_ids).includes(:project_category, :project_language, :repository, owner: :user_extension).reorder("projects.#{sort} #{sort_direction}")
+
+    scope = scope.no_anomory_projects.distinct.includes(:project_category, :project_language, :repository, owner: :user_extension).reorder("projects.#{sort} #{sort_direction}") 
+    scope
+
+    #cope_ids = scope.select(:id,:user_id).no_anomory_projects.distinct.pluck(:id)
+
+    #sort = params[:sort_by] || "updated_on"
+    #sort_direction = params[:sort_direction] || "desc"
+    #projects.where(id: scope_ids).includes(:project_category, :project_language, :repository, owner: :user_extension).reorder("projects.#{sort} #{sort_direction}")
   end
 end
