@@ -13,7 +13,7 @@ class IssuesController < ApplicationController
 
   def index
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
-    issues = @project.issues.issue_issue.includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)
+    issues = @project.issues.issue_issue
     issues = issues.where(is_private: false) unless @user_admin_or_member
     @all_issues_size = issues.size
     @open_issues_size = issues.where.not(status_id: 5).size

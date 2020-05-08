@@ -9,7 +9,7 @@ class PullRequestsController < ApplicationController
 
   def index
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
-    issues = @project.issues.issue_pull_request.includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)
+    issues = @project.issues.issue_pull_request
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
     @all_issues_size = issues.size
     @open_issues_size = issues.where.not(status_id: 5).size

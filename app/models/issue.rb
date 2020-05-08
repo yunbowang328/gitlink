@@ -22,6 +22,7 @@ class Issue < ApplicationRecord
   scope :issue_many_includes, ->{includes(journals: :user)}
   scope :issue_issue, ->{where(issue_classify: [nil,"issue"])}
   scope :issue_pull_request, ->{where(issue_classify: "pull_request")}
+  scope :issue_index_includes, ->{includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)}
 
   after_update :change_versions_count
 

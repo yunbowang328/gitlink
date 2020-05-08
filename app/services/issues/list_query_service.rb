@@ -13,12 +13,12 @@ class Issues::ListQueryService < ApplicationService
     start_time = params[:start_date]
     end_time = params[:due_date]
 
+    issues = all_issues.issue_index_includes
+
     if status_type.to_s == "1"  #表示开启中的
-      issues = all_issues.where.not(status_id: 5)
+      issues = issues.where.not(status_id: 5)
     elsif status_type.to_s == "2"   #表示关闭中的
-      issues = all_issues.where(status_id: 5)
-    else 
-      issues = all_issues
+      issues = issues.where(status_id: 5)
     end
 
     if search_name.present?
