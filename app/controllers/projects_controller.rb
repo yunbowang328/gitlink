@@ -7,13 +7,13 @@ class ProjectsController < ApplicationController
 
   def index
     scope = Projects::ListQuery.call(params)
-    Rails.logger.info("#######_____scope__ids_____######{scope.pluck(:id)}")
-
     @total_count = scope.size
     Rails.logger.info("#######______total_count______######{@total_count}")
     page  = params[:page]  || 1
     limit = params[:limit] || 15
-    @projects = scope.page(page).per(limit)
+    projects = scope.page(page).per(limit)
+    Rails.logger.info("#######_____projects_ids______######{projects.pluck(:id)}")
+    @projects = projects
   end
 
   def create
