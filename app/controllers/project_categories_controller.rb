@@ -1,6 +1,8 @@
 class ProjectCategoriesController < ApplicationController
   def index
-    @project_categories = ProjectCategory.search(params[:name]).without_content
+    # @project_categories = ProjectCategory.search(params[:name]).without_content
+    q = ProjectCategory.ransack(name_cont: params[:name])
+    @project_categories = q.result(distinct: true)
   end
 
   def group_list
