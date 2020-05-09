@@ -58,6 +58,9 @@ gem 'omniauth-cas'
 # profiler Middleware
 gem 'rack-mini-profiler'
 
+# object-based searching
+gem 'ransack'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.8'
 end

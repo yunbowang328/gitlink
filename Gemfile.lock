@@ -214,6 +214,8 @@ GEM
     parser (2.7.1.1)
       ast (~> 2.4.0)
     pdfkit (0.8.4.1)
+    polyamorous (2.3.2)
+      activerecord (>= 5.2.1)
     popper_js (1.16.0)
     powerpack (0.1.2)
     public_suffix (4.0.3)
@@ -256,6 +258,11 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
     rake (13.0.1)
+    ransack (2.3.2)
+      activerecord (>= 5.2.1)
+      activesupport (>= 5.2.1)
+      i18n
+      polyamorous (= 2.3.2)
     rb-fsevent (0.10.3)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -464,6 +471,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (~> 5.2.0)
   rails-i18n (~> 5.1)
+  ransack
   rchardet (~> 1.8)
   redcarpet (~> 3.4)
   redis-rails
@@ -496,4 +504,4 @@ RUBY VERSION
    ruby 2.3.7p456
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
