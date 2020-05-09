@@ -1,6 +1,6 @@
 user = project.owner
 if user.present?
-  json.partial! 'project', project: project
+  json.partial! '/projects/project', project: project
   json.author do
     json.name user.try(:show_real_name)
     json.login user.login
