@@ -10,8 +10,10 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-    projects = Project.visible
-    scope = projects.includes(:project_category, :project_language).like(params[:search])
+    q = Project.visible.ransack(name_or_identifier_cont: params[:search])
+
+    scope = q.result(distinct: true)
+      .includes(:project_category, :project_language, :repository, owner: :user_extension)
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
       .with_project_language(params[:language_id])
@@ -19,13 +21,7 @@ class Projects::ListQuery < ApplicationQuery
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
 
-    scope = scope.no_anomory_projects.distinct.includes(:project_category, :project_language, :repository, owner: :user_extension).reorder("projects.#{sort} #{sort_direction}") 
+    scope = scope.no_anomory_projects.reorder("projects.#{sort} #{sort_direction}")
     scope
-
-    #cope_ids = scope.select(:id,:user_id).no_anomory_projects.distinct.pluck(:id)
-
-    #sort = params[:sort_by] || "updated_on"
-    #sort_direction = params[:sort_direction] || "desc"
-    #projects.where(id: scope_ids).includes(:project_category, :project_language, :repository, owner: :user_extension).reorder("projects.#{sort} #{sort_direction}")
   end
 end

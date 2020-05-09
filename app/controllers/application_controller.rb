@@ -668,7 +668,13 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
+	def kaminari_paginate(relation)
+		limit = params[:limit] || params[:per_page]
+		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
 
+		relation.page(page).per(limit)
+	end
 
 	def strf_time(time)
 		time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M:%S")
