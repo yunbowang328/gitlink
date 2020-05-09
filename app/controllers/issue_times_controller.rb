@@ -22,16 +22,10 @@ class IssueTimesController < ApplicationController
     end_type = params[:end_type].to_i
     end_work_time = end_type == 0 ? "" : Time.now
     last_work_time = @issue.issue_times.where(user_id: current_user.id, end_time: nil)
-    Rails.logger.info("######________last_work_time&.last.try(:id)_____###########{last_work_time&.first.try(:id)}")
-
     if last_work_time.update_all(end_time: end_work_time)
-      if end_type == 0
-        message = "取消时间跟踪"
-        @issue.custom_journal_detail("cancel_time",last_work_time&.first.try(:id), "取消时间跟踪", current_user&.id)
-      else
-        message = "停止工作"
-        @issue.custom_journal_detail("end_time",last_work_time&.first.try(:id), "停止工作", current_user&.id)
-      end
+      message = end_type == 0 ? "取消时间跟踪" : "停止工作"
+      journal_time = end_type == 0 ? "cancel_time" : "end_time"
+      @issue.custom_journal_detail(journal_time,last_work_time&.first.try(:id), message, current_user&.id)
       normal_status(0, message)
     else
       normal_status(0, "操作失败")
