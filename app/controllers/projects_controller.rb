@@ -16,6 +16,7 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
+      
     end
   rescue Exception => e
     uid_logger_error(e.message)

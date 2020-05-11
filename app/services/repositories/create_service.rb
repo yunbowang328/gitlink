@@ -14,6 +14,24 @@ class Repositories::CreateService < ApplicationService
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
+        Rails.logger.info("#######________reuqest_domain____#########{EduSetting.get("host_name")}")
+        #if project.project_type == "common"
+          #hook_params = {
+           # active: true,
+           # type: "gitea"
+           # branch_filter: "",
+           # config: {
+            #  content_type: "application/json",
+            #  url: "#{EduSetting.get("host_name")}/repositories/#{project.id}/repo_hooks",
+            #  http_method: "post"
+            #},
+            #events: ["create", "pull", "push"],
+          #}
+          #Gitea::Repository::Hooks::CreateService.new(user, @repository.try(:identifier), hook_params).call
+        #end
+        
+        # 托管项目创建上链操作
+        ProjectCreateChainJob.perform_later(user.try(:login), @repository.try(:identifier)) if project.project_type == "common"
       end
       @repository
     end

@@ -192,6 +192,7 @@ Rails.application.routes.draw do
         post :create_file
         put :update_file
         delete :delete_file
+        post :repo_hook
       end
     end
 

@@ -123,6 +123,10 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def repo_hook
+    Rails.logger.info("#####______222________########")
+  end
+
   private
 
   def find_project

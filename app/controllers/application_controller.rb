@@ -381,7 +381,12 @@ class ApplicationController < ActionController::Base
 	end
 
 	def current_user
-		User.current
+		if Rails.env.development?
+			User.find(1)
+		else 
+			User.current
+		end
+		# User.current
 	end
 
 	## 默认输出json
