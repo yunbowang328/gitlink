@@ -14,24 +14,26 @@ class Repositories::CreateService < ApplicationService
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
-        Rails.logger.info("#######________reuqest_domain____#########{EduSetting.get("host_name")}")
-        #if project.project_type == "common"
-          #hook_params = {
-           # active: true,
-           # type: "gitea"
-           # branch_filter: "",
-           # config: {
-            #  content_type: "application/json",
-            #  url: "#{EduSetting.get("host_name")}/repositories/#{project.id}/repo_hooks",
-            #  http_method: "post"
-            #},
-            #events: ["create", "pull", "push"],
-          #}
-          #Gitea::Repository::Hooks::CreateService.new(user, @repository.try(:identifier), hook_params).call
-        #end
-        
-        # 托管项目创建上链操作
-        ProjectCreateChainJob.perform_later(user.try(:login), @repository.try(:identifier)) if project.project_type == "common"
+        if project.project_type == "common"
+          hook_params = {
+            active: true,
+            type: "gitea"
+            branch_filter: "",
+            config: {
+              content_type: "application/json",
+              url: "#{EduSetting.get("host_name")}/repositories/#{project.id}/repo_hooks.json",
+              http_method: "post"
+            },
+            events: ["create", "pull", "push"],
+          }
+          chain_params = {
+            type: "create",
+            ownername: user.try(:login), 
+            reponame: @repository.try(:identifier)
+          }
+          ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
+          Gitea::Repository::Hooks::CreateService.new(user, @repository.try(:identifier), hook_params).call  #创建gitea的hook功能
+        end
       end
       @repository
     end

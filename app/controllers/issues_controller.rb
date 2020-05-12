@@ -104,8 +104,14 @@ class IssuesController < ApplicationController
       normal_status(-1, "标题不能为空")
     elsif params[:subject].to_s.size > 255
       normal_status(-1, "标题不能超过255个字符")
-    elsif (params[:issue_type].to_s == "2") && params[:token].to_i == 0
-      normal_status(-1, "悬赏的奖金必须大于0")
+    elsif (params[:issue_type].to_s == "2")
+      return normal_status(-1, "悬赏的奖金必须大于0")if params[:token].to_i == 0
+      #查看当前用户的积分
+      query_params = {
+        type: "user"
+      }.merge(tokens_params(@project))
+      user_tokens = Gitea::Repository::Hooks::QueryService.new(query_params).call
+      return normal_status(-1, "悬赏的奖金不足") if user_tokens[:value].to_i < params[:token].to_i
     else
       issue_params = issue_send_params(params)
 
@@ -133,6 +139,16 @@ class IssuesController < ApplicationController
                          parent_container_id: @project.id, parent_container_type: "Project",
                          tiding_type: 'issue', status: 0)
         end
+
+        #为悬赏任务时, 扣除当前用户的积分
+        if params[:issue_type].to_s == "2"
+          change_params = {
+            change_type: "minusToken",
+            tokens: params[:token]
+          }.merge(tokens_params(@proeject))
+          ChangeTokenJob.perform_later(change_params)
+        end
+
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
         normal_status(0, "创建成功")
       else
@@ -150,6 +166,7 @@ class IssuesController < ApplicationController
 
   def update
     issue_params = issue_send_params(params).except("issue_classify", "author_id", "project_id")
+    return normal_status(-1, "您没有权限修改token") if @issue.will_save_change_to_token? && @issue.user_id !== current_user&.id
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
@@ -191,6 +208,21 @@ class IssuesController < ApplicationController
 
       if params[:status_id].to_i == 5
         @issue.issue_times.update_all(end_time: Time.now)
+      end
+
+      if @issue.issue_type.to_s == "2" 
+        #表示修改token值
+        if @issue.saved_change_to_attribute("token")
+          last_token = @issue.token_was
+          change_token = last_token - @issue.token 
+          change_type = change_token > 0 ? "addToken" : "minusToken"
+          change_params = {
+            change_type: change_type,
+            tokens: change_token.abs
+          }.merge(tokens_params(@proeject))
+          ChangeTokenJob.perform_later(change_params)
+        end
+        
       end
 
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
@@ -243,6 +275,9 @@ class IssuesController < ApplicationController
 
   def close_issue
     type = params[:status_id].to_i || 5
+    return normal_status(-1, "悬赏工单不允许再次打开") if @issue.issue_type.to_s == "2" && @issue.status_id.to_i == 5
+    return normal_status(-1, "您没有权限操作") if @issue.issue_type.to_s == "2" && (@issue.user_id !== current_user&.id || !current_user&.admin?)
+
     if type == 5
       message = "关闭"
       old_message = "重新开启"
@@ -255,6 +290,17 @@ class IssuesController < ApplicationController
         @issue&.project_trends&.update_all(action_type: "close")
 
         @issue.issue_times.update_all(end_time: Time.now)
+        if @issue.issue_type.to_s == "2"
+          tokens = @issue.token
+          change_params = {
+            change_type: "addToken",
+            tokens: tokens,
+            ownername: project.owner.try(:login),
+            reponame: project.try(:identifer),
+            username: @issue.get_assign_user.try(:login)   #指派人增加积分
+          }
+          ChangeTokenJob.perform_later(change_params)
+        end
       else
         @issue&.project_trends&.update_all(action_type: "create")
       end
@@ -264,7 +310,6 @@ class IssuesController < ApplicationController
         close_message = "close_pr"
       end
       @issue.custom_journal_detail(close_message,old_message, "#{message}", current_user&.id)
-
       normal_status(0, message)
     else
       normal_status(-1, "操作失败")
@@ -380,5 +425,14 @@ class IssuesController < ApplicationController
         author_id: current_user.id,
         project_id: @project.id
       }
+  end
+
+  def tokens_params(project)
+    {
+      ownername: project.owner.try(:login),
+      reponame: project.try(:identifer),
+      username: current_user.try(:login)
+    }
+  
   end
 end
