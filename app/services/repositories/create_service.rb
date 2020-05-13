@@ -17,7 +17,7 @@ class Repositories::CreateService < ApplicationService
         if project.project_type == "common"
           hook_params = {
             active: true,
-            type: "gitea"
+            type: "gitea",
             branch_filter: "",
             config: {
               content_type: "application/json",
