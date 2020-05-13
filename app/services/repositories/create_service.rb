@@ -32,7 +32,8 @@ class Repositories::CreateService < ApplicationService
             reponame: @repository.try(:identifier)
           }
           ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
-          Gitea::Repository::Hooks::CreateService.new(user, @repository.try(:identifier), hook_params).call  #创建gitea的hook功能
+          #暂时gitea的hook功能未完善
+          #Gitea::Repository::Hooks::CreateService.new(user, @repository.try(:identifier), hook_params).call  #创建gitea的hook功能
         end
       end
       @repository
