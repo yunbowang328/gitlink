@@ -5,6 +5,8 @@ class ProjectCreateChainJob < ApplicationJob
     status = 0
     chain_type = chain_params[:type].to_s
     reponame = chain_params[:reponame]
+    Rails.logger.info("########_response_chain_type__#{chain_type}__")
+
 
     5.times do |i|
       if status == 200
@@ -34,6 +36,8 @@ class ProjectCreateChainJob < ApplicationJob
 
   #创建项目的上链操作
   def create_chain(chain_params)
+    Rails.logger.info("########_chain trustieCreate___#{chain_params[:ownername]}____#{chain_params[:reponame]}___")
+
     system("chain trustieCreate #{chain_params[:ownername]} #{chain_params[:reponame]}")
   end
 
