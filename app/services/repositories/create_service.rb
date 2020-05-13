@@ -31,8 +31,6 @@ class Repositories::CreateService < ApplicationService
             ownername: user.try(:login), 
             reponame: @repository.try(:id)
           }
-          Rails.logger.info("########_response_chain_params_111111_#{chain_params}__")
-
           ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
           #暂时gitea的hook功能未完善
           #Gitea::Repository::Hooks::CreateService.new(user, @repository.try(:identifier), hook_params).call  #创建gitea的hook功能
