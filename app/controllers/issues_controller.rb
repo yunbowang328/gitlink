@@ -166,7 +166,7 @@ class IssuesController < ApplicationController
 
   def update
     issue_params = issue_send_params(params).except("issue_classify", "author_id", "project_id")
-    return normal_status(-1, "您没有权限修改token") if @issue.will_save_change_to_token? && @issue.user_id !== current_user&.id
+    return normal_status(-1, "您没有权限修改token") if @issue.will_save_change_to_token? && @issue.user_id != current_user&.id
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
@@ -276,7 +276,7 @@ class IssuesController < ApplicationController
   def close_issue
     type = params[:status_id].to_i || 5
     return normal_status(-1, "悬赏工单不允许再次打开") if @issue.issue_type.to_s == "2" && @issue.status_id.to_i == 5
-    return normal_status(-1, "您没有权限操作") if @issue.issue_type.to_s == "2" && (@issue.user_id !== current_user&.id || !current_user&.admin?)
+    return normal_status(-1, "您没有权限操作") if @issue.issue_type.to_s == "2" && (@issue.user_id != current_user&.id || !current_user&.admin?)
 
     if type == 5
       message = "关闭"
