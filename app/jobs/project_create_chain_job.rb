@@ -19,6 +19,8 @@ class ProjectCreateChainJob < ApplicationJob
         else 
           chain_status = {status: 200}
         end
+        Rails.logger.info("########_response__chain_status__#{chain_status}__")
+
         status = chain_status[:status].to_i
       end
     end
