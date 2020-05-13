@@ -29,7 +29,7 @@ class Repositories::CreateService < ApplicationService
           chain_params = {
             type: "create",
             ownername: user.try(:login), 
-            reponame: @repository.try(:identifier)
+            reponame: @repository.try(:id)
           }
           ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
           #暂时gitea的hook功能未完善
