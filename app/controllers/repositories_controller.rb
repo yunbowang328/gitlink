@@ -170,7 +170,7 @@ class RepositoriesController < ApplicationController
     if hook_type == "push"
       # TODO hook返回的记录中，暂时没有文件代码数量的增减，暂时根据 commits数量来计算 
       uploadPushInfo = {
-        "shas": params["commits"].map{|c| c["id"]} if params["commits"].present?, 
+        "shas": params["commits"].present? ? params["commits"].map{|c| c["id"]} : "", 
         "branch": params["ref"].to_s.split("/").last,
         "modificationLines": params["commits"].length 
         }
