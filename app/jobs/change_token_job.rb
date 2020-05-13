@@ -9,7 +9,8 @@ class ChangeTokenJob < ApplicationJob
         break
       else 
         Rails.logger.info("########_change_user_toke_try:_#{i+1}_")
-        chain_status = system("chain #{change_params[:change_type]} #{change_params[:ownername]} #{change_params[:reponame]} #{change_params[:username]} #{change_params[:tokens].to_i}")
+        chain_status = `chain #{change_params[:change_type]} #{change_params[:ownername]} #{change_params[:reponame]} #{change_params[:username]} #{change_params[:tokens].to_i}`
+        chain_status = eval(chain_status)
         status = chain_status[:status].to_i
       end
     end

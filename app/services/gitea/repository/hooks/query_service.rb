@@ -15,18 +15,18 @@ class Gitea::Repository::Hooks::QueryService < Gitea::ClientService
   def call
     query_type = query_params[:type] || "user"
     if query_type == "user"   #查询单个用户的积分
-      query_result = system("chain query #{query_params[:ownername]} #{query_params[:reponame]} #{query_params[:username]}")
+      query_result = `chain query #{query_params[:ownername]} #{query_params[:reponame]} #{query_params[:username]}`
 
       #response {status:int, message:string, value:int}
     elsif query_type == "members"  #查询项目全部用户的积分
-      query_result = system("chain getAllInfo #{query_params[:ownername]} #{query_params[:reponame]} ")
+      query_result = `chain getAllInfo #{query_params[:ownername]} #{query_params[:reponame]}`
       #response {status:int, message:string, value:jsonObject}
     else  #查询用户在项目的贡献大小
-      query_result = system("chain getContributionPercent #{query_params[:ownername]} #{query_params[:reponame]} #{query_params[:username]}")
+      query_result = `chain getContributionPercent #{query_params[:ownername]} #{query_params[:reponame]} #{query_params[:username]}`
 
       #response {status:int, message:string, percent:int, allTokenSum:int, personalTokens:int}
     end 
-    query_result
+    eval(query_result)
   end
 
 end
