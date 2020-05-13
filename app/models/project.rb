@@ -120,4 +120,16 @@ class Project < ApplicationRecord
     is_public? || User.current.admin? || member?(User.current)
   end
 
+  def version_releases_size(current_user_id, type)
+    if current_user_id == self.user_id && type.to_s == "all"
+      self.repository.version_releases_count 
+    else 
+      self.repository.version_releases.releases_size
+    end
+  end
+
+  def contributor_users
+    self.pull_requests.select(:user_id).pluck(:user_id).uniq.size
+  end
+
 end
