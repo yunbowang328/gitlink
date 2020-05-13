@@ -2,11 +2,13 @@ class ProjectCreateChainJob < ApplicationJob
   queue_as :default
 
   def perform(chain_params)
+    Rails.logger.info("########_response_chain_params_22222_#{chain_params}__")
     status = 0
     chain_type = chain_params[:type].to_s
     reponame = chain_params[:reponame]
-    Rails.logger.info("########_response_chain_type__#{chain_type}__")
-
+   
+    Rails.logger.info("########_response_chain_chain_type_#{chain_type}__")
+    Rails.logger.info("########_response_reponame_#{reponame}__")
 
     5.times do |i|
       if status == 200
