@@ -1,0 +1,33 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="5%">序号</th>
+    <th width="30%">名称</th>
+    <th width="20%"><%= sort_tag('项目数', name: 'projects_count', path: admins_project_categories_path) %></th>
+    <th width="20%"><%= sort_tag('创建时间', name: 'created_at', path: admins_project_categories_path) %></th>
+    <th width="25%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if project_categories.present? %>
+    <% project_categories.each_with_index do |project_category, index| %>
+      <tr class="project-language-item-<%= project_category.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td>
+          <%= link_to(project_category.name, "/projects?category_id=#{project_category.id}", target: '_blank') %>
+        </td>
+        <td><%= project_category.projects_count %></td>
+        <td><%= project_category.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td class="action-container">
+        <%= link_to "编辑", edit_admins_project_category_path(project_category), remote: true, class: "action" %>
+        <%= link_to "删除", admins_project_category_path(project_category), method: :delete, data:{confirm: "确认删除的吗？"}, class: "action" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: project_categories } %>

@@ -2,9 +2,9 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-  # mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => '/sidekiq'
 
-  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+  # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
@@ -389,6 +389,10 @@ Rails.application.routes.draw do
         get :visits_static
       end
     end
+    resources :project_languages
+    resources :project_categories
+    resources :project_licenses
+    resources :project_ignores
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do

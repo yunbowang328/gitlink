@@ -4,7 +4,7 @@ class Admins::UsersController < Admins::BaseController
     params[:sort_direction] = params[:sort_direction].presence || 'desc'
 
     users = Admins::UserQuery.call(params)
-    @users = paginate users.includes(:user_extension)
+    @users = paginate users.includes(:user_extension, projects: :members)
   end
 
   def edit
