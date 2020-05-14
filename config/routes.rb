@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
 
-  require 'sidekiq/web'
-  require 'admin_constraint'
-  mount Sidekiq::Web => '/sidekiq'
+  
 
   # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
@@ -383,6 +381,10 @@ Rails.application.routes.draw do
   end
 
   namespace :admins do
+    require 'sidekiq/web'
+    require 'admin_constraint'
+    mount Sidekiq::Web => '/sidekiq'
+    
     get '/', to: 'dashboards#index'
     resources :project_statistics, only: [:index] do
       collection do
