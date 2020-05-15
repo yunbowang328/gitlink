@@ -2,7 +2,7 @@ json.count @fork_users.size
 json.fork_users do 
   json.array! @fork_users.each do |f|
     user = f.user 
-    fork_project = Project.select(:id,).find_by(f.fork_project_id)
+    fork_project = Project.select(:id,:fork_project_id,:name).find_by(id: f.fork_project_id)
     json.id f.fork_project_id
     json.name "#{user.try(:show_real_name)}/#{fork_project.name}"
     json.login user.try(:login)

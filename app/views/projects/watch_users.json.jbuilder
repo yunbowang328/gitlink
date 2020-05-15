@@ -1,4 +1,4 @@
-json.cout @watch_users.size 
+json.cout @watchers.size 
 json.watchers do 
-  json.partial! "/projects/list_user", collection: @watch_user, as: :target
+  json.partial! "/projects/list_user", collection: @watchers, as: :target
 end

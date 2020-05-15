@@ -9,7 +9,7 @@ class CreateForkUsers < ActiveRecord::Migration[5.2]
     add_index :fork_users, :project_id
     add_index :fork_users, :user_id
 
-    projects = Project.where.not(forked_from_project_id: [nil, ""])
+    projects = Project.where("forked_from_project_id is not null")
     projects.each do |p|
       ForkUser.create(project_id: p.forked_from_project_id, fork_project_id: p.id, user_id: p.user_id)
     end
