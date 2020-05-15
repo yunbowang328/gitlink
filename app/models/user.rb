@@ -51,6 +51,7 @@ class User < ApplicationRecord
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
   has_one :qq_open_user, class_name: 'OpenUsers::QQ'
   accepts_nested_attributes_for :user_extension, update_only: true
+  has_many :fork_users, dependent: :destroy
 
   has_many :versions
   has_many :issue_times, :dependent => :destroy

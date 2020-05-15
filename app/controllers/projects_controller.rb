@@ -2,8 +2,9 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   before_action :require_login, except: %i[index branches group_type_list]
-  before_action :find_project_with_id, only: %i[show branches update destroy]
+  before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_user]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
+  before_action :project_public?, only: %i[fork_users praise_users watch_user]
 
   def index
     scope = Projects::ListQuery.call(params)
@@ -81,6 +82,21 @@ class ProjectsController < ApplicationController
     tip_exception(e.message)
   end
 
+  def watch_users
+    watchers = @project.watchers.includes(:user).distinct
+    @watchers = paginate(watchers)
+  end
+
+  def parise_users
+    praises = @project.praise_treads.includes(:user).distinct
+    @praises = paginate(praises)
+  end
+
+  def fork_users 
+    fork_users = @project.fork_users.includes(:user, :project).distinct 
+    @fork_users = paginate(fork_users)
+  end
+
   private
   def project_params
     params.permit(:user_id, :name, :description, :repository_name,
@@ -90,5 +106,11 @@ class ProjectsController < ApplicationController
   def mirror_params
     params.permit(:user_id, :name, :description, :repository_name,
                   :project_category_id, :project_language_id, :clone_addr, :private)
+  end
+
+  def project_public? 
+    unless @project.is_public || current_user&admin?
+      tip_exception(403, "..")
+    end
   end
 end

@@ -12,6 +12,8 @@ class Project < ApplicationRecord
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
+  has_many :watchers, as: :watchable, dependent: :destroy
+  has_many :fork_users, dependent: :destroy
 
   # has_many :commits, dependent: :destroy
 
