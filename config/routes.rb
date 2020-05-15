@@ -104,6 +104,9 @@ Rails.application.routes.draw do
       member do
         get :branches
         post :watch
+        get :watch_users
+        get :parise_users
+        get :fork_users
       end
     end
 
