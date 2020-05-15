@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   before_action :require_login, except: %i[index branches group_type_list]
-  before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_user]
+  before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_users]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_user]
 
@@ -87,7 +87,7 @@ class ProjectsController < ApplicationController
     @watchers = paginate(watchers)
   end
 
-  def parise_users
+  def praise_users
     praises = @project.praise_treads.includes(:user).distinct
     @praises = paginate(praises)
   end
