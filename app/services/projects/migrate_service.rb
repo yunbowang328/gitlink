@@ -31,8 +31,12 @@ class Projects::MigrateService < ApplicationService
       project_category_id: params[:project_category_id],
       project_language_id: params[:project_language_id],
       is_public: project_secretion[:public],
-      project_type: Project.project_types[:mirror]
+      project_type: set_project_type
     }
+  end
+
+  def set_project_type
+    ActiveModel::Type::Boolean.new.cast(params[:is_mirror]) == true ? Project.project_types[:sync_mirror] : Project.project_types[:mirror]
   end
 
   def repository_params
@@ -41,7 +45,9 @@ class Projects::MigrateService < ApplicationService
       identifier: params[:repository_name],
       mirror_url: params[:clone_addr],
       user_id: user.id,
-      login: user.login
+      login: params[:auth_username],
+      password: params[:auth_password],
+      is_mirror: params[:is_mirror]
     }
   end
 

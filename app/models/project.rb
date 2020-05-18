@@ -4,7 +4,11 @@ class Project < ApplicationRecord
   include Watchable
   include ProjectOperable
 
-  enum project_type: { mirror: 1, common: 0 } # common:开源托管项目, mirror:开源镜像项目
+  # common:开源托管项目
+  # mirror:普通镜像项目，没有定时同步功能
+  # sync_mirror:同步镜像项目，有系统定时同步功能，且用户可手动同步操作
+  #
+  enum project_type: { sync_mirror: 2, mirror: 1, common: 0 }
 
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
@@ -122,8 +126,8 @@ class Project < ApplicationRecord
 
   def releases_size(current_user_id, type)
     if current_user_id == self.user_id && type.to_s == "all"
-      self.repository.version_releases_count 
-    else 
+      self.repository.version_releases_count
+    else
       self.repository.version_releases.releases_size
     end
   end
