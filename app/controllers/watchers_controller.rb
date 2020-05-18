@@ -12,7 +12,12 @@ class WatchersController < ApplicationController
     begin
       return normal_status(2, "你还没有关注哦") unless current_user.watched?(@target)
       current_user.unwatch!(@target)
-      render_ok({watchers_count: @target.watchers_count, watched: false})
+      if @target_type.downcase == "project"
+        render_ok({watchers_count: @target.watchers_count, watched: false})
+      else 
+        render_ok({ watched: false})
+      end
+
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
@@ -24,7 +29,11 @@ class WatchersController < ApplicationController
     begin
       return normal_status(2, "你已关注了") if current_user.watched?(@target)
       current_user.watch!(@target)
-      render_ok({watchers_count: @target.watchers_count, watched: true})
+      if @target_type.downcase == "project"
+        render_ok({watchers_count: @target.watchers_count, watched: true})
+      else 
+        render_ok({ watched: false})
+      end
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
@@ -43,12 +52,12 @@ class WatchersController < ApplicationController
   private 
 
   def get_target 
-    target_type = params[:target_type].to_s
-    case target_type 
+    @target_type = params[:target_type].to_s
+    case  @target_type 
     when "project" 
-      @target = target_type.capitalize.constantize.find_by(id: params[:id])
+      @target = @target_type.capitalize.constantize.find_by(id: params[:id])
     else 
-      @target = target_type.capitalize.constantize.find_by(login: params[:id])   #用户
+      @target = @target_type.capitalize.constantize.find_by(login: params[:id])   #用户
     end
 
     unless @target.present?
