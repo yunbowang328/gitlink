@@ -1,5 +1,5 @@
 json.count @forks_count
-json.fork_users do 
+json.users do 
   json.array! @fork_users.each do |f|
     user = f.user 
     fork_project = Project.select(:id,:name).find_by(id: f.fork_project_id)
