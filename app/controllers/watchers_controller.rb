@@ -32,7 +32,7 @@ class WatchersController < ApplicationController
       if @target_type.downcase == "project"
         render_ok({watchers_count: @target.watchers_count, watched: true})
       else 
-        render_ok({ watched: false})
+        render_ok({ watched: true})
       end
     rescue Exception => e
       uid_logger_error(e.message)
