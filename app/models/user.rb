@@ -51,6 +51,7 @@ class User < ApplicationRecord
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
   has_one :qq_open_user, class_name: 'OpenUsers::QQ'
   accepts_nested_attributes_for :user_extension, update_only: true
+  has_many :fork_users, dependent: :destroy
 
   has_many :versions
   has_many :issue_times, :dependent => :destroy
@@ -607,7 +608,7 @@ class User < ApplicationRecord
   end
 
   def projects_count
-    Project.joins(:members).where(members: { user_id: self.id }).select(:id).size
+    Project.includes(:members).joins(:members).where(members: { user_id: self.id }).select(:id).size
   end
 
   # 是否已经签到

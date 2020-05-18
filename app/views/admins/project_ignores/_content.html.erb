@@ -1,0 +1,9 @@
+<div class="box search-form-container project-list-form">
+  <div style="line-height: 38px;" class="flex-1"><%= @project_ignore.name %></div>
+  <%= link_to "返回", admins_project_ignores_path, class: "btn btn-default pull-right" %>
+</div>
+
+<div class="box">
+<%= @project_ignore.content.html_safe %>
+
+</div>

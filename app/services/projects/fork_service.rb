@@ -27,6 +27,8 @@ class Projects::ForkService < ApplicationService
 
       @project.update_column('forked_count', @project&.forked_count.to_i + 1)
       new_repository.update_column('url', result['clone_url']) if result
+      
+      ForkUser.create(project_id: @project.id, fork_project_id: clone_project.id, user_id: clone_project.user_id)
 
       clone_project
     end

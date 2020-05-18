@@ -13,7 +13,7 @@ module Watchable
   end
 
   def watch!(watchable)
-    watchable.watchers.create!(user: self)
+    watchable.watchers.create!(user: self, created_at: Time.current)
   end
 
   def unwatch!(watchable)

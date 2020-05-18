@@ -14,54 +14,18 @@
   <!-- Sidebar Links -->
   <ul class="list-unstyled components">
     <li><%= sidebar_item(admins_path, '概览', icon: 'dashboard', controller: 'admins-dashboards') %></li>
-
-    <li>
-      <%= sidebar_item_group('#schools-submenu', '单位管理', icon: 'building') do %>
-        <li><%= sidebar_item(admins_schools_path, '单位列表', icon: 'university', controller: 'admins-schools') %></li>
-        <li><%= sidebar_item(admins_departments_path, '部门列表', icon: 'sitemap', controller: 'admins-departments') %></li>
-        <li><%= sidebar_item(admins_partners_path, '合作伙伴', icon: 'handshake-o', controller: 'admins-partners') %></li>
-      <% end %>
-    </li>
-
     <li>
       <%= sidebar_item_group('#user-submenu', '用户', icon: 'user') do %>
         <li><%= sidebar_item(admins_users_path, '用户列表', icon: 'user', controller: 'admins-users') %></li>
-        <li><%= sidebar_item(admins_user_statistics_path, '用户实训情况', icon: 'area-chart', controller: 'admins-user_statistics') %></li>
       <% end %>
     </li>
-
     <li>
-      <%= sidebar_item_group('#apply-review-submenu', '审核', icon: 'gavel') do %>
-        <li><%= sidebar_item(admins_identity_authentications_path, '实名认证', icon: 'id-card-o', controller: 'admins-identity_authentications') %></li>
-        <li><%= sidebar_item(admins_professional_authentications_path, '职业认证', icon: 'drivers-license', controller: 'admins-professional_authentications') %></li>
-        <li><%= sidebar_item(admins_department_applies_path, '部门审批', icon: 'newspaper-o', controller: 'admins-department_applies') %></li>
-        <li><%= sidebar_item(admins_unit_applies_path, '单位审批', icon: 'building-o', controller: 'admins-unit_applies') %></li>
-        <li><%= sidebar_item(admins_project_package_applies_path, '众包需求发布', icon: 'joomla', controller: 'admins-project_package_applies') %></li>
-      <% end %>
-    </li>
-
-    <li>
-      <%= sidebar_item_group('#comments-submenu', '消息', icon: 'comments') do %>
-      <li><%= sidebar_item(admins_shixun_feedback_messages_path, '实训反馈', icon: 'comment', controller: 'admins-shixun_feedback_messages') %></li>
-    <% end %>
-    </li>
-
-    <li>
-      <%= sidebar_item_group('#running-data', '运营数据', icon: 'bar-chart') do %>
-      <li><%= sidebar_item(admins_salesmans_path, '销售数据列表', icon: 'columns', controller: 'admins-salesmans') %></li>
-    <% end %>
-    </li>
-
-    <li>
-      <%= sidebar_item_group('#other-submenu', '其他', icon: 'list-alt') do %>
-      <li><%= sidebar_item(admins_repertoires_path, '技术体系', icon: 'sitemap', controller: 'admins-repertoires') %></li>
-    <% end %>
-    </li>
-
-    <li>
-      <%= sidebar_item_group('#major-identification-submenu', '工程认证', icon: 'anchor') do %>
-       <li><%= sidebar_item(admins_major_informations_path, '本科专业目录', icon: 'outdent', controller: 'admins-major_informations') %></li>
-       <li><%= sidebar_item(admins_auth_schools_path, '认证单位列表', icon: 'th', controller: 'admins-auth_schools') %></li>
+      <%= sidebar_item_group('#projects-submenu', '开源项目', icon: 'database') do %>
+        <li><%= sidebar_item(admins_projects_path, '项目列表', icon: 'database', controller: 'admins-projects') %></li>
+        <li><%= sidebar_item(admins_project_languages_path, '项目语言', icon: 'language', controller: 'admins-project_languages') %></li>
+        <li><%= sidebar_item(admins_project_categories_path, '分类列表', icon: 'sitemap', controller: 'admins-project_categories') %></li>
+        <li><%= sidebar_item(admins_project_licenses_path, '开源许可证', icon: 'file-text-o', controller: 'admins-project_licenses') %></li>
+        <li><%= sidebar_item(admins_project_ignores_path, '忽略文件', icon: 'git', controller: 'admins-project_ignores') %></li>
       <% end %>
     </li>
 
@@ -76,7 +40,9 @@
         <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
       <% end %>
     </li>
-
+    <li>
+    <%= sidebar_item('/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
+    </li>
     <li><%= sidebar_item('/', '返回主站', icon: 'sign-out', controller: 'root') %></li>
   </ul>
 </nav>

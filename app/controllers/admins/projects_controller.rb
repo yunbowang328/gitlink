@@ -1,10 +1,11 @@
 class Admins::ProjectsController < Admins::BaseController
 
   def index
-    default_sort('created_at', 'desc')
+    sort_by = params[:sort_by] ||= 'created_on'
+    sort_direction = params[:sort_direction] ||= 'desc'
 
     search = params[:search].to_s.strip
-    projects = Project.where("name like ?", "%#{search}%")
+    projects = Project.where("name like ?", "%#{search}%").order("#{sort_by} #{sort_direction}")
     @projects = paginate projects.includes(:owner, :members, :issues, :versions, :attachments, :project_score)
   end
 
@@ -21,5 +22,4 @@ class Admins::ProjectsController < Admins::BaseController
       render_delete_success
     end
   end
-
 end

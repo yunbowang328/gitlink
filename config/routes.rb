@@ -44,7 +44,14 @@ Rails.application.routes.draw do
     resources :project_languages, only: [:index, :show]
     resources :ignores, only: [:index, :show]
     resources :licenses, only: [:index, :show]
-
+    
+    resources :watchers, only: [:index] do
+      collection do
+        post :follow
+        delete :unfollow
+        get :check_watch
+      end
+    end
     resources :projects do
       resources :pull_requests, except: [:destroy] do
         member do
@@ -75,13 +82,7 @@ Rails.application.routes.draw do
           post :update_status
         end
       end
-      resources :watchers, only: [:index] do
-        collection do
-          post :follow
-          delete :unfollow
-          get :check_watch
-        end
-      end
+     
       resources :praise_tread, only: [:index] do
         collection do
           post :like
@@ -104,6 +105,9 @@ Rails.application.routes.draw do
       member do
         get :branches
         post :watch
+        get :watch_users
+        get :praise_users
+        get :fork_users
       end
     end
 
@@ -390,6 +394,10 @@ Rails.application.routes.draw do
         get :visits_static
       end
     end
+    resources :project_languages
+    resources :project_categories
+    resources :project_licenses
+    resources :project_ignores
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do

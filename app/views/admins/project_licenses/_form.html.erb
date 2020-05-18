@@ -1,0 +1,38 @@
+<div class="box search-form-container project-list-form">
+  <div style="line-height: 38px;" class="flex-1"><%= type == "create" ? "新建" : "编辑" %>开源许可证</div>
+  <%= link_to "返回", admins_project_licenses_path, class: "btn btn-default pull-right" %>
+</div>
+
+<div class="box">
+  <%= form_for @project_license, url: {controller: "project_licenses", action: "#{type}"} do |f| %>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        许可证名称
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= f.text_field :name, class: "form-control input-lg", maxlength: "60", placeholder: "请输入开源许可证的全称" %>
+    </div>
+
+  </div>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        许可证内容
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= f.text_area :content,class:"form-control", rows: "10", cols: "20",placeholer: "许可证的简要介绍，不得超过500字" %>
+    </div>
+
+
+
+  </div>
+  <div class="form-group">
+    <%= f.submit "确认", class: "btn btn-primary submit-btn" %>
+  </div>
+  <% end %>
+</div>
