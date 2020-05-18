@@ -222,3 +222,7 @@ zh-CN:
         live_time: '开播时间'
         duration: '直播时长'
     close_pr: 合并请求
+  roles: 
+    Developer: 开发者 
+    Reporter: 报告者
+    Manager: 管理员
