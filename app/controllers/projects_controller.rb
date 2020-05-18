@@ -84,16 +84,19 @@ class ProjectsController < ApplicationController
 
   def watch_users
     watchers = @project.watchers.includes(:user).order("watchers.created_at asc").distinct
+    @watchers_count = watchers.size
     @watchers = paginate(watchers)
   end
 
   def praise_users
     praises = @project.praise_treads.includes(:user).order("praise_treads.created_at asc").distinct
+    @praises_count = praises.size
     @praises = paginate(praises)
   end
 
   def fork_users 
     fork_users = @project.fork_users.includes(:user, :project).order("fork_users.created_at asc").distinct 
+    @forks_count = fork_users.size
     @fork_users = paginate(fork_users)
   end
 

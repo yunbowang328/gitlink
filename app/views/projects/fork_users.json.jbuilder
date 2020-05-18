@@ -1,4 +1,4 @@
-json.count @fork_users.size 
+json.count @forks_count
 json.fork_users do 
   json.array! @fork_users.each do |f|
     user = f.user 
