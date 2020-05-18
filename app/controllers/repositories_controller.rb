@@ -1,7 +1,10 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
-  before_action :require_login, only: %i[edit update create_file update_file delete_file]
+  include OperateProjectAbilityAble
+  before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :find_project, :authorizate!
+  before_action :find_repository, only: %i[sync_mirror]
+  before_action :authorizate_user_can_edit_project!, only: %i[sync_mirror]
 
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
@@ -125,8 +128,8 @@ class RepositoriesController < ApplicationController
 
   def repo_hook
     hook_type = request.headers["X-Gitea-Event"].to_s  # 获取推送的方式
-    ownername = @project.owner.try(:login) 
-    reponame = @project.identifier 
+    ownername = @project.owner.try(:login)
+    reponame = @project.identifier
     username = current_user.try(:login)
     user_params = {
       "ownername": ownername,
@@ -142,11 +145,21 @@ class RepositoriesController < ApplicationController
     @project.update_attribute(:token, @project.token + uploadPushInfo[:modificationLines].to_i)
   end
 
+  def sync_mirror
+    @repo&.mirror.set_status!(Mirror.statuses[:waiting])
+    SyncMirroredRepositoryJob(@repo, current_user)
+    render_ok
+  end
+
   private
 
   def find_project
     @project = Project.find params[:id]
     render_not_found("未找到相关的仓库") unless @project
+  end
+
+  def find_repository
+    @repo = Repository.find params[:id]
   end
 
   def authorizate!
@@ -166,13 +179,13 @@ class RepositoriesController < ApplicationController
     }
   end
 
-  def hook_params(hook_type, params) 
+  def hook_params(hook_type, params)
     if hook_type == "push"
-      # TODO hook返回的记录中，暂时没有文件代码数量的增减，暂时根据 commits数量来计算 
+      # TODO hook返回的记录中，暂时没有文件代码数量的增减，暂时根据 commits数量来计算
       uploadPushInfo = {
-        "shas": params["commits"].present? ? params["commits"].map{|c| c["id"]} : "", 
+        "shas": params["commits"].present? ? params["commits"].map{|c| c["id"]} : "",
         "branch": params["ref"].to_s.split("/").last,
-        "modificationLines": params["commits"].length 
+        "modificationLines": params["commits"].length
         }
     elsif hook_type == "pull_request" && params["action"].to_s == "closed"  #合并请求合并后才会有上链操作
       uploadPushInfo = {
@@ -183,7 +196,7 @@ class RepositoriesController < ApplicationController
         "shas": [params["pull_request"]["merge_commit_sha"], params["pull_request"]["merge_base"]],
         "modificationLines": 1  #pull_request中没有commits数量
         }
-    else 
+    else
         uploadPushInfo = {}
     end
 

@@ -197,6 +197,7 @@ Rails.application.routes.draw do
         put :update_file
         delete :delete_file
         post :repo_hook
+        post :sync_mirror
       end
     end
 

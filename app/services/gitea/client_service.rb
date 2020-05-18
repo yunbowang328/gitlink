@@ -143,6 +143,8 @@ class Gitea::ClientService < ApplicationService
     when 409
       message = "创建失败，请检查该分支合并是否已存在"
       raise Error, mark + message
+    when 403
+      {status: 403, message: '你没有权限操作!'}
     else
       if response&.body.blank?
         message = "请求失败"

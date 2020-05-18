@@ -17,7 +17,7 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
-      
+
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -107,8 +107,8 @@ class ProjectsController < ApplicationController
   end
 
   def mirror_params
-    params.permit(:user_id, :name, :description, :repository_name,
-                  :project_category_id, :project_language_id, :clone_addr, :private)
+    params.permit(:user_id, :name, :description, :repository_name, :is_mirror, :auth_username,
+                  :auth_password, :project_category_id, :project_language_id, :clone_addr, :private)
   end
 
   def project_public? 

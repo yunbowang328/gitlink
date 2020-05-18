@@ -11,9 +11,8 @@ class Repositories::MigrateService < ApplicationService
     @repository = Repository.new(repository_params)
     ActiveRecord::Base.transaction do
       if @repository.save!
-        gitea_repository = Gitea::Repository::MigrateService.new(user.gitea_token, gitea_repository_params).call
-        sync_project(gitea_repository)
-        sync_repository(@repository, gitea_repository)
+        @repository.set_mirror! if wrapper_mirror
+        MigrateRemoteRepositoryJob.perform_later(@repository, user.gitea_token, gitea_repository_params)
       end
       @repository
     end
@@ -23,15 +22,6 @@ class Repositories::MigrateService < ApplicationService
   end
 
   private
-
-  def sync_project(gitea_repository)
-    project.update_columns(gpid: gitea_repository["id"], identifier: gitea_repository["name"]) if gitea_repository
-  end
-
-  def sync_repository(repository, gitea_repository)
-    repository.update_columns(url: gitea_repository["clone_url"]) if gitea_repository
-  end
-
   def repository_params
     params.merge(project_id: project.id)
   end
@@ -41,7 +31,14 @@ class Repositories::MigrateService < ApplicationService
       clone_addr: params[:mirror_url],
       repo_name: params[:identifier],
       uid: user.gitea_uid,
-      private: params[:hidden]
+      private: params[:hidden],
+      mirror: wrapper_mirror || false,
+      auth_username: params[:login],
+      auth_password: params[:password]
     }
+  end
+
+  def wrapper_mirror
+    ActiveModel::Type::Boolean.new.cast(params[:is_mirror])
   end
 end
