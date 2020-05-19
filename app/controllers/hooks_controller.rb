@@ -51,12 +51,12 @@ class HooksController < ApplicationController
     #   }
     # }
 
-    hook_params = params[:hook_params].compact
+    hook_params = params[:hook_params]
     Gitea::Hooks::CreateService.new(@user, @repository.try(:identifier), hook_params).call  #创建gitea的hook功能
   end 
 
   def update 
-    hook_params = params[:hook_params].compact
+    hook_params = params[:hook_params]
     response = Gitea::Hooks::UpdateService.new(@user, @repository.try(:identifier), hook_params, params[:id]).call
     if response.status == 200 
       normal_status(1, "更新成功")
