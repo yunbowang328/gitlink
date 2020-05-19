@@ -46,6 +46,7 @@ module ProjectOperable
   def develper?(user)
     developers.exists? user
   end
+
   # 报告者，只有可读权限
   def reporter?(user)
     reporters.exists? user
