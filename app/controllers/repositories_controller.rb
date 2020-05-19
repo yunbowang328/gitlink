@@ -2,8 +2,8 @@ class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
-  before_action :find_project, :authorizate!
-  before_action :find_repository, only: %i[sync_mirror]
+  before_action :find_project, :authorizate!, except: :tags
+  before_action :find_repository, only: %i[sync_mirror tags]
   before_action :authorizate_user_can_edit_project!, only: %i[sync_mirror]
 
   def show
@@ -49,7 +49,7 @@ class RepositoriesController < ApplicationController
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.new(@project, @project.identifier).call
+    @tags = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @repo.user.login, @repo.identifier, {page: params[:page], limit: params[:limit]}).call
   end
 
   def edit

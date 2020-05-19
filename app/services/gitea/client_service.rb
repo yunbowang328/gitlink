@@ -17,7 +17,6 @@ class Gitea::ClientService < ApplicationService
   # }
   def post(url, params={})
     puts "[gitea] request params: #{params}"
-    Rails.logger.info("##########___________post_params__________########{params}")
     request_url = [api_url, url].join('').freeze
     auth_token = authen_params(params[:token])
     response = conn(auth_token).post do |req|
