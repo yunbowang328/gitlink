@@ -1,4 +1,4 @@
-class Gitea::Repository::Hooks::CreateService < Gitea::ClientService
+class Gitea::Hooks::CreateService < Gitea::ClientService
   attr_reader :user, :repo_name, :body
 
   def initialize(user, repo_name, body)

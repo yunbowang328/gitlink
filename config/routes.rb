@@ -53,6 +53,7 @@ Rails.application.routes.draw do
       end
     end
     resources :projects do
+      resources :hooks
       resources :pull_requests, except: [:destroy] do
         member do
           post :pr_merge

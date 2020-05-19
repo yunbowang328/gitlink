@@ -4,5 +4,6 @@ json.members @members do |member|
     json.partial! 'member', user: member.user
     json.is_owner @project.owner?(member.user)
     json.role member.roles.last.name
+    json.role_name t("roles.#{member.roles.last.name}")
   end
 end
