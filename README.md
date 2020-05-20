@@ -461,31 +461,21 @@ http://localhost:3000/api/projects/migrate  | jq
   "name": "ni项目"
 }
 ```
+
+---
 #### 手动同步镜像
 ```
 POST api/repositories/:id/sync_mirror
 ```
 *示例*
 ```
-curl -X POST \
--d "user_id=36401" \
-http://localhost:3000/api/repositories/1244/sync_mirror  | jq
+curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|user_id            |是|int    |用户id或者组织id  |
-|name               |是|string |项目名称  |
-|clone_addr         |是|string |镜像项目clone地址  |
-|description        |否|string |项目描述  |
-|repository_name    |是|string |仓库名称, 只含有数字、字母、下划线不能以下划线开头和结尾，且唯一  |
-|project_category_id|是|int    |项目类别id  |
-|project_language_id|是|int    |项目语言id  |
-|is_mirror          |否|boolean|是否设置为镜像， true：是， false：否，默认为否  |
-|auth_username      |否|string|镜像源仓库的登录用户名  |
-|auth_password      |否|string|镜像源仓库的登录秘密  |
-|private            |否|boolean|项目是否私有, true：为私有，false: 非私有，默认为公开  |
+|id            |是|int    |仓库id  |
 
 
 *返回参数说明:*
