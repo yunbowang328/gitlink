@@ -1,13 +1,14 @@
 json.identifier @project.identifier
 json.name @project.name
 json.project_id @project.id
+json.repo_id @project.repository.id
 json.issues_count @project.issues_count
 json.pull_requests_count @project.pull_requests_count
 json.project_identifier @project.identifier
 json.praises_count @project.praises_count.to_i
 json.forked_count @project.forked_count.to_i
 json.watchers_count @project.watchers_count.to_i
-json.versions_count @project.versions_count  #里程碑数量 
+json.versions_count @project.versions_count  #里程碑数量
 json.version_releases_count @project.releases_size(current_user.try(:id), "all")
 json.version_releasesed_count @project.releases_size(current_user.try(:id), "released")  #已发行的版本
 json.contributor_users_count @project.contributor_users
@@ -18,6 +19,7 @@ json.permission render_edit_project_permission(current_user, @project) if curren
 json.mirror_url @project&.repository.mirror_url
 json.watched current_user&.watched?(@project)
 json.praised current_user&.liked?(@project)
+json.status @project.status
 json.forked_from_project_id @project_fork_id
 json.fork_info do
   if @fork_project.present?
