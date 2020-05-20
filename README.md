@@ -1348,19 +1348,24 @@ curl -X GET http://localhost:3000/api/projects/mirror_demo/branches | jq
 ```
 ---
 
-### 获取版本列表
+### 获取代码库标签列表
 ```
 GET  /api/repositories/:id/tags
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/repositories/124/tags.json | jq
+curl -X GET \
+-d "limit=20" \
+-d "page=1" \
+http://localhost:3000/api/repositories/5836/tags.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id               |是|int |项目id  |
+|id          |是|int |仓库id  |
+|page        |否|string |页数，第几页  |
+|limit       |否|string |每页多少条数据，默认20条  |
 
 
 *返回参数说明:*
