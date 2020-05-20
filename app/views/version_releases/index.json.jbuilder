@@ -38,8 +38,9 @@ json.releases do
         json.image_url user.present? ? url_to_avatar(user) : ""
       end
     end
+    
     json.attachments do
-      json.array! version.attachments do |attachment|
+      json.array! version.try(:attachments) do |attachment|
         json.partial! "attachments/attachment_simple", locals: {attachment: attachment}
       end
     end
