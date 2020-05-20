@@ -4,7 +4,7 @@ json.user_permission @user_permission
 json.releases do
   json.array! @version_releases.to_a.each do |re|
     user = User.select(:id, :gitea_uid, :login, :lastname,:firstname, :nickname).find_by_gitea_uid(re["author"]["id"])
-    version = VersionRelease.select(:id).find_by_version_gid(re["id"])
+    version = @forge_releases.find_by(version_gid: re["id"])
     if @user_permission && re["draft"]
       json.version_id version.try(:id)
       json.id re["id"]
@@ -38,6 +38,10 @@ json.releases do
         json.image_url user.present? ? url_to_avatar(user) : ""
       end
     end
-
+    json.attachments do
+      json.array! version.attachments do |attachment|
+        json.partial! "attachments/attachment_simple", locals: {attachment: attachment}
+      end
+    end
   end
 end

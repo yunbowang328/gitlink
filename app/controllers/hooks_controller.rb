@@ -56,6 +56,8 @@ class HooksController < ApplicationController
 
     hook_params = params[:hook_params]
     Gitea::Hooks::CreateService.new(@user, @repository.try(:identifier), hook_params).call  #创建gitea的hook功能
+    Gitea::Hooks::CreateService.new(user, p.try(:identifier), hook_params).call  #创建gitea的hook功能
+
   end 
 
   def update 
