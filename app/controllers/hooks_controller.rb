@@ -16,6 +16,7 @@ class HooksController < ApplicationController
   end
 
   def create 
+    #根据gitea的api
     # hook_params = {
     #   active: true,
     #   type: "gitea",
@@ -27,6 +28,7 @@ class HooksController < ApplicationController
     #   },
     #   events: ["create", "pull", "push"],
     # }
+    #根据gitea上hook的字段测试的
     # hook_params = {
     #   is_active: params[:is_active] || false,
     #   type: params[:type],
