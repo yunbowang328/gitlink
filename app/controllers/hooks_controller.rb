@@ -1,6 +1,7 @@
 class HooksController < ApplicationController
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login
   before_action :find_project_with_id
+  before_action :check_user
   before_action :set_repository
 
   def index 
@@ -81,5 +82,11 @@ class HooksController < ApplicationController
     @user = @project.owner
     normal_status(-1, "仓库不存在") unless @repository.present?
     normal_status(-1, "用户不存在") unless @user.present?
+  end
+
+  def check_user 
+    unless @project.user_id == current_user.id 
+      tip_exception(403, "您没有权限进入") 
+    end
   end
 end
