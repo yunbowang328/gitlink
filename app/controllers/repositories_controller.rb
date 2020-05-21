@@ -4,12 +4,13 @@ class RepositoriesController < ApplicationController
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :find_project, except: :tags
   before_action :authorizate!, except: [:sync_mirror, :tags]
-  before_action :find_repository, only: %i[sync_mirror tags]
+  before_action :find_repository, only: %i[sync_mirror tags show]
   before_action :authorizate_user_can_edit_project!, only: %i[sync_mirror]
 
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier).call[:total_count]
+    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @repo.user.login, @repo.identifier).call&.size
     @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
