@@ -12,7 +12,7 @@ json.versions_count @project.versions_count  #里程碑数量
 json.version_releases_count @project.releases_size(current_user.try(:id), "all")
 json.version_releasesed_count @project.releases_size(current_user.try(:id), "released")  #已发行的版本
 json.contributor_users_count @project.contributor_users
-json.issue_tags_count @tags_count
+json.issue_tags_count 0
 json.branches_count @branches_count
 json.commits_count @commits_count
 json.permission render_edit_project_permission(current_user, @project) if current_user
