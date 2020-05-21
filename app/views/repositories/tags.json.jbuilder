@@ -9,3 +9,4 @@ json.array! @tags do |tag|
     end
   end
 end
+
