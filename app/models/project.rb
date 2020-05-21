@@ -118,9 +118,6 @@ class Project < ApplicationRecord
     members.select(:id).size
   end
 
-  def issues_count
-    issues.select(:id).size
-  end
 
   def can_visited?
     is_public? || User.current.admin? || member?(User.current)
@@ -136,6 +133,10 @@ class Project < ApplicationRecord
 
   def contributor_users
     self.pull_requests.select(:user_id).pluck(:user_id).uniq.size
+  end
+
+  def open_issues_count
+    issues_count - closed_issues_count
   end
 
 end
