@@ -10,7 +10,7 @@ class RepositoriesController < ApplicationController
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier).call[:total_count]
-    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @repo.user.login, @repo.identifier).call&.size
+    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
     @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
