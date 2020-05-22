@@ -55,7 +55,7 @@ class Projects::ApplyJoinService < ApplicationService
         applied_user_id: user.id, role: role_value, project_id: project.id
       }
 
-      project.manager_members.each do |manager|
+      project.managers.each do |manager|
         worker.add(base_attr.merge(user_id: manager.user_id))
       end
     end
