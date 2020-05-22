@@ -26,5 +26,15 @@ json.array! @entries do |entry|
     json.content entry['content']
     json.target entry['target']
   end
-  json.commit entry['latest_commit']
+
+  if entry['latest_commit']
+    created_at = Time.at(entry['latest_commit']['created_at'].to_i).strftime("%Y-%m-%d %H:%M")
+    json.commit do
+      json.message entry['latest_commit']['message']
+      json.sha entry['latest_commit']['sha']
+      json.created_at fix_time entry['latest_commit']
+      json.time_from_now time_from_now(created_at)
+      json.created_at_unix entry['latest_commit']['created_at']
+    end
+  end
 end
