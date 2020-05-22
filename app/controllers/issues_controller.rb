@@ -208,13 +208,14 @@ class IssuesController < ApplicationController
 
       if params[:status_id].to_i == 5
         @issue.issue_times.update_all(end_time: Time.now)
+        @issue.update_closed_issues_count_in_project!
       end
 
-      if @issue.issue_type.to_s == "2" 
+      if @issue.issue_type.to_s == "2"
         #表示修改token值
         if @issue.saved_change_to_attribute("token")
           last_token = @issue.token_was
-          change_token = last_token - @issue.token 
+          change_token = last_token - @issue.token
           change_type = change_token > 0 ? "addToken" : "minusToken"
           change_params = {
             change_type: change_type,
@@ -222,7 +223,7 @@ class IssuesController < ApplicationController
           }.merge(tokens_params(@proeject))
           ChangeTokenJob.perform_later(change_params)
         end
-        
+
       end
 
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
@@ -433,6 +434,6 @@ class IssuesController < ApplicationController
       reponame: project.try(:identifer),
       username: current_user.try(:login)
     }
-  
+
   end
 end

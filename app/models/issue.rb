@@ -25,6 +25,7 @@ class Issue < ApplicationRecord
   scope :issue_index_includes, ->{includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)}
 
   after_update :change_versions_count
+  after_destroy :update_closed_issues_count_in_project!
 
 
   def get_assign_user
@@ -100,6 +101,10 @@ class Issue < ApplicationRecord
         self.version.update_attributes(closed_issues_count: (self.version.closed_issues_count - 1), percent: percent)
       end
     end
+  end
+
+  def update_closed_issues_count_in_project!
+    self.project.decrement!(:closed_issues_count)
   end
 
 end
