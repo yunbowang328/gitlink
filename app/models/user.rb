@@ -130,7 +130,7 @@ class User < ApplicationRecord
   end
 
   def project_manager?(project)
-    project.manager_members.exists?(user: self) || self.admin?
+    project.managers.exists?(user: self) || self.admin?
   end
 
   # 学号

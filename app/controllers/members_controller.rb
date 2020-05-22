@@ -19,7 +19,7 @@ class MembersController < ApplicationController
     search = params[:search].to_s.downcase
     role = params[:role].to_s
     scope = scope.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login, users.mail)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
-    scope = scope.joins(:roles).where("roles.name LIKE ?", "%#{role.split(" ")}%") if role.present?
+    scope = scope.joins(:roles).where("roles.name LIKE ?", "%#{role}%") if role.present?
 
     @total_count = scope.size
     @members = paginate(scope)
