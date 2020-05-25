@@ -13,10 +13,8 @@ class Project < ApplicationRecord
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
   belongs_to :owner, class_name: 'User', foreign_key: :user_id
-  # belongs_to :project_category, optional: true , :counter_cache => true
-  # belongs_to :project_language, optional: true , :counter_cache => true
-  belongs_to :project_category, optional: true 
-  belongs_to :project_language, optional: true 
+  belongs_to :project_category, optional: true , :counter_cache => true
+  belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
