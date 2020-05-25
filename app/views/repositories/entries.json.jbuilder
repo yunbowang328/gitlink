@@ -26,5 +26,8 @@ json.array! @entries do |entry|
     json.content entry['content']
     json.target entry['target']
   end
-  json.commit entry['latest_commit']
+
+  if entry['latest_commit']
+    json.partial! 'last_commit', entry: entry
+  end
 end

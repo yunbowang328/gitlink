@@ -10,3 +10,7 @@ json.content entry['content'].present? && !direct_download ? render_decode64_con
 json.target entry['target']
 json.download_url entry['download_url']
 json.direct_download direct_download
+
+if entry['latest_commit']
+  json.partial! 'last_commit', entry: entry
+end
