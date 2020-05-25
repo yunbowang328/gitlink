@@ -39,17 +39,17 @@ module ProjectOperable
 
   # 项目管理员(包含项目拥有者)，权限：仓库设置、仓库可读可写
   def manager?(user)
-    managers.exists? user
+    managers.exists?(user_id: user.id)
   end
 
   # 项目开发者，可读可写权限
   def develper?(user)
-    developers.exists? user
+    developers.exists?(user_id: user.id)
   end
 
   # 报告者，只有可读权限
   def reporter?(user)
-    reporters.exists? user
+    reporters.exists?(user_id: user.id)
   end
 
   def set_developer_role(member)
