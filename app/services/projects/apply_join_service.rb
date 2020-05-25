@@ -13,7 +13,7 @@ class Projects::ApplyJoinService < ApplicationService
 
     # 项目报告人员直接加入项目
     if params[:role] == 'reporter'
-      Projects::JoinService.call(project, user, role: 'reporter')
+      # Projects::JoinService.call(project, user, role: 'reporter')
       return project
     end
 

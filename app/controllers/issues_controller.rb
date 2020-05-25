@@ -165,7 +165,7 @@ class IssuesController < ApplicationController
   end
 
   def update
-    issue_params = issue_send_params(params).except("issue_classify", "author_id", "project_id")
+    issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
     return normal_status(-1, "您没有权限修改token") if @issue.will_save_change_to_token? && @issue.user_id != current_user&.id
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
