@@ -12,14 +12,14 @@ class Admins::ProjectsController < Admins::BaseController
   def destroy
     project = Project.find_by!(id: params[:id])
     ActiveRecord::Base.transaction do
-      g = Gitlab.client
-      g.delete_project(project.gpid)
-      # 删除Trustie版本库记录
-      repoisitory = Repository.where(project_id: project.id, type: "Repository::Gitlab").first
-      repoisitory.destroy!
-      Tiding.where(container_id: project.id, container_type: ["JoinProject", "DealProject", "ReporterJoinProject", "ManagerJoinProject"]).destroy_all
+      Gitea::Repository::DeleteService.new(project.owner, project.identifier).call
       project.destroy!
-      render_delete_success
+      # render_delete_success
+      redirect_to admins_projects_path
+      flash[:success] = "删除成功"
+    rescue Exception => e
+      redirect_to admins_projects_path
+      flash[:danger] = "删除失败"
     end
   end
 end
