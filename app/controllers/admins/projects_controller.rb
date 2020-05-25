@@ -17,9 +17,9 @@ class Admins::ProjectsController < Admins::BaseController
       # render_delete_success
       redirect_to admins_projects_path
       flash[:success] = "删除成功"
+    end
     rescue Exception => e
       redirect_to admins_projects_path
       flash[:danger] = "删除失败"
-    end
   end
 end
