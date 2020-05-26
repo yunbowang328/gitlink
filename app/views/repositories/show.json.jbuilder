@@ -29,7 +29,7 @@ json.fork_info do
   end
 end
 
-json.size number_to_human_size(@result['size'].to_i)
+json.size replace_bytes_to_b(number_to_human_size(@result['size'].to_i*1024))
 json.ssh_url @result['ssh_url']
 json.clone_url @result['clone_url']
 json.default_branch @result['default_branch']

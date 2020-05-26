@@ -52,6 +52,10 @@ module ApplicationHelper
     "avatars"
   end
 
+  def replace_bytes_to_b(size_string)
+    return size_string.gsub("Bytes", "B").gsub("bytes", "B").gsub("字节", "B")
+  end
+
   def storage_path
     File.join(Rails.root, "public", "images", relative_path)
   end
