@@ -16,7 +16,7 @@ class Issues::ListQueryService < ApplicationService
     issues = all_issues.issue_index_includes
     if status_type.to_s == "2"   #表示关闭中的
       issues = issues.where(status_id: 5)
-    else 
+    elsif status_type.to_s == "1"
       issues = issues.where.not(status_id: 5)  #默认显示开启中的
     end
 
