@@ -251,10 +251,47 @@ class IssuesController < ApplicationController
   end
 
   def destroy
-    if @issue.delete
+    if @issue.destroy
       normal_status(0, "删除成功")
     else
       normal_status(-1, "删除失败")
+    end
+  end
+
+  def clean 
+    begin
+      issue_ids = params[:ids]
+      if issue_ids.present?
+        if Issue.where(id: issue_ids).destroy_all
+          normal_status(0, "删除成功")
+        else
+          normal_status(-1, "删除失败")
+        end
+      else 
+        normal_status(-1, "请选择任务")
+      end
+    rescue Exception => e
+      normal_status(-1, "批量删除失败")
+      raise ActiveRecord::Rollback
+    end
+  end
+
+  def series_update 
+    begin
+      issue_ids = params[:ids]
+      update_params = params[:update_params]
+      if issue_ids.present?
+        if Issue.where(id: issue_ids).update_all(update_params)
+          normal_status(0, "批量更新成功")
+        else
+          normal_status(-1, "批量更新失败")
+        end
+      else 
+        normal_status(-1, "请选择任务")
+      end
+    rescue Exception => e
+      normal_status(-1, "批量更新失败")
+      raise ActiveRecord::Rollback
     end
   end
 

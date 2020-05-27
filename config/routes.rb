@@ -70,6 +70,8 @@ Rails.application.routes.draw do
         collection do
           get :commit_issues
           get :index_chosen
+          post :clean
+          post :series_update
         end
         member do
          post :copy
