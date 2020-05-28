@@ -272,7 +272,7 @@ class IssuesController < ApplicationController
   end
 
   def series_update 
-    params.permit!
+    params.permit!(:ids, :update_params, :project_id)
     issue_ids = params[:ids]
     new_update_params = params[:update_params]
     if issue_ids.present?
