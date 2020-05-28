@@ -447,7 +447,7 @@ class IssuesController < ApplicationController
         status_id: params[:status_id],
         priority_id: params[:priority_id],
         fixed_version_id: params[:fixed_version_id],
-        start_date: params[:start_date].to_s.to_date,
+        start_date: params[:start_date].to_s.to_date || Time.current.to_date,
         due_date: params[:due_date].to_s.to_date,
         estimated_hours: params[:estimated_hours],
         done_ratio: params[:done_ratio],

@@ -1,6 +1,6 @@
 class JournalsController < ApplicationController
   before_action :require_login, except: :index
-  before_action :set_issue
+  before_action :set_issue, except: :get_children_journals
   before_action :check_issue_permission
   before_action :set_journal, only: [:destroy, :edit, :update]
 
@@ -71,6 +71,14 @@ class JournalsController < ApplicationController
       normal_status(-1, "评论的内容不能为空")
     end
 
+  end
+
+  def get_children_journals
+    @page  = params[:page]  || 1
+    @limit = params[:limit] || 10
+    journals = Journal.children_journals(params[:parent_id]).journal_includes.order("created_on desc")
+    @journals_size = journals.size
+    @children_journals = journals.page(@page).per(@limit)
   end
 
 
