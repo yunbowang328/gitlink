@@ -273,7 +273,9 @@ class IssuesController < ApplicationController
 
   def series_update 
     issue_ids = params[:ids]
-    new_update_params = params[:update_params]
+    new_update_params = params[:change_update]
+    Rails.logger.info("'#########_____params_______#########{params}'")
+
     Rails.logger.info("'#########____________#########{new_update_params}'")
     if issue_ids.present?
       if new_update_params.blank?
