@@ -274,11 +274,10 @@ class IssuesController < ApplicationController
   def series_update 
     Rails.logger.info("#######_______first_params______########{params}")
 
-    # params.permit!
-    # Rails.logger.info("#######_________params______########{params}")
+    params.permit!
+    Rails.logger.info("#######_________params______########{params}")
     issue_ids = params[:ids]
-    new_update_params = params[:contents]
-    Rails.logger.info("#######______new_update_params______########{new_update_params.to_h}")
+    new_update_params = params[:update_params]
     if issue_ids.present?
       if new_update_params.blank?
         normal_status(-1, "请选择批量更新内容")
