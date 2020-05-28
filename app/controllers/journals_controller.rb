@@ -1,6 +1,6 @@
 class JournalsController < ApplicationController
   before_action :require_login, except: :index
-  before_action :set_issue, except: :get_children_journals
+  before_action :set_issue
   before_action :check_issue_permission
   before_action :set_journal, only: [:destroy, :edit, :update]
 
