@@ -273,11 +273,12 @@ class IssuesController < ApplicationController
 
   def series_update 
     issue_ids = params[:ids]
-    update_params = params[:update_params]
+    new_update_params = params[:update_params]
+    Rails.logger.info("'#########____________#########{new_update_params}'")
     if issue_ids.present?
-      if update_params.blank?
+      if new_update_params.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids).update_all(update_params)
+      elsif Issue.where(id: issue_ids).update_all(new_update_params)
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")
