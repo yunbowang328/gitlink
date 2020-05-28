@@ -29,7 +29,11 @@ Rails.application.routes.draw do
     delete 'commons/delete',      to: 'commons#delete'
 
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
-      resources :journals, only: [:index, :create, :destroy, :edit, :update]
+      resources :journals, only: [:index, :create, :destroy, :edit, :update] do 
+        member do 
+          get :get_children_journals
+        end
+      end
       resources :issue_times, only: [:create] do
         collection do
           post :end_work
