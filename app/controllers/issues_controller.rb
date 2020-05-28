@@ -272,7 +272,10 @@ class IssuesController < ApplicationController
   end
 
   def series_update 
-    params.permit!(:ids, :update_params, :project_id)
+    Rails.logger.info("#######_______first_params______########{params}")
+
+    params.permit(:ids, :update_params, :project_id)
+    Rails.logger.info("#######_________params______########{params}")
     issue_ids = params[:ids]
     new_update_params = params[:update_params]
     if issue_ids.present?
