@@ -274,10 +274,10 @@ class IssuesController < ApplicationController
   def series_update 
     Rails.logger.info("#######_______first_params______########{params}")
 
-    params.permit(:ids, :update_params, :project_id)
+    params.permit!
     Rails.logger.info("#######_________params______########{params}")
     issue_ids = params[:ids]
-    new_update_params = params[:update_params]
+    new_update_params = eval(params[:update_params])
     if issue_ids.present?
       if new_update_params.blank?
         normal_status(-1, "请选择批量更新内容")
