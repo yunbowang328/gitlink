@@ -277,7 +277,7 @@ class IssuesController < ApplicationController
     update_hash.merge(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
     update_hash.merge(status_id: params[:status_id]) if params[:status_id].present?
     
-    issue_ids = unsafe_params[:ids]
+    issue_ids = params[:ids]
     if issue_ids.present?
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
