@@ -274,7 +274,7 @@ class IssuesController < ApplicationController
   def series_update 
     
     update_hash = {}
-    update_hash.merge!(author_id: params[:author_id]) if params[:author_id].present?
+    update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
     update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
     update_hash.merge!(status_id: params[:status_id]) if params[:status_id].present?
     # update_hash = params[:issue]
