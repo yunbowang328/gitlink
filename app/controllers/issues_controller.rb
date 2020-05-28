@@ -272,16 +272,16 @@ class IssuesController < ApplicationController
   end
 
   def series_update 
-    Rails.logger.info("#######_______first_params______########{params}")
-
-    params.permit!
-    Rails.logger.info("#######_________params______########{params}")
-    issue_ids = params[:ids]
-    new_update_params = params[:update_params]
+    update_hash = {}
+    update_hash.merge(author_id: params[:author_id]) if params[:author_id].present?
+    update_hash.merge(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
+    update_hash.merge(status_id: params[:status_id]) if params[:status_id].present?
+    
+    issue_ids = unsafe_params[:ids]
     if issue_ids.present?
-      if new_update_params.blank?
+      if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids).update_all(new_update_params)
+      elsif Issue.where(id: issue_ids).update_all(update_hash)
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")
