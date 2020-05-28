@@ -76,7 +76,7 @@ class JournalsController < ApplicationController
   def get_children_journals
     @page  = params[:page]  || 1
     @limit = params[:limit] || 10
-    journals = Journal.children_journals(params[:parent_id]).journal_includes.order("created_on desc")
+    journals = Journal.children_journals(params[:id]).journal_includes.order("created_on desc")
     @journals_size = journals.size
     @children_journals = journals.page(@page).per(@limit)
   end
