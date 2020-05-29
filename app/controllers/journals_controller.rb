@@ -9,7 +9,7 @@ class JournalsController < ApplicationController
     @limit = params[:limit] || 10
     total_journals =  @issue.journals.journal_includes
     @jounals_total = total_journals.size
-    parent_journals =journals.parent_journals.order("created_on desc")
+    parent_journals = total_journals.parent_journals.order("created_on desc")
     @journals = parent_journals.order("created_on desc").page(@page).per(@limit)
     @journals_size = parent_journals.size
     
