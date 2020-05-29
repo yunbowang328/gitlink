@@ -43,8 +43,8 @@ class JournalsController < ApplicationController
         end
 
         # @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "journal")
-
-        normal_status(0, "评论成功")
+        render :json => { status: 0, message: "评论成功", id:  journal.id}
+        # normal_status(0, "评论成功")
       else
         normal_status(-1, "评论失败")
       end
