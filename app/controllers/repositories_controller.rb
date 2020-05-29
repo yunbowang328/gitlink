@@ -49,7 +49,6 @@ class RepositoriesController < ApplicationController
 
   def commit
     @commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token).call
-    @custom_commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token, true).call
   end
 
   def tags
