@@ -29,4 +29,8 @@ module ProjectsHelper
 
     member&.roles&.last&.name || permission
   end
+
+  def find_user_by_login_or_mail(identifier)
+    (User.find_by_login identifier) || (User.find_by_mail identifier)
+  end
 end

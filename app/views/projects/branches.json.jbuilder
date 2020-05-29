@@ -13,7 +13,7 @@ json.array! @branches do |branch|
     json.time_from_now time_from_now(branch['commit']['timestamp'])
   end
 
-  user = User.find_by_login branch['commit']['author']['username']
+  user = find_user_by_login_or_mail(branch['commit']['author']['username'])
   json.author do
     if user
       json.login user.login
