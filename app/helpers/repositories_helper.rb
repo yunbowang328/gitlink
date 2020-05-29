@@ -5,8 +5,8 @@ module RepositoriesHelper
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb)
-    default_type.include?(str)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg)
+    default_type.include?(str&.downcase)
   end
 
   def render_commit_author(author_json)
