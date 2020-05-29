@@ -13,13 +13,13 @@ json.array! @branches do |branch|
     json.time_from_now time_from_now(branch['commit']['timestamp'])
   end
 
-  user = User.find_by_login branch['commit']['author']['name']
+  user = User.find_by_login branch['commit']['author']['username']
   json.author do
     if user
       json.login user.login
       json.image_url url_to_avatar(user)
     else
-      json.nil
+      json.nil!
     end
   end
 end
