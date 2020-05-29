@@ -7,7 +7,7 @@ class Contents::UpdateForm < BaseForm
 
   def check_branch
     raise "branch和new_branch必须存在一个 " if branch.blank? && new_branch.blank?
-    raise "branch和new_branch只能存在一个" if !branch.blank? && !new_branch.blank?
+    # raise "branch和new_branch只能存在一个" if !branch.blank? && !new_branch.blank?
   end
 
 end

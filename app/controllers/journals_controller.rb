@@ -7,9 +7,13 @@ class JournalsController < ApplicationController
   def index
     @page  = params[:page]  || 1
     @limit = params[:limit] || 10
-    journals = @issue.journals.journal_includes.order("created_on desc")
-    @journals_size = journals.size
-    @journals = journals.parent_journals.page(@page).per(@limit)
+    total_journals =  @issue.journals.journal_includes
+    @jounals_total = total_journals.size
+    parent_journals = total_journals.parent_journals.order("created_on desc")
+    @journals = parent_journals.order("created_on desc").page(@page).per(@limit)
+    @journals_size = parent_journals.size
+    
+   
   end
 
   def create
@@ -71,6 +75,14 @@ class JournalsController < ApplicationController
       normal_status(-1, "评论的内容不能为空")
     end
 
+  end
+
+  def get_children_journals
+    @page  = params[:page]  || 1
+    @limit = params[:limit] || 10
+    journals = Journal.children_journals(params[:id]).journal_includes.order("created_on desc")
+    @journals_size = journals.size
+    @children_journals = journals.page(@page).per(@limit)
   end
 
 

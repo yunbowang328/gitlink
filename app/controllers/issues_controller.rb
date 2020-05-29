@@ -251,10 +251,44 @@ class IssuesController < ApplicationController
   end
 
   def destroy
-    if @issue.delete
+    if @issue.destroy
       normal_status(0, "删除成功")
     else
       normal_status(-1, "删除失败")
+    end
+  end
+
+  def clean 
+    issue_ids = params[:ids]
+    if issue_ids.present?
+      if Issue.where(id: issue_ids).destroy_all
+        normal_status(0, "删除成功")
+      else
+        normal_status(-1, "删除失败")
+      end
+    else 
+      normal_status(-1, "请选择任务")
+    end
+  end
+
+  def series_update 
+    
+    update_hash = {}
+    update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
+    update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
+    update_hash.merge!(status_id: params[:status_id]) if params[:status_id].present?
+    # update_hash = params[:issue]
+    issue_ids = params[:ids]
+    if issue_ids.present?
+      if update_hash.blank?
+        normal_status(-1, "请选择批量更新内容")
+      elsif Issue.where(id: issue_ids).update_all(update_hash)
+        normal_status(0, "批量更新成功")
+      else
+        normal_status(-1, "批量更新失败")
+      end
+    else 
+      normal_status(-1, "请选择任务")
     end
   end
 
@@ -413,7 +447,7 @@ class IssuesController < ApplicationController
         status_id: params[:status_id],
         priority_id: params[:priority_id],
         fixed_version_id: params[:fixed_version_id],
-        start_date: params[:start_date].to_s.to_date,
+        start_date: params[:start_date].to_s.to_date || Time.current.to_date,
         due_date: params[:due_date].to_s.to_date,
         estimated_hours: params[:estimated_hours],
         done_ratio: params[:done_ratio],
