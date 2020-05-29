@@ -53,6 +53,7 @@ class JournalsController < ApplicationController
 
   def destroy
     if @journal.destroy  #如果有子评论，子评论删除吗？
+      Journal.children_journals(@journal.id).destroy_all
       normal_status(0, "评论删除成功")
     else
       normal_status(-1, "评论删除失败")
