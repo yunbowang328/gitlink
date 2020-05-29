@@ -48,7 +48,7 @@ Rails.application.routes.draw do
     resources :project_languages, only: [:index, :show]
     resources :ignores, only: [:index, :show]
     resources :licenses, only: [:index, :show]
-    
+
     resources :watchers, only: [:index] do
       collection do
         post :follow
@@ -89,7 +89,7 @@ Rails.application.routes.draw do
           post :update_status
         end
       end
-     
+
       resources :praise_tread, only: [:index] do
         collection do
           post :like
@@ -197,7 +197,6 @@ Rails.application.routes.draw do
         get :entries
         match :sub_entries, :via => [:get, :put]
         get :commits
-        get :single_commit
         post :files
         get :tags
         post :create_file
@@ -205,6 +204,7 @@ Rails.application.routes.draw do
         delete :delete_file
         post :repo_hook
         post :sync_mirror
+        get 'commits/:sha', to: 'repositories#commit', as: 'commit'
       end
     end
 

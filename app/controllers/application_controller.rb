@@ -382,8 +382,8 @@ class ApplicationController < ActionController::Base
 
 	def current_user
 		if Rails.env.development?
-			User.find(1)
-		else 
+			User.current = User.find 36480
+		else
 			User.current
 		end
 		# User.current
@@ -708,6 +708,10 @@ class ApplicationController < ActionController::Base
 	def find_repository
 		@repo = @user.repositories.find_by_identifier params[:repo_identifier]
     render_not_found("未找到’#{params[:repo_identifier]}’相关的项目") unless @repo
+	end
+
+	def find_repository_by_id
+		@repo = Repository.find params[:id]
 	end
 
 	def find_project

@@ -2,10 +2,11 @@ class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
-  before_action :find_project, except: :tags
-  before_action :authorizate!, except: [:sync_mirror, :tags]
+  before_action :find_project, except: [:tags, :commit]
+  before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :find_repository, only: %i[sync_mirror tags]
   before_action :authorizate_user_can_edit_project!, only: %i[sync_mirror]
+  before_action :find_repository_by_id, only: %i[commit]
 
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
@@ -46,8 +47,9 @@ class RepositoriesController < ApplicationController
     @hash_commit = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier, sha: params[:sha], page: params[:page]).call
   end
 
-  def single_commit
-    @commit = Gitea::Repository::Commits::GetService.new(@project.owner, @project.identifier, params[:sha]).call
+  def commit
+    @commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token).call
+    @custom_commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token, true).call
   end
 
   def tags

@@ -432,4 +432,8 @@ module ApplicationHelper
   def render_unix_time(date)
     date.to_time.to_i
   end
+
+  def find_user_by_login(login)
+    User.find_by_login login
+  end
 end
