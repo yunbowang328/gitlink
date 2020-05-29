@@ -1,12 +1,16 @@
 # Get a single commit from a repository
 class Gitea::Repository::Commits::GetService < Gitea::ClientService
-  attr_reader :user, :repo_name, :sha
+  attr_reader :token, :owner, :repo, :sha, :custom
 
   # sha: the commit hash
-  def initialize(user, repo_name, sha)
-    @user      = user
-    @sha       = sha
-    @repo_name = repo_name
+  # ex: Gitea::Repository::Commits::GetService.new(@repo.user.login, repo.identifier, params[:sha], current_user.gitea_token)
+  # TODO custom参数用于判断调用哪个api
+  def initialize(owner, repo, sha, token, custom=false)
+    @token = token
+    @owner = owner
+    @sha   = sha
+    @repo  = repo
+    @custom = custom
   end
 
   def call
@@ -16,11 +20,17 @@ class Gitea::Repository::Commits::GetService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: user.gitea_token)
+    Hash.new.merge(token: token)
   end
 
   def url
-    "/repos/#{user.login}/#{repo_name}/git/commits/#{sha}".freeze
+    if custom
+      # TODO
+      # 平台自己编写的gitea接口，后续可能会通过提交pr的形式合并到gitea原有的接口上
+      "/repos/#{owner}/#{repo}/commits/diff/#{sha}".freeze
+    else
+      "/repos/#{owner}/#{repo}/git/commits/#{sha}".freeze
+    end
   end
 
   def render_result(response)

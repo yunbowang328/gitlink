@@ -8,4 +8,9 @@ module RepositoriesHelper
     default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb)
     default_type.include?(str)
   end
+
+  def render_commit_author(author_json)
+    return nil if author_json.blank?
+    find_user_by_login author_json['login']
+  end
 end
