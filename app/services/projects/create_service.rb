@@ -50,6 +50,6 @@ class Projects::CreateService < ApplicationService
   end
 
   def repo_is_public
-    !get_is_public
+    params[:private].blank? ? true : !get_is_public
   end
 end
