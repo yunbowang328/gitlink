@@ -111,7 +111,7 @@ class IssuesController < ApplicationController
         type: "user"
       }.merge(tokens_params(@project))
       user_tokens = Gitea::Repository::Hooks::QueryService.new(query_params).call
-      return normal_status(-1, "悬赏的奖金不足") if user_tokens[:value].to_i < params[:token].to_i
+      return normal_status(-1, "您的token值不足") if user_tokens[:value].to_i < params[:token].to_i
     else
       issue_params = issue_send_params(params)
 
@@ -159,8 +159,8 @@ class IssuesController < ApplicationController
   end
 
   def edit
-    @all_branches = get_branches
-    @issue_chosen = issue_left_chosen(@project, @issue.id)
+    # @all_branches = get_branches
+    # @issue_chosen = issue_left_chosen(@project, @issue.id)
     @issue_attachments = @issue.attachments
   end
 
@@ -454,7 +454,7 @@ class IssuesController < ApplicationController
         issue_type: params[:issue_type] || "1",
         token: params[:token],
         issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
-        closed_on: (params[:status_id].to_i == 5) ? Time.now : nil,
+        closed_on: (params[:status_id].to_i == 5) ? Time.current : nil,
         branch_name: params[:branch_name].to_s,
         issue_classify: "issue",
         author_id: current_user.id,
