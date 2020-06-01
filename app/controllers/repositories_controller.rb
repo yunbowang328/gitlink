@@ -10,7 +10,8 @@ class RepositoriesController < ApplicationController
 
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
-    @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier).call[:total_count]
+    @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call[:total_count]
     @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
     @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
     @project_fork_id = @project.try(:forked_from_project_id)
@@ -44,12 +45,12 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@project.owner, @project.identifier, sha: params[:sha], page: params[:page]).call
+    @hash_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
   end
 
   def commit
     @commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token).call
-    @custom_commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token, true).call
   end
 
   def tags

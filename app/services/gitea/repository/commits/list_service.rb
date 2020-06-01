@@ -1,12 +1,15 @@
 # Get a list of all commits from a repository
 class Gitea::Repository::Commits::ListService < Gitea::ClientService
-  attr_reader :user, :repo_name, :args
+  attr_reader :owner, :repo_name, :args
 
   # sha: SHA or branch to start listing commits from (usually 'master')
-  def initialize(user, repo_name, **args)
-    @user      = user
+  # ex:
+  #   Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+  #          sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+  def initialize(owner, repo_name, **args)
+    @owner     = owner
     @repo_name = repo_name
-    @args      = { sha: 'master', page: 1 }.merge(args.compact)
+    @args      = args
   end
 
   def call
@@ -16,15 +19,14 @@ class Gitea::Repository::Commits::ListService < Gitea::ClientService
 
   private
   def params
-    @args.merge(token: user.gitea_token)
+    { sha: args[:sha] || 'master', page: args[:page] || PAGINATE_DEFAULT_PAGE, limit: args[:limit] || PAGINATE_DEFAULT_LIMIT, token: args[:token] || "" }
   end
 
   def url
-    "/repos/#{user.login}/#{repo_name}/commits".freeze
+    "/repos/#{owner}/#{repo_name}/commits".freeze
   end
 
   def render_result(response)
-
     case response.status
     when 200
       result = {}
