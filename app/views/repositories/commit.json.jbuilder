@@ -7,6 +7,7 @@ json.commit do
   @commit['commit'].delete('url')
   json.author @commit['commit']['author']
   json.committer @commit['commit']['committer']
+  json.message @commit['commit']['message']
   json.tree do
     @commit['commit']['tree']['sha']
   end
