@@ -1,6 +1,9 @@
 class Gitea::ClientService < ApplicationService
   attr_reader :username, :secret, :token, :url, :params
 
+  PAGINATE_DEFAULT_PAGE  = 1
+  PAGINATE_DEFAULT_LIMIT = 20
+
   def initialize(options={})
     @username = options[:username]
     @secret   = options[:password]
