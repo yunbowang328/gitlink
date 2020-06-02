@@ -4,8 +4,8 @@ class RepositoriesController < ApplicationController
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :find_project, except: [:tags, :commit, :sync_mirror]
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
-  before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
+  before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
 
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
@@ -112,7 +112,7 @@ class RepositoriesController < ApplicationController
 
   def sync_mirror
     @repo&.mirror.set_status!(Mirror.statuses[:waiting])
-    SyncMirroredRepositoryJob(@repo, current_user)
+    SyncMirroredRepositoryJob.perform_later(@repo, current_user)
     render_ok
   end
 
