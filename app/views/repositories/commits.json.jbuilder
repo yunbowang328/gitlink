@@ -9,7 +9,7 @@ else
       json.message commit['commit']['message']
       json.timestamp render_unix_time(commit['commit']['author']['date'])
       json.time_from_now time_from_now(commit['commit']['author']['date'])
-      json.partial! 'author', user: @project.owner
+      json.partial! 'author', locals: {user:  @create_user}
     end
   end
 end
