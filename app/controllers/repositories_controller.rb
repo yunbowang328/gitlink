@@ -112,7 +112,7 @@ class RepositoriesController < ApplicationController
 
   def sync_mirror
     @repo&.mirror.set_status!(Mirror.statuses[:waiting])
-    SyncMirroredRepositoryJob.perform_later(@repo, current_user)
+    SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)
     render_ok
   end
 

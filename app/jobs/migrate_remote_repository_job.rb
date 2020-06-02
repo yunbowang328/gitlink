@@ -1,7 +1,10 @@
 class MigrateRemoteRepositoryJob < ApplicationJob
   queue_as :default
 
-  def perform(repo, token, params)
+  def perform(repo_id, token, params)
+    repo = Repository.find_by(id: repo_id)
+    return if repo.blank?
+
     gitea_repository = Gitea::Repository::MigrateService.new(token, params).call
     sync_project(repo, gitea_repository)
     sync_repository(repo, gitea_repository)
