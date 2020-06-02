@@ -4,7 +4,7 @@ class RepositoriesController < ApplicationController
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :find_project, except: [:tags, :commit, :sync_mirror]
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
-  before_action :authorizate_user_can_edit_project!, only: %i[sync_mirror]
+  before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
 
   def show
