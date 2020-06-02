@@ -12,6 +12,6 @@ json.user_phone_binded @user.phone.present?
 # json.email @user.mail
 json.profile_completed @user.profile_completed?
 json.professional_certification @user.professional_certification
-json.is_watch current_user&.watched?(user)
+json.is_watch current_user&.watched?(@user)
 
 
