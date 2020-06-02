@@ -145,7 +145,7 @@ class IssuesController < ApplicationController
           change_params = {
             change_type: "minusToken",
             tokens: params[:token]
-          }.merge(tokens_params(@proeject))
+          }.merge(tokens_params(@project))
           ChangeTokenJob.perform_later(change_params)
         end
 

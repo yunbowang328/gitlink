@@ -5,11 +5,20 @@ else
   json.total_count @hash_commit[:total_count]
   json.commits do
     json.array! @hash_commit[:body] do |commit|
+      commiter = commit['committer']
+      if commiter.present? 
+        commit_user_id = commiter['id']
+        forge_user = User.simple_select.find_by(gitea_uid: commit_user_id)
+      end
       json.sha commit['sha']
       json.message commit['commit']['message']
       json.timestamp render_unix_time(commit['commit']['author']['date'])
       json.time_from_now time_from_now(commit['commit']['author']['date'])
-      json.partial! 'author', user: @project_owner
+      if forge_user 
+        json.partial! 'author', user: forge_user 
+      else 
+        json.author nil
+      end
     end
   end
 end
