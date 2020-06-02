@@ -15,7 +15,7 @@ class ChangeTokenJob < ApplicationJob
       end
     end
     unless status == 200 
-      Rails.logger.info("########_change_user_toke_failed__change_params:__#{change_parame}_")
+      Rails.logger.info("########_change_user_toke_failed__change_params:__#{change_params}_")
     end
   end
 
