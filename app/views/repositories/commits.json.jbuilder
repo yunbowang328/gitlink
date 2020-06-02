@@ -5,8 +5,9 @@ else
   json.total_count @hash_commit[:total_count]
   json.commits do
     json.array! @hash_commit[:body] do |commit|
-      commit_user = commit['committer']['name']
-      if commit_user 
+      commiter = commit['committer']
+      if commiter.present? 
+        commit_user = commiter['name']
         forge_user = User.simple_select.find_by(login: commit_user)
       end
       json.sha commit['sha']
