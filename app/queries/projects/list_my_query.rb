@@ -14,6 +14,11 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.joins(:members).where(members: { user_id: user.id })
     elsif params[:category].to_s == "manage"
       projects = Project.where(user_id: user.id)
+    elsif params[:category].to_s == "watched"  #我关注的
+      projects = Project.joins(:watchers).where("watchable_type = ? and user_id = ?", "Project", user.id)
+    elsif params[:category].to_s == "forked"  #我fork的
+      fork_ids = user.fork_users.select(:id, :fork_project_id).pluck(:fork_project_id)
+      projects = Project.where(id: fork_ids)
     else
       projects = Project.where.not(user_id: user.id).joins(:members).where(members: { user_id: user.id })
     end

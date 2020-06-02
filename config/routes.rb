@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    resources :composes do
+      resources :compose_projects, only: [:create, :destroy]
+    end
     resources :attachments do
       collection do
         delete :destroy_files

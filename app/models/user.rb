@@ -45,7 +45,8 @@ class User < ApplicationRecord
   enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
-
+  has_many :composes, dependent: :destroy
+  has_many :compose_users, dependent: :destroy
   has_one :user_extension, dependent: :destroy
   has_many :open_users, dependent: :destroy
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
