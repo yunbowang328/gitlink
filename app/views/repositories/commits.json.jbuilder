@@ -5,6 +5,7 @@ else
   json.total_count @hash_commit[:total_count]
   json.commits do
     json.array! @hash_commit[:body] do |commit|
+      Rails.logger.info("#######______commit______#########{commit}")
       commiter = commit['committer']
       if commiter.present? 
         commit_user = commiter['name']
