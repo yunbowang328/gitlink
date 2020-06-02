@@ -2,11 +2,10 @@ class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
-  before_action :find_project, except: [:tags, :commit]
+  before_action :find_project, except: [:tags, :commit, :sync_mirror]
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
-  before_action :find_repository, only: %i[sync_mirror tags]
   before_action :authorizate_user_can_edit_project!, only: %i[sync_mirror]
-  before_action :find_repository_by_id, only: %i[commit]
+  before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
 
   def show
     @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
@@ -45,7 +44,8 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+    @project_owner = @project.owner
+    @hash_commit = Gitea::Repository::Commits::ListService.new(@project_owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
   end
 
@@ -121,10 +121,6 @@ class RepositoriesController < ApplicationController
   def find_project
     @project = Project.find params[:id]
     render_not_found("未找到相关的仓库") unless @project
-  end
-
-  def find_repository
-    @repo = Repository.find params[:id]
   end
 
   def authorizate!
