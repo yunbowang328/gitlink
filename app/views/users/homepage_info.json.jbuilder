@@ -8,7 +8,8 @@ json.brief_introduction @user.user_extension&.brief_introduction
 json.professional_certification @user.professional_certification
 json.followed User.current.watched?(@user)
 json.projects_count @user.projects_count
-
+json.undo_events @undo_events
+json.user_composes_count @user_composes_count
 # json.id @user.id
 # json.name @user.full_name
 # json.avatar_url url_to_avatar(@user)

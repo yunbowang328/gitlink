@@ -86,7 +86,13 @@ class UsersController < ApplicationController
   end
 
   # 个人主页信息
-  def homepage_info;end
+  def homepage_info
+    #待办事项，现在未做
+    @undo_events = 10
+    #用户的组织数量
+    # @user_composes_count =  @user.composes.size
+    @user_composes_count = 10
+  end
 
   def brief_introduction
     content = params[:content].to_s.strip
