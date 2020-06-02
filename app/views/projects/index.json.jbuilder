@@ -4,6 +4,7 @@ json.projects @projects do |project|
   next if user.blank?
 
   json.id project.id
+  json.repo_id project&.repository.id
   json.identifier project.identifier
   json.name project.name
   json.description Nokogiri::HTML(project.description).text

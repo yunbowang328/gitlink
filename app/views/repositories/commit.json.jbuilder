@@ -1,12 +1,13 @@
 json.key_format! camelize: :lower
-json.additions @custom_commit['TotalAddition']
-json.deletions @custom_commit['TotalDeletion']
+json.additions @commit['commit_diff']['TotalAddition']
+json.deletions @commit['commit_diff']['TotalDeletion']
 json.sha @commit['sha']
 json.url request.url
 json.commit do
   @commit['commit'].delete('url')
   json.author @commit['commit']['author']
   json.committer @commit['commit']['committer']
+  json.message @commit['commit']['message']
   json.tree do
     @commit['commit']['tree']['sha']
   end
@@ -23,4 +24,4 @@ json.parents @commit['parents'] do |parent|
   json.url EduSetting.get('host_name') + commit_repository_path(@repo, parent['sha'])
 end
 
-json.files @custom_commit['Files']
+json.files @commit['commit_diff']['Files']

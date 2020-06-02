@@ -21,11 +21,11 @@ class Gitea::Repository::Tags::ListService < Gitea::ClientService
   end
 
   def set_page
-    (params[:page] || 1).to_i
+    (params[:page] || PAGINATE_DEFAULT_PAGE).to_i
   end
 
   def set_limit
-    (params[:limit] || 50).to_i
+    (params[:limit] || PAGINATE_DEFAULT_LIMIT).to_i
   end
 
   def url

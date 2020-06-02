@@ -1632,6 +1632,8 @@ http://localhost:3000/api/repositories/5845/commits/b0c4a4a1487d53acebf2addc544b
 |-- IsCreated    |boolean|是否为新添加的文件，true：是； false：否|
 |-- IsDeleted    |boolean|是否为删除的文件，true：是；false：否|
 |-- IsRenamed    |boolean|是否为重命名的文件，true：是，false：否|
+|-- IsBin    |boolean|是否为二进制文件，true：是，false：否|
+|-- IsLFSFile    |boolean|是否git lfs操作的大文件，true：是，false：否|
 |-- IsSubmodule    |boolean|收否为子模块，true：是；false：否|
 |-- Sections    |array| |
 |---- Name    |string|文件名称|
