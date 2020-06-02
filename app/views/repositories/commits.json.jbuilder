@@ -5,11 +5,10 @@ else
   json.total_count @hash_commit[:total_count]
   json.commits do
     json.array! @hash_commit[:body] do |commit|
-      Rails.logger.info("#######______commit______#########{commit}")
       commiter = commit['committer']
       if commiter.present? 
-        commit_user = commiter['name']
-        forge_user = User.simple_select.find_by(login: commit_user)
+        commit_user_id = commiter['id']
+        forge_user = User.simple_select.find_by(gitea_uid: commit_user_id)
       end
       json.sha commit['sha']
       json.message commit['commit']['message']

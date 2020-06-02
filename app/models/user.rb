@@ -96,7 +96,7 @@ class User < ApplicationRecord
     where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
-  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname)}
+  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid)}
 
   attr_accessor :password, :password_confirmation
 
