@@ -104,14 +104,14 @@ class IssuesController < ApplicationController
       normal_status(-1, "标题不能为空")
     elsif params[:subject].to_s.size > 255
       normal_status(-1, "标题不能超过255个字符")
-    elsif (params[:issue_type].to_s == "2")
-      return normal_status(-1, "悬赏的奖金必须大于0")if params[:token].to_i == 0
-      #查看当前用户的积分
-      query_params = {
-        type: "user"
-      }.merge(tokens_params(@project))
-      user_tokens = Gitea::Repository::Hooks::QueryService.new(query_params).call
-      return normal_status(-1, "您的token值不足") if user_tokens[:value].to_i < params[:token].to_i
+    # elsif (params[:issue_type].to_s == "2")
+    #   return normal_status(-1, "悬赏的奖金必须大于0")if params[:token].to_i == 0
+    #   #查看当前用户的积分
+    #   query_params = {
+    #     type: "user"
+    #   }.merge(tokens_params(@project))
+    #   user_tokens = Gitea::Repository::Hooks::QueryService.new(query_params).call
+    #   return normal_status(-1, "您的token值不足") if user_tokens[:value].to_i < params[:token].to_i
     else
       issue_params = issue_send_params(params)
 
