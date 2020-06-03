@@ -145,13 +145,13 @@ class User < ApplicationRecord
 
   # 关注数
   def follow_count
-    Watcher.where(user_id: 1, watchable_type: %w(User)).count
+    Watcher.where(user_id: self.id, watchable_type: %w(User)).count
     # User.watched_by(id).count
   end
 
   # 粉丝数
   def fan_count
-    Watcher.where(watchable_type: %w(User), watchable_id: id).count
+    Watcher.where(watchable_type: %w(User), watchable_id: self.id).count
     # watchers.count
   end
 
