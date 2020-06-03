@@ -1,4 +1,4 @@
-class Gitea::Repository::BranchesService < Gitea::ClientService
+class Gitea::Repository::Branches::ListService < Gitea::ClientService
   attr_reader :user, :repo
 
   def initialize(user, repo)
