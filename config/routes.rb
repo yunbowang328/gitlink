@@ -140,6 +140,8 @@ Rails.application.routes.draw do
       member do
         get :homepage_info
         get :projects
+        get :watch_users
+        get :fan_users
       end
       collection do
         post :following
