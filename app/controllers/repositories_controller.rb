@@ -6,6 +6,7 @@ class RepositoriesController < ApplicationController
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
+  before_action :get_latest_commit, only: %i[entries sub_entries]
 
   def show
     @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
@@ -25,20 +26,14 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
-    @ref = params[:ref] || "master"
 
-    # TODO 获取最新commit信息
-    @latest_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
-      sha: @ref, page: 1, limit: 1, token: current_user&.gitea_token).call
-    @latest_commit = @latest_commit.blank? ? nil : @latest_commit[:body][0]
-
-    @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref: @ref).call
+    @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref: get_ref).call
     @entries = @entries.sort_by{ |hash| hash['type'] }
   end
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: params[:ref])
+    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: get_ref)
     if interactor.success?
       @sub_entries = interactor.result
       @sub_entries = [] << @sub_entries unless @sub_entries.is_a? Array
@@ -132,6 +127,17 @@ class RepositoriesController < ApplicationController
     if @project.repository.hidden? && !@project.member?(current_user)
       render_forbidden
     end
+  end
+
+  # TODO 获取最新commit信息
+  def get_latest_commit
+    @latest_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+      sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    @latest_commit = @latest_commit.blank? ? nil : @latest_commit[:body][0]
+  end
+
+  def get_ref
+    params[:ref] || "master"
   end
 
   def content_params
