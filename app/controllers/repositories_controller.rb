@@ -8,7 +8,7 @@ class RepositoriesController < ApplicationController
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
 
   def show
-    @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
+    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call[:total_count]
     @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
@@ -25,8 +25,13 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
+    @ref = params[:ref] || "master"
 
-    @ref = params[:branch] || "master"
+    # TODO 获取最新commit信息
+    @latest_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+      sha: @ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    @latest_commit = @latest_commit.blank? ? nil : @latest_commit[:body][0]
+
     @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref: @ref).call
     @entries = @entries.sort_by{ |hash| hash['type'] }
   end
