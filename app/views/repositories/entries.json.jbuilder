@@ -5,6 +5,8 @@ json.last_commit do
     json.nil!
   end
 end
+json.zip_url render_zip_url(@project, @ref)
+json.tar_url render_tar_url(@project, @ref)
 json.entries do
   json.array! @entries do |entry|
     json.name entry['name']
