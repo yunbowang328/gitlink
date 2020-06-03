@@ -258,7 +258,7 @@ class IssuesController < ApplicationController
     end
   end
 
-  def clean 
+  def clean
     issue_ids = params[:ids]
     if issue_ids.present?
       if Issue.where(id: issue_ids).destroy_all
@@ -266,13 +266,13 @@ class IssuesController < ApplicationController
       else
         normal_status(-1, "删除失败")
       end
-    else 
+    else
       normal_status(-1, "请选择任务")
     end
   end
 
-  def series_update 
-    
+  def series_update
+
     update_hash = {}
     update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
     update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
@@ -287,7 +287,7 @@ class IssuesController < ApplicationController
       else
         normal_status(-1, "批量更新失败")
       end
-    else 
+    else
       normal_status(-1, "请选择任务")
     end
   end
@@ -428,7 +428,7 @@ class IssuesController < ApplicationController
 
   def get_branches
     all_branches = []
-    get_all_branches = Gitea::Repository::BranchesService.new(@user, @project&.repository.try(:identifier)).call
+    get_all_branches = Gitea::Repository::Branches::ListService.new(@user, @project&.repository.try(:identifier)).call
     if get_all_branches && get_all_branches.size > 0
       get_all_branches.each do |b|
         all_branches.push(b["name"])

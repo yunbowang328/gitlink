@@ -35,7 +35,7 @@ class ProjectsController < ApplicationController
   end
 
   def branches
-    @branches = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call
+    @branches = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call
   end
 
   def group_type_list
@@ -94,8 +94,8 @@ class ProjectsController < ApplicationController
     @praises = paginate(praises)
   end
 
-  def fork_users 
-    fork_users = @project.fork_users.includes(:user, :project).order("fork_users.created_at asc").distinct 
+  def fork_users
+    fork_users = @project.fork_users.includes(:user, :project).order("fork_users.created_at asc").distinct
     @forks_count = fork_users.size
     @fork_users = paginate(fork_users)
   end
@@ -111,7 +111,7 @@ class ProjectsController < ApplicationController
                   :auth_password, :project_category_id, :project_language_id, :clone_addr, :private)
   end
 
-  def project_public? 
+  def project_public?
     unless @project.is_public || current_user&admin?
       tip_exception(403, "..")
     end

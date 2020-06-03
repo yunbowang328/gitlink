@@ -12,7 +12,7 @@ class Repositories::MigrateService < ApplicationService
     ActiveRecord::Base.transaction do
       if @repository.save!
         @repository.set_mirror! if wrapper_mirror
-        MigrateRemoteRepositoryJob.perform_later(@repository, user.gitea_token, gitea_repository_params)
+        MigrateRemoteRepositoryJob.perform_later(@repository.id, user.gitea_token, gitea_repository_params)
       end
       @repository
     end

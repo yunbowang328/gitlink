@@ -18,6 +18,8 @@ json.commits_count @commits_count
 json.permission render_edit_project_permission(current_user, @project) if current_user
 json.mirror_url @project&.repository.mirror_url
 json.mirror @project&.repository.mirror_url.present?
+json.type @project.numerical_for_project_type
+json.mirror_status @project.repository&.mirror&.numerical_for_status if @project.sync_mirror?
 json.watched current_user&.watched?(@project)
 json.praised current_user&.liked?(@project)
 json.status @project.status

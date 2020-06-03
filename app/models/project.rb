@@ -139,4 +139,8 @@ class Project < ApplicationRecord
     issues_count - closed_issues_count
   end
 
+  def numerical_for_project_type
+    self.class.name.constantize.project_types["#{self.project_type}"]
+  end
+
 end

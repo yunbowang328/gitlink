@@ -6,9 +6,11 @@ class RepositoriesController < ApplicationController
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
+  before_action :get_ref, only: %i[entries sub_entries]
+  before_action :get_latest_commit, :get_ref, only: %i[entries sub_entries]
 
   def show
-    @branches_count = Gitea::Repository::BranchesService.new(@project.owner, @project.identifier).call&.size
+    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call[:total_count]
     @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
@@ -26,14 +28,13 @@ class RepositoriesController < ApplicationController
   def entries
     @project.increment!(:visits)
 
-    @ref = params[:branch] || "master"
     @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref: @ref).call
     @entries = @entries.sort_by{ |hash| hash['type'] }
   end
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: params[:ref])
+    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
     if interactor.success?
       @sub_entries = interactor.result
       @sub_entries = [] << @sub_entries unless @sub_entries.is_a? Array
@@ -112,7 +113,7 @@ class RepositoriesController < ApplicationController
 
   def sync_mirror
     @repo&.mirror.set_status!(Mirror.statuses[:waiting])
-    SyncMirroredRepositoryJob.perform_later(@repo, current_user)
+    SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)
     render_ok
   end
 
@@ -127,6 +128,17 @@ class RepositoriesController < ApplicationController
     if @project.repository.hidden? && !@project.member?(current_user)
       render_forbidden
     end
+  end
+
+  # TODO 获取最新commit信息
+  def get_latest_commit
+    @latest_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+      sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    @latest_commit = @latest_commit.blank? ? nil : @latest_commit[:body][0]
+  end
+
+  def get_ref
+    @ref = params[:ref] || "master"
   end
 
   def content_params

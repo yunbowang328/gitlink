@@ -14,7 +14,7 @@ class VersionReleasesController < ApplicationController
   def new
     #获取所有的分支
     @all_branches = []
-    get_all_branches = Gitea::Repository::BranchesService.new(@user, @repository.try(:identifier)).call
+    get_all_branches = Gitea::Repository::Branches::ListService.new(@user, @repository.try(:identifier)).call
     if get_all_branches && get_all_branches.size > 0
       get_all_branches.each do |b|
         @all_branches.push(b["name"])
