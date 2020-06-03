@@ -8,6 +8,6 @@ class Mirror < ApplicationRecord
 
 
   def set_status!(status=Mirror.statuses[:succeeded])
-    update_column(status: status)
+    update_column(:status, status)
   end
 end
