@@ -1,13 +1,13 @@
 
 # 本地开发部署步骤
 
-#### 1. 安装依赖包
+### 1. 安装依赖包
 
 ```bash
 bundle install
 ```
 
-#### 2. 配置初始化文件
+### 2. 配置初始化文件
 进入项目根目录执行一下命令：
 
 ```bash
@@ -17,33 +17,67 @@ touch config/redis.yml
 touch config/elasticsearch.yml
 ```
 
-#### 3. 创建数据库
+### 3. 配置gitea服务(可选)
+**如需要部署自己的gitea平台，请参考gitea官方平台：https://docs.gitea.io/zh-cn/install-from-binary/**
+
+**因目前gitea平台api受限，暂时推荐从forge平台获取gitea部署文件进行部署：https://forgeplus.trustie.net/projects/6070/coders**
+
+#### 配置gitea服务步骤
+1. 部署gitea服务，并注册root账户
+2. 修改forge平台的 config/configuration.yml中的gitea服务指向地址，如：
+
+```ruby
+gitea:
+  access_key_id: 'root'
+  access_key_secret: 'password'
+  domain: 'http://www.gitea.example.com'
+  base_url: '/api/v1'
+```
+
+### 4. 安装redis环境
+**请自行搜索各平台如何安装部署redis环境**
+
+
+### 5. 创建数据库
 
 ```bash
 rails db:create
 ```
 
-#### 4. 导入数据表结构
+### 6. 导入数据表结构
 
 ```bash
 bundle exec rake sync_table_structure:import_csv
 ```
 
-#### 5. 执行migrate迁移文件
+### 7. 执行migrate迁移文件
+**开发环境为development， 生成环境为production**
 ```bash
 rails db:migrate RAILS_ENV=development
 ```
 
-#### 6. 启动rails服务
+### 8. 启动redis(此处已mac系统为例)
+```bash
+redis-server&
+```
+
+### 9. 启动sidekiq
+**开发环境为development， 生成环境为production**
+```bash
+bundle exec sidekiq -C config/sidekiq.yml -e production -d
+```
+
+### 10. 启动rails服务
 ```bash
 rails s
 ```
 
-#### 7. 浏览器访问
+### 11. 浏览器访问
 在浏览器中输入如下地址访问：
 ```bash
-http://localhost:3000/projects
+http://localhost:3000/
 ```
+
 
 ---
 
@@ -420,14 +454,14 @@ POST api/projects/migrate
 *示例*
 ```
 curl -X POST \
--d "user_id=36401" \
+-d "user_id=36408" \
 -d "clone_addr=https://gitea.com/mx8090alex/golden.git" \
--d "name=golden" \
--d "description=golden" \
--d "repository_name=golden" \
+-d "name=golden_mirror1" \
+-d "description=golden_mirror" \
+-d "repository_name=golden_mirror1" \
 -d "project_category_id=1" \
 -d "project_language_id=2" \
-http://localhost:3000/api/projects/migrate  | jq
+http://localhost:3000/api/projects/migrate.json?debug=admin  | jq
 ```
 *请求参数说明:*
 
@@ -884,6 +918,8 @@ http://localhost:3000//api/repositories/3687/entries.json  | jq
 
 |参数名|类型|说明|
 |-|-|-|
+|last_commit            |object   | |
+|-- commit             |object   | |
 |id             |int   |id |
 |name           |string|文件夹或文件名称|
 |path           |string|文件夹或文件相对路径|
@@ -894,38 +930,64 @@ http://localhost:3000//api/repositories/3687/entries.json  | jq
 
 返回值
 ```
-[
-  {
-    "name": "Manual",
-    "path": "Manual",
-    "sha": "c2f18765235076b4c835b3e31262b3ee65176a75",
-    "type": "file",
-    "size": 12579,
-    "content": null,
-    "target": null,
-    "commit": null
+{
+  "last_commit": {
+    "commit": {
+      "sha": "3f2de4f78d2d7050486535082cd11cdfc9f3679e",
+      "url": "http://localhost:3003//api/repositories/api-cloud-platform/commits/3f2de4f78d2d7050486535082cd11cdfc9f3679e",
+      "message": "update README.md.",
+      "author": {
+        "name": "Gitee",
+        "email": "noreply@gitee.com",
+        "date": "2020-03-02T20:23:18+08:00"
+      },
+      "committer": {
+        "name": "Gitee",
+        "email": "noreply@gitee.com",
+        "date": "2020-03-02T20:23:18+08:00"
+      },
+      "timestamp": 1583151798,
+      "time_from_now": "3个月前"
+    },
+    "author": null,
+    "committer": null
   },
-  {
-    "name": "README",
-    "path": "README",
-    "sha": "91a29176828eba5c5598f5d4a95458e861f271ec",
-    "type": "file",
-    "size": 1767,
-    "content": null,
-    "target": null,
-    "commit": null
-  },
-  {
-    "name": "base",
-    "path": "base",
-    "sha": "7adbe5698e02dba062216333d5e1d16b36ae1cbd",
-    "type": "dir",
-    "size": 0,
-    "content": null,
-    "target": null,
-    "commit": null
-  }
-]
+  "entries": [
+    {
+      "name": "ace-gate",
+      "path": "ace-gate",
+      "sha": "c83f85fc63b14edcd6fc502eee9996f5a9993eca",
+      "type": "dir",
+      "size": 0,
+      "content": null,
+      "target": null,
+      "commit": {
+        "message": "v2.9 升级alibaba组件release版本\n",
+        "sha": "6117eaab86f71115f42f2a46ff1683015cda798d",
+        "created_at": "1970-01-01 08:00",
+        "time_from_now": "51年前",
+        "created_at_unix": null
+      }
+    },
+    {
+      "name": "ace-sidecar",
+      "path": "ace-sidecar",
+      "sha": "38e41d7810876b464f8f1adcbf998e1b04f710a7",
+      "type": "dir",
+      "size": 0,
+      "content": null,
+      "target": null,
+      "commit": {
+        "message": "[Feature] 升级spring 版本&consul注册中心\n",
+        "sha": "c0a5dde35cfc87f7dbaf676aac397b184ba0e55b",
+        "created_at": "1970-01-01 08:00",
+        "time_from_now": "51年前",
+        "created_at_unix": null
+      }
+    },
+    ...
+  ]
+}
 ```
 ---
 
@@ -1259,17 +1321,17 @@ http://localhost:3000/api/projects  | jq
 
 ### 获取分支列表
 ```
-GET /api/projects/:identifier/branches
+GET /api/projects/:id/branches
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/projects/mirror_demo/branches | jq
+curl -X GET http://localhost:3000/api/projects/4797/branches | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|identifier               |是|string |项目标识  |
+|id               |是|id |项目id |
 
 
 *返回参数说明:*
@@ -1458,6 +1520,8 @@ http://localhost:3000/api/repositories/23.json | jq
 |watched         |boolean|当前登录用户是否已关注，true:已关注，fasle:未关注， 用户未登录状态为null|
 |permission      |string|当前登录用户对该仓库的操作权限, Manager:管理员，可以在线编辑文件、在线新建文件、可以设置仓库的基本信息; Developer:开发人员，可在线编辑文件、在线新建文件、不能设置仓库信息; Reporter: 报告人员，只能查看信息，不能设置仓库信息、不能在线编辑文件、不能在线新建文件；用户未登录时也会返回Reporter, 说明也只有读取文件的权限 |
 |size            |int|仓库文件大小，单位：KB|
+|type            |int|项目类型; 2: 表示是一个镜像(具备同步功能), 1: 普通镜像项目(不具同步功能), 0: 普通托管项目, 3: fork项目|
+|mirror_status   |int|该字段在type字段为2(一个镜像)时才会出现; 0: 表示同步镜像成功；1: 表示正在同步镜像；2: 同步失败|
 |mirror_url      |string|镜像地址, 只有通过镜像过来的项目才会有这个地址|
 |ssh_url         |string|仓库ssh地址|
 |clone_url       |string|仓库克隆地址|
