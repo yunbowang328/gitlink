@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
-  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects]
-  before_action :check_user_exist, only: [:show, :homepage_info]
+  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
+  before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
   before_action :require_login, only: %i[me list projects]
   skip_before_action :check_sign, only: [:attachment_show]
 
@@ -11,7 +11,34 @@ class UsersController < ApplicationController
     @users = paginate(scope)
   end
 
-  def show;end
+  def show
+      #待办事项，现在未做
+      @undo_events = 0
+      #用户的组织数量
+      # @user_composes_count =  @user.composes.size
+      @user_composes_count = 0
+      user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
+      @projects_common_count = user_projects.common.size
+      @projects_mirrior_count = user_projects.mirror.size
+  end
+
+  def watch_users
+    watchers = Watcher.watching_users(@user.id).includes(:user).order("watchers.created_at asc")
+    if params[:search].present?
+      search_user_ids = User.where(id: watchers.pluck(:watchable_id)).like(params[:search]).pluck(:id)
+      watchers = watchers.where(watchable_id: search_user_ids)
+    end
+    @watchers_count = watchers.size
+    @watchers = paginate(watchers)
+  end
+
+  def fan_users
+    watchers = @user.watchers.includes(:user).order("watchers.created_at asc")
+    watchers = watchers.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
+
+    @watchers_count = watchers.size
+    @watchers = paginate(watchers)
+  end
 
   def update
     @user = User.find params[:id]
@@ -85,7 +112,7 @@ class UsersController < ApplicationController
     @projects = projects.select(:id, :name)
   end
 
-  # 个人主页信息
+  #TODO 个人主页信息，forge上弃用-hs, 0602
   def homepage_info
     #待办事项，现在未做
     @undo_events = 10
@@ -119,7 +146,8 @@ class UsersController < ApplicationController
   end
 
   def projects
-    scope = Projects::ListMyQuery.call(params.merge(category: params[:category],is_public: params[:status]), @user)
+    is_current_admin_user = User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
+    scope = Projects::ListMyQuery.call(params, @user,is_current_admin_user)
     @total_count = scope.size
     @projects = paginate(scope)
   end
