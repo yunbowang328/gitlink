@@ -92,24 +92,6 @@ class RepositoriesController < ApplicationController
     end
   end
 
-  def upload_file 
-    file_ids = params[:attachment_ids]
-    if file_ids.present? 
-      file_ids.each do |id| 
-        attachment = Attachment.select(:id, :filename, :disk_directory, :disk_filename).find_by(id)
-        file_path = attachemnt&.diskfile.to_s
-        unless File.exists?(file_path)
-          file_content = File.open(file_path)
-        end
-      end
-    else 
-      render_error("请上传文件")
-    end
-
-    files.each do 
-
-  end
-
   def repo_hook
     hook_type = request.headers["X-Gitea-Event"].to_s  # 获取推送的方式
     ownername = @project.owner.try(:login)
