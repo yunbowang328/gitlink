@@ -143,4 +143,19 @@ class Project < ApplicationRecord
     self.class.name.constantize.project_types["#{self.project_type}"]
   end
 
+  def watched_by? user
+    watchers.pluck(:user_id).include? user&.id
+  end
+
+  def praised_by? user
+    praise_treads.pluck(:user_id).include? user&.id
+  end
+
+  def get_premission user
+    permission = "Reporter"
+    member = members.find_by(user: user)
+
+    member&.roles&.last&.name || permission
+  end
+
 end

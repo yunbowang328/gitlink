@@ -1,7 +1,7 @@
 module RepositoriesHelper
   def render_decode64_content(str)
     return nil if str.blank?
-    Base64.decode64(str)
+    Base64.decode64(str).force_encoding('UTF-8')
   end
 
   def download_type(str)

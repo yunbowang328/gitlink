@@ -1,9 +1,0 @@
-.webSSHTimer {
-	color: #888;
-	vertical-align: middle;
-	/* margin-right: 100px; */
-	margin-left: 2px;
-}
-.iconButton:hover .webSSHTimer {
-	color: #4CACFF;
-}

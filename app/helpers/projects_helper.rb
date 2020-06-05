@@ -23,13 +23,6 @@ module ProjectsHelper
     Gitea.gitea_config[:domain]
   end
 
-  def render_edit_project_permission(user, project)
-    permission = "Reporter"
-    member = project.members.includes(:roles).find_by(user: user)
-
-    member&.roles&.last&.name || permission
-  end
-
   def find_user_by_login_or_mail(identifier)
     (User.find_by_login identifier) || (User.find_by_mail identifier)
   end

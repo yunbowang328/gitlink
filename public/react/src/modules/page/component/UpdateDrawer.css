@@ -1,9 +1,0 @@
-
-body>div.updateDialog>div {
-	padding-bottom: 0px;
-}
-#dialog-actions {
-	display: flex;
-    flex-direction: row;
-    margin: 0;
-}
