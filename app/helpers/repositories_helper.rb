@@ -9,6 +9,11 @@ module RepositoriesHelper
     default_type.include?(str&.downcase)
   end
 
+  def image_type?(str)
+    default_type = %w(png jpg gif tif psd svg)
+    default_type.include?(str&.downcase)
+  end
+
   def render_commit_author(author_json)
     return nil if author_json.blank?
     find_user_by_login author_json['login']
