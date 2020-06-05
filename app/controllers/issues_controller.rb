@@ -336,8 +336,14 @@ class IssuesController < ApplicationController
           }
           ChangeTokenJob.perform_later(change_params)
         end
+        if @issue.issue_classify.to_s == "pull_request"
+          @issue&.pull_request&.update_attribute(:status, 2)
+        end
       else
         @issue&.project_trends&.update_all(action_type: "create")
+        if @issue.issue_classify.to_s == "pull_request"
+          @issue&.pull_request&.update_attribute(:status, 0)
+        end
       end
       if @issue.issue_classify == "issue"
         close_message = "close_issue"
