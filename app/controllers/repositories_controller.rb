@@ -2,7 +2,8 @@ class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
-  before_action :find_project, except: [:tags, :commit, :sync_mirror]
+  before_action :find_project_with_includes, only: :show
+  before_action :find_project, except: [:tags, :commit, :sync_mirror, :show]
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
@@ -10,6 +11,7 @@ class RepositoriesController < ApplicationController
   before_action :get_latest_commit, :get_ref, only: %i[entries sub_entries]
 
   def show
+    @user = current_user
     @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
     @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call[:total_count]
@@ -27,8 +29,8 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
-
-    @entries = Gitea::Repository::Entries::ListService.new(@project.owner, @project.identifier, ref: @ref).call
+    @project_owner = @project.owner
+    @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
     @entries = @entries.sort_by{ |hash| hash['type'] }
   end
 
@@ -122,6 +124,10 @@ class RepositoriesController < ApplicationController
   def find_project
     @project = Project.find params[:id]
     render_not_found("未找到相关的仓库") unless @project
+  end
+
+  def find_project_with_includes
+    @project = Project.includes(:repository, :owner, :watchers, :praise_treads).find params[:id]
   end
 
   def authorizate!

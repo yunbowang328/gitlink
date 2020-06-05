@@ -9,19 +9,19 @@ json.praises_count @project.praises_count.to_i
 json.forked_count @project.forked_count.to_i
 json.watchers_count @project.watchers_count.to_i
 json.versions_count @project.versions_count  #里程碑数量
-json.version_releases_count @project.releases_size(current_user.try(:id), "all")
-json.version_releasesed_count @project.releases_size(current_user.try(:id), "released")  #已发行的版本
+json.version_releases_count @project.releases_size(@user.try(:id), "all")
+json.version_releasesed_count @project.releases_size(@user.try(:id), "released")  #已发行的版本
 json.contributor_users_count @project.contributor_users
 json.issue_tags_count @tags_count
 json.branches_count @branches_count
 json.commits_count @commits_count
-json.permission render_edit_project_permission(current_user, @project) if current_user
+json.permission  @project.get_premission(@user)
 json.mirror_url @project&.repository.mirror_url
 json.mirror @project&.repository.mirror_url.present?
 json.type @project.numerical_for_project_type
 json.mirror_status @project.repository&.mirror&.numerical_for_status if @project.sync_mirror?
-json.watched current_user&.watched?(@project)
-json.praised current_user&.liked?(@project)
+json.watched @project.watched_by? @user
+json.praised @project.praised_by? @user
 json.status @project.status
 json.forked_from_project_id @project_fork_id
 json.fork_info do
