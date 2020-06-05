@@ -1,4 +1,4 @@
-user = target.watchable 
+# user = target.watchable 
 
 json.format_time target.created_at.strftime("%Y-%m-%d")
 json.name user.try(:show_real_name)
