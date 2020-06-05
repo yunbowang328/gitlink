@@ -16,7 +16,6 @@ json.type project&.numerical_for_project_type
 json.last_update_time render_unix_time(project.updated_on)
 json.time_ago time_from_now(project.updated_on)
 json.forked_from_project_id project.forked_from_project_id
-json.type @project.numerical_for_project_type
 json.author do
   json.name user.try(:show_real_name)
   json.login user.login
