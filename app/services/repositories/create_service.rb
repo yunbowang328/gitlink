@@ -18,11 +18,11 @@ class Repositories::CreateService < ApplicationService
 
           chain_params = {
             type: "create",
-            ownername: user.try(:login), 
+            ownername: user.try(:login),
             reponame: @repository.try(:id)
           }
-          ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
-        
+          # ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
+
         end
       end
       @repository
