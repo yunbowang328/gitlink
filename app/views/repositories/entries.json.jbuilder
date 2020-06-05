@@ -14,7 +14,14 @@ json.entries do
     json.sha entry['sha']
     json.type entry['type']
     json.size entry['size']
-    json.content entry['content']
+    content =
+      if entry['name'] === 'README.md'
+        content = Gitea::Repository::Entries::GetService.call(@project_owner, @project.identifier, entry['name'], ref: @ref)['content']
+        render_decode64_content content
+      else
+        entry['content']
+      end
+    json.content content
     json.target entry['target']
     if entry['latest_commit']
       json.partial! 'last_commit', entry: entry
