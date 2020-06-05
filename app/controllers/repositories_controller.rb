@@ -207,8 +207,8 @@ class RepositoriesController < ApplicationController
         status_id: 1,
         priority_id: 1
       }
-      pull_issue = Issue.new(issue_params)
-      if pull_issue.save!
+      @pull_issue = Issue.new(issue_params)
+      if @pull_issue.save!
         local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: pull_issue.id))
         if local_requests.save
           gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @project.owner, @project.try(:identifier), requests_params).call
