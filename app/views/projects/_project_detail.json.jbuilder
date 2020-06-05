@@ -12,7 +12,7 @@ json.praises_count project.praises_count.to_i
 json.forked_count project.forked_count.to_i
 json.is_public project.is_public
 json.mirror_url project.repository&.mirror_url
-json.type project.numerical_for_project_type
+json.type project&.numerical_for_project_type
 json.last_update_time render_unix_time(project.updated_on)
 json.time_ago time_from_now(project.updated_on)
 json.forked_from_project_id project.forked_from_project_id
