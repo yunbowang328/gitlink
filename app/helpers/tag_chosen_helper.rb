@@ -19,17 +19,17 @@ module TagChosenHelper
 
       issue_comment_users_array = join_users(issue)
       #总耗时
-      cost_time(issue)
-      cost_time_array = @cost_time_array
-      all_cost_time = @all_cost_time
+      # cost_time(issue)
+      # cost_time_array = @cost_time_array
+      # all_cost_time = @all_cost_time
 
       #被依赖
-      be_depended_issues_array = be_depended_issues(issue)
+      # be_depended_issues_array = be_depended_issues(issue)
 
       #依赖于
-      depended_issues(issue)
-      depended_issues_array = @depended_issues_array
-      depended_issues_id = @depended_issues_id
+      # depended_issues(issue)
+      # depended_issues_array = @depended_issues_array
+      # depended_issues_id = @depended_issues_id
 
     end
     project_members = project.members_user_infos
@@ -75,7 +75,7 @@ module TagChosenHelper
       end
     end
 
-    issue_versions = project.versions&.pluck(:id,:name, :status)
+    issue_versions = project.versions.order("created_at desc")&.pluck(:id,:name, :status)
     new_version_info = []  #issue里程碑
     if issue_versions.size > 0
       issue_versions.each do |t|
@@ -95,7 +95,7 @@ module TagChosenHelper
       end
     end
 
-    issue_tags = project.issue_tags&.pluck(:id,:name, :color)
+    issue_tags = project.issue_tags.order("created_at desc")&.pluck(:id,:name, :color)
     new_tags_info = []  #issue标签
     if issue_tags.size > 0
       issue_tags.each do |t|
@@ -114,14 +114,15 @@ module TagChosenHelper
       new_types_info.push(new_type_info)
     end
 
-    depend_other_issues = project.issues.issue_issue.where.not(id: issue_id)&.pluck(:id, :subject)
-    if depend_other_issues.size > 0
-      depend_other_issues.each do |t|
-        is_chosen = depended_issues_id.include?(t[0]) ? "1" : "0"
-        new_issue = {id: t[0], subject: t[1], is_chosen: is_chosen}
-        all_issues.push(new_issue)
-      end
-    end
+    #依赖issue暂时取消
+    # depend_other_issues = project.issues.issue_issue.where.not(id: issue_id)&.pluck(:id, :subject)
+    # if depend_other_issues.size > 0
+    #   depend_other_issues.each do |t|
+    #     is_chosen = depended_issues_id.include?(t[0]) ? "1" : "0"
+    #     new_issue = {id: t[0], subject: t[1], is_chosen: is_chosen}
+    #     all_issues.push(new_issue)
+    #   end
+    # end
 
 
     {
@@ -134,10 +135,10 @@ module TagChosenHelper
       "due_date": issue_info[6],
       "joins_users": issue_comment_users_array,
       "cost_time_users": cost_time_array,
-      "total_cost_time": Time.at(all_cost_time).utc.strftime('%H h %M min %S s'),
-      "be_depended_issues": be_depended_issues_array,
-      "depended_issues":depended_issues_array,
-      "estimated_hours": issue_info[7],
+      # "total_cost_time": Time.at(all_cost_time).utc.strftime('%H h %M min %S s'),
+      # "be_depended_issues": be_depended_issues_array,
+      # "depended_issues":depended_issues_array,
+      # "estimated_hours": issue_info[7],
       "done_ratio": new_done_info,
       "issue_tag": new_tags_info,
       "issue_type": new_types_info,
@@ -159,49 +160,49 @@ module TagChosenHelper
     issue_comment_users_array
   end
 
-  def cost_time(issue)
-    #总耗时
-    @cost_time_array = []
-    @all_cost_time = 0
-    all_issue_times = issue.issue_times.includes(:user).where.not(end_time: nil)
-    if issue.present? && all_issue_times.size > 0
-      all_issue_times.each do |time|
-        cost_time = time.end_time.to_i - time.start_time.to_i
-        cost_time = cost_time > 0 ? cost_time : 0
-        @all_cost_time = @all_cost_time + cost_time
-        set_cost_time = Time.at(cost_time).utc.strftime('%H h %M min %S s')
-        @cost_time_array.push({login: time.user.try(:login), avatar_url: url_to_avatar(time.user), cost_time: set_cost_time})
-      end
-    end
-  end
+  # def cost_time(issue)
+  #   #总耗时
+  #   @cost_time_array = []
+  #   @all_cost_time = 0
+  #   all_issue_times = issue.issue_times.includes(:user).where.not(end_time: nil)
+  #   if issue.present? && all_issue_times.size > 0
+  #     all_issue_times.each do |time|
+  #       cost_time = time.end_time.to_i - time.start_time.to_i
+  #       cost_time = cost_time > 0 ? cost_time : 0
+  #       @all_cost_time = @all_cost_time + cost_time
+  #       set_cost_time = Time.at(cost_time).utc.strftime('%H h %M min %S s')
+  #       @cost_time_array.push({login: time.user.try(:login), avatar_url: url_to_avatar(time.user), cost_time: set_cost_time})
+  #     end
+  #   end
+  # end
 
-  def depended_issues(issue)
-    #依赖于
-    @depended_issues_id = []
-    @depended_issues_array = []
-    depended_issues = issue.issue_depends.pluck(:id,:depend_issue_id).uniq
-    if issue.present? && depended_issues.size > 0
-      depended_issues.each do |de|
-        @depended_issues_id.push(de[1])
-        issues = Issue.select(:id, :subject).where(id: de[1]).as_json
-        issues = issues.first.merge(depend_id: de[0])
-        @depended_issues_array.push(issues)
-      end
-      @depended_issues_id.delete(issue.id)
-    end
-  end
+  # def depended_issues(issue)
+  #   #依赖于
+  #   @depended_issues_id = []
+  #   @depended_issues_array = []
+  #   depended_issues = issue.issue_depends.pluck(:id,:depend_issue_id).uniq
+  #   if issue.present? && depended_issues.size > 0
+  #     depended_issues.each do |de|
+  #       @depended_issues_id.push(de[1])
+  #       issues = Issue.select(:id, :subject).where(id: de[1]).as_json
+  #       issues = issues.first.merge(depend_id: de[0])
+  #       @depended_issues_array.push(issues)
+  #     end
+  #     @depended_issues_id.delete(issue.id)
+  #   end
+  # end
 
-  def be_depended_issues(issue)
-    be_depended_issues_array = []
-    be_depended_issues = IssueDepend.where(depend_issue_id: issue.id).pluck(:id,:issue_id).uniq
-    if issue.present? && be_depended_issues.size > 0
-      be_depended_issues.each do |de|
-        d_issues =  Issue.select(:id, :subject).where(id: de[1]).as_json
-        d_issues = d_issues.first.merge(depend_id: de[0])
-        be_depended_issues_array.push(d_issues)
-      end
-    end
-    be_depended_issues_array
-  end
+  # def be_depended_issues(issue)
+  #   be_depended_issues_array = []
+  #   be_depended_issues = IssueDepend.where(depend_issue_id: issue.id).pluck(:id,:issue_id).uniq
+  #   if issue.present? && be_depended_issues.size > 0
+  #     be_depended_issues.each do |de|
+  #       d_issues =  Issue.select(:id, :subject).where(id: de[1]).as_json
+  #       d_issues = d_issues.first.merge(depend_id: de[0])
+  #       be_depended_issues_array.push(d_issues)
+  #     end
+  #   end
+  #   be_depended_issues_array
+  # end
 
 end
