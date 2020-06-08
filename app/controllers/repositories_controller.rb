@@ -168,11 +168,8 @@ class RepositoriesController < ApplicationController
         }
     elsif hook_type == "pull_request" && params["action"].to_s == "closed"  #合并请求合并后才会有上链操作
       uploadPushInfo = {
-        "source_branch": params["head"]["ref"].to_s.split("/").last,
-        "target_branch": params["base"]["ref"].to_s.split("/").last,
-        "source_project_id": params["head"]["repo_id"].to_i,  #现在是为gitea上仓库的id
-        "target_project_id": params["base"]["repo_id"].to_i,
-        "sha": [params["pull_request"]["merge_commit_sha"], params["pull_request"]["merge_base"]],
+        "branch": params["base"]["ref"].to_s.split("/").last,
+        "sha": params["pull_request"]["merge_base"],
         "modification_lines": 1  #pull_request中没有commits数量
         }
     else
