@@ -105,13 +105,19 @@ class IssuesController < ApplicationController
     elsif params[:subject].to_s.size > 255
       normal_status(-1, "标题不能超过255个字符")
     elsif (params[:issue_type].to_s == "2")
-      return normal_status(-1, "悬赏的奖金必须大于0")if params[:token].to_i == 0
+      return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
       #查看当前用户的积分
       query_params = {
-        type: "user"
-      }.merge(tokens_params(@project))
-      user_tokens = Gitea::Repository::Hooks::QueryService.new(query_params).call
-      return normal_status(-1, "您的token值不足") if user_tokens[:value].to_i < params[:token].to_i
+        type: "query",
+        chain_params: {
+          reponame: project.try(:identifer),
+          username: current_user.try(:login)
+        }
+      }
+
+      response = Gitea::Chain::ChainGetService.new(query_params).call
+      return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200 
+      return normal_status(-1, "您的token值不足") if response.body["balance"].to_i < params[:token].to_i
     else
       issue_params = issue_send_params(params)
 
@@ -143,10 +149,14 @@ class IssuesController < ApplicationController
         #为悬赏任务时, 扣除当前用户的积分
         if params[:issue_type].to_s == "2"
           change_params = {
-            change_type: "minusToken",
-            tokens: params[:token]
-          }.merge(tokens_params(@project))
-          ChangeTokenJob.perform_later(change_params)
+            type: "minus",
+            chain_params: {
+              amount: params[:token],
+              reponame: @project.try(:identifer),
+              username: current_user.try(:login)
+            }
+          }
+          PostChainJob.perform_later(change_params)
         end
 
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
@@ -216,16 +226,18 @@ class IssuesController < ApplicationController
         if @issue.saved_change_to_attribute("token")
           last_token = @issue.token_was
           change_token = last_token - @issue.token
-          change_type = change_token > 0 ? "addToken" : "minusToken"
+          change_type = change_token > 0 ? "add" : "minus"
           change_params = {
-            change_type: change_type,
-            tokens: change_token.abs
-          }.merge(tokens_params(@proeject))
-          ChangeTokenJob.perform_later(change_params)
+            type: change_type,
+            chain_params: {
+              amount: change_token.abs,
+              reponame: @project.try(:identifer),
+              username: current_user.try(:login)
+            }
+          }
+          PostChainJob.perform_later(change_params)
         end
-
       end
-
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
       normal_status(0, "更新成功")
     else
@@ -252,6 +264,7 @@ class IssuesController < ApplicationController
 
   def destroy
     if @issue.destroy
+
       normal_status(0, "删除成功")
     else
       normal_status(-1, "删除失败")
@@ -272,7 +285,6 @@ class IssuesController < ApplicationController
   end
 
   def series_update
-
     update_hash = {}
     update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
     update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
@@ -323,18 +335,18 @@ class IssuesController < ApplicationController
     if @issue.update_attribute(:status_id, type)
       if type == 5
         @issue&.project_trends&.update_all(action_type: "close")
-
         @issue.issue_times.update_all(end_time: Time.now)
         if @issue.issue_type.to_s == "2"
           tokens = @issue.token
           change_params = {
-            change_type: "addToken",
-            tokens: tokens,
-            ownername: project.owner.try(:login),
-            reponame: project.try(:identifer),
-            username: @issue.get_assign_user.try(:login)   #指派人增加积分
+            type: "add",
+            chain_params: {
+              amount: tokens
+              reponame: @project.try(:identifer),
+              username: @issue.get_assign_user.try(:login)
+            }
           }
-          ChangeTokenJob.perform_later(change_params)
+          PostChainJob.perform_later(change_params)
         end
         if @issue.issue_classify.to_s == "pull_request"
           @issue&.pull_request&.update_attribute(:status, 2)
@@ -466,14 +478,5 @@ class IssuesController < ApplicationController
         author_id: current_user.id,
         project_id: @project.id
       }
-  end
-
-  def tokens_params(project)
-    {
-      ownername: project.owner.try(:login),
-      reponame: project.try(:identifer),
-      username: current_user.try(:login)
-    }
-
   end
 end

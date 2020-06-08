@@ -106,10 +106,10 @@ class RepositoriesController < ApplicationController
     }
     uploadPushInfo = hook_params(hook_type, params).merge(user_params)
     chain_params = {
-      type: hook_type,
-      uploadPushInfo: uploadPushInfo
-    }.merge(user_params)
-    ProjectCreateChainJob.perform_later(chain_params)
+      type: "upload",
+      chain_params: uploadPushInfo
+    }
+    PostChainJob.perform_later(chain_params)
     @project.update_attribute(:token, @project.token + uploadPushInfo[:modificationLines].to_i)
   end
 
@@ -162,9 +162,9 @@ class RepositoriesController < ApplicationController
     if hook_type == "push"
       # TODO hook返回的记录中，暂时没有文件代码数量的增减，暂时根据 commits数量来计算
       uploadPushInfo = {
-        "shas": params["commits"].present? ? params["commits"].map{|c| c["id"]} : "",
+        "sha": params["commits"].present? ? params["commits"].last. : "",
         "branch": params["ref"].to_s.split("/").last,
-        "modificationLines": params["commits"].length
+        "modification_lines": params["commits"].length
         }
     elsif hook_type == "pull_request" && params["action"].to_s == "closed"  #合并请求合并后才会有上链操作
       uploadPushInfo = {
@@ -172,8 +172,8 @@ class RepositoriesController < ApplicationController
         "target_branch": params["base"]["ref"].to_s.split("/").last,
         "source_project_id": params["head"]["repo_id"].to_i,  #现在是为gitea上仓库的id
         "target_project_id": params["base"]["repo_id"].to_i,
-        "shas": [params["pull_request"]["merge_commit_sha"], params["pull_request"]["merge_base"]],
-        "modificationLines": 1  #pull_request中没有commits数量
+        "sha": [params["pull_request"]["merge_commit_sha"], params["pull_request"]["merge_base"]],
+        "modification_lines": 1  #pull_request中没有commits数量
         }
     else
         uploadPushInfo = {}

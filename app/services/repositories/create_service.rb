@@ -15,14 +15,16 @@ class Repositories::CreateService < ApplicationService
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
         if project.project_type == "common"
-
           chain_params = {
             type: "create",
-            ownername: user.try(:login),
-            reponame: @repository.try(:id)
+            chain_params:{
+              username: user.try(:login),
+              reponame: @repository.try(:identifier),
+              token_name: @repository.try(:identifier),
+              total_supply: 0
+            }
           }
-          # ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
-
+          PostChainJob.perform_later(chain_params)  #创建上链操作
         end
       end
       @repository
