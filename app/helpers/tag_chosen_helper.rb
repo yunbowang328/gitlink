@@ -75,7 +75,7 @@ module TagChosenHelper
       end
     end
 
-    issue_versions = project.versions.order("created_at desc")&.pluck(:id,:name, :status)
+    issue_versions = project.versions&.pluck(:id,:name, :status)
     new_version_info = []  #issue里程碑
     if issue_versions.size > 0
       issue_versions.each do |t|
@@ -95,7 +95,7 @@ module TagChosenHelper
       end
     end
 
-    issue_tags = project.issue_tags.order("created_at desc")&.pluck(:id,:name, :color)
+    issue_tags = project.issue_tags&.pluck(:id,:name, :color)
     new_tags_info = []  #issue标签
     if issue_tags.size > 0
       issue_tags.each do |t|

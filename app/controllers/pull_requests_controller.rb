@@ -246,13 +246,13 @@ class PullRequestsController < ApplicationController
     @issue_assign_to = @issue.get_assign_user
     @join_users = join_users(@issue)
     #总耗时
-    cost_time(@issue)
+    # cost_time(@issue)
 
-    #被依赖
-    @be_depended_issues_array = be_depended_issues(@issue)
+    # #被依赖
+    # @be_depended_issues_array = be_depended_issues(@issue)
 
-    #依赖于
-    depended_issues(@issue)
+    # #依赖于
+    # depended_issues(@issue)
   end
 
   def pr_merge

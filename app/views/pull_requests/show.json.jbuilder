@@ -23,10 +23,10 @@ json.issue do
   json.issue_type @issue.issue_type == "1" ? "普通" : "悬赏"
   json.token @issue.issue_type == "2" ? @issue.token : ""
   json.join_users @join_users
-  json.cost_time @cost_time_array
-  json.total_cost_time Time.at(@all_cost_time).utc.strftime('%H h %M min %S s')
-  json.be_depended_issues @be_depended_issues_array
-  json.depended_issues @depended_issues_array
+  # json.cost_time @cost_time_array
+  # json.total_cost_time Time.at(@all_cost_time).utc.strftime('%H h %M min %S s')
+  # json.be_depended_issues @be_depended_issues_array
+  # json.depended_issues @depended_issues_array
 end
 
 json.attachments do

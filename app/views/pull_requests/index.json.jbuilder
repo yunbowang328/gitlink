@@ -10,7 +10,7 @@ json.user_admin_or_member @user_admin_or_member
 
 json.issues do
   json.array! @issues.to_a do |issue|
-    cost_time(issue)
+    # cost_time(issue)
     json.pull_request_id issue.pull_request.id
     json.pull_request_status issue.pull_request.status
     json.id issue.id
@@ -33,7 +33,7 @@ json.issues do
     json.token issue.issue_type == "2" ? issue.token : ""
     json.issue_classify issue.issue_classify
     json.branch_name issue.branch_name
-    json.cost_time @all_cost_time
+    # json.cost_time @all_cost_time
   end
 end
 
