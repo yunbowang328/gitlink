@@ -280,8 +280,6 @@ class IssuesController < ApplicationController
 
   def close_issue
     type = params[:status_id].to_i || 5
-    # return normal_status(-1, "悬赏工单不允许再次打开") if @issue.issue_type.to_s == "2" && @issue.status_id.to_i == 5
-    # return normal_status(-1, "您没有权限操作") if @issue.issue_type.to_s == "2" && (@issue.user_id != current_user&.id || !current_user&.admin?)
 
     if type == 5
       message = "关闭"
@@ -294,7 +292,6 @@ class IssuesController < ApplicationController
       if type == 5
         @issue&.project_trends&.update_all(action_type: "close")
         @issue.issue_times.update_all(end_time: Time.now)
-        end
         if @issue.issue_classify.to_s == "pull_request"
           @issue&.pull_request&.update_attribute(:status, 2)
         end
