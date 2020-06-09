@@ -342,7 +342,7 @@ class IssuesController < ApplicationController
           change_params = {
             type: "add",
             chain_params: {
-              amount: tokens
+              amount: tokens,
               reponame: @project.try(:identifer),
               username: @issue.get_assign_user.try(:login)
             }
