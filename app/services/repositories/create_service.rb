@@ -14,18 +14,6 @@ class Repositories::CreateService < ApplicationService
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
-        if project.project_type == "common"
-          chain_params = {
-            type: "create",
-            chain_params:{
-              username: user.try(:login),
-              reponame: @repository.try(:identifier),
-              token_name: @repository.try(:identifier),
-              total_supply: 0
-            }
-          }
-          PostChainJob.perform_later(chain_params)  #创建上链操作
-        end
       end
       @repository
     end
