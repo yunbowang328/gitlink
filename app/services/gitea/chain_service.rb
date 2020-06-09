@@ -18,8 +18,10 @@ class Gitea::ChainService < ApplicationService
 
   def get(url, params={})
     conn.get do |req|
-      req.url = "#{request_url}"
-      req.body = params[:data].to_json
+      req.url "#{request_url}"
+      params.each_pair do |key, value|
+        req.params["#{key}"] = value
+      end
     end
   end
 

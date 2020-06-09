@@ -21,7 +21,7 @@ class Repositories::CreateService < ApplicationService
               username: user.try(:login),
               reponame: @repository.try(:identifier),
               token_name: @repository.try(:identifier),
-              total_supply: 0
+              total_supply: 1000000
             }
           }
           PostChainJob.perform_later(chain_params)  #创建上链操作

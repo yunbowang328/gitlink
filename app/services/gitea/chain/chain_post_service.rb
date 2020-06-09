@@ -13,11 +13,11 @@ class Gitea::Chain::ChainPostService < Gitea::ChainService
   private
 
   def request_params
-    Hash.new.merge(data: params["chain_params"])
+    Hash.new.merge(data: params[:chain_params])
   end
 
   def url
-    chain_type = params["type"].to_s
+    chain_type = params[:type].to_s
     case chain_type
     when "create"
       "/repos/create".freeze
