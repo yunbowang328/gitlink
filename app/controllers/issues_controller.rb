@@ -106,6 +106,18 @@ class IssuesController < ApplicationController
       normal_status(-1, "标题不能超过255个字符")
     elsif (params[:issue_type].to_s == "2")
       return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
+      #查看当前用户的积分
+      query_params = {
+        type: "query",
+        chain_params: {
+          reponame: @project.try(:identifer),
+          username: current_user.try(:login)
+        }
+      }
+
+      response = Gitea::Chain::ChainGetService.new(query_params).call
+      return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200 
+      return normal_status(-1, "您的token值不足") if response.body["balance"].to_i < params[:token].to_i
     else
       issue_params = issue_send_params(params)
 
@@ -132,6 +144,19 @@ class IssuesController < ApplicationController
                          container_id: @issue.id, container_type: 'Issue',
                          parent_container_id: @project.id, parent_container_type: "Project",
                          tiding_type: 'issue', status: 0)
+        end
+
+        #为悬赏任务时, 扣除当前用户的积分
+        if params[:issue_type].to_s == "2"
+          change_params = {
+            type: "minus",
+            chain_params: {
+              amount: params[:token],
+              reponame: @project.try(:identifer),
+              username: current_user.try(:login)
+            }
+          }
+          PostChainJob.perform_later(change_params)
         end
 
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
@@ -195,6 +220,26 @@ class IssuesController < ApplicationController
         @issue.issue_times.update_all(end_time: Time.now)
         @issue.update_closed_issues_count_in_project!
       end
+
+      if @issue.issue_type.to_s == "2"
+        #表示修改token值
+        if @issue.saved_change_to_attribute("token")
+          last_token = @issue.token_was
+          change_token = last_token - @issue.token
+          change_type = change_token > 0 ? "add" : "minus"
+          change_params = {
+            type: change_type,
+            chain_params: {
+              amount: change_token.abs,
+              reponame: @project.try(:identifer),
+              username: current_user.try(:login)
+            }
+          }
+          PostChainJob.perform_later(change_params)
+        end
+
+      end
+
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
       normal_status(0, "更新成功")
     else
