@@ -162,7 +162,7 @@ class RepositoriesController < ApplicationController
     if hook_type == "push"
       # TODO hook返回的记录中，暂时没有文件代码数量的增减，暂时根据 commits数量来计算
       uploadPushInfo = {
-        "sha": params["commits"].present? ? params["commits"].last. : "",
+        "sha": params["commits"].present? ? params["commits"].last : "",
         "branch": params["ref"].to_s.split("/").last,
         "modification_lines": params["commits"].length
         }
@@ -176,7 +176,7 @@ class RepositoriesController < ApplicationController
         uploadPushInfo = {}
     end
 
-    return uploadPushInfo
+    uploadPushInfo
   end
 
   def create_new_pr(params)
