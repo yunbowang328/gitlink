@@ -319,8 +319,6 @@ class IssuesController < ApplicationController
 
   def close_issue
     type = params[:status_id].to_i || 5
-    return normal_status(-1, "悬赏工单不允许再次打开") if @issue.issue_type.to_s == "2" && @issue.status_id.to_i == 5
-    return normal_status(-1, "您没有权限操作") if @issue.issue_type.to_s == "2" && (@issue.user_id != current_user&.id || !current_user&.admin?)
 
     if type == 5
       message = "关闭"
@@ -481,7 +479,7 @@ class IssuesController < ApplicationController
   end
 
   def check_token_enough 
-    if params[:issue_type].to_s == "2"
+    if params[:issue_type].to_s == "2" && (@issue.blank? || (@issue.present? && @issue.author_id == current_user.try(:id)))
       return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
       query_params = {
         type: "query",
