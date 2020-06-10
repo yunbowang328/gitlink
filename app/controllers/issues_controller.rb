@@ -199,7 +199,7 @@ class IssuesController < ApplicationController
       else 
         normal_status(-1, "更新失败")
       end
-    elsif @issue.issue_type.to_s == "2" &&  params[:status_id].to_i == 5 && @issue.author_id !== current_user.try(:id)
+    elsif @issue.issue_type.to_s == "2" &&  params[:status_id].to_i == 5 && @issue.author_id != current_user.try(:id)
       normal_status(-1, "不允许修改为关闭状态")
     else
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
