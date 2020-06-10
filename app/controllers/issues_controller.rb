@@ -7,6 +7,7 @@ class IssuesController < ApplicationController
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
   before_action :get_branches, only: [:new, :edit]
+  before_action :check_token_enough, only: [:create, :update]
 
   include ApplicationHelper
   include TagChosenHelper
@@ -105,20 +106,6 @@ class IssuesController < ApplicationController
     elsif params[:subject].to_s.size > 255
       normal_status(-1, "标题不能超过255个字符")
     else
-      if params[:issue_type].to_s == "2"
-        return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
-        query_params = {
-          type: "query",
-          chain_params: {
-            reponame: @project.try(:identifier),
-            username: current_user.try(:login)
-          }
-        }
-        response = Gitea::Chain::ChainGetService.new(query_params).call
-        return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200 
-        return normal_status(-1, "您的token值不足") if JSON.parse(response.body)["balance"].to_i < params[:token].to_i
-      end
-      
       issue_params = issue_send_params(params)
 
       @issue = Issue.new(issue_params)
@@ -171,12 +158,13 @@ class IssuesController < ApplicationController
   def edit
     # @all_branches = get_branches
     # @issue_chosen = issue_left_chosen(@project, @issue.id)
+    @cannot_edit_tags = @issue.issue_type=="2" && @issue.status_id == 5  #悬赏任务已解决且关闭的状态下，不能修改
     @issue_attachments = @issue.attachments
   end
 
   def update
-    issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
-    return normal_status(-1, "您没有权限修改token") if @issue.will_save_change_to_token? && @issue.user_id != current_user&.id
+    last_token = @issue.token
+    last_status_id = @issue.status_id
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
@@ -184,50 +172,61 @@ class IssuesController < ApplicationController
       end
     end
 
-    if @issue.update_attributes(issue_params)
-      issue_files = params[:attachment_ids]
-      change_files = false
-      issue_file_ids = []
+    issue_files = params[:attachment_ids]
+    change_files = false
+    issue_file_ids = []
 
-      if issue_files.present?
-        change_files = true
-        issue_files.each do |id|
-          attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
-          unless attachment.blank?
-            attachment.container = @issue
-            attachment.author_id = current_user.id
-            attachment.description = ""
-            attachment.save
-          end
+    if issue_files.present?
+      change_files = true
+      issue_files.each do |id|
+        attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
+        unless attachment.blank?
+          attachment.container = @issue
+          attachment.author_id = current_user.id
+          attachment.description = ""
+          attachment.save
         end
       end
-
-      if params[:status_id].to_i == 5
-        @issue.issue_times.update_all(end_time: Time.now)
-        @issue.update_closed_issues_count_in_project!
-        if @issue.issue_type.to_s == "2" && @issue.saved_change_to_attribute("status_id")
-          if @issue.status_id_was == 3
-            post_to_chain("add", @issue.token, @issue.get_assign_user.try(:login))
-          else 
-            post_to_chain("add", @issue.token, @issue.user.try(:login))
-          end
-        end
-      end
-
-      if @issue.issue_type.to_s == "2" && ![3,5].include?(@issue.status_id) && @issue.saved_change_to_attribute("token")
-        #表示修改token值
-        last_token = @issue.token_was
-        change_token = last_token - @issue.token
-        change_type = change_token > 0 ? "add" : "minus"
-        post_to_chain(change_type, change_token.abs, current_user.try(:login))
-      end
-
-      @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
-      normal_status(0, "更新成功")
-    else
-      normal_status(-1, "更新失败")
     end
 
+    if @issue.issue_type.to_s == "2" && @issue.status_id == 5    #已关闭的情况下，只能更新标题和内容，附件
+      new_issue_params = {
+        subject: params[:subject],
+        description: params[:description],
+      }
+      if @issue.update_attributes(new_issue_params)
+        normal_status(0, "更新成功")
+      else 
+        normal_status(-1, "更新失败")
+      end
+    else
+      issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
+
+      if @issue.update_attributes(issue_params)
+        if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
+          @issue.issue_times.update_all(end_time: Time.now)
+          @issue.update_closed_issues_count_in_project!
+          if @issue.issue_type.to_s == "2" && last_status_id != 5
+            if @issue.assigned_to_id.present? && last_status_id == 3 #只有当用户完成100%时，才给token
+              post_to_chain("add", @issue.token, @issue.get_assign_user.try(:login))
+            else 
+              post_to_chain("add", @issue.token, @issue.user.try(:login))
+            end
+          end
+        end
+  
+        if @issue.issue_type.to_s == "2" && @issue.status_id != 5 && @issue.saved_change_to_attribute("token")
+          #表示修改token值
+          change_token = last_token - @issue.token
+          change_type = change_token > 0 ? "add" : "minus"
+          post_to_chain(change_type, change_token.abs, current_user.try(:login))
+        end
+        @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
+        normal_status(0, "更新成功")
+      else
+        normal_status(-1, "更新失败")
+      end
+    end
   end
 
   def show
@@ -247,15 +246,25 @@ class IssuesController < ApplicationController
   end
 
   def destroy
-    if @issue.destroy
-      if @issue.issue_type == "2" && @issue.status_id != 5
-        post_to_chain("add", @issue.token, current_user.try(:login))
+    begin
+      issue_type = @issue.issue_type
+      status_id = @issue.status_id
+      token = @issue.token
+      login =  @issue.user.try(:login)
+      if @issue.destroy
+        if issue_type == "2" && status_id != 5
+          post_to_chain("add", token, login)
+        end
+        normal_status(0, "删除成功")
+      else
+        normal_status(-1, "删除失败")
       end
-      
-      normal_status(0, "删除成功")
-    else
+    rescue => exception
+      Rails.logger.info("#########_______exception.message_________##########{exception.message}")
       normal_status(-1, "删除失败")
+    else
     end
+
   end
 
   def clean
@@ -469,5 +478,21 @@ class IssuesController < ApplicationController
       }
     }
     PostChainJob.perform_later(change_params)
+  end
+
+  def check_token_enough 
+    if params[:issue_type].to_s == "2"
+      return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
+      query_params = {
+        type: "query",
+        chain_params: {
+          reponame: @project.try(:identifier),
+          username: current_user.try(:login)
+        }
+      }
+      response = Gitea::Chain::ChainGetService.new(query_params).call
+      return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200 
+      return normal_status(-1, "您的token值不足") if JSON.parse(response.body)["balance"].to_i < params[:token].to_i
+    end
   end
 end
