@@ -18,6 +18,8 @@ class Issues::ListQueryService < ApplicationService
       issues = issues.where(status_id: 5)
     elsif status_type.to_s == "1"
       issues = issues.where.not(status_id: 5)  #默认显示开启中的
+    elsif status_type.to_s == "11" #表示pr的已关闭
+      issues = issues.joins(:pull_request).where(pull_requests: {status: 1})
     end
 
     if search_name.present?
