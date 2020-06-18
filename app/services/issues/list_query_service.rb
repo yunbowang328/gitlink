@@ -1,10 +1,11 @@
 class Issues::ListQueryService < ApplicationService
 
-  attr_reader :all_issues, :params
+  attr_reader :all_issues, :params,:select_type
 
-  def initialize(all_issues, params)
+  def initialize(all_issues, params, select_type)
     @all_issues = all_issues
     @params = params
+    @select_type = select_type
   end
 
   def call
@@ -17,7 +18,11 @@ class Issues::ListQueryService < ApplicationService
     if status_type.to_s == "2"   #表示关闭中的
       issues = issues.where(status_id: 5)
     elsif status_type.to_s == "1"
-      issues = issues.where.not(status_id: 5)  #默认显示开启中的
+      if(select_type == "Issue")
+        issues = issues.where.not(status_id: 5)  #默认显示开启中的
+      else
+        issues = issues.joins(:pull_request).where(pull_requests: {status: 0})  #默认显示开启中的
+      end
     elsif status_type.to_s == "11" #表示pr的已关闭
       issues = issues.joins(:pull_request).where(pull_requests: {status: 1})
     end

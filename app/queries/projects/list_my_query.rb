@@ -17,6 +17,12 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.visible
     end
 
+    if params[:is_public].present? && !params[:is_public]
+      projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
+    else 
+      projects = projects.visible.joins(:members).where(members: { user_id: user.id })
+    end
+
     if params[:category].blank?
       projects = projects.joins(:members).where(members: { user_id: user.id })
     elsif params[:category].to_s == "join"
@@ -28,10 +34,10 @@ class Projects::ListMyQuery < ApplicationQuery
     elsif params[:category].to_s == "forked"  #我fork的
       fork_ids = user.fork_users.select(:id, :fork_project_id).pluck(:fork_project_id)
       projects = projects.where(id: fork_ids)
-    elsif params[:category].to_s == "public" 
-      projects = projects.visible.joins(:members).where(members: { user_id: user.id })
-    elsif params[:category].to_s == "private"
-      projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
+    # elsif params[:category].to_s == "public" 
+    #   projects = projects.visible.joins(:members).where(members: { user_id: user.id })
+    # elsif params[:category].to_s == "private"
+    #   projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
     end
 
     if params[:project_type].to_s === "common"

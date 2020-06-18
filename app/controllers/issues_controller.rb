@@ -14,14 +14,15 @@ class IssuesController < ApplicationController
 
   def index
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
-    issues = @project.issues.issue_issue
+    issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
+    
     @all_issues_size = issues.size
     @open_issues_size = issues.where.not(status_id: 5).size
     @close_issues_size = issues.where(status_id: 5).size
     @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
     @my_published_size = issues.where(author_id: current_user&.id).size
-    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?})
+    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "Issue")
     @issues_size = scopes.size
     @issues = paginate(scopes)
 
