@@ -34,7 +34,7 @@ module TagChosenHelper
     end
     project_members = project.members_user_infos
     project_members_info = []  #指派给
-    project_members.each do |member|
+    project_members.includes(user: :user_extension).each do |member|
       user = member&.user
       if user
         real_name = user.try(:show_real_name)

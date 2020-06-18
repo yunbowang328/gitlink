@@ -10,15 +10,15 @@ class PullRequestsController < ApplicationController
 
   def index
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
-    issues = @project.issues.issue_pull_request
+    issues = @project.issues.issue_pull_request.issue_index_includes.includes(:pull_request)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
     @all_issues_size = issues.size
-    @open_issues_size = issues.where.not(status_id: 5).size
-    @close_issues_size = issues.where(status_id: 5).size
+    @open_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 0}).size
+    @close_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 2}).size
     @merged_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 1}).size
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
-    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?})
+    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "PullRequest")
     @issues_size = scopes.size
     @issues = paginate(scopes)
   end
@@ -130,19 +130,6 @@ class PullRequestsController < ApplicationController
 
   end
 
-  def simple_update
-    # ActiveRecord::Base.transaction do
-    #   begin
-    #     @pull_request.update(status: 2)
-    #     @pull_request.issue.update(status_id: 5)
-    #     normal_status(1, "已拒绝")
-    #   rescue => e
-    #     normal_status(-1, e.message)
-    #     raise ActiveRecord::Rollback
-    #   end
-    # end
-  end
-
   def refuse_merge
     ActiveRecord::Base.transaction do
       begin
@@ -176,9 +163,7 @@ class PullRequestsController < ApplicationController
           }
           merge_pr = Gitea::PullRequest::MergeService.new(current_user, @repository.try(:identifier), @pull_request.try(:gpid), requests_params).call
           if @pull_request.update_attribute(:status, 1) && merge_pr[:status].to_i == 200
-            # @pull_request.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "merge")
             @pull_request&.project_trends&.update_all(action_type: "close")
-
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
@@ -192,57 +177,6 @@ class PullRequestsController < ApplicationController
     end
   end
 
-  #评审
-  def check_merge
-    # notes = params[:content]
-    # pull_request_status = params[:status]
-    # if notes.blank?
-    #   normal_status(-1, "评论内容不能为空")
-    # else
-    #   if @pull_request.status > 0
-    #     normal_status(-1, "已合并，不能评审")
-    #   else
-    #     if pull_request_status.to_i == 1
-    #       message = "评审通过："
-    #     elsif pull_request_status.to_i == 2
-    #       message = "评审请求变更："
-    #     else
-    #       message = ""
-    #     end
-    #     journal_params = {
-    #       journalized_id: @issue.id ,
-    #       journalized_type: "Issue",
-    #       user_id: current_user.id ,
-    #       notes: message + notes.to_s.strip
-    #     }
-    #     journal = Journal.new journal_params
-    #     if journal.save
-    #       if pull_request_status.present?
-    #         @pull_request.update_attribute(:status, pull_request_status.to_i)
-    #       end
-    #       if pull_request_status.to_i == 1
-    #         requests_params = {
-    #           do: "merge",
-    #           MergeMessageField: notes,
-    #           MergeTitleField: "Merge PullRequest ##{@pull_request.gpid}"
-    #         }
-    #         merge_pr = Gitea::PullRequest::MergeService.new(current_user, @repository.try(:identifier), @pull_request.try(:gpid), requests_params).call
-    #         if merge_pr
-    #           @pull_request&.project_trends&.update_all(action_type: "close")
-    #           # @pull_request.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "merge")
-    #           @issue.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
-    #           normal_status(1, "评审成功")
-    #         else
-    #           normal_status(-1, "评审失败")
-    #         end
-    #       end
-    #       normal_status(0, "评审成功")
-    #     else
-    #       normal_status(-1, "评审失败")
-    #     end
-    #   end
-    # end
-  end
 
   def check_can_merge
     target_head = params[:head]  #源分支
@@ -268,10 +202,8 @@ class PullRequestsController < ApplicationController
   private
 
   def set_repository
-    # @project = Project.find_by_identifier! params[:id]
     @repository = @project.repository
     @user = @project.owner
-    # normal_status(-1, "项目不存在") unless @project.present?
     normal_status(-1, "仓库不存在") unless @repository.present?
     normal_status(-1, "用户不存在") unless @user.present?
   end
