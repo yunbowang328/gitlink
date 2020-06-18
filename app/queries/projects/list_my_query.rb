@@ -17,7 +17,7 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.visible
     end
 
-    if params[:is_public].present? && !params[:is_public]
+    if params[:is_public].present? && params[:is_public] == "private"
       projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
     else 
       projects = projects.visible.joins(:members).where(members: { user_id: user.id })
