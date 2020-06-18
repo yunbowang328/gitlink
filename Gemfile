@@ -66,6 +66,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'prettier'
   gem 'rubocop', '~> 0.52.0'
   gem 'solargraph', '~> 0.38.0'
   gem 'awesome_print'

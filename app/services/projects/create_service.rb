@@ -46,7 +46,7 @@ class Projects::CreateService < ApplicationService
   end
 
   def get_is_public
-    params[:private] || true
+    params[:private] || false
   end
 
   def repo_is_public
