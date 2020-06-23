@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   require 'admin_constraint'
   # mount Sidekiq::Web => '/sidekiq'
 
-  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+  mount Sidekiq::Web => '/sidekiq'
 
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
