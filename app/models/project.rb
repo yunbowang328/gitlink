@@ -24,12 +24,12 @@ class Project < ApplicationRecord
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy
   has_many :pull_requests, dependent: :destroy
-  has_many :issue_tags, dependent: :destroy
+  has_many :issue_tags, -> { order("issue_tags.created_at DESC") }, dependent: :destroy
   has_many :issues, dependent: :destroy
   # has_many :user_grades, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
   has_one :project_score, dependent: :destroy
-  has_many :versions, -> { order("versions.effective_date DESC, versions.name DESC") }, dependent: :destroy
+  has_many :versions, -> { order("versions.created_on DESC, versions.name DESC") }, dependent: :destroy
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
 

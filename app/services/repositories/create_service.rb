@@ -11,19 +11,11 @@ class Repositories::CreateService < ApplicationService
     @repository = Repository.new(repository_params)
     ActiveRecord::Base.transaction do
       if @repository.save!
+        Rails.logger.info("#############__________gitea_repository_params______###########{gitea_repository_params}")
+
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
-        if project.project_type == "common"
-
-          chain_params = {
-            type: "create",
-            ownername: user.try(:login),
-            reponame: @repository.try(:id)
-          }
-          # ProjectCreateChainJob.perform_later(chain_params)  #创建上链操作
-
-        end
       end
       @repository
     end

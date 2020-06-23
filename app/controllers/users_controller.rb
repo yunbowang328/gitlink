@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list projects]
+  before_action :require_login, only: %i[me list]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def list
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def watch_users
-    watchers = Watcher.watching_users(@user.id).includes(:user).order("watchers.created_at asc")
+    watchers = Watcher.watching_users(@user.id).includes(:user).order("watchers.created_at desc")
     if params[:search].present?
       search_user_ids = User.where(id: watchers.pluck(:watchable_id)).like(params[:search]).pluck(:id)
       watchers = watchers.where(watchable_id: search_user_ids)
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
   end
 
   def fan_users
-    watchers = @user.watchers.includes(:user).order("watchers.created_at asc")
+    watchers = @user.watchers.includes(:user).order("watchers.created_at desc")
     watchers = watchers.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
 
     @watchers_count = watchers.size

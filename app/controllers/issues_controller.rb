@@ -13,14 +13,15 @@ class IssuesController < ApplicationController
 
   def index
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
-    issues = @project.issues.issue_issue
+    issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
+    
     @all_issues_size = issues.size
     @open_issues_size = issues.where.not(status_id: 5).size
     @close_issues_size = issues.where(status_id: 5).size
     @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
     @my_published_size = issues.where(author_id: current_user&.id).size
-    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?})
+    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "Issue")
     @issues_size = scopes.size
     @issues = paginate(scopes)
 
@@ -105,13 +106,8 @@ class IssuesController < ApplicationController
     elsif params[:subject].to_s.size > 255
       normal_status(-1, "标题不能超过255个字符")
     elsif (params[:issue_type].to_s == "2")
-      return normal_status(-1, "悬赏的奖金必须大于0")if params[:token].to_i == 0
-      #查看当前用户的积分
-      query_params = {
-        type: "user"
-      }.merge(tokens_params(@project))
-      user_tokens = Gitea::Repository::Hooks::QueryService.new(query_params).call
-      return normal_status(-1, "您的token值不足") if user_tokens[:value].to_i < params[:token].to_i
+      return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
+
     else
       issue_params = issue_send_params(params)
 
@@ -138,15 +134,6 @@ class IssuesController < ApplicationController
                          container_id: @issue.id, container_type: 'Issue',
                          parent_container_id: @project.id, parent_container_type: "Project",
                          tiding_type: 'issue', status: 0)
-        end
-
-        #为悬赏任务时, 扣除当前用户的积分
-        if params[:issue_type].to_s == "2"
-          change_params = {
-            change_type: "minusToken",
-            tokens: params[:token]
-          }.merge(tokens_params(@project))
-          ChangeTokenJob.perform_later(change_params)
         end
 
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
@@ -211,21 +198,6 @@ class IssuesController < ApplicationController
         @issue.update_closed_issues_count_in_project!
       end
 
-      if @issue.issue_type.to_s == "2"
-        #表示修改token值
-        if @issue.saved_change_to_attribute("token")
-          last_token = @issue.token_was
-          change_token = last_token - @issue.token
-          change_type = change_token > 0 ? "addToken" : "minusToken"
-          change_params = {
-            change_type: change_type,
-            tokens: change_token.abs
-          }.merge(tokens_params(@proeject))
-          ChangeTokenJob.perform_later(change_params)
-        end
-
-      end
-
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
       normal_status(0, "更新成功")
     else
@@ -241,13 +213,13 @@ class IssuesController < ApplicationController
     @issue_assign_to = @issue.get_assign_user
     @join_users = join_users(@issue)
     #总耗时
-    cost_time(@issue)
+    # cost_time(@issue)
 
-    #被依赖
-    @be_depended_issues_array = be_depended_issues(@issue)
+    # #被依赖
+    # @be_depended_issues_array = be_depended_issues(@issue)
 
-    #依赖于
-    depended_issues(@issue)
+    # #依赖于
+    # depended_issues(@issue)
   end
 
   def destroy
@@ -272,7 +244,6 @@ class IssuesController < ApplicationController
   end
 
   def series_update
-
     update_hash = {}
     update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
     update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
@@ -310,8 +281,6 @@ class IssuesController < ApplicationController
 
   def close_issue
     type = params[:status_id].to_i || 5
-    return normal_status(-1, "悬赏工单不允许再次打开") if @issue.issue_type.to_s == "2" && @issue.status_id.to_i == 5
-    return normal_status(-1, "您没有权限操作") if @issue.issue_type.to_s == "2" && (@issue.user_id != current_user&.id || !current_user&.admin?)
 
     if type == 5
       message = "关闭"
@@ -323,19 +292,7 @@ class IssuesController < ApplicationController
     if @issue.update_attribute(:status_id, type)
       if type == 5
         @issue&.project_trends&.update_all(action_type: "close")
-
         @issue.issue_times.update_all(end_time: Time.now)
-        if @issue.issue_type.to_s == "2"
-          tokens = @issue.token
-          change_params = {
-            change_type: "addToken",
-            tokens: tokens,
-            ownername: project.owner.try(:login),
-            reponame: project.try(:identifer),
-            username: @issue.get_assign_user.try(:login)   #指派人增加积分
-          }
-          ChangeTokenJob.perform_later(change_params)
-        end
         if @issue.issue_classify.to_s == "pull_request"
           @issue&.pull_request&.update_attribute(:status, 2)
         end
@@ -466,14 +423,5 @@ class IssuesController < ApplicationController
         author_id: current_user.id,
         project_id: @project.id
       }
-  end
-
-  def tokens_params(project)
-    {
-      ownername: project.owner.try(:login),
-      reponame: project.try(:identifer),
-      username: current_user.try(:login)
-    }
-
   end
 end

@@ -22,14 +22,14 @@ class Issue < ApplicationRecord
   scope :issue_many_includes, ->{includes(journals: :user)}
   scope :issue_issue, ->{where(issue_classify: [nil,"issue"])}
   scope :issue_pull_request, ->{where(issue_classify: "pull_request")}
-  scope :issue_index_includes, ->{includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)}
+  scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
 
   after_update :change_versions_count
   after_destroy :update_closed_issues_count_in_project!
 
 
   def get_assign_user
-    User.select(:login, :lastname,:firstname, :nickname)&.find_by_id(self.assigned_to_id)
+    User&.find_by_id(self.assigned_to_id) if self.assigned_to_id.present?
   end
 
   def create_journal_detail(change_files, issue_files, issue_file_ids, user_id)

@@ -2,7 +2,7 @@ json.identifier @project.identifier
 json.name @project.name
 json.project_id @project.id
 json.repo_id @project.repository.id
-json.issues_count @project.issues_count
+json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
 json.pull_requests_count @project.pull_requests_count
 json.project_identifier @project.identifier
 json.praises_count @project.praises_count.to_i

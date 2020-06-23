@@ -64,8 +64,8 @@ Rails.application.routes.draw do
       resources :pull_requests, except: [:destroy] do
         member do
           post :pr_merge
-          post :check_merge
-          post :simple_update
+          # post :check_merge
+          post :refuse_merge
         end
         collection do
           post :check_can_merge
