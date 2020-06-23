@@ -9,13 +9,11 @@ class Repositories::MigrateService < ApplicationService
 
   def call
     @repository = Repository.new(repository_params)
-    ActiveRecord::Base.transaction do
-      if @repository.save!
-        @repository.set_mirror! if wrapper_mirror
-        MigrateRemoteRepositoryJob.perform_later(@repository.id, user.gitea_token, gitea_repository_params)
-      end
-      @repository
+    if @repository.save!
+      @repository.set_mirror! if wrapper_mirror
+      MigrateRemoteRepositoryJob.perform_later(@repository.id, user.gitea_token, gitea_repository_params)
     end
+    @repository
   rescue => e
     puts "create mirror repository service error: #{e.message}"
     raise Error, e.message
@@ -23,7 +21,7 @@ class Repositories::MigrateService < ApplicationService
 
   private
   def repository_params
-    params.merge(project_id: project.id)
+    params.merge(project_id: project.id, identifier: params[:identifier])
   end
 
   def gitea_repository_params
