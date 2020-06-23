@@ -18,4 +18,36 @@ module RepositoriesHelper
     return nil if author_json.blank?
     find_user_by_login author_json['login']
   end
+
+  def readme_render_decode64_content(str, path)
+    return nil if str.blank?
+    content = Base64.decode64(str).force_encoding('UTF-8')
+
+    c_regex = /\!\[.*?\]\((.*?)\)/
+    src_regex = /src=\"(.*?)\"/
+    ss = content.to_s.scan(c_regex)
+    ss_src = content.to_s.scan(src_regex)
+    total_images = ss + ss_src
+    if total_images.length > 0
+      total_images.each do |s|
+        image_title = /\"(.*?)\"/
+        r_content = s[0]
+        remove_title = r_content.to_s.scan(image_title)
+        if remove_title.length > 0
+          r_content = r_content.gsub(/#{remove_title[0]}/, "").strip
+        end
+        if r_content.include?("?")
+          new_r_content = r_content + "&raw=true"
+        else 
+          new_r_content = r_content + "?raw=true"
+        end
+        unless r_content.include?("http://") || r_content.include?("https://") || r_content.include?("mailto:")
+          new_r_content = "#{path}" + new_r_content
+        end
+        content = content.gsub(/#{r_content}/, new_r_content)
+      end
+    end
+
+    return content
+  end
 end

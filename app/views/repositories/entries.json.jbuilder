@@ -17,7 +17,7 @@ json.entries do
     content =
       if entry['name'] === 'README.md'
         content = Gitea::Repository::Entries::GetService.call(@project_owner, @project.identifier, entry['name'], ref: @ref)['content']
-        render_decode64_content content
+        readme_render_decode64_content(content, @path)
       else
         entry['content']
       end
