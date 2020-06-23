@@ -8,7 +8,7 @@ class MigrateRemoteRepositoryJob < ApplicationJob
 
     gitea_repository = Gitea::Repository::MigrateService.new(token, params).call
     if gitea_repository
-      repo&.project&.update_columns(gpid: gitea_repository["id"], identifier: gitea_repository["name"])
+      repo&.project&.update_columns(gpid: gitea_repository["id"])
       repo&.mirror&.update_columns(status: Mirror.statuses[:succeeded])
     end
   end

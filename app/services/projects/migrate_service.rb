@@ -8,12 +8,10 @@ class Projects::MigrateService < ApplicationService
 
   def call
     @project = Project.new(project_params)
-    ActiveRecord::Base.transaction do
-      if @project.save!
-        Repositories::MigrateService.new(user, @project, repository_params).call
-      else
-        #
-      end
+    if @project.save!
+      Repositories::MigrateService.new(user, @project, repository_params).call
+    else
+      #
     end
     @project
   rescue => e
@@ -27,11 +25,12 @@ class Projects::MigrateService < ApplicationService
     {
       name: params[:name],
       user_id: params[:user_id],
+      project_type: set_project_type,
       description: params[:description],
+      identifier: params[:repository_name],
+      is_public: project_secretion[:public],
       project_category_id: params[:project_category_id],
       project_language_id: params[:project_language_id],
-      is_public: project_secretion[:public],
-      project_type: set_project_type
     }
   end
 
