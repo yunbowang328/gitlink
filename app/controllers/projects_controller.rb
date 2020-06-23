@@ -25,10 +25,8 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
-    ActiveRecord::Base.transaction do
-      Projects::MigrateForm.new(mirror_params).validate!
-      @project = Projects::MigrateService.new(current_user, mirror_params).call
-    end
+    Projects::MigrateForm.new(mirror_params).validate!
+    @project = Projects::MigrateService.new(current_user, mirror_params).call
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
