@@ -3,7 +3,8 @@ module ProjectsHelper
   def render_zh_project_type(project_type)
     case project_type
     when 'common' then "开源托管项目"
-    when 'mirror', 'sync_mirror' then "开源镜像项目"
+    when 'sync_mirror' then "镜像托管项目"
+    when 'mirror' then "开源镜像项目"
     end
   end
 
