@@ -20,6 +20,7 @@ class UsersController < ApplicationController
       user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
+      @projects_sync_mirrior_count = user_projects.sync_mirror.size
   end
 
   def watch_users
