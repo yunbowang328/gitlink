@@ -10,7 +10,7 @@ class Repositories::MigrateService < ApplicationService
   def call
     @repository = Repository.new(repository_params)
     if @repository.save!
-      @repository.set_mirror! if wrapper_mirror
+      @repository.set_mirror!
       MigrateRemoteRepositoryJob.perform_later(@repository.id, user.gitea_token, gitea_repository_params)
     end
     @repository
