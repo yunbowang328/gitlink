@@ -15,4 +15,22 @@ class Repository < ApplicationRecord
   def set_mirror!
     self.build_mirror(status: Mirror.statuses[:waiting]).save
   end
+
+  def mirror_status
+    self&.mirror&.numerical_for_status
+  end
+
+  def mirror_num
+    self&.mirror&.sync_num
+  end
+
+  def first_sync?
+    self&.mirror&.sync_num === 1
+  end
+
+  def sync_mirror!
+    repo_mirror = self.mirror
+    repo_mirror.set_status!(Mirror.statuses[:waiting])
+    repo_mirror.increment!(:sync_num)
+  end
 end

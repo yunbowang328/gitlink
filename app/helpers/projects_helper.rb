@@ -27,4 +27,18 @@ module ProjectsHelper
   def find_user_by_login_or_mail(identifier)
     (User.find_by_login identifier) || (User.find_by_mail identifier)
   end
+
+  def json_response(project)
+    json = {
+      identifier: project.identifier,
+      name: project.name,
+      id: project.id,
+      author: {
+        login: project.owner.login,
+        name: project.owner.real_name,
+        image_url: url_to_avatar(project.owner)
+      }
+    }
+    render json: json
+  end
 end
