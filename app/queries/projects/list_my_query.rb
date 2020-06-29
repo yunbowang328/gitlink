@@ -44,6 +44,8 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = projects.common
     elsif params[:project_type].to_s === "mirror"
       projects = projects.mirror
+    elsif params[:project_type].to_s === "sync_mirror"
+      projects = projects.sync_mirror
     end
       
     q = projects.ransack(name_or_identifier_cont: params[:search])
