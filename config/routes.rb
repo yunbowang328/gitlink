@@ -32,8 +32,8 @@ Rails.application.routes.draw do
     delete 'commons/delete',      to: 'commons#delete'
 
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
-      resources :journals, only: [:index, :create, :destroy, :edit, :update] do 
-        member do 
+      resources :journals, only: [:index, :create, :destroy, :edit, :update] do
+        member do
           get :get_children_journals
         end
       end
@@ -69,6 +69,8 @@ Rails.application.routes.draw do
         end
         collection do
           post :check_can_merge
+          get :create_merge_infos
+          get :get_branches
         end
       end
       resources :version_releases, only: [:index,:new, :create, :edit, :update, :destroy]
@@ -118,6 +120,7 @@ Rails.application.routes.draw do
         get :watch_users
         get :praise_users
         get :fork_users
+        get :simple
       end
     end
 
