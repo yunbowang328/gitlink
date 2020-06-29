@@ -16,6 +16,9 @@ json.issues do
     json.pull_request_head pr.head 
     json.pull_request_base pr.base
     json.pull_request_staus pr.status == 1 ? "merged" : (pr.status == 2 ? "closed" : "open")
+    json.is_original pr.is_original
+    json.fork_project_id pr.fork_project_id
+    json.pull_request_user pr.user.try(:show_real_name)
 
     json.id issue.id
     json.name issue.subject

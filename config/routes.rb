@@ -69,6 +69,8 @@ Rails.application.routes.draw do
         end
         collection do
           post :check_can_merge
+          get :create_merge_infos
+          get :get_branches
         end
       end
       resources :version_releases, only: [:index,:new, :create, :edit, :update, :destroy]

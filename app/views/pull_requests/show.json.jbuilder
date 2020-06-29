@@ -1,9 +1,11 @@
 json.partial! "commons/success"
 json.project_name @project.name
 json.pr_time time_from_now(@pull_request.updated_at)
+
 json.pull_request do
-  json.extract! @pull_request, :id,:base, :head, :status
+  json.extract! @pull_request, :id,:base, :head, :status,:fork_project_id, :is_original
   json.pull_request_staus @pull_request.status == 1 ? "merged" : (@pull_request.status == 2 ? "closed" : "open")
+  json.pull_request_user @pull_request.user.try(:show_real_name)
 end
 
 json.issue do
