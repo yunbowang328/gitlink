@@ -29,7 +29,17 @@ module ProjectsHelper
   end
 
   def json_response(project)
-    json = {
+    repo = project.repository
+    tmp_json = {}
+    unless project.common?
+      tmp_json = tmp_json.merge({
+        mirror_status: repo.mirror_status,
+        mirror_num: repo.mirror_num,
+        first_sync: repo.first_sync?
+      })
+    end
+
+    tmp_json = tmp_json.merge({
       identifier: project.identifier,
       name: project.name,
       id: project.id,
@@ -38,7 +48,7 @@ module ProjectsHelper
         name: project.owner.real_name,
         image_url: url_to_avatar(project.owner)
       }
-    }
-    render json: json
+    }).compact
+    render json: tmp_json
   end
 end
