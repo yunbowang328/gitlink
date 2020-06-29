@@ -1,3 +1,7 @@
 json.partial! "commons/success"
-json.partial! "pull_requests/merge_item"
+json.project_id @project.id
 json.branches @all_branches
+json.is_fork @is_fork
+json.projects_names @projects_names
+json.merge_projects @merge_projects
+# json.merge_branches @merge_branches

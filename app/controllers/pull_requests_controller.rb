@@ -2,15 +2,15 @@ class PullRequestsController < ApplicationController
   before_action :require_login, except: [:index, :show]
   before_action :find_project_with_id
   before_action :set_repository
-  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge]
-  before_action :get_relatived, only: [:new, :edit]
+  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos]
+  # before_action :get_relatived, only: [:edit]
   include TagChosenHelper
   include ApplicationHelper
 
 
   def index
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
-    issues = @project.issues.issue_pull_request.issue_index_includes.includes(:pull_request)
+    issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
     @all_issues_size = issues.size
     @open_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 0}).size
@@ -24,13 +24,26 @@ class PullRequestsController < ApplicationController
   end
 
   def new
-    @all_branches = []
-    get_all_branches = Gitea::Repository::Branches::ListService.new(@user, @repository.try(:identifier)).call
-    if get_all_branches && get_all_branches.size > 0
-      get_all_branches.each do |b|
-        @all_branches.push(b["name"])
-      end
+    @all_branches = PullRequests::BranchesService.new(@user, @project).call
+    @is_fork = @project.forked_from_project_id.present?
+    @projects_names = [{
+      project_name: "#{@user.try(:show_real_name)}/#{@repository.try(:identifier)}",
+      project_id: @project.id
+    }]
+    @merge_projects = @projects_names
+    fork_project = @project.fork_project if @is_fork
+    if fork_project.present?
+      @merge_projects.push({
+        project_name: "#{fork_project.owner.try(:show_real_name)}/#{fork_project.repository.try(:identifier)}",
+        project_id: fork_project.id
+      })
     end
+  end
+
+  def get_branches
+    branch_result = PullRequests::BranchesService.new(@user, @project).call
+    render json: branch_result
+    # return json: branch_result
   end
 
   def create
@@ -81,6 +94,8 @@ class PullRequestsController < ApplicationController
   end
 
   def edit
+    @fork_project_user = @project&.fork_project&.owner.try(:show_real_name)
+    @fork_project_identifier = @project&.fork_project&.repository.try(:identifier)
     
   end
 
@@ -102,7 +117,7 @@ class PullRequestsController < ApplicationController
           end
 
           if @issue.update_attributes(@issue_params)
-            if @pull_request.update_attributes(@local_params)
+            if @pull_request.update_attributes(@local_params.compact)
               gitea_request = Gitea::PullRequest::UpdateService.new(current_user, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
               if gitea_request
                 if params[:issue_tag_ids].present?
@@ -141,6 +156,10 @@ class PullRequestsController < ApplicationController
         raise ActiveRecord::Rollback
       end
     end
+  end
+
+  def create_merge_infos
+    get_relatived
   end
 
   def show
@@ -237,7 +256,9 @@ class PullRequestsController < ApplicationController
       assignee: current_user.try(:login),
       assignees: ["#{params[:assigned_login].to_s}"],
       labels: params[:issue_tag_ids],
-      due_date: Time.now
+      due_date: Time.now,
+      fork_project_id: params[:fork_project_id],
+      is_original: params[:is_original]
     })
     @issue_params = {
       author_id: current_user.id,
