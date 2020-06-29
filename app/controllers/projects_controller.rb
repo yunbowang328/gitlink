@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
-  before_action :require_login, except: %i[index branches group_type_list]
+  include ProjectsHelper
+  before_action :require_login, except: %i[index branches group_type_list simple]
   before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_users]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_user]
@@ -96,6 +97,12 @@ class ProjectsController < ApplicationController
     fork_users = @project.fork_users.includes(:user, :project).order("fork_users.created_at desc").distinct
     @forks_count = fork_users.size
     @fork_users = paginate(fork_users)
+  end
+
+  def simple
+    project = Project.includes(:owner).select(:id, :name, :identifier, :user_id).find params[:id]
+
+    json_response(project)
   end
 
   private
