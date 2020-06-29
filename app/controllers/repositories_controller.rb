@@ -8,14 +8,11 @@ class RepositoriesController < ApplicationController
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
   before_action :get_ref, only: %i[entries sub_entries]
-  before_action :get_latest_commit, :get_ref, only: %i[entries sub_entries]
+  before_action :get_statistics, only: %i[entries sub_entries]
 
   def show
     @user = current_user
-    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
-    @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
-      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call[:total_count]
-    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
+    @repo = @project.repository
     @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
@@ -96,11 +93,13 @@ class RepositoriesController < ApplicationController
   end
 
   def repo_hook
-    
+
   end
 
   def sync_mirror
-    @repo&.mirror.set_status!(Mirror.statuses[:waiting])
+    return render_error("正在镜像中..") if  @repo.mirror.warning?
+
+    @repo.sync_mirror!
     SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)
     render_ok
   end
@@ -124,9 +123,17 @@ class RepositoriesController < ApplicationController
 
   # TODO 获取最新commit信息
   def get_latest_commit
-    @latest_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+    Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
       sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
-    @latest_commit = @latest_commit.blank? ? nil : @latest_commit[:body][0]
+  end
+
+  def get_statistics
+    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
+    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
+
+    latest_commit = get_latest_commit
+    @latest_commit = latest_commit[:body][0]
+    @commits_count = latest_commit[:total_count]
   end
 
   def get_ref
