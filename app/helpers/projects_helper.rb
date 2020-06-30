@@ -35,6 +35,7 @@ module ProjectsHelper
       tmp_json = tmp_json.merge({
         mirror_status: repo.mirror_status,
         mirror_num: repo.mirror_num,
+        mirror_url: repo.mirror_url,
         first_sync: repo.first_sync?
       })
     end
@@ -43,6 +44,7 @@ module ProjectsHelper
       identifier: project.identifier,
       name: project.name,
       id: project.id,
+      type: project.numerical_for_project_type,
       author: {
         login: project.owner.login,
         name: project.owner.real_name,

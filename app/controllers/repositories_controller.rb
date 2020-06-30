@@ -132,8 +132,8 @@ class RepositoriesController < ApplicationController
     @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
 
     latest_commit = get_latest_commit
-    @latest_commit = latest_commit[:body][0]
-    @commits_count = latest_commit[:total_count]
+    @latest_commit = latest_commit[:body][0] if latest_commit.present?
+    @commits_count = latest_commit[:total_count] if latest_commit.present?
   end
 
   def get_ref
