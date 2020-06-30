@@ -7,6 +7,7 @@ json.search_count @issues_size
 json.limit @limit
 json.user_admin_or_member @user_admin_or_member
 json.project_name @project.name
+json.project_author_name @project.owner.try(:login)
 
 json.issues do
   json.array! @issues.to_a do |issue|
@@ -17,9 +18,10 @@ json.issues do
     json.pull_request_base pr.base
     json.pull_request_staus pr.status == 1 ? "merged" : (pr.status == 2 ? "closed" : "open")
     json.is_original pr.is_original
-    json.fork_project_id pr.fork_project_id
-    json.pull_request_user pr.user.try(:show_real_name)
+    json.fork_project_id pr&.fork_project_id
+    json.fork_project_user pr&.fork_project&.owner.try(:login)
 
+    
     json.id issue.id
     json.name issue.subject
     json.pr_time time_from_now(pr.status == 1 ? pr.updated_at : issue.updated_on)

@@ -27,6 +27,7 @@ class PullRequestsController < ApplicationController
     @all_branches = PullRequests::BranchesService.new(@user, @project).call
     @is_fork = @project.forked_from_project_id.present?
     @projects_names = [{
+      project_user_login: @user.try(:login),
       project_name: "#{@user.try(:show_real_name)}/#{@repository.try(:identifier)}",
       project_id: @project.id
     }]
@@ -34,6 +35,7 @@ class PullRequestsController < ApplicationController
     fork_project = @project.fork_project if @is_fork
     if fork_project.present?
       @merge_projects.push({
+        project_user_login: fork_project.owner.try(:login),
         project_name: "#{fork_project.owner.try(:show_real_name)}/#{fork_project.repository.try(:identifier)}",
         project_id: fork_project.id
       })
@@ -57,8 +59,16 @@ class PullRequestsController < ApplicationController
           merge_params
           pull_issue = Issue.new(@issue_params)
           if pull_issue.save!
-            local_requests = PullRequest.new(@local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: pull_issue.id))
+            pr_params = {
+              user_id: current_user.try(:id), 
+              project_id: @project.id, 
+              issue_id: pull_issue.id,
+              fork_project_id: params[:fork_project_id],           
+              is_original: params[:is_original]
+            }
+            local_requests = PullRequest.new(@local_params.merge(pr_params))
             if local_requests.save
+              @requests_params.merge!(head: "#{params[:merge_user_login]}:#{params[:head]}") if local_requests.is_original && params[:merge_user_login]
               gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), @requests_params).call
               if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
                 if params[:issue_tag_ids].present?
@@ -94,9 +104,9 @@ class PullRequestsController < ApplicationController
   end
 
   def edit
-    @fork_project_user = @project&.fork_project&.owner.try(:show_real_name)
+    @fork_project_user_name = @project&.fork_project&.owner.try(:show_real_name)
+    @fork_project_user = @project&.fork_project&.owner.try(:login)
     @fork_project_identifier = @project&.fork_project&.repository.try(:identifier)
-    
   end
 
   def update
@@ -118,7 +128,7 @@ class PullRequestsController < ApplicationController
 
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
-              gitea_request = Gitea::PullRequest::UpdateService.new(current_user, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
+              gitea_request = Gitea::PullRequest::UpdateService.new(@project.owner, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
               if gitea_request
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
@@ -200,12 +210,13 @@ class PullRequestsController < ApplicationController
   def check_can_merge
     target_head = params[:head]  #源分支
     target_base = params[:base]  #目标分支
+    is_original = params[:is_original]
     if target_head.blank? || target_base.blank?
       normal_status(-2, "请选择分支")
-    elsif target_head === target_base
+    elsif target_head === target_base && !is_original
       normal_status(-2, "分支内容相同，无需创建合并请求")
     else
-      can_merge = @project&.pull_requests.where(user_id: current_user&.id, head: target_head, base: target_base, status: 0)
+      can_merge = @project&.pull_requests.where(user_id: current_user&.id, head: target_head, base: target_base, status: 0, is_original: is_original, fork_project_id: params[:fork_project_id])
       if can_merge.present?
         render json: {
           status: -2,
@@ -256,9 +267,7 @@ class PullRequestsController < ApplicationController
       assignee: current_user.try(:login),
       assignees: ["#{params[:assigned_login].to_s}"],
       labels: params[:issue_tag_ids],
-      due_date: Time.now,
-      fork_project_id: params[:fork_project_id],
-      is_original: params[:is_original]
+      due_date: Time.now
     })
     @issue_params = {
       author_id: current_user.id,
