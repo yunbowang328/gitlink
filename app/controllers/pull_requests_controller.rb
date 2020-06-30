@@ -174,7 +174,7 @@ class PullRequestsController < ApplicationController
   end
 
   def show
-    @user_permission = current_user.present? && current_user.logged? && (@issue.assigned_to_id == current_user.id || current_user.admin? )
+    @user_permission = current_user.present? && current_user.logged? && (@issue.assigned_to_id == current_user.id || @project.user_id == current_user.id || @project.manager?(current_user) )
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
 
