@@ -128,7 +128,7 @@ class PullRequestsController < ApplicationController
 
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
-              gitea_request = Gitea::PullRequest::UpdateService.new(current_user, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
+              gitea_request = Gitea::PullRequest::UpdateService.new(@project.owner, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
               if gitea_request
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
