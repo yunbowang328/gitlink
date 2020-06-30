@@ -60,16 +60,16 @@ class PullRequestsController < ApplicationController
           pull_issue = Issue.new(@issue_params)
           if pull_issue.save!
             pr_params = {
-              user_id: current_user.try(:id), 
-              project_id: @project.id, 
+              user_id: current_user.try(:id),
+              project_id: @project.id,
               issue_id: pull_issue.id,
-              fork_project_id: params[:fork_project_id],           
+              fork_project_id: params[:fork_project_id],
               is_original: params[:is_original]
             }
             local_requests = PullRequest.new(@local_params.merge(pr_params))
             if local_requests.save
-              @requests_params.merge!(head: "#{params[:merge_user_login]}:#{params[:head]}") if local_requests.is_original && params[:merge_user_login]
-              gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), @requests_params).call
+              remote_pr_params = @local_params.merge(head: "#{params[:merge_user_login]}:#{params[:head]}").compact if local_requests.is_original && params[:merge_user_login]
+              gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
               if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
@@ -248,14 +248,14 @@ class PullRequestsController < ApplicationController
     end
   end
 
-  def get_relatived 
+  def get_relatived
     @project_tags = @project.issue_tags&.select(:id,:name, :color).as_json
     @project_versions = @project.versions&.select(:id,:name, :status).as_json
     @project_members = @project.members_user_infos
     @project_priories = IssuePriority&.select(:id,:name, :position).as_json
   end
 
-  def merge_params 
+  def merge_params
     @local_params = {
       title: params[:title],  #标题
       body:	params[:body],  #内容
