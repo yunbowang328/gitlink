@@ -24,12 +24,11 @@ class Gitea::Repository::Entries::ListService < Gitea::ClientService
   end
 
   def render_result(response)
-    body = JSON.parse(response.body)
     case response.status
     when 200
-      body
+      JSON.parse(response.body).merge({"status": 1})
     else
-      {status: -1, message: "#{body['message']}"}
+      {'status': -1, 'message': "#{body['message']}"}
     end
   end
 end
