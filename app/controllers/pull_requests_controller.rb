@@ -69,7 +69,7 @@ class PullRequestsController < ApplicationController
             local_requests = PullRequest.new(@local_params.merge(pr_params))
             if local_requests.save
               @requests_params.merge!(head: "#{params[:merge_user_login]}:#{params[:head]}") if local_requests.is_original && params[:merge_user_login]
-              gitea_request = Gitea::PullRequest::CreateService.new(@project.owner.try(:gitea_token), @project.owner, @repository.try(:identifier), @requests_params).call
+              gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), @requests_params).call
               if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
