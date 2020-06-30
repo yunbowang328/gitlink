@@ -36,7 +36,7 @@ module ProjectsHelper
         mirror_status: repo.mirror_status,
         mirror_num: repo.mirror_num,
         mirror_url: repo.mirror_url,
-        first_sync: repo.first_sync?,
+        first_sync: repo.first_sync?
       })
     end
 
