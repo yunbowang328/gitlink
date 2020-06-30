@@ -28,7 +28,7 @@ class RepositoriesController < ApplicationController
     @project.increment!(:visits)
     @project_owner = @project.owner
     @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
-    @entries = @entries.sort_by{ |hash| hash['type'] }
+    @entries = @entries.sort_by{ |hash| hash['type'] } if @entries.present?
     @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
   end
 
