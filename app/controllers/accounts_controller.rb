@@ -269,7 +269,9 @@ class AccountsController < ApplicationController
       cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
     end
     cookies[autologin_cookie_name] = cookie_options
-    logger.info("cookies is #{cookies}")
+    cookies.signed[:user_id] ||= user.id
+
+    logger.info("cookies is #{cookies} ======> #{cookies.signed[:user_id]} =====> #{cookies[autologin_cookie_name]}")
   end
 
   def logout

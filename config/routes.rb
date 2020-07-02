@@ -2,9 +2,11 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-  # mount Sidekiq::Web => '/sidekiq'
 
   mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+
+  # Serve websocket cable requests in-process
+  mount ActionCable.server => '/cable'
 
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
