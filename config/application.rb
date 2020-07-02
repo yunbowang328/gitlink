@@ -29,6 +29,9 @@ module Educoderplus
     # job
     config.active_job.queue_adapter = :sidekiq
 
+    # disable actioncable development nend true
+    # config.action_cable.disable_request_forgery_protection = true
+
     config.middleware.use OmniAuth::Builder do
       provider :cas, url: 'https://urp.tfswufe.edu.cn/cas'
     end

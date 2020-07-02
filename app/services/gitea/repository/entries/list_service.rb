@@ -29,7 +29,6 @@ class Gitea::Repository::Entries::ListService < Gitea::ClientService
     when 200
       body
     else
-      Rails.logger.info("########__________has_error_______##########{body['message']}")
      []
     end
   end

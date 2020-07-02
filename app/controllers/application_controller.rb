@@ -342,7 +342,9 @@ class ApplicationController < ActionController::Base
 			elsif params[:debug] == 'student'
 				User.current = User.find 8686
 			elsif params[:debug] == 'admin'
-				User.current = User.find 1
+				user = User.find 1
+				User.current = user
+				cookies.signed[:user_id] = user.id
 			end
 		end
 		# User.current = User.find 81403

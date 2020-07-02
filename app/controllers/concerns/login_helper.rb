@@ -24,8 +24,10 @@ module LoginHelper
     unless  cookies[autologin_cookie_name].present?
       cookies[autologin_cookie_name] = cookie_options
     end
+    # for action cable
+    cookies.signed[:user_id] ||= user.id
 
-    Rails.logger.info("cookies is #{cookies}")
+    Rails.logger.info("cookies is #{cookies} ======> #{cookies.signed[:user_id]}")
   end
 
   def successful_authentication(user)
