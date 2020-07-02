@@ -12,7 +12,7 @@ json.target entry['target']
 json.download_url entry['download_url']
 json.direct_download direct_download
 json.image_type image_type
-
+json.is_readme_file is_readme_type?(file_name)
 if entry['latest_commit']
   json.partial! 'last_commit', entry: entry
 end
