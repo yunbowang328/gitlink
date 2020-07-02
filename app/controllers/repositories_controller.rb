@@ -97,7 +97,7 @@ class RepositoriesController < ApplicationController
   end
 
   def sync_mirror
-    return render_error("正在镜像中..") if  @repo.mirror.warning?
+    return render_error("正在镜像中..") if  @repo.mirror.waiting?
 
     @repo.sync_mirror!
     SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)

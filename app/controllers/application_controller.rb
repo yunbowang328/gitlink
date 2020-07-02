@@ -386,7 +386,6 @@ class ApplicationController < ActionController::Base
 		else
 			User.current
 		end
-		# User.current
 	end
 
 	## 默认输出json
