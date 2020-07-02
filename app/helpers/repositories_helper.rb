@@ -14,6 +14,12 @@ module RepositoriesHelper
     default_type.include?(str&.downcase)
   end
 
+  def is_readme_type?(str)
+    return false if str.blank?
+    readme_types = ["readme.md", "readme", "readme_en.md", "readme_zh.md", "readme_en", "readme_zh"]
+    readme_types.include?(str.to_s.downcase)
+  end
+
   def render_commit_author(author_json)
     return nil if author_json.blank?
     find_user_by_login author_json['login']
