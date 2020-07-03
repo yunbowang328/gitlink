@@ -11,7 +11,7 @@ end
 json.issue do
   json.extract! @issue, :id,:subject,:description,:is_private, :branch_name
   json.project_author_name @project.owner.try(:login)
-  json.user_permission @user_permission
+  #json.user_permission @user_permission
   json.closed_on @issue.closed_on.present? ? format_time(@issue.closed_on) : ""
   json.created_at format_time(@issue.created_on)
   json.assign_user_name @issue_assign_to.try(:show_real_name)

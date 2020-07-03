@@ -47,7 +47,7 @@ class Project < ApplicationRecord
   end
 
   def members_user_infos
-    members.joins("left join users on members.user_id = users.id").includes(:user).where("users.type = ?", "User")
+    members.joins(:roles).where("roles.name in ('Manager', 'Developer')").joins("left join users on members.user_id = users.id ").includes(:user).where("users.type = ?", "User")
     # members.joins("left join users on members.user_id = users.id").select("users.id", "users.login","users.firstname","users.lastname")
     #   .pluck("users.id", "users.login","users.lastname", "users.firstname")
   end
