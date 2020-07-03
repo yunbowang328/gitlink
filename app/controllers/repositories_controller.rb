@@ -53,6 +53,8 @@ class RepositoriesController < ApplicationController
     @project_owner = @project.owner
     @hash_commit = Gitea::Repository::Commits::ListService.new(@project_owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      Rails.logger.info("#####################_______hash_commit______############{@hash_commit}")
+      Rails.logger.info("#####################_______hash_commit_size______############{@hash_commit.size}")
   end
 
   def commit
