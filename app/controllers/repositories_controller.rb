@@ -8,8 +8,8 @@ class RepositoriesController < ApplicationController
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
   before_action :get_ref, only: %i[entries sub_entries top_counts]
-  before_action :get_statistics, only: %i[top_counts]
   before_action :get_latest_commit, %i[entries sub_entries top_counts]
+  before_action :get_statistics, only: %i[top_counts]
 
   def show
     @user = current_user
