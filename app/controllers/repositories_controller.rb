@@ -7,8 +7,9 @@ class RepositoriesController < ApplicationController
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries]
-  before_action :get_statistics, only: %i[entries sub_entries]
+  before_action :get_ref, only: %i[entries sub_entries top_counts]
+  before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
+  before_action :get_statistics, only: %i[top_counts]
 
   def show
     @user = current_user
@@ -30,6 +31,10 @@ class RepositoriesController < ApplicationController
     @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
     @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
     @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+  end
+
+  def top_counts
+    @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
   end
 
   def sub_entries
@@ -122,7 +127,7 @@ class RepositoriesController < ApplicationController
   end
 
   # TODO 获取最新commit信息
-  def get_latest_commit
+  def project_commits
     Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
       sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
   end
@@ -130,14 +135,16 @@ class RepositoriesController < ApplicationController
   def get_statistics
     @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
     @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
-
-    latest_commit = get_latest_commit
-    @latest_commit = latest_commit[:body][0] if latest_commit.present?
-    @commits_count = latest_commit[:total_count] if latest_commit.present?
   end
 
   def get_ref
     @ref = params[:ref] || "master"
+  end
+
+  def get_latest_commit 
+    latest_commit = project_commits
+    @latest_commit = latest_commit[:body][0] if latest_commit.present?
+    @commits_count = latest_commit[:total_count] if latest_commit.present?
   end
 
   def content_params

@@ -6,9 +6,9 @@ json.last_commit do
     json.nil!
   end
 end
-json.tags_count @tags_count
-json.branches_count @branches_count
-json.commits_count @commits_count
+#json.tags_count @tags_count
+#json.branches_count @branches_count
+#json.commits_count @commits_count
 json.entries do
   json.array! @sub_entries do |entry|
     json.partial! 'repositories/simple_entry', locals: { entry: entry }
