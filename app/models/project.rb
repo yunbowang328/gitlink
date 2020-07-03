@@ -38,6 +38,9 @@ class Project < ApplicationRecord
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
 
 
+  def self.search_project(search)
+    ransack(name_or_identifier_cont: search)
+  end
   # 创建者
   def creator
     User.find(user_id).full_name
