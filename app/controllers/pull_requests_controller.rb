@@ -188,7 +188,7 @@ class PullRequestsController < ApplicationController
       ActiveRecord::Base.transaction do
         begin
           requests_params = {
-            do: params[:do],
+            Do: params[:do],
             MergeMessageField: params[:body],
             MergeTitleField: params[:title]
           }
