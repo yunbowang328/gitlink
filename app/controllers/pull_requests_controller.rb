@@ -192,7 +192,7 @@ class PullRequestsController < ApplicationController
             MergeMessageField: params[:body],
             MergeTitleField: params[:title]
           }
-          merge_pr = Gitea::PullRequest::MergeService.call(current_user.gitea_token, @repository.owner.login,
+          merge_pr = Gitea::PullRequest::MergeService.call(current_user.gitea_token, @project.owner.login,
             @repository.try(:identifier), @pull_request.try(:gpid), requests_params)
           if @pull_request.update_attribute(:status, 1) && merge_pr[:status].to_i == 200
             @pull_request&.project_trends&.update_all(action_type: "close")
