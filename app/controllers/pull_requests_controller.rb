@@ -181,6 +181,8 @@ class PullRequestsController < ApplicationController
   end
 
   def pr_merge
+    return render_forbidden("你没有权限操作.") if @project.reporter?(current_user)
+
     if params[:do].blank?
       normal_status(-1, "请选择合并方式")
     else
@@ -191,7 +193,8 @@ class PullRequestsController < ApplicationController
             MergeMessageField: params[:body],
             MergeTitleField: params[:title]
           }
-          merge_pr = Gitea::PullRequest::MergeService.new(current_user, @repository.try(:identifier), @pull_request.try(:gpid), requests_params).call
+          merge_pr = Gitea::PullRequest::MergeService.call(current_user.gitea_token, @repository.owner.login,
+            @repository.try(:identifier), @pull_request.try(:gpid), requests_params)
           if @pull_request.update_attribute(:status, 1) && merge_pr[:status].to_i == 200
             @pull_request&.project_trends&.update_all(action_type: "close")
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
