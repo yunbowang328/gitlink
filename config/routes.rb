@@ -214,6 +214,7 @@ Rails.application.routes.draw do
         delete :delete_file
         post :repo_hook
         post :sync_mirror
+        get :top_counts
         get 'commits/:sha', to: 'repositories#commit', as: 'commit'
       end
     end
