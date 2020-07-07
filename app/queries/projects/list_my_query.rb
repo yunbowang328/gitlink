@@ -17,16 +17,15 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.visible
     end
 
-    if params[:is_public].present? && params[:is_public] == "private"
-      projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
-    else 
-      projects = projects.visible.joins(:members).where(members: { user_id: user.id })
+    if params[:is_public].present?
+      projects = projects.is_private.members_projects(user.id) if params[:is_public].to_s == "private"
+      projects = projects.visible.members_projects(user.id) if params[:is_public].to_s == "public"
     end
 
     if params[:category].blank?
-      projects = projects.joins(:members).where(members: { user_id: user.id })
+      projects = projects.members_projects(user.id)
     elsif params[:category].to_s == "join"
-      projects = projects.where.not(user_id: user.id).joins(:members).where(members: { user_id: user.id })
+      projects = projects.where.not(user_id: user.id).members_projects(user.id)
     elsif params[:category].to_s == "manage"
       projects = projects.where(user_id: user.id)
     elsif params[:category].to_s == "watched"  #我关注的

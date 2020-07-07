@@ -165,4 +165,8 @@ class Project < ApplicationRecord
     Project.find_by(id: self.forked_from_project_id)
   end
 
+  def self.members_projects(member_user_id)
+    joins(:members).where(members: { user_id: member_user_id})
+  end
+
 end
