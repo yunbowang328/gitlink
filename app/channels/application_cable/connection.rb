@@ -9,8 +9,9 @@ module ApplicationCable
 
     private
       def find_verified_user
-        puts "############### cookies.signed[:signed_user_id]: #{cookies.signed[:user_id]}"
+        puts "############### cookies.signed[:user_id]: #{cookies.signed[:user_id]}"
         if current_user = User.find_by(id: cookies.signed[:user_id])
+          puts "############### find_verified_user success! ###############"
           current_user
         else
           reject_unauthorized_connection
