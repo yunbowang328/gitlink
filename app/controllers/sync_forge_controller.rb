@@ -2,11 +2,10 @@ class SyncForgeController < ApplicationController
   before_action :check_token
 
   def create 
-    sync_params = params["sync_params"]
-    Rails.logger.info("========sync_params=1==#{params["sync_params"]}====")
+    sync_params = params[:sync_params]
     Rails.logger.info("========sync_params=2==#{params[:sync_params]}====")
 
-    sync_params = eval(sync_params)
+    # sync_params = eval(sync_params)
 
     #以前已同步的项目,那么肯定存在仓库
     if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
@@ -188,7 +187,7 @@ class SyncForgeController < ApplicationController
   end
 
   def check_token 
-    sync_params = params[:sync_params][0]
+    sync_params = params[:sync_params]
     unless sync_params[:token] && sync_params[:token] == get_token
       render json: {message: "token_errors"}
     end
