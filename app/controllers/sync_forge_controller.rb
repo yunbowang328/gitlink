@@ -3,6 +3,8 @@ class SyncForgeController < ApplicationController
 
   def create 
     sync_params = params[:sync_params]
+    sync_params = eval(sync_params)
+    Rails.logger.info("========sync_params===#{sync_params}====")
 
     #以前已同步的项目,那么肯定存在仓库
     if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
@@ -29,8 +31,9 @@ class SyncForgeController < ApplicationController
     params.permit!
     users_params = params[:sync_params]
     users_params.each do |u|
-      Rails.logger.info("--------------user_login:#{u[:user_params][:login]}--------------------")
-      unless User.exists?(login: u[:user_params][:login])
+      if User.exists?(login: u[:user_params][:login])
+        normal_status(-1, "user:#{u[:user_params][:login]} is present")
+      else
         new_user = User.new(u[:user_params])
         username = new_user.login
         password = "12345678"
@@ -42,7 +45,7 @@ class SyncForgeController < ApplicationController
             new_user.gitea_token = result['sha1']
             new_user.gitea_uid = gitea_user['id']
             if new_user.save!
-              new_user.user_extension.create!(u[:user_extensions]) if u[:user_extensions].present?
+              UserExtension.create!(u[:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present?
               normal_status(1, "created_succrss")
             end
           else
@@ -109,7 +112,8 @@ class SyncForgeController < ApplicationController
       end
       pre_project_score.save! if change_num > 0   #如果 project_score有变化则更新
     else 
-      project.project_score.create!(project_scores)
+      ProjectScore.create!(project_scores.merge(project_id: project.id))
+      # project.project_score.create!(project_scores)
     end
   end
 
