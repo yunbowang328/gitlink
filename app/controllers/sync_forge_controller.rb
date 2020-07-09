@@ -4,14 +4,13 @@ class SyncForgeController < ApplicationController
   def create 
     ActiveRecord::Base.transaction do
       sync_params = params[:sync_params]
-      
-  
       #以前已同步的项目,那么肯定存在仓库
       if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
+        Rails.logger.info("=================begin_to_update_project========")
         project = Project.find_by(id: sync_params[:id])
         check_sync_project(project, sync_params)
       else #新建项目
-        
+       Rails.logger.info("=================begin_to_create_new_project========")
         project_user = User.where(login: sync_params[:owner_login]).first 
         project_params = {
           identifier: sync_params[:identifier],
@@ -24,9 +23,10 @@ class SyncForgeController < ApplicationController
           SyncRepositoryJob.perform_later(project.repository, sync_params[:repository_params]) if sync_params[:repository_params]
           check_new_project(project, sync_params)
         end
-    rescue Exception => e
-      Rails.logger.info("========has_errors:==#{e}====")
+      end
     end
+  rescue Exception => e
+    SyncLog.sync_log("=================has_errors:==#{e}")
   end
 
   def sync_users
