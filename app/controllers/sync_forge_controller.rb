@@ -13,7 +13,7 @@ class SyncForgeController < ApplicationController
         Rails.logger.info("=================begin_to_create_new_project========")
         project_user = User.where(login: sync_params[:owner_login]).first 
         project_params = {
-          identifier: sync_params[:identifier],
+          repository_name: sync_params[:identifier],
           user_id: project_user.id,
           private: !sync_params[:is_public],
           name: sync_params[:name]
