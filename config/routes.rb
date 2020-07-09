@@ -16,6 +16,11 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    resources :sync_forge, only: [:create] do 
+      collection do 
+        post :sync_users
+      end
+    end
     resources :composes do
       resources :compose_projects, only: [:create, :destroy]
     end
