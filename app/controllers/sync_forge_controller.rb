@@ -2,29 +2,30 @@ class SyncForgeController < ApplicationController
   before_action :check_token
 
   def create 
-    sync_params = params[:sync_params]
-    Rails.logger.info("========sync_params=2==#{params[:sync_params]}====")
-
-    # sync_params = eval(sync_params)
-
-    #以前已同步的项目,那么肯定存在仓库
-    if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
-      project = Project.find_by(id: sync_params[:id])
-      check_sync_project(project, sync_params)
-    else #新建项目
+    ActiveRecord::Base.transaction do
+      sync_params = params[:sync_params]
       
-      project_user = User.where(login: sync_params[:owner_login]).first.id 
-      project_params = {
-        identifier: sync_params[:identifier],
-        user_id: user_id,
-        is_public: sync_params[:is_public]
-      }
-      project = Projects::CreateService.new(project_user, project_params).call
-      if project.present?
-        project.project_score.create!( sync_params[:project_score]) if sync_params[:project_score]
-        SyncRepositoryJob.perform_later(project.repository, sync_params[:repository_params]) if sync_params[:repository_params]
-        check_new_project(project, sync_params)
-      end
+  
+      #以前已同步的项目,那么肯定存在仓库
+      if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
+        project = Project.find_by(id: sync_params[:id])
+        check_sync_project(project, sync_params)
+      else #新建项目
+        
+        project_user = User.where(login: sync_params[:owner_login]).first 
+        project_params = {
+          identifier: sync_params[:identifier],
+          user_id: project_user.id,
+          is_public: sync_params[:is_public]
+        }
+        project = Projects::CreateService.new(project_user, project_params).call
+        if project.present?
+          project.project_score.create!( sync_params[:project_score]) if sync_params[:project_score]
+          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository_params]) if sync_params[:repository_params]
+          check_new_project(project, sync_params)
+        end
+    rescue Exception => e
+      Rails.logger.info("========has_errors:==#{e}====")
     end
   end
 
