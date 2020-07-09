@@ -27,7 +27,7 @@ class SyncForgeController < ApplicationController
       end
     end
   rescue Exception => e
-    SyncLog.sync_log("=================has_errors:==#{e}")
+    Rails.logger.info("=================has_errors:==#{e}")
   end
 
   def sync_users
