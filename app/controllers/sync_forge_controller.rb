@@ -15,7 +15,8 @@ class SyncForgeController < ApplicationController
         project_params = {
           identifier: sync_params[:identifier],
           user_id: project_user.id,
-          is_public: sync_params[:is_public]
+          private: !sync_params[:is_public],
+          name: sync_params[:name]
         }
         project = Projects::CreateService.new(project_user, project_params).call
         if project.present?
@@ -26,7 +27,7 @@ class SyncForgeController < ApplicationController
       end
     end
   rescue Exception => e
-    SyncLog.sync_log("=================has_errors:==#{e}")
+    Rails.logger.info("=================has_errors:==#{e}")
   end
 
   def sync_users
