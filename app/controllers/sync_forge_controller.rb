@@ -5,9 +5,9 @@ class SyncForgeController < ApplicationController
     ActiveRecord::Base.transaction do
       sync_params = params[:sync_params]
       #以前已同步的项目,那么肯定存在仓库
-      if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
+      if Project.exists?(id: sync_params[:id]) || Project.exists?(identifier: sync_params[:identifier])
         Rails.logger.info("=================begin_to_update_project========")
-        project = Project.find_by(id: sync_params[:id])
+        project = Project.find_by(id: sync_params[:id]) || Project.where(identifier: sync_params[:identifier])&.first
         check_sync_project(project, sync_params)
       else #新建项目
         Rails.logger.info("=================begin_to_create_new_project========")
@@ -20,7 +20,7 @@ class SyncForgeController < ApplicationController
         }
         project = Projects::CreateService.new(project_user, project_params).call
         if project.present?
-          project.project_score.create!( sync_params[:project_score]) if sync_params[:project_score]
+          ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score]
           SyncRepositoryJob.perform_later(project.repository, sync_params[:repository_params]) if sync_params[:repository_params]
           check_new_project(project, sync_params)
         end
