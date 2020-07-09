@@ -29,6 +29,7 @@ class SyncForgeController < ApplicationController
     params.permit!
     users_params = params[:sync_params]
     users_params.each do |u|
+      Rails.logger.info("--------------user_login:#{u[:user_params][:login]}--------------------")
       unless User.exists?(login: u[:user_params][:login])
         new_user = User.new(u[:user_params])
         username = new_user.login
