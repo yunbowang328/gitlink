@@ -35,7 +35,7 @@ class SyncForgeController < ApplicationController
 
     users_params.each do |u|
       if User.exists?(login: u[:user_params][:login])
-        normal_status(-1, "user:#{u[:user_params][:login]} is present")
+        SyncLog.sync_log("=================sync_to_user_been_exists====#{u[:user_params][:login]}")
       else
         new_user = User.new(u[:user_params])
         username = new_user.login
@@ -49,14 +49,17 @@ class SyncForgeController < ApplicationController
             new_user.gitea_uid = gitea_user['id']
             if new_user.save!
               UserExtension.create!(u[:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present?
-              normal_status(1, "created_succrss")
+              SyncLog.sync_log("=================sync_to_user_success====#{new_user.login}")
+            else
+              SyncLog.sync_log("=================sync_to_user_failed==1==#{new_user.login}")
             end
           else
-            normal_status(-1, "created_failed")
+            SyncLog.sync_log("=================sync_to_user_failed====#{new_user.login}")
           end
         end
       end
     end
+    normal_status(1, "completed_sync")
   rescue Exception => e
     normal_status(-1, e.message)
   end
@@ -190,6 +193,7 @@ class SyncForgeController < ApplicationController
 
   def check_token 
     sync_params = params[:sync_params]
+    Rails.logger.info("=======is_token:#{sync_params[:token] == get_token}=====================")
     unless sync_params[:token] && sync_params[:token] == get_token
       render json: {message: "token_errors"}
     end
