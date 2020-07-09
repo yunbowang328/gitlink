@@ -30,7 +30,9 @@ class SyncForgeController < ApplicationController
 
   def sync_users
     params.permit!
-    users_params = params[:sync_params]
+    sync_params = params[:sync_params]
+    users_params = sync_params[:users]
+
     users_params.each do |u|
       if User.exists?(login: u[:user_params][:login])
         normal_status(-1, "user:#{u[:user_params][:login]} is present")
