@@ -2,7 +2,7 @@ class SyncForgeController < ApplicationController
   before_action :check_token
 
   def create 
-    sync_params = params[:sync_params]
+    sync_params = params["sync_params"]
     sync_params = eval(sync_params)
     Rails.logger.info("========sync_params===#{sync_params}====")
 
