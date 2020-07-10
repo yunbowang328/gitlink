@@ -53,7 +53,8 @@ class SyncProjectsJob < ApplicationJob
       if re[:target_params].present?
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
         u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
-        new_target = target_type.constantize.new(re[:target_params].delete(:id).merge(user_id: u_id))
+        re[:target_params].delete(:id)
+        new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
         if target_type == "Issue"
           assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
           new_target.assigned_to_id = assing_u_id
@@ -82,7 +83,8 @@ class SyncProjectsJob < ApplicationJob
       if re[:target_params].present?
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
         u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
-        new_target = target_type.constantize.new(re[:target_params].delete(:id).merge(user_id: u_id))
+        re[:target_params].delete(:id)
+        new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
         if new_target.save!
           all_issues&.where(fixed_version_id: old_id)&.update_all(fixed_version_id: new_target.id)
         end
