@@ -7,27 +7,26 @@ class SyncProjectsJob < ApplicationJob
   def perform(sync_params, gitea_main)
     SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
     SyncLog.sync_log("==========sync_params:#{sync_params}============")
-    begin     
 
+    begin     
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
 
-      sync_json = {
-        "sync_params": sync_params
-      }
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = true
-      response = http.send_request('GET', uri.path, sync_params, {'Content-Type' => 'application/json'})
+      response = http.send_request('GET', uri.path, sync_params.to_json, {'Content-Type' => 'application/json'})
+
       SyncLog.sync_log("==========response_status:#{response.status}============")
       SyncLog.sync_log("==========response_body:#{response.body}============")
-      if response.status == 200
+      if response.status.to_i == 200
         target_jsons = response.body
         SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
         target_jsons = eval(target_jsons)
+
         if sync_params[:type] == "Project"
-          update_new_project(target_jsons, sync_params[:new_project_id])
+          update_new_project(target_jsons[:target_params], sync_params[:new_project_id])
         else
-          create_target(project, eval(target_jsons), sync_params[:type].to_s)
+          create_target(project, target_jsons[:target_params], sync_params[:type].to_s)
         end
       else
         SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
