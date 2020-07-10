@@ -3,6 +3,7 @@ class SyncForgeController < ApplicationController
 
   def create 
     ActiveRecord::Base.transaction do
+      params.permit!
       sync_params = params[:sync_params]
       #以前已同步的项目,那么肯定存在仓库
       if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
@@ -24,11 +25,10 @@ class SyncForgeController < ApplicationController
         Rails.logger.info("=================new_repository_id:#{project&.repository&.id}========")
         if project.present?
           if sync_params[:project_score].present?
-            score_params = sync_params[:project_score]
-            new_project_score = ProjectScore.create(:project_id => project.id)
-            Rails.logger.info("=================new_project_score:#{new_project_score}========")
-            new_project_score.update_attributes(score_params)
-            Rails.logger.info("=================new_project_score:#{new_project_score}========")
+            sync_params.permit!
+            score_params = sync_params[:project_score].merge(project_id: project.id)
+            new_project_score = ProjectScore.create(score_params)
+            Rails.logger.info("=================new_project_score:#{new_project_score.try(:id)}========")
           end
           SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository].present?
           check_new_project(project, sync_params)
