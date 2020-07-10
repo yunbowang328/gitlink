@@ -39,7 +39,9 @@ class Repositories::CreateService < ApplicationService
   end
 
   def sync_repository(repository, gitea_repository)
-    Rails.logger.info("#############__________sync_repository______###########{@repository.try(:id)}")
+    Rails.logger.info("#############__________sync_repository______###########{repository.try(:id)}")
+    Rails.logger.info("#############__________sync_repository___remote_repository_url___###########{remote_repository_url}")
+
     repository.update_columns(url: remote_repository_url,) if gitea_repository
   end
 
