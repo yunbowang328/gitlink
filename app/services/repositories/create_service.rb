@@ -42,11 +42,13 @@ class Repositories::CreateService < ApplicationService
 
   def sync_project(repository, gitea_repository)
     Rails.logger.info("#############_________sync_project_____###########{gitea_repository}")
+    
     if gitea_repository
-      project.update_columns(
+      s = project.update_columns(
         gpid: gitea_repository["id"],
         identifier: repository.identifier,
         forked_count: gitea_repository["forks_count"])
+        Rails.logger.info("#############_________sync_project__ss___###########{s}")
     end
   end
 
