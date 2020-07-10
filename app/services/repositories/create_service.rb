@@ -19,6 +19,8 @@ class Repositories::CreateService < ApplicationService
       else
         Rails.logger.info("#############___________create_repository_erros______###########{@repository.errors.messages}")
       end
+      Rails.logger.info("#############___________@create_repository_url______###########{@repository.try(:url)}")
+      Rails.logger.info("#############___________@create_project_gpid______###########{project.try(:gpid)}")
       @repository
     end
   rescue => e
@@ -28,9 +30,7 @@ class Repositories::CreateService < ApplicationService
 
   private
 
-  def sync_project(repository, gitea_repository)
-    Rails.logger.info("#############_________sync_project_____###########{gitea_repository}")
-    
+  def sync_project(repository, gitea_repository)    
     if gitea_repository
       s = project.update_columns(
         gpid: gitea_repository["id"],
@@ -42,9 +42,8 @@ class Repositories::CreateService < ApplicationService
 
   def sync_repository(repository, gitea_repository)
     Rails.logger.info("#############__________sync_repository______###########{repository.try(:id)}")
-    Rails.logger.info("#############__________sync_repository___remote_repository_url___###########{remote_repository_url}")
-
-    repository.update_columns(url: remote_repository_url,) if gitea_repository
+    r = repository.update_columns(url: remote_repository_url,) if gitea_repository
+    Rails.logger.info("#############__________sync_repository___rrrr___###########{r}")
   end
 
   def remote_repository_url
