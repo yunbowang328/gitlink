@@ -161,7 +161,7 @@ class Project < ApplicationRecord
     member&.roles&.last&.name || permission
   end
 
-  def fork_project 
+  def fork_project
     Project.find_by(id: self.forked_from_project_id)
   end
 

@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    namespace :dev_ops  do
+      resources :cloud_accounts, only: [:create]
+    end
+
     resources :composes do
       resources :compose_projects, only: [:create, :destroy]
     end
