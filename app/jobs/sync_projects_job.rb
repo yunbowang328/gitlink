@@ -20,8 +20,6 @@ class SyncProjectsJob < ApplicationJob
       SyncLog.sync_log("==========response_body:#{response.body}============")
       if response.code.to_s == "200"
         target_jsons = response.body
-        SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
-        target_jsons = eval(target_jsons)
 
         if sync_params[:type] == "Project"
           update_new_project(target_jsons[:target_params], sync_params[:new_project_id])
