@@ -11,9 +11,7 @@ class Repositories::CreateService < ApplicationService
     @repository = Repository.new(repository_params)
     ActiveRecord::Base.transaction do
       if @repository.save!
-        Rails.logger.info("#############__________gitea_repository_params______###########{gitea_repository_params}")
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
-        Rails.logger.info("#############_______create__gitea_repository______###########{gitea_repository}")
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
         if project.project_type == "common"
@@ -31,8 +29,6 @@ class Repositories::CreateService < ApplicationService
       else
         Rails.logger.info("#############___________create_repository_erros______###########{@repository.errors.messages}")
       end
-      Rails.logger.info("#############___________@create_repository_url______###########{@repository.try(:url)}")
-      Rails.logger.info("#############___________@create_project_gpid______###########{project.try(:gpid)}")
       @repository
     end
   rescue => e
@@ -44,18 +40,15 @@ class Repositories::CreateService < ApplicationService
 
   def sync_project(repository, gitea_repository)    
     if gitea_repository
-      s = project.update_columns(
+      project.update_columns(
         gpid: gitea_repository["id"],
         identifier: repository.identifier,
         forked_count: gitea_repository["forks_count"])
-        Rails.logger.info("#############_________sync_project__ss___###########{s}")
     end
   end
 
   def sync_repository(repository, gitea_repository)
-    Rails.logger.info("#############__________sync_repository______###########{repository.try(:id)}")
-    r = repository.update_columns(url: remote_repository_url,) if gitea_repository
-    Rails.logger.info("#############__________sync_repository___rrrr___###########{r}")
+    repository.update_columns(url: remote_repository_url,) if gitea_repository
   end
 
   def remote_repository_url
