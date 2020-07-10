@@ -22,7 +22,7 @@ class SyncForgeController < ApplicationController
         project = Projects::CreateService.new(project_user, project_params).call
         Rails.logger.info("=================new_project_id:#{project.id}========")
         if project.present?
-          ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score]
+          ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score].present?
           SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository]
           check_new_project(project, sync_params)
         end
@@ -110,6 +110,7 @@ class SyncForgeController < ApplicationController
         parent_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      
       Rails.logger.info("***6. end_to_sync_parises---------------")
     end
   end
