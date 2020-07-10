@@ -21,6 +21,7 @@ class SyncProjectsJob < ApplicationJob
       if response.code.to_s == "200"
         target_jsons = response.body
         if sync_params[:type] == "Project"
+          SyncLog.sync_log("==========targets_params: #{target_jsons[:targets_params]}============")
           update_new_project(target_jsons[:targets_params][0], sync_params[:new_project_id])
         else
           create_target(project, target_jsons[:targets_params], sync_params[:type].to_s)
@@ -36,10 +37,10 @@ class SyncProjectsJob < ApplicationJob
   private
 
   def update_new_project(re, project_id)
+    SyncLog.sync_log("==========re: #{re}============")
+    SyncLog.sync_log("==========project_id: #{project_id}============")
     project = Project.find_by(id: project_id)
-    SyncLog.sync_log("==========project: #{project.id}============")
-    SyncLog.sync_log("==========project_params: #{re[:target_params]}============")
-    SyncLog.sync_log("==========update_project_params: #{project.update(re[:target_params])}============")
+    SyncLog.sync_log("==========re_target_params: #{re[:target_params]}============")
     project.update(re[:target_params]) if re[:target_params].present?
     create_target(re[:issues_params], "Issue") if re[:issues_params].present?
     create_target(re[:member_params], "Member") if re[:member_params].present?
