@@ -24,9 +24,10 @@ class SyncForgeController < ApplicationController
         Rails.logger.info("=================new_repository_id:#{project&.repository&.id}========")
         if project.present?
           if sync_params[:project_score].present?
-            score_params = sync_params[:project_score].merge(project_id: project.id)
-            Rails.logger.info("=================new_score_params:#{score_params}========")
-            new_project_score = ProjectScore.create!(score_params)
+            score_params = sync_params[:project_score]
+            new_project_score = ProjectScore.create(:project_id => project.id)
+            Rails.logger.info("=================new_project_score:#{new_project_score}========")
+            new_project_score.update_attributes(score_params)
             Rails.logger.info("=================new_project_score:#{new_project_score}========")
           end
           SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository].present?
