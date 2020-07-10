@@ -12,7 +12,6 @@ class Repositories::CreateService < ApplicationService
     ActiveRecord::Base.transaction do
       if @repository.save!
         Rails.logger.info("#############__________gitea_repository_params______###########{gitea_repository_params}")
-
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
