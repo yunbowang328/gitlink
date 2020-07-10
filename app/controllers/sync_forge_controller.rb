@@ -23,13 +23,15 @@ class SyncForgeController < ApplicationController
         Rails.logger.info("=================new_project_id:#{project.id}========")
         if project.present?
           ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score].present?
-          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository]
+          Rails.logger.info("=================sync_params_test:#{sync_params[:project_score]}========")
+          Rails.logger.info("=================repository_present?:#{sync_params[:repository]}========")
+          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository].present?
           check_new_project(project, sync_params)
         end
       end
     end
   rescue Exception => e
-    Rails.logger.info("=================has_errors:==#{e}")
+    Rails.logger.info("=================has_errors:==#{e.message}")
   end
 
   def sync_users
