@@ -16,9 +16,9 @@ class SyncProjectsJob < ApplicationJob
       http.use_ssl = true
       response = http.send_request('GET', uri.path, sync_params.to_json, {'Content-Type' => 'application/json'})
 
-      SyncLog.sync_log("==========response_status:#{response.status}============")
+      SyncLog.sync_log("==========response_status:#{response.code}============")
       SyncLog.sync_log("==========response_body:#{response.body}============")
-      if response.status.to_i == 200
+      if response.code.to_s == "200"
         target_jsons = response.body
         SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
         target_jsons = eval(target_jsons)
