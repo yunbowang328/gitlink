@@ -7,9 +7,9 @@ class SyncProjectsJob < ApplicationJob
   def perform(sync_params)
     SyncLog.sync_log.info("==========begin to sync #{sync_params[:type]} to forge============")
     begin
-      gitea_main = "https://trustie.net"
-      if request.subdomain === 'testforgeplus'
-        gitea_main = "https://ucloudtest.trustie.net/"
+      gitea_main = "https://ucloudtest.trustie.net/"
+      if request.subdomain === 'forgeplus'
+        gitea_main = "https://trustie.net"
       end
 
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
@@ -28,11 +28,11 @@ class SyncProjectsJob < ApplicationJob
             create_target(eval(target_jsons), sync_params[:type].to_s)
           end
         else
-          SyncLog.sync_log.info("==========bsync_user_to_forge_failed #{sync_params[:type]}============")
+          SyncLog.sync_log.info("==========sync_project_to_forge_failed #{sync_params[:type]}============")
         end
       end
     rescue => e
-      SyncLog.sync_log.info("==========bsync_user_to_forge_failed #{sync_params[:type]}============errors:#{e}")
+      SyncLog.sync_log.info("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
     end
   end
 

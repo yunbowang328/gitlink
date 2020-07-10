@@ -21,7 +21,7 @@ class SyncForgeController < ApplicationController
         project = Projects::CreateService.new(project_user, project_params).call
         if project.present?
           ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score]
-          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository_params]) if sync_params[:repository_params]
+          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository]
           check_new_project(project, sync_params)
         end
       end
@@ -69,8 +69,8 @@ class SyncForgeController < ApplicationController
   private 
 
   def check_sync_project(project,sync_params)
-    if sync_params[:repository_params].present?  #仓库存在
-      change_project_score(project, sync_params[:project_score], sync_params[:repository_params])  #更新project_score
+    if sync_params[:repository].present?  #仓库存在
+      change_project_score(project, sync_params[:project_score], sync_params[:repository])  #更新project_score
     end
     change_project_issues(project, sync_params[:issues],project.id) 
     change_project_members(project, sync_params[:members])

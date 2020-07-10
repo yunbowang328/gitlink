@@ -5,7 +5,7 @@ class SyncRepositoryJob < ApplicationJob
 
   def perform(repository, repository_params)
     #创建临时文件夹 clone 并强推代码
-    SyncLog.sync_log("=================begin to sync repository=====================")
+    SyncLog.sync_log("=================begin to sync request trustie repository=====================")
     path = "#{Rails.root}/public/cache_repository"
     unless File.directory?(path)
       FileUtils.mkdir_p(path)
