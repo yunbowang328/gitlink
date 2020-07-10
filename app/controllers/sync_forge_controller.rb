@@ -23,7 +23,6 @@ class SyncForgeController < ApplicationController
         }
         project = Projects::CreateService.new(project_user, project_params).call
         Rails.logger.info("=================new_project_id:#{project.id}========")
-        Rails.logger.info("=================new_repository_id:#{project&.repository&.id}========")
         if project.present?
           if sync_params[:project_score].present?
             sync_params.permit!

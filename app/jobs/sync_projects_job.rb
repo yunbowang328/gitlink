@@ -54,7 +54,6 @@ class SyncProjectsJob < ApplicationJob
       if re[:target_params].present?
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
         u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
-        
         new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
         
         if target_type == "Issue"
