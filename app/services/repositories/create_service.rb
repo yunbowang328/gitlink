@@ -27,6 +27,8 @@ class Repositories::CreateService < ApplicationService
           }
           PostChainJob.perform_later(chain_params)  #创建上链操作
         end
+      else
+        Rails.logger.info("#############___________create_repository_erros______###########{@repository.errors.messages}")
       end
       @repository
     end
