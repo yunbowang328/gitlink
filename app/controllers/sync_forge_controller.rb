@@ -2,7 +2,7 @@ class SyncForgeController < ApplicationController
   before_action :check_token
 
   def create 
-    Rails.logger.info("=================request.subdomain:#{request.subdomain}========")
+   
     ActiveRecord::Base.transaction do
       params.permit!
       sync_params = params[:sync_params]
@@ -32,13 +32,7 @@ class SyncForgeController < ApplicationController
             Rails.logger.info("=================new_project_score:#{new_project_score.try(:id)}========")
           end
               
-          gitea_main = "testgitea.trustie.net"
-          if request.subdomain === 'testforgeplus'
-            gitea_main = "testgitea2.trustie.net"
-          elsif request.subdomain === 'forge'
-            gitea_main = "gitea.trustie.net"
-          end
-          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository], gitea_main) if sync_params[:repository].present?
+          SyncRepositoryJob.perform_later(sync_params[:owner_login], sync_params[:identifier], sync_params[:repository], get_sudomain) if sync_params[:repository].present?
           check_new_project(project, sync_params)
         end
       end
@@ -149,7 +143,7 @@ class SyncForgeController < ApplicationController
             pre_project_score[:"#{k}"] = v
           end
           if k == "changeset_num" && v.to_i > pre_project_score.changeset_num.to_i && repository_params[:url].present?
-            SyncRepositoryJob.perform_later(project.repository, repository_params)
+            SyncRepositoryJob.perform_later(project.owner.try(:login), project.identifier, repository_params, get_sudomain)
           end
         end
         pre_project_score.save! if change_num > 0   #如果 project_score有变化则更新
@@ -252,6 +246,17 @@ class SyncForgeController < ApplicationController
 
   def get_token
     "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
+  end
+
+  def get_sudomain
+    Rails.logger.info("=================request.subdomain:#{request.subdomain}========")
+    gitea_main = "testgitea.trustie.net"
+    if request.subdomain === 'testforgeplus'
+      gitea_main = "testgitea2.trustie.net"
+    elsif request.subdomain === 'forge'
+      gitea_main = "gitea.trustie.net"
+    end
+    return gitea_main
   end
 
 end

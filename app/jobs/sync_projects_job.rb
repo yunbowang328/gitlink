@@ -17,6 +17,8 @@ class SyncProjectsJob < ApplicationJob
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = true
       response = http.send_request('GET', uri.path, sync_params, {'Content-Type' => 'application/json'})
+      SyncLog.sync_log("==========response_status:#{response.status}============")
+      SyncLog.sync_log("==========response_body:#{response.body}============")
       if response.status == 200
         target_jsons = response.body
         SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
@@ -48,7 +50,7 @@ class SyncProjectsJob < ApplicationJob
 
 
   def create_target(project, target_jsons, target_type)
-    Rails.logger.info("***111222. begin_to_create_target---------------")
+    Rails.logger.info("***【#{target_type}】. begin_to_create_target---------------")
     target_jsons.each do |re|
       if re[:target_params].present?
         Rails.logger.info("***user_login:#{re[:user_login]}----target_type:#{target_type}")
