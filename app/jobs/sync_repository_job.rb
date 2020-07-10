@@ -6,8 +6,6 @@ class SyncRepositoryJob < ApplicationJob
   def perform(user_login, identifier, repository_params, gitea_main)
     #创建临时文件夹 clone 并强推代码
     SyncLog.sync_log("=================begin to sync request trustie repository=====================")
-    SyncLog.sync_log("=================begin to sync repository_params:==#{repository_params}===================")
-    SyncLog.sync_log("=================repository_url:==#{repository_params[:git_url]}===================")
     path = "#{Rails.root}/public/cache_repository"
     unless File.directory?(path)
       FileUtils.mkdir_p(path)
@@ -16,8 +14,7 @@ class SyncRepositoryJob < ApplicationJob
     g_default_branch = repository_params[:default_branch]
     image_repo_name = image_url.to_s.split('/')&.last&.chomp('.git')
     check_clone = system("cd #{path} and git clone #{image_url}")
-
-
+    SyncLog.sync_log("========check_clone:====cd #{path} and git clone #{image_url}===================")
     if check_clone
       new_gitlab_url = "http://root:_Trustie_10010@#{gitea_main}/#{user_login}/#{identifier}.git"
 
