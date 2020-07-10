@@ -14,22 +14,20 @@ class SyncProjectsJob < ApplicationJob
         "sync_params": sync_params
       }
       uri = URI.parse(url)
-      if api_host
-        http = Net::HTTP.new(uri.hostname, uri.port)
-        http.use_ssl = true
-        response = http.send_request('GET', uri.path, sync_params, {'Content-Type' => 'application/json'})
-        if response.status == 200
-          target_jsons = response.body
-          SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
-          target_jsons = eval(target_jsons)
-          if sync_params[:type] == "Project"
-            update_new_project(target_jsons, sync_params[:new_project_id])
-          else
-            create_target(project, eval(target_jsons), sync_params[:type].to_s)
-          end
+      http = Net::HTTP.new(uri.hostname, uri.port)
+      http.use_ssl = true
+      response = http.send_request('GET', uri.path, sync_params, {'Content-Type' => 'application/json'})
+      if response.status == 200
+        target_jsons = response.body
+        SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
+        target_jsons = eval(target_jsons)
+        if sync_params[:type] == "Project"
+          update_new_project(target_jsons, sync_params[:new_project_id])
         else
-          SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
+          create_target(project, eval(target_jsons), sync_params[:type].to_s)
         end
+      else
+        SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
       end
     rescue => e
       SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
