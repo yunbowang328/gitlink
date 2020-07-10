@@ -1,8 +1,8 @@
+require 'uri'
+require 'net/http'
+
 class SyncProjectsJob < ApplicationJob
   queue_as :default
-
-  require 'uri'
-  require 'net/http'
 
   def perform(sync_params)
     SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
@@ -40,6 +40,8 @@ class SyncProjectsJob < ApplicationJob
       SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
     end
   end
+
+  private
 
   def update_new_project(re, project_id)
     project = Project.find_by(id: project_id)
