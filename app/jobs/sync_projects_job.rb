@@ -20,11 +20,10 @@ class SyncProjectsJob < ApplicationJob
       SyncLog.sync_log("==========response_body:#{response.body}============")
       if response.code.to_s == "200"
         target_jsons = response.body
-
         if sync_params[:type] == "Project"
-          update_new_project(target_jsons[:target_params], sync_params[:new_project_id])
+          update_new_project(target_jsons[:targets_params][0], sync_params[:new_project_id])
         else
-          create_target(project, target_jsons[:target_params], sync_params[:type].to_s)
+          create_target(project, target_jsons[:targets_params], sync_params[:type].to_s)
         end
       else
         SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
