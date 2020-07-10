@@ -38,6 +38,9 @@ class SyncProjectsJob < ApplicationJob
 
   def update_new_project(re, project_id)
     project = Project.find_by(id: project_id)
+    SyncLog.sync_log("==========project: #{project.id}============")
+    SyncLog.sync_log("==========project_params: #{re[:target_params]}============")
+    SyncLog.sync_log("==========update_project_params: #{project.update(re[:target_params])}============")
     project.update(re[:target_params]) if re[:target_params].present?
     create_target(re[:issues_params], "Issue") if re[:issues_params].present?
     create_target(re[:member_params], "Member") if re[:member_params].present?
