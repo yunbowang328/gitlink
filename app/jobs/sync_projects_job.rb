@@ -5,9 +5,9 @@ class SyncProjectsJob < ApplicationJob
   require 'net/http'
 
   def perform(sync_params)
-    SyncLog.sync_log.info("==========begin to sync #{sync_params[:type]} to forge============")
+    SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
     begin
-      SyncLog.sync_log.info("=========request.subdomain: #{request.subdomain}============")
+      SyncLog.sync_log("=========request.subdomain: #{request.subdomain}============")
       gitea_main = "https://ucloudtest.trustie.net/"
       if request.subdomain === 'forgeplus'
         gitea_main = "https://trustie.net"
@@ -25,7 +25,7 @@ class SyncProjectsJob < ApplicationJob
         response = http.send_request('GET', uri.path, sync_params, {'Content-Type' => 'application/json'})
         if response.status == 200
           target_jsons = response.body
-          SyncLog.sync_log.info("=========target_jsons: #{target_jsons}============")
+          SyncLog.sync_log("=========target_jsons: #{target_jsons}============")
           target_jsons = eval(target_jsons)
           if sync_params[:type] == "Project"
             update_new_project(target_jsons, sync_params[:new_project_id])
@@ -33,11 +33,11 @@ class SyncProjectsJob < ApplicationJob
             create_target(project, eval(target_jsons), sync_params[:type].to_s)
           end
         else
-          SyncLog.sync_log.info("==========sync_project_to_forge_failed #{sync_params[:type]}============")
+          SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
         end
       end
     rescue => e
-      SyncLog.sync_log.info("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
+      SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
     end
   end
 
