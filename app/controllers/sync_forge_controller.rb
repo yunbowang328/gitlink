@@ -8,6 +8,7 @@ class SyncForgeController < ApplicationController
       if Project.exists?(id: sync_params[:id]) || Project.exists?(identifier: sync_params[:identifier])
         Rails.logger.info("=================begin_to_update_project========")
         project = Project.find_by(id: sync_params[:id]) || Project.where(identifier: sync_params[:identifier])&.first
+        Rails.logger.info("--------project_id:#{project.id}---------------")
         check_sync_project(project, sync_params)
       else #新建项目
        Rails.logger.info("=================begin_to_create_new_project========")
@@ -69,14 +70,21 @@ class SyncForgeController < ApplicationController
   private 
 
   def check_sync_project(project,sync_params)
-    if sync_params[:repository].present?  #仓库存在
-      change_project_score(project, sync_params[:project_score], sync_params[:repository])  #更新project_score
+    begin
+      Rails.logger.info("----begin_to_check_sync_project----project_id:#{project.id}---------------")
+      if sync_params[:repository].present?  #仓库存在
+        change_project_score(project, sync_params[:project_score], sync_params[:repository])  #更新project_score
+      end
+      change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score 
+      change_project_issues(project, sync_params[:issues],project.id) 
+      change_project_members(project, sync_params[:members])
+      change_project_versions(project, sync_params[:project_versions])
+      change_project_watchers(project, sync_params[:project_watchers])
+      change_project_praises(project, sync_params[:praise_trends])
+    rescue => e
+      Rails.logger.info("=========check_sync_project_errors:#{e}===================")
     end
-    change_project_issues(project, sync_params[:issues],project.id) 
-    change_project_members(project, sync_params[:members])
-    change_project_versions(project, sync_params[:project_versions])
-    change_project_watchers(project, sync_params[:project_watchers])
-    change_project_praises(project, sync_params[:praise_trends])
+    
   end
 
   def check_new_project(project,sync_params)
@@ -106,49 +114,56 @@ class SyncForgeController < ApplicationController
 
   #检查repository和project_score
   def change_project_score(project, project_scores, repository_params)
-    pre_project_score = project.project_score
-    if pre_project_score.present?
-      change_num = 0
-      project_scores.each do |k,v|
-        unless pre_project_score.send("#{k}") == v
-          change_num += 1
-          pre_project_score[:"#{k}"] = v
+    begin
+      pre_project_score = project.project_score
+      if pre_project_score.present?
+        change_num = 0
+        project_scores.each do |k,v|
+          unless pre_project_score.send("#{k}") == v
+            change_num += 1
+            pre_project_score[:"#{k}"] = v
+          end
+          if k == "changeset_num" && v.to_i > pre_project_score.changeset_num.to_i && repository_params[:url].present?
+            SyncRepositoryJob.perform_later(project.repository, repository_params)
+          end
         end
-        if k == "changeset_num" && v.to_i > pre_project_score.changeset_num.to_i && repository_params[:url].present?
-          SyncRepositoryJob.perform_later(project.repository, repository_params)
-        end
+        pre_project_score.save! if change_num > 0   #如果 project_score有变化则更新
+      else 
+        ProjectScore.create!(project_scores.merge(project_id: project.id))
       end
-      pre_project_score.save! if change_num > 0   #如果 project_score有变化则更新
-    else 
-      ProjectScore.create!(project_scores.merge(project_id: project.id))
-      # project.project_score.create!(project_scores)
+    rescue Exception => e
+      Rails.logger.info("=========change_project_score_errors:#{e}===================")
     end
   end
 
   def change_project_issues(project, old_issues_params,project_id)
-    forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
-    forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
-    diff_issue_ids = old_issues_params[:issue_params][:ids] - forge_issue_ids
-    sync_projects_params = {}
-    if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
-      diff_journal_ids = old_issues_params[:issue_params][:journals][:ids] - forge_journal_ids
-      unless diff_journal_ids.size == 0
+    begin
+      forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
+      forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
+      diff_issue_ids = old_issues_params[:ids] - forge_issue_ids
+      sync_projects_params = {}
+      if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
+        diff_journal_ids = old_issues_params[:journals][:ids] - forge_journal_ids
+        unless diff_journal_ids.size == 0
+          sync_projects_params = {
+            type: "Journal",
+            ids: diff_journal_ids,
+            token: get_token,
+            parent_id: project_id
+          }
+        end
+      else
         sync_projects_params = {
-          type: "Journal",
-          ids: diff_journal_ids,
+          type: "Issue",
+          ids: diff_issue_ids,
           token: get_token,
           parent_id: project_id
         }
       end
-    else
-      sync_projects_params = {
-        type: "Issue",
-        ids: diff_issue_ids,
-        token: get_token,
-        parent_id: project_id
-      }
+      SyncProjectsJob.perform_later(sync_projects_params) if sync_projects_params.present?
+    rescue Exception => e
+      Rails.logger.info("=========change_project_issues_errors:#{e}===================")
     end
-    SyncProjectsJob.perform_later(sync_projects_params) if sync_projects_params.present?
   end
 
   def change_project_watchers(project, watchers)
