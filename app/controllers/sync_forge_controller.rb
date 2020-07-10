@@ -22,14 +22,16 @@ class SyncForgeController < ApplicationController
         project = Projects::CreateService.new(project_user, project_params).call
         Rails.logger.info("=================new_project_id:#{project.id}========")
         if project.present?
-          ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score]
-          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository]
+          ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id)) if sync_params[:project_score].present?
+          Rails.logger.info("=================sync_params_test:#{sync_params[:project_score]}========")
+          Rails.logger.info("=================repository_present?:#{sync_params[:repository]}========")
+          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository].present?
           check_new_project(project, sync_params)
         end
       end
     end
   rescue Exception => e
-    Rails.logger.info("=================has_errors:==#{e}")
+    Rails.logger.info("=================has_errors:==#{e.message}")
   end
 
   def sync_users
@@ -110,6 +112,7 @@ class SyncForgeController < ApplicationController
         parent_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      
       Rails.logger.info("***6. end_to_sync_parises---------------")
     end
   end
