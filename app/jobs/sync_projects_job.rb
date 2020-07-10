@@ -7,6 +7,7 @@ class SyncProjectsJob < ApplicationJob
   def perform(sync_params)
     SyncLog.sync_log.info("==========begin to sync #{sync_params[:type]} to forge============")
     begin
+      SyncLog.sync_log.info("=========request.subdomain: #{request.subdomain}============")
       gitea_main = "https://ucloudtest.trustie.net/"
       if request.subdomain === 'forgeplus'
         gitea_main = "https://trustie.net"
@@ -24,6 +25,7 @@ class SyncProjectsJob < ApplicationJob
         response = http.send_request('GET', uri.path, sync_params, {'Content-Type' => 'application/json'})
         if response.status == 200
           target_jsons = response.body
+          SyncLog.sync_log.info("=========target_jsons: #{target_jsons}============")
           if target_jsons.present? && sync_params[:type]
             create_target(eval(target_jsons), sync_params[:type].to_s)
           end
