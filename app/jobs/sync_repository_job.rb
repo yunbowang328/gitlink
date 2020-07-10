@@ -3,7 +3,7 @@ class SyncRepositoryJob < ApplicationJob
 
   #同步 trustie的仓库
 
-  def perform(repository, repository_params)
+  def perform(repository, repository_params, gitea_main)
     #创建临时文件夹 clone 并强推代码
     SyncLog.sync_log("=================begin to sync request trustie repository=====================")
     path = "#{Rails.root}/public/cache_repository"
@@ -14,13 +14,7 @@ class SyncRepositoryJob < ApplicationJob
     g_default_branch = repository_params[:default_branch]
     image_repo_name = image_url.to_s.split('/')&.last&.chomp('.git')
     check_clone = system("cd #{path} and git clone #{image_url}")
-    
-    gitea_main = "testgitea.trustie.net"
-    if request.subdomain === 'testforgeplus'
-      gitea_main = "testgitea2.trustie.net"
-    elsif request.subdomain === 'forge'
-      gitea_main = "gitea.trustie.net"
-    end
+
 
     if check_clone
       new_gitlab_url = "http://root:_Trustie_10010@#{gitea_main}/#{repository.user.login}/#{repository.identifier}.git"
