@@ -38,8 +38,9 @@ class SyncProjectsJob < ApplicationJob
 
 
   def create_target(target_jsons, target_type)
+    Rails.logger.info("***111222. begin_to_create_target---------------")
     target_jsons.each do |re|
-
+      Rails.logger.info("***user_login:#{re[:user_login]}----target_type:#{target_type}")
       u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
       
       new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
@@ -65,5 +66,6 @@ class SyncProjectsJob < ApplicationJob
         end
       end
     end
+    Rails.logger.info("***111222. end_to_create_target---------------")
   end
 end

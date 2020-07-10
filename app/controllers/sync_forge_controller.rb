@@ -72,9 +72,6 @@ class SyncForgeController < ApplicationController
   def check_sync_project(project,sync_params)
     begin
       Rails.logger.info("----begin_to_check_sync_project----project_id:#{project.id}---------------")
-      if sync_params[:repository].present?  #仓库存在
-        change_project_score(project, sync_params[:project_score], sync_params[:repository])  #更新project_score
-      end
       change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score 
       change_project_issues(project, sync_params[:issues],project.id) 
       change_project_members(project, sync_params[:members])
@@ -88,6 +85,7 @@ class SyncForgeController < ApplicationController
   end
 
   def check_new_project(project,sync_params)
+    Rails.logger.info("***8. begin_to_sync_new_project---------------")
     sync_projects_params = {
         type: "Project",
         ids: sync_params[:id],
@@ -96,9 +94,11 @@ class SyncForgeController < ApplicationController
         new_project_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      Rails.logger.info("***8. end_to_sync_new_project---------------")
   end
 
   def change_project_praises(project, praises)
+    Rails.logger.info("***6. begin_to_sync_parises---------------")
     forge_praises_ids = project&.praise_treads&.select(:id)&.pluck(:id)
     diff_target_ids = praises[:ids] - forge_praises_ids
     if diff_target_ids.size > 0
@@ -109,11 +109,13 @@ class SyncForgeController < ApplicationController
         parent_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      Rails.logger.info("***6. end_to_sync_parises---------------")
     end
   end
 
   #检查repository和project_score
   def change_project_score(project, project_scores, repository_params)
+    Rails.logger.info("***1. begin_to_sync_project_score---------------")
     begin
       pre_project_score = project.project_score
       if pre_project_score.present?
@@ -131,12 +133,14 @@ class SyncForgeController < ApplicationController
       else 
         ProjectScore.create!(project_scores.merge(project_id: project.id))
       end
+      Rails.logger.info("***1. end_to_sync_project_score---------------")
     rescue Exception => e
       Rails.logger.info("=========change_project_score_errors:#{e}===================")
     end
   end
 
   def change_project_issues(project, old_issues_params,project_id)
+    Rails.logger.info("***2. begin_to_syncissues---------------")
     begin
       forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
       forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
@@ -161,12 +165,14 @@ class SyncForgeController < ApplicationController
         }
       end
       SyncProjectsJob.perform_later(sync_projects_params) if sync_projects_params.present?
+      Rails.logger.info("***2. end_to_syncissues---------------")
     rescue Exception => e
       Rails.logger.info("=========change_project_issues_errors:#{e}===================")
     end
   end
 
   def change_project_watchers(project, watchers)
+    Rails.logger.info("***5. begin_to_sync_watchers---------------")
     forge_watchers_ids = project&.watchers&.select(:id)&.pluck(:id)
     diff_target_ids = watchers[:ids] - forge_watchers_ids
     if diff_target_ids.size > 0
@@ -177,10 +183,13 @@ class SyncForgeController < ApplicationController
         parent_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      Rails.logger.info("***5. begin_to_sync_watchers---------------")
+
     end
   end
 
   def change_project_versions(project, versions)
+    Rails.logger.info("***4. begin_to_sync_versions---------------")
     forge_version_ids = project&.versions&.select(:id)&.pluck(:id)
     diff_version_ids = versions[:ids] - forge_version_ids
     if diff_version_ids.size > 0
@@ -191,10 +200,12 @@ class SyncForgeController < ApplicationController
         parent_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      Rails.logger.info("***4. end_to_sync_versions---------------")
     end
   end
 
   def change_project_members(project, members)
+    Rails.logger.info("***3. begin_to_sync_members---------------")
     forge_member_ids = project&.members&.select(:id)&.pluck(:id)
     diff_member_ids = members[:ids] - forge_member_ids
     if diff_member_ids.size > 0
@@ -205,6 +216,7 @@ class SyncForgeController < ApplicationController
         parent_id: project.id
       }
       SyncProjectsJob.perform_later(sync_projects_params)
+      Rails.logger.info("***3. end_to_sync_members---------------")
     end
   end
 
