@@ -26,7 +26,7 @@ class SyncForgeController < ApplicationController
           if sync_params[:project_score].present?
             Rails.logger.info("=================sync_params_test:#{sync_params[:project_score].merge(project_id: project.id)}========")
 
-            project_score = Project.new(project_id: project.id)
+            project_score = ProjectScore.new(project_id: project.id)
             project_score.save
             project_score.update_columns(sync_params[:project_score])
             # new_project_score = ProjectScore.create!( sync_params[:project_score].merge(project_id: project.id))
