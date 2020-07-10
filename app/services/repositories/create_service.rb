@@ -13,6 +13,7 @@ class Repositories::CreateService < ApplicationService
       if @repository.save!
         Rails.logger.info("#############__________gitea_repository_params______###########{gitea_repository_params}")
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
+        Rails.logger.info("#############_______create__gitea_repository______###########{gitea_repository}")
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
         if project.project_type == "common"
@@ -40,6 +41,7 @@ class Repositories::CreateService < ApplicationService
   private
 
   def sync_project(repository, gitea_repository)
+    Rails.logger.info("#############_________sync_project_____###########{gitea_repository}")
     if gitea_repository
       project.update_columns(
         gpid: gitea_repository["id"],
@@ -49,6 +51,7 @@ class Repositories::CreateService < ApplicationService
   end
 
   def sync_repository(repository, gitea_repository)
+    Rails.logger.info("#############__________sync_repository______###########{@repository.try(:id)}")
     repository.update_columns(url: remote_repository_url,) if gitea_repository
   end
 
