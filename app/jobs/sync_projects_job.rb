@@ -6,9 +6,7 @@ class SyncProjectsJob < ApplicationJob
 
   def perform(sync_params, gitea_main)
     SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
-    begin
-      SyncLog.sync_log("=========request.subdomain: #{request.subdomain}============")
-     
+    begin     
 
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
 
