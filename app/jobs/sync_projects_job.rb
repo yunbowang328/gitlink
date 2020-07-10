@@ -54,7 +54,12 @@ class SyncProjectsJob < ApplicationJob
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
         u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
         re[:target_params].delete(:id)
-        new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
+        if target_type == "Issue"
+          new_target = target_type.constantize.new(re[:target_params].merge(author_id: u_id))
+        else
+          new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
+        end
+        
         if target_type == "Issue"
           assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
           new_target.assigned_to_id = assing_u_id
