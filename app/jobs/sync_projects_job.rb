@@ -4,14 +4,11 @@ require 'net/http'
 class SyncProjectsJob < ApplicationJob
   queue_as :default
 
-  def perform(sync_params)
+  def perform(sync_params, gitea_main)
     SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
     begin
       SyncLog.sync_log("=========request.subdomain: #{request.subdomain}============")
-      gitea_main = "https://ucloudtest.trustie.net/"
-      if request.subdomain === 'forgeplus'
-        gitea_main = "https://trustie.net"
-      end
+     
 
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
 

@@ -2,6 +2,7 @@ class SyncForgeController < ApplicationController
   before_action :check_token
 
   def create 
+    Rails.logger.info("=================request.subdomain:#{request.subdomain}========")
     ActiveRecord::Base.transaction do
       params.permit!
       sync_params = params[:sync_params]
@@ -30,7 +31,14 @@ class SyncForgeController < ApplicationController
             new_project_score = ProjectScore.create(score_params)
             Rails.logger.info("=================new_project_score:#{new_project_score.try(:id)}========")
           end
-          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository]) if sync_params[:repository].present?
+              
+          gitea_main = "testgitea.trustie.net"
+          if request.subdomain === 'testforgeplus'
+            gitea_main = "testgitea2.trustie.net"
+          elsif request.subdomain === 'forge'
+            gitea_main = "gitea.trustie.net"
+          end
+          SyncRepositoryJob.perform_later(project.repository, sync_params[:repository], gitea_main) if sync_params[:repository].present?
           check_new_project(project, sync_params)
         end
       end
@@ -101,7 +109,13 @@ class SyncForgeController < ApplicationController
         sync_params: sync_params,
         new_project_id: project.id
       }
-      SyncProjectsJob.perform_later(sync_projects_params)
+
+      gitea_main = "https://ucloudtest.trustie.net/"
+      if request.subdomain === 'forgeplus'
+        gitea_main = "https://trustie.net"
+      end
+
+      SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
       Rails.logger.info("***8. end_to_sync_new_project---------------")
   end
 
