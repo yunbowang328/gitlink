@@ -7,12 +7,18 @@ class SyncRepositoryJob < ApplicationJob
     #创建临时文件夹 clone 并强推代码
     SyncLog.sync_log("=================begin to sync request trustie repository=====================")
     path = "#{Rails.root}/public/cache_repository"
-    unless File.directory?(path)
-      FileUtils.mkdir_p(path)
-    end
     image_url = repository_params[:git_url]
     g_default_branch = repository_params[:default_branch]
     image_repo_name = image_url.to_s.split('/')&.last&.chomp('.git')
+
+    unless File.directory?(path)
+      FileUtils.mkdir_p(path)
+    end
+
+    if Dir.exist?("#{path}/#{image_repo_name}")
+      system("rm -rf #{path}/#{image_repo_name}")
+    end
+
     check_clone = system("cd #{path} and git clone #{image_url}")
     SyncLog.sync_log("========check_clone:====cd #{path} and git clone #{image_url}===================")
     if check_clone
