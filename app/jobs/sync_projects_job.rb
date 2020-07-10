@@ -38,7 +38,7 @@ class SyncProjectsJob < ApplicationJob
 
   def update_new_project(re, project_id)
     project = Project.find_by(id: project_id)
-    project.update(re[:target_params].compact!) if re[:target_params].present?
+    project.update(re[:target_params]) if re[:target_params].present?
     create_target(re[:issues_params], "Issue") if re[:issues_params].present?
     create_target(re[:member_params], "Member") if re[:member_params].present?
     create_target(re[:versions_params], "Version") if re[:versions_params].present?
