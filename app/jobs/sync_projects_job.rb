@@ -74,6 +74,11 @@ class SyncProjectsJob < ApplicationJob
               JournalDetail.create!(j[:journal_detail].merge(journal_id: new_target.id))
             end
           end
+          if re[:member_roles].present?
+            re[:member_roles].each do |m|
+              MemberRole.create!(m[:member_role].merge(member_id: new_target.id))
+            end
+          end
         end
       end
     end
