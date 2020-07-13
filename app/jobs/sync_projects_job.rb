@@ -64,11 +64,11 @@ class SyncProjectsJob < ApplicationJob
         if target_type == "Issue"
           assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
           new_target.assigned_to_id = assing_u_id
-          if re[:journals].present?
-            create_target(re[:journals], "Journal")
-          end
         end
         if new_target.save!
+          if re[:journals].present?
+            create_journals(re[:journals], "Journal", new_target.id)
+          end
           if re[:journal_details].present?
             re[:journal_details].each do |j|
               JournalDetail.create!(j[:journal_detail].merge(journal_id: new_target.id))
@@ -78,6 +78,28 @@ class SyncProjectsJob < ApplicationJob
       end
     end
     SyncLog.sync_log("***111222. end_to_create_target---------------")
+  end
+
+  def create_journals(target_jsons, target_type,issue_id)
+    SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
+    return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
+    target_jsons.each_with_index do |re,index|
+      SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
+      if re[:target_params].present?
+        u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
+        re[:target_params].delete(:id)
+        new_target = Journal.new(re[:target_params].merge(user_id: u_id))
+        new_target.journalized_id = issue_id
+        if new_target.save!
+          if re[:journal_details].present?
+            re[:journal_details].each do |j|
+              JournalDetail.create!(j[:journal_detail].merge(journal_id: new_target.id))
+            end
+          end
+        end
+      end
+    end
+    SyncLog.sync_log("***111222. end_to_create_journal---------------")
   end
 
   def create_versions(project, target_jsons)
