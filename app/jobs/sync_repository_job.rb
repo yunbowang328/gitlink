@@ -27,9 +27,11 @@ class SyncRepositoryJob < ApplicationJob
       
       shell5 = system("cd #{path}/#{image_repo_name} && git checkout #{g_default_branch} && git push --force --set-upstream origin #{g_default_branch}")
       if !shell5
+        SyncLog.sync_project_log("=============force_push_erros==#{path}/#{image_repo_name}++new_gitlab_url+++#{new_gitlab_url}")
         SyncLog.sync_log("++++++++++++++++++force_push_erros++++++++++++++++++##{path}/#{image_repo_name}++++++new_gitlab_url+++#{new_gitlab_url}")
       end
     else
+      SyncLog.sync_project_log("=============check_clone_erros==#{path}/#{image_repo_name}")
       SyncLog.sync_log("++++++++++++++++++check_clone_erros++++++++++++++++++#{image_repo_name}")
     end
     SyncLog.sync_log("=================end to sync repository=====================#{image_repo_name}")
