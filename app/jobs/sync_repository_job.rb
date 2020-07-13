@@ -19,8 +19,8 @@ class SyncRepositoryJob < ApplicationJob
       system("rm -rf #{path}/#{image_repo_name}")
     end
 
-    check_clone = system("cd #{path} and git clone #{image_url}")
-    SyncLog.sync_log("========check_clone:====cd #{path} and git clone #{image_url}===================")
+    check_clone = system("cd #{path} && git clone #{image_url}")
+    SyncLog.sync_log("========check_clone:====cd #{path} && git clone #{image_url}===================")
     if check_clone
       new_gitlab_url = "http://root:_Trustie_10010@#{gitea_main}/#{user_login}/#{identifier}.git"
 

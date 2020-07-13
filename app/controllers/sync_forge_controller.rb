@@ -80,13 +80,17 @@ class SyncForgeController < ApplicationController
 
   def check_sync_project(project,sync_params)
     begin
+      gitea_main = "https://ucloudtest.trustie.net/"
+      if request.subdomain === 'forgeplus'
+        gitea_main = "https://trustie.net"
+      end
       Rails.logger.info("----begin_to_check_sync_project----project_id:#{project.id}---------------")
       change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score 
-      change_project_issues(project, sync_params[:issues],project.id) 
-      change_project_members(project, sync_params[:members])
-      change_project_versions(project, sync_params[:project_versions])
-      change_project_watchers(project, sync_params[:project_watchers])
-      change_project_praises(project, sync_params[:praise_trends])
+      change_project_issues(project, sync_params[:issues],project.id, gitea_main) 
+      change_project_members(project, sync_params[:members],gitea_main)
+      change_project_versions(project, sync_params[:project_versions],gitea_main)
+      change_project_watchers(project, sync_params[:project_watchers],gitea_main)
+      change_project_praises(project, sync_params[:praise_trends],gitea_main)
     rescue => e
       Rails.logger.info("=========check_sync_project_errors:#{e}===================")
     end
@@ -112,7 +116,7 @@ class SyncForgeController < ApplicationController
       Rails.logger.info("***8. end_to_sync_new_project---------------")
   end
 
-  def change_project_praises(project, praises)
+  def change_project_praises(project, praises,gitea_main)
     Rails.logger.info("***6. begin_to_sync_parises---------------")
     forge_praises_ids = project&.praise_treads&.select(:id)&.pluck(:id)
     diff_target_ids = praises[:ids] - forge_praises_ids
@@ -123,7 +127,7 @@ class SyncForgeController < ApplicationController
         token: get_token,
         parent_id: project.id
       }
-      SyncProjectsJob.perform_later(sync_projects_params)
+      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
       
       Rails.logger.info("***6. end_to_sync_parises---------------")
     end
@@ -155,7 +159,7 @@ class SyncForgeController < ApplicationController
     end
   end
 
-  def change_project_issues(project, old_issues_params,project_id)
+  def change_project_issues(project, old_issues_params,project_id, gitea_main)
     Rails.logger.info("***2. begin_to_syncissues---------------")
     begin
       forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
@@ -180,14 +184,14 @@ class SyncForgeController < ApplicationController
           parent_id: project_id
         }
       end
-      SyncProjectsJob.perform_later(sync_projects_params) if sync_projects_params.present?
+      SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
       Rails.logger.info("***2. end_to_syncissues---------------")
     rescue Exception => e
       Rails.logger.info("=========change_project_issues_errors:#{e}===================")
     end
   end
 
-  def change_project_watchers(project, watchers)
+  def change_project_watchers(project, watchers,gitea_main)
     Rails.logger.info("***5. begin_to_sync_watchers---------------")
     forge_watchers_ids = project&.watchers&.select(:id)&.pluck(:id)
     diff_target_ids = watchers[:ids] - forge_watchers_ids
@@ -198,13 +202,13 @@ class SyncForgeController < ApplicationController
         token: get_token,
         parent_id: project.id
       }
-      SyncProjectsJob.perform_later(sync_projects_params)
+      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
       Rails.logger.info("***5. begin_to_sync_watchers---------------")
 
     end
   end
 
-  def change_project_versions(project, versions)
+  def change_project_versions(project, versions,gitea_main)
     Rails.logger.info("***4. begin_to_sync_versions---------------")
     forge_version_ids = project&.versions&.select(:id)&.pluck(:id)
     diff_version_ids = versions[:ids] - forge_version_ids
@@ -215,12 +219,12 @@ class SyncForgeController < ApplicationController
         token: get_token,
         parent_id: project.id
       }
-      SyncProjectsJob.perform_later(sync_projects_params)
+      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
       Rails.logger.info("***4. end_to_sync_versions---------------")
     end
   end
 
-  def change_project_members(project, members)
+  def change_project_members(project, members,gitea_main)
     Rails.logger.info("***3. begin_to_sync_members---------------")
     forge_member_ids = project&.members&.select(:id)&.pluck(:id)
     diff_member_ids = members[:ids] - forge_member_ids
@@ -231,7 +235,7 @@ class SyncForgeController < ApplicationController
         token: get_token,
         parent_id: project.id
       }
-      SyncProjectsJob.perform_later(sync_projects_params)
+      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
       Rails.logger.info("***3. end_to_sync_members---------------")
     end
   end
