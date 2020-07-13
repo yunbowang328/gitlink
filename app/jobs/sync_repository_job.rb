@@ -23,7 +23,6 @@ class SyncRepositoryJob < ApplicationJob
     SyncLog.sync_log("========check_clone:====cd #{path} && git clone #{image_url}===================")
     if check_clone
       new_gitlab_url = "http://root:_Trustie_10010@#{gitea_main}/#{user_login}/#{identifier}.git"
-
       shell_remote_1 = system("cd #{path}/#{image_repo_name} && git remote set-url origin #{new_gitlab_url}")
       
       shell5 = system("cd #{path}/#{image_repo_name} && git checkout #{g_default_branch} && git push --force --set-upstream origin #{g_default_branch}")

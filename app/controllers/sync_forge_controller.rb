@@ -2,7 +2,6 @@ class SyncForgeController < ApplicationController
   before_action :check_token
 
   def create 
-   
     ActiveRecord::Base.transaction do
       params.permit!
       sync_params = params[:sync_params]
@@ -22,7 +21,6 @@ class SyncForgeController < ApplicationController
           name: sync_params[:name]
         }
         project = Projects::CreateService.new(project_user, project_params).call
-        Rails.logger.info("=================new_project_id:#{project.id}========")
         if project.present?
           if sync_params[:project_score].present?
             sync_params.permit!
@@ -37,7 +35,7 @@ class SyncForgeController < ApplicationController
       end
     end
   rescue Exception => e
-    Rails.logger.info("=================has_errors:==#{e.message}")
+    SyncLog.sync_project_log("=============sync_has_errors:==#{e.message}, project_id==:#{params[:sync_params][:id]}")
   end
 
   def sync_users
@@ -61,12 +59,12 @@ class SyncForgeController < ApplicationController
             new_user.gitea_uid = gitea_user['id']
             if new_user.save!
               UserExtension.create!(u[:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present?
-              SyncLog.sync_log("=================sync_to_user_success====#{new_user.login}")
             else
-              SyncLog.sync_log("=================sync_to_user_failed==1==#{new_user.login}")
+              SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
             end
           else
-            SyncLog.sync_log("=================sync_to_user_failed====#{new_user.login}")
+            SyncLog.sync_project_log("=============sync_to_user_failed,user_login====#{new_user.login}")
+            SyncLog.sync_log("=================sync_to_user_failed,user_login====#{new_user.login}")
           end
         end
       end
