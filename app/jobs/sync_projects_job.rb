@@ -71,12 +71,12 @@ class SyncProjectsJob < ApplicationJob
           end
           if re[:journal_details].present?
             re[:journal_details].each do |j|
-              JournalDetail.create!(j.merge(journal_id: new_target.id))
+              JournalDetail.create!(j.merge(journal_id: new_target.id)) if j.present?
             end
           end
           if re[:member_roles].present?
             re[:member_roles].each do |m|
-              MemberRole.create!(m.merge(member_id: new_target.id))
+              MemberRole.create!(m.merge(member_id: new_target.id)) if m.present?
             end
           end
         end
@@ -98,7 +98,7 @@ class SyncProjectsJob < ApplicationJob
         if new_target.save!
           if re[:journal_details].present?
             re[:journal_details].each do |j|
-              JournalDetail.create!(j[:journal_detail].merge(journal_id: new_target.id))
+              JournalDetail.create!(j.merge(journal_id: new_target.id))
             end
           end
         end
