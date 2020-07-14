@@ -6,9 +6,9 @@ class SyncForgeController < ApplicationController
       params.permit!
       sync_params = params[:sync_params]
       #以前已同步的项目,那么肯定存在仓库
-      if Project.exists?(id: sync_params[:id], identifier: sync_params[:identifier])
+      if Project.exists?(identifier: sync_params[:identifier])
         Rails.logger.info("=================begin_to_update_project========")
-        project = Project.find_by(id: sync_params[:id])
+        project = Project.find_by(identifier: sync_params[:identifier])
         Rails.logger.info("--------project_id:#{project.id}---------------")
         check_sync_project(project, sync_params)
       else #新建项目
