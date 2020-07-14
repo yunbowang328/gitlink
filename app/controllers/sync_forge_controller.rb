@@ -91,7 +91,7 @@ class SyncForgeController < ApplicationController
 
   def check_sync_project(project,sync_params)
     begin
-      gitea_main = "https://trustie.net/"
+      gitea_main = "https://www.trustie.net/"
       if request.subdomain === 'testforgeplus'
         gitea_main = "https://ucloudtest.trustie.net/"
       end
@@ -119,7 +119,7 @@ class SyncForgeController < ApplicationController
         new_project_id: project.id
       }
 
-      gitea_main = "https://trustie.net/"
+      gitea_main = "https://www.trustie.net/"
       if request.subdomain === 'testforgeplus'
         gitea_main = "https://ucloudtest.trustie.net/"
       end
