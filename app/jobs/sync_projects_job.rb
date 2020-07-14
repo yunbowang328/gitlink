@@ -20,16 +20,16 @@ class SyncProjectsJob < ApplicationJob
       if response.code == '200'
         target_jsons = eval(response.body)
         if sync_params[:type] == "Project"
-          SyncLog.sync_log("==========target_jsons: #{target_jsons}============")
+          SyncLog.sync_project_log("==========target_jsons: #{target_jsons}============")
           update_new_project(target_jsons[:targets_params][0], sync_params[:new_project_id])
         else
           create_target(target_jsons[:targets_params], sync_params[:type].to_s)
         end
       else
-        SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
+        SyncLog.sync_project_log("==========sync_project_to_forge_failed #{sync_params[:type]}============")
       end
     rescue => e
-      SyncLog.sync_log("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
+      SyncLog.sync_project_log("==========sync_project_to_forge_failed #{sync_params[:type]}============errors:#{e}")
     end
   end
 
@@ -47,10 +47,10 @@ class SyncProjectsJob < ApplicationJob
   end
 
   def create_target(target_jsons, target_type)
-    SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
+    SyncLog.sync_project_log("***【#{target_type}】. begin_to_create_target---------------")
     return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
     target_jsons.each_with_index do |re,index|
-      SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
+      SyncLog.sync_project_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
       if re[:target_params].present?
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
         u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
@@ -82,7 +82,7 @@ class SyncProjectsJob < ApplicationJob
         end
       end
     end
-    SyncLog.sync_log("***111222. end_to_create_target---------------")
+    SyncLog.sync_project_log("***111222. end_to_create_target---------------")
   end
 
   def create_journals(target_jsons, target_type,issue_id)
