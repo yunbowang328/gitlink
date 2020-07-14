@@ -10,7 +10,6 @@ class SyncProjectsJob < ApplicationJob
 
     begin     
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
-
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.hostname, uri.port)
       http.use_ssl = true
@@ -23,6 +22,7 @@ class SyncProjectsJob < ApplicationJob
           SyncLog.sync_project_log("==========target_jsons: #{target_jsons}============")
           update_new_project(target_jsons[:targets_params][0], sync_params[:new_project_id])
         else
+          SyncLog.sync_project_log("========== #{sync_params[:type]}============")
           create_target(target_jsons[:targets_params], sync_params[:type].to_s)
         end
       else
@@ -47,42 +47,50 @@ class SyncProjectsJob < ApplicationJob
   end
 
   def create_target(target_jsons, target_type)
-    SyncLog.sync_project_log("***【#{target_type}】. begin_to_create_target---------------")
-    return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
-    target_jsons.each_with_index do |re,index|
-      SyncLog.sync_project_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
-      if re[:target_params].present?
-        SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
-        u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
-        re[:target_params].delete(:id)
-        if target_type == "Issue"
-          new_target = target_type.constantize.new(re[:target_params].merge(author_id: u_id))
-        else
-          new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
-        end
-        
-        if target_type == "Issue"
-          assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
-          new_target.assigned_to_id = assing_u_id
-        end
-        if new_target.save!
-          if re[:journals].present?
-            create_journals(re[:journals], "Journal", new_target.id)
+    begin
+      SyncLog.sync_project_log("***【#{target_type}】. begin_to_create_target---------------")
+      return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
+      target_jsons.each_with_index do |re,index|
+        SyncLog.sync_project_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
+        if re[:target_params].present?
+          SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
+          u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
+          re[:target_params].delete(:id)
+          if target_type == "Issue"
+            new_target = target_type.constantize.new(re[:target_params].merge(author_id: u_id))
+          else
+            new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
           end
-          if re[:journal_details].present?
-            re[:journal_details].each do |j|
-              JournalDetail.create!(j.merge(journal_id: new_target.id)) if j.present?
-            end
+          
+          if target_type == "Issue"
+            assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
+            new_target.assigned_to_id = assing_u_id
           end
-          if re[:member_roles].present?
-            re[:member_roles].each do |m|
-              MemberRole.create!(m.merge(member_id: new_target.id)) if m.present?
+          if new_target.save!
+            SyncLog.sync_project_log("***【#{target_type}】. create_success---------------")
+            if re[:journals].present?
+              create_journals(re[:journals], "Journal", new_target.id)
             end
+            if re[:journal_details].present?
+              re[:journal_details].each do |j|
+                JournalDetail.create!(j.merge(journal_id: new_target.id)) if j.present?
+              end
+            end
+            if re[:member_roles].present?
+              re[:member_roles].each do |m|
+                MemberRole.create!(m.merge(member_id: new_target.id)) if m.present?
+              end
+            end
+          else
+            SyncLog.sync_project_log("***【#{target_type}】. create_failed---------------")
           end
         end
       end
+      SyncLog.sync_project_log("***111222. end_to_create_target---------------")
+    rescue => e
+      SyncLog.sync_project_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
     end
-    SyncLog.sync_project_log("***111222. end_to_create_target---------------")
+    
   end
 
   def create_journals(target_jsons, target_type,issue_id)
