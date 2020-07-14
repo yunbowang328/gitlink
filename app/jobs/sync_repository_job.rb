@@ -8,7 +8,7 @@ class SyncRepositoryJob < ApplicationJob
     SyncLog.sync_log("=================begin to sync request trustie repository=====================")
     path = "#{Rails.root}/public/cache_repository"
     image_url = repository_params[:git_url]
-    g_default_branch = repository_params[:default_branch]
+    g_default_branch = repository_params[:default_branch] || "master"
     image_repo_name = image_url.to_s.split('/')&.last&.chomp('.git')
 
     unless File.directory?(path)
@@ -29,6 +29,8 @@ class SyncRepositoryJob < ApplicationJob
       if !shell5
         SyncLog.sync_project_log("=============force_push_erros==#{path}/#{image_repo_name}++new_gitlab_url+++#{new_gitlab_url}")
         SyncLog.sync_log("++++++++++++++++++force_push_erros++++++++++++++++++##{path}/#{image_repo_name}++++++new_gitlab_url+++#{new_gitlab_url}")
+      else
+        SyncLog.sync_project_log("=============force_push_success==#{path}/#{image_repo_name}++new_gitlab_url+++#{new_gitlab_url}")
       end
     else
       SyncLog.sync_project_log("=============check_clone_erros==#{path}/#{image_repo_name}")
