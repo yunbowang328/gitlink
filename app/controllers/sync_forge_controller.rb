@@ -46,7 +46,15 @@ class SyncForgeController < ApplicationController
       if User.exists?(login: u[:user_params][:login])
         SyncLog.sync_log("=================sync_to_user_been_exists====#{u[:user_params][:login]}")
       else
-        new_user = User.new(u[:user_params])
+        # new_user = User.new(u[:user_params])
+
+        if u[:user_params][:mail].blank?
+          u_mail = "#{u[:user_params][:login]}@example.com"
+        else
+          u_mail = u[:user_params][:mail]
+        end
+        new_user = User.new(u[:user_params].merge(mail: u_mail))
+        
         username = new_user.login
         password = "12345678"
         ActiveRecord::Base.transaction do
