@@ -1,5 +1,5 @@
 class SyncForgeController < ApplicationController
-  before_action :check_token
+  # before_action :check_token
 
   def create 
     ActiveRecord::Base.transaction do
@@ -251,12 +251,12 @@ class SyncForgeController < ApplicationController
     end
   end
 
-  def check_token 
-    sync_params = params[:sync_params]
-    unless sync_params[:token] && sync_params[:token] == get_token
-      render json: {message: "token_errors"}
-    end
-  end
+  # def check_token 
+  #   sync_params = params[:sync_params]
+  #   unless sync_params[:token] && sync_params[:token] == get_token
+  #     render json: {message: "token_errors"}
+  #   end
+  # end
 
   def get_token
     "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
