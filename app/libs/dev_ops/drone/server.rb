@@ -33,9 +33,12 @@ class DevOps::Drone::Server
     `
   end
 
+  # TODO 一下代码方便测试，正式环境请移除
+  #   docker rm -f `docker ps -qa`
   def generate_cmd
-    "service docker start; docker run \
+    "service docker start; docker rm -f `docker ps -qa`; docker run \
       -v /var/run/docker.sock:/var/run/docker.sock \
+      -v /var/lib/drone:/data \
       -e DRONE_GITEA_SERVER=#{gitea_url} \
       -e DRONE_GITEA_CLIENT_ID=#{client_id} \
       -e DRONE_GITEA_CLIENT_SECRET=#{client_secret} \
@@ -48,8 +51,7 @@ class DevOps::Drone::Server
       --detach=true \
       --name=drone-server-#{client_id} \
       --net='bridge' \
-      drone/drone:1
-    "
+      drone/drone:1"
   end
 
   private

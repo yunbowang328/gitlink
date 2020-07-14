@@ -1,7 +1,6 @@
-class DevopsCloudAccount < ApplicationRecord
+class DevOps::CloudAccount < ApplicationRecord
   belongs_to :project
   belongs_to :user
-
 
   def drone_host
     [drone_ip, ":80"].join
@@ -22,4 +21,5 @@ class DevopsCloudAccount < ApplicationRecord
   def self.encrypted_secret(str)
      Base64.encode64(str.strip).gsub(/\n/, '')
   end
+
 end

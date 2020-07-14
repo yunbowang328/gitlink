@@ -18,6 +18,11 @@ Rails.application.routes.draw do
   scope '/api' do
     namespace :dev_ops  do
       resources :cloud_accounts, only: [:create]
+      resources :languages, only: [:index, :create, :show] do
+        collection do
+          get :common
+        end
+      end
     end
 
     resources :composes do

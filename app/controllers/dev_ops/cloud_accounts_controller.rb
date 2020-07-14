@@ -7,16 +7,16 @@ class DevOps::CloudAccountsController < ApplicationController
       DevOps::CreateCloudAccountForm.new(devops_params).validate!
       logger.info "######### devops_params: #{devops_params}"
       logger.info "######### ......: #{(IPAddr.new devops_params[:ip_num]).to_i}"
-      logger.info "######### ......: #{DevopsCloudAccount.encrypted_secret(devops_params[:secret])}"
+      logger.info "######### ......: #{DevOps::CloudAccount.encrypted_secret(devops_params[:secret])}"
       # 1. 保存华为云服务器帐号
-      logger.info "######### ......ff:  #{devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevopsCloudAccount.encrypted_secret(devops_params[:secret]))}"
-      create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevopsCloudAccount.encrypted_secret(devops_params[:secret]))
+      logger.info "######### ......ff:  #{devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))}"
+      create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))
       logger.info "######### create_params: #{create_params}"
-      cloud_account = DevopsCloudAccount.new(create_params)
+      cloud_account = DevOps::CloudAccount.new(create_params)
       cloud_account.user = current_user
       cloud_account.save
       # 2. 生成oauth2应用程序的client_id和client_secrete
-      gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline", redirect_uris: [cloud_account.drone_url]})
+      gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline", redirect_uris: ["#{cloud_account.drone_url}/login"]})
       logger.info "######### gitea_oauth: #{gitea_oauth}"
       oauth = Oauth.new(client_id: gitea_oauth['client_id'],
         client_secret: gitea_oauth['client_secret'],
@@ -42,6 +42,7 @@ class DevOps::CloudAccountsController < ApplicationController
 
 
       redirect_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{oauth.client_id}&redirect_uri=#{cloud_account.drone_url}/login&response_type=code"
+      logger.info "######### redirect_url: #{redirect_url}"
       if result
         render_ok(redirect_url: redirect_url)
       else

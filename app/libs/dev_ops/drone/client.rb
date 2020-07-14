@@ -33,7 +33,6 @@ class DevOps::Drone::Client
       --restart always \
       --name drone-agent--#{client_id} \
       --net='bridge' \
-      drone/drone-runner-docker:1
-    "
+      drone/drone-runner-docker:1"
   end
 end
