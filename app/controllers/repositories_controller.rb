@@ -53,8 +53,6 @@ class RepositoriesController < ApplicationController
     @project_owner = @project.owner
     @hash_commit = Gitea::Repository::Commits::ListService.new(@project_owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
-      Rails.logger.info("#####################_______hash_commit______############{@hash_commit}")
-      Rails.logger.info("#####################_______hash_commit_size______############{@hash_commit.size}")
   end
 
   def commit
@@ -210,7 +208,7 @@ class RepositoriesController < ApplicationController
         issue_type: "1",
         tracker_id: 2,
         status_id: 1,
-        priority_id: 1
+        priority_id: params[:priority_id] || "2"
       }
       @pull_issue = Issue.new(issue_params)
       if @pull_issue.save!

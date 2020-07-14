@@ -12,10 +12,9 @@ class Projects::CreateService < ApplicationService
     @project = Project.new(project_params)
     ActiveRecord::Base.transaction do
       if @project.save!
-        Rails.logger.info("#############___________repository_params______###########{repository_params}")
         Repositories::CreateService.new(user, @project, repository_params).call
       else
-        #
+        Rails.logger.info("#############___________create_project_erros______###########{@project.errors.messages}")
       end
     end
     @project

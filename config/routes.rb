@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'admin_constraint'
 
-  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+  mount Sidekiq::Web => '/sidekiq'
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
   resources :edu_settings
-
   scope '/api' do
     namespace :dev_ops  do
       resources :cloud_accounts, only: [:create]
@@ -25,6 +24,11 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :sync_forge, only: [:create] do
+      collection do
+        post :sync_users
+      end
+    end
     resources :composes do
       resources :compose_projects, only: [:create, :destroy]
     end

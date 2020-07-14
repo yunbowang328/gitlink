@@ -18,7 +18,6 @@ class Project < ApplicationRecord
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
-
   # has_many :commits, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
