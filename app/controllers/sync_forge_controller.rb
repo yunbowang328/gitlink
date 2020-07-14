@@ -65,7 +65,7 @@ class SyncForgeController < ApplicationController
             new_user.gitea_token = result['sha1']
             new_user.gitea_uid = gitea_user['id']
             if new_user.save!
-              UserExtension.create!(u[:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present?
+              UserExtension.create!(u[:user_extensions][:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present? && u[:user_extensions][:user_extensions].present?
             else
               SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
             end
