@@ -146,6 +146,44 @@ class UsersController < ApplicationController
     render_ok
   end
 
+  def trustie_related_projects
+    projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
+    projects_json = []
+    if projects.present?
+      projects.each do |p|
+        pj = {
+          id: p.id,
+          name: p.name,
+          is_public: p.is_public,
+          updated_on: p.updated_on.strftime("%Y-%m-%d"),
+          owner: {
+            name: p.owner.try(:show_real_name),
+            login: p.owner.login
+          },
+          members_count: p&.members.size,
+          issues_count: p.issues_count - p.pull_requests_count,
+          commits_count: p&.project_score&.changeset_num.to_i
+        }
+        projects_json.push(pj)
+      end
+    end
+    Rails.logger.info("==========projects_json========+########{projects_json}")
+    render json: { projects: projects_json }
+  end
+
+  def trustie_projects
+    user_id = User.select(:id, :login).where(login: params[:login])&.first&.id
+    projects = Project.visible
+    
+    projects = projects.joins(:members).where(members: { user_id: user_id })
+
+    search = params[:search].to_s.strip
+    projects = projects.where('projects.name LIKE ?', "%#{search}%") if search.present?
+
+    projects = projects.select(:id, :name).limit(10).as_json
+    render json: { projects: projects }
+  end
+
   def projects
     is_current_admin_user = User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
     scope = Projects::ListMyQuery.call(params, @user,is_current_admin_user)
