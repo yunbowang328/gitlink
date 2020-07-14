@@ -174,27 +174,31 @@ class SyncForgeController < ApplicationController
     SyncLog.sync_log("***2. begin_to_syncissues---------------")
     begin
       forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
-      forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
-      diff_issue_ids = old_issues_params[:ids] - forge_issue_ids
       sync_projects_params = {}
-      if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
-        diff_journal_ids = old_issues_params[:journals][:ids] - forge_journal_ids
-        unless diff_journal_ids.size == 0
+      unless forge_issue_ids.size.to_i < old_issues_params[:count].to_i
+        forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
+        diff_issue_ids = old_issues_params[:ids] - forge_issue_ids
+        
+        if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
+          diff_journal_ids = old_issues_params[:journals][:ids] - forge_journal_ids
+          unless diff_journal_ids.size == 0
+            sync_projects_params = {
+              type: "Journal",
+              ids: diff_journal_ids,
+              token: get_token,
+              parent_id: project_id
+            }
+          end
+        else
           sync_projects_params = {
-            type: "Journal",
-            ids: diff_journal_ids,
+            type: "Issue",
+            ids: diff_issue_ids,
             token: get_token,
             parent_id: project_id
           }
         end
-      else
-        sync_projects_params = {
-          type: "Issue",
-          ids: diff_issue_ids,
-          token: get_token,
-          parent_id: project_id
-        }
       end
+      
       SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
       SyncLog.sync_log("***2. end_to_syncissues---------------")
     rescue Exception => e
@@ -205,32 +209,37 @@ class SyncForgeController < ApplicationController
   def change_project_watchers(project, watchers,gitea_main)
     SyncLog.sync_log("***5. begin_to_sync_watchers---------------")
     forge_watchers_ids = project&.watchers&.select(:id)&.pluck(:id)
-    diff_target_ids = watchers[:ids] - forge_watchers_ids
-    if diff_target_ids.size > 0
-      sync_projects_params = {
-        type: "Watcher",
-        ids: diff_target_ids,
-        token: get_token,
-        parent_id: project.id
-      }
-      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
-      SyncLog.sync_log("***5. begin_to_sync_watchers---------------")
-
+    unless forge_watchers_ids.size.to_i < watchers[:count].to_i
+      diff_target_ids = watchers[:ids] - forge_watchers_ids
+      if diff_target_ids.size > 0
+        sync_projects_params = {
+          type: "Watcher",
+          ids: diff_target_ids,
+          token: get_token,
+          parent_id: project.id
+        }
+        SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
+        
+      end
     end
+    SyncLog.sync_log("***5. begin_to_sync_watchers---------------")
   end
 
   def change_project_versions(project, versions,gitea_main)
     SyncLog.sync_log("***4. begin_to_sync_versions---------------")
     forge_version_ids = project&.versions&.select(:id)&.pluck(:id)
-    diff_version_ids = versions[:ids] - forge_version_ids
-    if diff_version_ids.size > 0
-      sync_projects_params = {
-        type: "Version",
-        ids: diff_version_ids,
-        token: get_token,
-        parent_id: project.id
-      }
-      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
+    unless forge_version_ids.size < versions[:count].to_i
+      diff_version_ids = versions[:ids] - forge_version_ids
+      if diff_version_ids.size > 0
+        sync_projects_params = {
+          type: "Version",
+          ids: diff_version_ids,
+          token: get_token,
+          parent_id: project.id
+        }
+        SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
+    end
+    
       SyncLog.sync_log("***4. end_to_sync_versions---------------")
     end
   end
@@ -238,15 +247,18 @@ class SyncForgeController < ApplicationController
   def change_project_members(project, members,gitea_main)
     SyncLog.sync_log("***3. begin_to_sync_members---------------")
     forge_member_ids = project&.members&.select(:id)&.pluck(:id)
-    diff_member_ids = members[:ids] - forge_member_ids
-    if diff_member_ids.size > 0
-      sync_projects_params = {
-        type: "Member",
-        ids: diff_member_ids,
-        token: get_token,
-        parent_id: project.id
-      }
-      SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
+    unless forge_member_ids.size < members[:count]
+      diff_member_ids = members[:ids] - forge_member_ids
+      if diff_member_ids.size > 0
+        sync_projects_params = {
+          type: "Member",
+          ids: diff_member_ids,
+          token: get_token,
+          parent_id: project.id
+        }
+        SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
+    end
+    
       SyncLog.sync_log("***3. end_to_sync_members---------------")
     end
   end
