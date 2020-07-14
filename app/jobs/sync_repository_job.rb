@@ -21,11 +21,14 @@ class SyncRepositoryJob < ApplicationJob
 
     check_clone = system("cd #{path} && git clone #{image_url}")
     SyncLog.sync_log("========check_clone:====cd #{path} && git clone #{image_url}===================")
+    SyncLog.sync_log("========gitlab_branches:#{gitlab_branches}===================")
     if check_clone
       new_gitlab_url = "http://root:_Trustie_10010@#{gitea_main}/#{user_login}/#{identifier}.git"
       shell_remote_1 = system("cd #{path}/#{image_repo_name} && git remote set-url origin #{new_gitlab_url}")
       gitlab_branches.each do |branch|
+        SyncLog.sync_log("========checkout_branch:#{branch}===================")
         shell5 = system("cd #{path}/#{image_repo_name} && git checkout #{branch} && git push --force --set-upstream origin #{branch}")
+        SyncLog.sync_log("========checkout_branch_shell5:#{shell5}===================")
         if !shell5
           SyncLog.sync_project_log("=============force_push_erros==#{path}/#{image_repo_name}++branch:#{branch}")
         else
