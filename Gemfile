@@ -40,7 +40,7 @@ gem 'oauth2'
 #导出为pdf
 gem 'pdfkit'
 gem 'wkhtmltopdf-binary'
-gem 'request_store'
+# gem 'request_store'
 #gem 'iconv'
 # markdown 转html
 gem 'redcarpet', '~> 3.4'
