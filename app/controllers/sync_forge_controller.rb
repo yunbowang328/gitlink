@@ -54,7 +54,7 @@ class SyncForgeController < ApplicationController
           u_mail = u[:user_params][:mail]
         end
         new_user = User.new(u[:user_params].merge(mail: u_mail))
-        
+
         username = new_user.login
         password = "12345678"
         ActiveRecord::Base.transaction do
@@ -76,9 +76,9 @@ class SyncForgeController < ApplicationController
         end
       end
     end
-    normal_status(1, "completed_sync")
+    # normal_status(1, "completed_sync")
   rescue Exception => e
-    normal_status(-1, e.message)
+     SyncLog.sync_log("=================sync_user_failed====#{e}")
   end
 
   private 
