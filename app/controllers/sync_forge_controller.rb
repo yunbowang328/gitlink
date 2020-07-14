@@ -1,5 +1,5 @@
 class SyncForgeController < ApplicationController
-  before_action :check_token
+  # before_action :check_token
 
   def create 
     ActiveRecord::Base.transaction do
@@ -46,48 +46,57 @@ class SyncForgeController < ApplicationController
       if User.exists?(login: u[:user_params][:login])
         SyncLog.sync_log("=================sync_to_user_been_exists====#{u[:user_params][:login]}")
       else
+        # new_user = User.new(u[:user_params])
+
         if u[:user_params][:mail].blank?
           u_mail = "#{u[:user_params][:login]}@example.com"
         else
           u_mail = u[:user_params][:mail]
         end
+
         new_user = User.new(u[:user_params].merge(mail: u_mail))
-        
+
         username = new_user.login
 
         password = "12345678"
-        ActiveRecord::Base.transaction do
-          interactor = Gitea::RegisterInteractor.call({username: username, email: new_user.mail, password: password})
-          if interactor.success?
-            gitea_user = interactor.result
-            result = Gitea::User::GenerateTokenService.new(username, password).call
-            new_user.gitea_token = result['sha1']
-            new_user.gitea_uid = gitea_user['id']
-            if new_user.save!
-              UserExtension.create!(u[:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present?
-            else
-              SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
-            end
-          else
-            SyncLog.sync_project_log("=============sync_to_user_failed,user_login====#{new_user.login}")
-            SyncLog.sync_log("=================sync_to_user_failed,user_login====#{new_user.login}")
-          end
+        if new_user.save!
+          SyncLog.sync_log("=================sync_to_user_success==#{new_user.login}")
+        else
+          SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
         end
+        # ActiveRecord::Base.transaction do
+        #   interactor = Gitea::RegisterInteractor.call({username: username, email: new_user.mail, password: password})
+        #   if interactor.success?
+        #     gitea_user = interactor.result
+        #     result = Gitea::User::GenerateTokenService.new(username, password).call
+        #     new_user.gitea_token = result['sha1']
+        #     new_user.gitea_uid = gitea_user['id']
+        #     if new_user.save!
+        #       UserExtension.create!(u[:user_extensions][:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present? && u[:user_extensions][:user_extensions].present?
+        #     else
+        #       SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
+        #     end
+        #   else
+        #     SyncLog.sync_project_log("=============sync_to_user_failed,user_login====#{new_user.login}")
+        #     SyncLog.sync_log("=================sync_to_user_failed,user_login====#{new_user.login}")
+        #   end
+        # end
       end
     end
-    normal_status(1, "completed_sync")
+    # normal_status(1, "completed_sync")
   rescue Exception => e
-    normal_status(-1, e.message)
+     SyncLog.sync_log("=================sync_user_failed====#{e}")
   end
 
   private 
 
   def check_sync_project(project,sync_params)
     begin
-      gitea_main = "https://ucloudtest.trustie.net/"
-      if request.subdomain === 'forgeplus'
-        gitea_main = "https://trustie.net"
+      gitea_main = "https://www.trustie.net/"
+      if request.subdomain === 'testforgeplus'
+        gitea_main = "https://ucloudtest.trustie.net/"
       end
+
       SyncLog.sync_log("----begin_to_check_sync_project----project_id:#{project.id}---------------")
       change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score 
       change_project_issues(project, sync_params[:issues],project.id, gitea_main) 
@@ -111,11 +120,10 @@ class SyncForgeController < ApplicationController
         new_project_id: project.id
       }
 
-      gitea_main = "https://ucloudtest.trustie.net/"
-      if request.subdomain === 'forgeplus'
-        gitea_main = "https://trustie.net"
+      gitea_main = "https://www.trustie.net/"
+      if request.subdomain === 'testforgeplus'
+        gitea_main = "https://ucloudtest.trustie.net/"
       end
-
       SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
       SyncLog.sync_log("***8. end_to_sync_new_project---------------")
   end
@@ -244,12 +252,12 @@ class SyncForgeController < ApplicationController
     end
   end
 
-  def check_token 
-    sync_params = params[:sync_params]
-    unless sync_params[:token] && sync_params[:token] == get_token
-      render json: {message: "token_errors"}
-    end
-  end
+  # def check_token 
+  #   sync_params = params[:sync_params]
+  #   unless sync_params[:token] && sync_params[:token] == get_token
+  #     render json: {message: "token_errors"}
+  #   end
+  # end
 
   def get_token
     "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
@@ -257,11 +265,11 @@ class SyncForgeController < ApplicationController
 
   def get_sudomain
     SyncLog.sync_log("=================request.subdomain:#{request.subdomain}========")
-    gitea_main = "testgitea.trustie.net"
+    gitea_main = "gitea.trustie.net"
     if request.subdomain === 'testforgeplus'
       gitea_main = "testgitea2.trustie.net"
-    elsif request.subdomain === 'forge'
-      gitea_main = "gitea.trustie.net"
+    # elsif request.subdomain === 'forgeplus'
+    #   gitea_main = "gitea.trustie.net"
     end
     return gitea_main
   end
