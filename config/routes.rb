@@ -179,6 +179,8 @@ Rails.application.routes.draw do
         post :sync_token
         post :sync_gitea_pwd
         post :sync_salt
+        get :trustie_projects
+        get :trustie_related_projects
       end
 
       scope module: :users do
