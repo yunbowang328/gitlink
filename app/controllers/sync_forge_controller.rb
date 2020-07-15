@@ -7,7 +7,7 @@ class SyncForgeController < ApplicationController
       sync_params = params[:sync_params]
       project_user = User.where(login: sync_params[:owner_login])&.first 
       #以前已同步的项目,那么肯定存在仓库
-
+      SyncLog.sync_log("=================begin_to_sync_forge: project_identifier: #{sync_params[:identifier]}========")
       user_projects = Project.where(user_id: project_user.id)
       if  user_projects.where(id: sync_params[:id], identifier: sync_params[:identifier]).present?
         has_project = true
@@ -24,8 +24,6 @@ class SyncForgeController < ApplicationController
 
       if has_project
         SyncLog.sync_log("=================begin_to_update_project========")
-        # project = user_projects.where(id: sync_params[:id]), identifier: sync_params[:identifier])&.first || 
-
         check_sync_project(project, sync_params)
       else #新建项目
         SyncLog.sync_log("=================begin_to_create_new_project========")
