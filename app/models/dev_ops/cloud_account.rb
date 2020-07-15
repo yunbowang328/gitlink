@@ -1,6 +1,7 @@
 class DevOps::CloudAccount < ApplicationRecord
   belongs_to :project
   belongs_to :user
+  belongs_to :repository
 
   def drone_host
     [drone_ip, ":80"].join

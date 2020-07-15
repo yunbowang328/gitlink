@@ -8,7 +8,7 @@ class SyncProjectsJob < ApplicationJob
     SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
     SyncLog.sync_log("==========sync_params:#{sync_params}============")
 
-    begin     
+    begin
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.hostname, uri.port)
@@ -112,7 +112,7 @@ class SyncProjectsJob < ApplicationJob
     rescue => e
       SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
     end
-    
+
   end
 
   def create_journals(target_jsons, target_type,issue_id)
