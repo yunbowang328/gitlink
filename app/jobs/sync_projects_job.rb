@@ -15,11 +15,11 @@ class SyncProjectsJob < ApplicationJob
       http.use_ssl = true
       response = http.send_request('GET', uri.path, sync_params.to_json, {'Content-Type' => 'application/json'})
 
-      SyncLog.sync_log("==========response_status::#{response.code}============")
+      SyncLog.sync_log("=======#{sync_params[:parent_id].present? ? sync_params[:parent_id] : sync_params[:new_project_id]}===response_status::#{response.code}============")
       if response.code == '200'
         target_jsons = eval(response.body)
         if sync_params[:type] == "Project"
-          SyncLog.sync_log("==========target_jsons: #{target_jsons}============")
+          # SyncLog.sync_log("==========target_jsons: #{target_jsons}============")
           update_new_project(target_jsons[:targets_params][0], sync_params[:new_project_id])
         else
           SyncLog.sync_log("========== #{sync_params[:type]}============")
