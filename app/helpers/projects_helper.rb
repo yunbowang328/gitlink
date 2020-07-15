@@ -44,7 +44,8 @@ module ProjectsHelper
       identifier: project.identifier,
       name: project.name,
       id: project.id,
-      open_devops: project.open_devops,
+      repo_id: repo.id,
+      open_devops: project.open_devops?,
       type: project.numerical_for_project_type,
       author: {
         login: project.owner.login,

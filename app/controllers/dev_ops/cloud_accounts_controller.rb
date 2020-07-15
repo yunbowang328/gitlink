@@ -12,9 +12,9 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### ......ff:  #{devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))}"
       create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))
       logger.info "######### create_params: #{create_params}"
-      cloud_account = DevOps::CloudAccount.new(create_params)
-      cloud_account.user = current_user
-      cloud_account.save
+
+      return if @project.dev_ops_cloud_account
+
       # 2. 生成oauth2应用程序的client_id和client_secrete
       gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline", redirect_uris: ["#{cloud_account.drone_url}/login"]})
       logger.info "######### gitea_oauth: #{gitea_oauth}"

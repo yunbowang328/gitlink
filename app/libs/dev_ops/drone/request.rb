@@ -1,10 +1,9 @@
   # @private
   class DevOps::Drone::Request
-    format :json
-    headers 'Accept' => 'application/json'
-    parser Proc.new { |body, _| parse(body) }
+    # format :json
+    # headers 'Accept' => 'application/json'
+    # parser Proc.new { |body, _| parse(body) }
 
-    attr_accessor :private_token
 
     # Converts the response body to an ObjectifiedHash.
     def self.parse(body)
@@ -84,27 +83,63 @@
       self.class.default_params.delete(:sudo) if sudo.nil?
     end
 
+    def request(method, domain, url, **params)
+      Rails.logger.info("[drone] request: #{method} #{url} #{params.except(:secret).inspect}")
+
+      client = Faraday.new(url: domain)
+      response = client.public_send(method, url, params)
+      result = JSON.parse(response.body)
+
+      Rails.logger.info("[drone] response:#{response.status} #{result.inspect}")
+
+      if response.status != 200
+        raise DevOps::Drone::Error.parse(result)
+      end
+
+      if result['errcode'].present? && result['errcode'].to_i.nonzero?
+        raise DevOps::Drone::Error.parse(result)
+      end
+
+      result
+    end
+
     private
+      def conn(auth={})
+        token = auth[:token]
+        puts "[gitea]    token: #{token}"
 
-    # Sets a PRIVATE-TOKEN header for requests.
-    # @raise [Error::MissingCredentials] if private_token not set.
-    def set_private_token_header(options, path=nil)
-      unless path == '/session'
-        raise Error::MissingCredentials.new("Please set a private_token for user") unless @private_token
-        options[:headers] = {'PRIVATE-TOKEN' => @private_token}
+        @client ||= begin
+          Faraday.new(url: domain) do |req|
+            req.request :url_encoded
+            req.headers['Content-Type'] = 'application/json'
+            req.response :logger # 显示日志
+            req.adapter Faraday.default_adapter
+            req.authorization :Bearer, token
+            req.headers['Authorization']
+          end
+        end
+        @client
       end
-    end
 
-    # Set HTTParty configuration
-    # @see https://github.com/jnunemaker/httparty
-    def set_httparty_config(options)
-      if self.httparty
-        options.merge!(self.httparty)
+      # Sets a PRIVATE-TOKEN header for requests.
+      # @raise [Error::MissingCredentials] if private_token not set.
+      def set_private_token_header(options, path=nil)
+        unless path == '/session'
+          raise Error::MissingCredentials.new("Please set a private_token for user") unless @private_token
+          options[:headers] = {'PRIVATE-TOKEN' => @private_token}
+        end
       end
-    end
 
-    def error_message(response)
-      "Server responded with code #{response.code}, message: #{response.parsed_response.message}. " \
-      "Request URI: #{response.request.base_uri}#{response.request.path}"
-    end
+      # Set HTTParty configuration
+      # @see https://github.com/jnunemaker/httparty
+      def set_httparty_config(options)
+        if self.httparty
+          options.merge!(self.httparty)
+        end
+      end
+
+      def error_message(response)
+        "Server responded with code #{response.code}, message: #{response.parsed_response.message}. " \
+        "Request URI: #{response.request.base_uri}#{response.request.path}"
+      end
   end
