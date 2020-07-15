@@ -188,12 +188,14 @@ class SyncForgeController < ApplicationController
   end
 
   def change_project_issues(project, old_issues_params,project_id, gitea_main)
-    SyncLog.sync_log("***2. begin_to_syncissues----old_issues_params:#{old_issues_params[:ids]}-----------")
+    SyncLog.sync_log("***2. begin_to_syncissues---------------")
     begin
       forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
       sync_projects_params = {}
+      SyncLog.sync_log("***2--01. forge_issue_ids-#{forge_issue_ids.size.to_i}--------------")
       if forge_issue_ids.size.to_i <= old_issues_params[:count].to_i
         diff_issue_ids = old_issues_params[:ids] - forge_issue_ids
+        SyncLog.sync_log("***2--02. diff_issue_ids-#{diff_issue_ids}--------------")
         if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
           forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
           diff_journal_ids = old_issues_params[:journals][:ids] - forge_journal_ids
