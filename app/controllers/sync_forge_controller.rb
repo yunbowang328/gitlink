@@ -9,12 +9,12 @@ class SyncForgeController < ApplicationController
       #以前已同步的项目,那么肯定存在仓库
 
       user_projects = Project.where(user_id: project_user.id)
-      if  user_projects.where(id: sync_params[:id]), identifier: sync_params[:identifier]).present?
+      if  user_projects.where(id: sync_params[:id], identifier: sync_params[:identifier]).present?
         has_project = true
-        project = user_projects.where(id: sync_params[:id]), identifier: sync_params[:identifier])&.first
+        project = user_projects.where(id: sync_params[:id], identifier: sync_params[:identifier])&.first
       elsif user_projects.where(id: sync_params[:id]).present?
         has_project = true
-        project = user_projects.where(id: sync_params[:id]))&.first
+        project = user_projects.where(id: sync_params[:id])&.first
       elsif user_projects.where(identifier: sync_params[:identifier]).present?
         has_project = true
         project = user_projects.where(identifier: sync_params[:identifier])&.first
