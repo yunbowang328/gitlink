@@ -22,13 +22,12 @@ Rails.application.routes.draw do
           get :common
         end
       end
-
       resources :builds, only: :index do
         collection do
           get ':number', to: 'builds#detail', as: 'detail'
-          get ':number/logs/:stage/:step', to: 'builds#detail', as: 'logs'
           post ':number', to: 'builds#restart', as: 'restart'
           delete ':number', to: 'builds#delete', as: 'delete'
+          get ':number/logs/:stage/:step', to: 'builds#detail', as: 'logs'
         end
       end
     end
