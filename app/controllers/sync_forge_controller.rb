@@ -206,18 +206,36 @@ class SyncForgeController < ApplicationController
               token: get_token,
               parent_id: project_id
             }
+            SyncLog.sync_log("***2--02. sync_projects_params-#{sync_projects_params}--------------")
+            SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
           end
         else
-          sync_projects_params = {
-            type: "Issue",
-            ids: diff_issue_ids,
-            token: get_token,
-            parent_id: project_id
-          }
+          if diff_issue_ids.size > 200
+            new_diff_ids = diff_issue_ids.in_groups_of(200).map{|k| k.reject(&:blank?)}
+            new_diff_ids.each_with_index do |diff, index|
+              sync_projects_params = {
+                type: "Issue",
+                ids: diff,
+                token: get_token,
+                parent_id: project_id
+              }
+              SyncLog.sync_log("***2--030#{idnex+1}. sync_projects_params_groups-#{sync_projects_params}--------------")
+              SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
+            end
+          else
+            sync_projects_params = {
+              type: "Issue",
+              ids: diff_issue_ids,
+              token: get_token,
+              parent_id: project_id
+            }
+          end
+          SyncLog.sync_log("***2--03. sync_projects_params_groups-#{sync_projects_params}--------------")
+          SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
         end
       end
-      SyncLog.sync_log("***2--02. sync_projects_params-#{sync_projects_params}--------------")
-      SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
+      
+      # SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
       SyncLog.sync_log("***2. end_to_syncissues---------------")
     rescue Exception => e
       SyncLog.sync_log("=========change_project_issues_errors:#{e}===================")
