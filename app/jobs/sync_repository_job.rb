@@ -25,13 +25,13 @@ class SyncRepositoryJob < ApplicationJob
       gitlab_branches.each do |branch|
         shell5 = system("cd #{path}/#{image_repo_name} && git checkout #{branch} && git push --force --set-upstream origin #{branch}")
         if !shell5
-          SyncLog.sync_project_log("=============force_push_erros==#{path}/#{image_repo_name}++branch:#{branch}")
+          SyncLog.sync_log("=============force_push_erros==#{path}/#{image_repo_name}++branch:#{branch}")
         else
-          SyncLog.sync_project_log("=============force_push_success==#{path}/#{image_repo_name}++branch+++#{branch}")
+          SyncLog.sync_log("=============force_push_success==#{path}/#{image_repo_name}++branch+++#{branch}")
         end
       end
     else
-      SyncLog.sync_project_log("=============check_clone_erros==#{path}/#{image_repo_name}")
+      SyncLog.sync_log("=============check_clone_erros==#{path}/#{image_repo_name}")
       SyncLog.sync_log("++++++++++++++++++check_clone_erros++++++++++++++++++#{image_repo_name}")
     end
     SyncLog.sync_log("=================end to sync repository=====================#{image_repo_name}")
