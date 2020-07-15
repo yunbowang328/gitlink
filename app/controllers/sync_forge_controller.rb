@@ -75,11 +75,11 @@ class SyncForgeController < ApplicationController
 
         username = new_user.login
         password = "12345678"
-        if new_user.save!
-          SyncLog.sync_log("=================sync_to_user_success==#{new_user.login}")
-        else
-          SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
-        end
+        # if new_user.save!
+        #   SyncLog.sync_log("=================sync_to_user_success==#{new_user.login}")
+        # else
+        #   SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
+        # end
         ActiveRecord::Base.transaction do
           interactor = Gitea::RegisterInteractor.call({username: username, email: new_user.mail, password: password})
           if interactor.success?
