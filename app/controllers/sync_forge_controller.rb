@@ -219,7 +219,7 @@ class SyncForgeController < ApplicationController
               token: get_token,
               parent_id: project_id
             }
-            SyncLog.sync_log("***2--030#{len+1}. sync_projects_params_groups-#{sync_projects_params}--------------")
+            SyncLog.sync_log("***2--030#{len}. sync_projects_params_groups-#{sync_projects_params}--------------")
             SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
           end
           # sync_projects_params = {
