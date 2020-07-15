@@ -2340,7 +2340,7 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
     "author": {
       "name": "18816895620",
       "email": "2456233122@qq.com",
-      "date": "2020-01-08T07:57:34Z"
+      "date": "2020-01-08T07:57:34Z"``
     },
     "committer": {
       "name": "18816895620",
@@ -2364,8 +2364,22 @@ POST  /api/dev_ops/cloud_accounts
 
 *示例*
 ```
-curl -X POST http://localhost:3000/api/dev_ops/cloud_accounts | jq
+curl -X POST \
+-d "account=xx" \
+-d "secret=xxx" \
+-d "ip_num=xx.xx.xx.xx" \
+-d "repo_id=5988" \
+https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 ```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|account          |是|string |云服务器ssh连接登录用户名  |
+|secret       |是|string |云服务器ssh连接登录秘密 |
+|ip_num        |否|string |云服务器公网IP |
+|repo_id         |否|string |repository id|
 
 *返回参数说明:*
 
@@ -2459,6 +2473,12 @@ GET  /api/dev_ops/languages/:id
 curl -X GET http://localhost:3000/api/dev_ops/languages/114.json | jq
 ```
 
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|id          |是|int |language's id  |
+
 *返回参数说明:*
 
 |参数名|类型|说明|
@@ -2476,6 +2496,323 @@ curl -X GET http://localhost:3000/api/dev_ops/languages/114.json | jq
     "name": "C",
     "cover_url": null,
     "content": "kind: pipeline\n          name: default\n\n          platform:\n            os: linux\n            arch: arm64\n\n          steps:\n          - name: test\n           image: gcc\n           commands:\n           - ./configure\n           - make\n           - make test",
+  }
+]
+```
+---
+
+#### 获取构建列表
+```
+GET  /api/dev_ops/builds
+```
+
+*示例*
+```
+curl -X GET http://localhost:3000/api/dev_ops/builds | jq
+```
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id         |int|build's id|
+|number       |string|build's number|
+|status         |string|build's result|
+|event         |string|build's event|
+
+返回值
+```
+[
+  {
+    "id": 100207,
+    "repo_id": 296163,
+    "number": 42,
+    "status": "success",
+    "event": "pull_request",
+    "action": "sync",
+    "link": "https://github.com/octoat/hello-world/compare/e3320539a4c0...9fc1ad6ebf12",
+    "message": "updated README",
+    "before": "e3320539a4c03ccfda992641646deb67d8bf98f3",
+    "after": "9fc1ad6ebf12462f3f9773003e26b4c6f54a772e",
+    "ref": "refs/heads/master",
+    "source_repo": "spaceghost/hello-world",
+    "source": "develop",
+    "target": "master",
+    "author_login": "octocat",
+    "author_name": "The Octocat",
+    "author_email": "octocat@github.com",
+    "author_avatar": "http://www.gravatar.com/avatar/7194e8d48fa1d2b689f99443b767316c",
+    "sender": "bradrydzewski",
+    "started": 1564085874,
+    "finished": 1564086343,
+    "created": 1564085874,
+    "updated": 1564085874,
+    "version": 3
+  }
+]
+```
+---
+
+#### 获取某条构建详情信息
+```
+GET  /api/dev_ops/builds/:number
+```
+
+*示例*
+```
+curl -X GET http://localhost:3000/api/dev_ops/builds/42 | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|number          |是|int |build's number  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id         |int|build's id|
+|status       |string|build's status|
+|event         |string|build's event|
+
+返回值
+```
+{
+  "id": 100207,
+  "repo_id": 296163,
+  "number": 42,
+  "status": "pending",
+  "event": "pull_request",
+  "action": "sync",
+  "link": "https://github.com/octoat/hello-world/compare/e3320539a4c0...9fc1ad6ebf12",
+  "message": "updated README",
+  "before": "e3320539a4c03ccfda992641646deb67d8bf98f3",
+  "after": "9fc1ad6ebf12462f3f9773003e26b4c6f54a772e",
+  "ref": "refs/heads/master",
+  "source_repo": "spaceghost/hello-world",
+  "source": "develop",
+  "target": "master",
+  "author_login": "octocat",
+  "author_name": "The Octocat",
+  "author_email": "octocat@github.com",
+  "author_avatar": "http://www.gravatar.com/avatar/7194e8d48fa1d2b689f99443b767316c",
+  "sender": "bradrydzewski",
+  "started": 0,
+  "finished": 0,
+  "created": 1564085874,
+  "updated": 1564085874,
+  "version": 1,
+  "stages": [
+      {
+          "id": 199937,
+          "repo_id": 296163,
+          "build_id": 100207,
+          "number": 1,
+          "name": "default",
+          "kind": "pipeline",
+          "type": "docker",
+          "status": "pending",
+          "errignore": false,
+          "exit_code": 0,
+          "machine": "15e89c0f84f1",
+          "os": "linux",
+          "arch": "amd64",
+          "started": 0,
+          "stopped": 0,
+          "created": 1564085874,
+          "updated": 1564086343,
+          "version": 1,
+          "on_success": true,
+          "on_failure": false
+      }
+  ]
+}
+```
+---
+
+#### 重启构建/重新构建
+```
+POST  /api/dev_ops/builds/:number
+```
+
+*示例*
+```
+curl -X POST http://localhost:3000/api/dev_ops/builds/42 | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|number          |是|int |build's number  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id         |int|build's id|
+|status       |string|build's status|
+|event         |string|build's event|
+
+返回值
+```
+{
+  "id": 100207,
+  "repo_id": 296163,
+  "number": 42,
+  "status": "pending",
+  "event": "pull_request",
+  "action": "sync",
+  "link": "https://github.com/octoat/hello-world/compare/e3320539a4c0...9fc1ad6ebf12",
+  "message": "updated README",
+  "before": "e3320539a4c03ccfda992641646deb67d8bf98f3",
+  "after": "9fc1ad6ebf12462f3f9773003e26b4c6f54a772e",
+  "ref": "refs/heads/master",
+  "source_repo": "spaceghost/hello-world",
+  "source": "develop",
+  "target": "master",
+  "author_login": "octocat",
+  "author_name": "The Octocat",
+  "author_email": "octocat@github.com",
+  "author_avatar": "http://www.gravatar.com/avatar/7194e8d48fa1d2b689f99443b767316c",
+  "sender": "bradrydzewski",
+  "started": 0,
+  "finished": 0,
+  "created": 1564085874,
+  "updated": 1564085874,
+  "version": 1,
+  "stages": [
+      {
+          "id": 199937,
+          "repo_id": 296163,
+          "build_id": 100207,
+          "number": 1,
+          "name": "default",
+          "kind": "pipeline",
+          "type": "docker",
+          "status": "pending",
+          "errignore": false,
+          "exit_code": 0,
+          "machine": "15e89c0f84f1",
+          "os": "linux",
+          "arch": "amd64",
+          "started": 0,
+          "stopped": 0,
+          "created": 1564085874,
+          "updated": 1564086343,
+          "version": 1,
+          "on_success": true,
+          "on_failure": false
+      }
+  ]
+}
+```
+---
+
+#### 关闭构建
+```
+DELETE  /api/dev_ops/builds/:number
+```
+
+*示例*
+```
+curl -X DELETE http://localhost:3000/api/dev_ops/builds/42 | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|number          |是|int |build's number  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id         |int|build's id|
+|status       |string|build's status|
+|event         |string|build's event|
+
+返回值
+```
+```
+---
+
+#### 获取某条构建的log信息
+```
+GET  /api/dev_ops/builds/:number/logs/:stage/:step
+```
+
+*示例*
+```
+curl -X GET http://localhost:3000/api/dev_ops/builds/42/logs/ | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|number          |是|int |build's number  |
+|stage          |是|int |build's stage id  |
+|step          |是|int |build's step id  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id         |int|build's id|
+|status       |string|build's status|
+|event         |string|build's event|
+
+返回值
+```
+[
+  {
+    "proc": "clone",
+    "pos": 0,
+    "out": "+ git init\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 1,
+    "out": "Initialized empty Git repository in /drone/src/github.com/octocat/hello-world/.git/\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 2,
+    "out": "+ git remote add origin https://github.com/octocat/hello-world.git\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 3,
+    "out": "+ git fetch --no-tags origin +refs/heads/master:\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 4,
+    "out": "From https://github.com/octocat/hello-world\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 5,
+    "out": " * branch            master     -> FETCH_HEAD\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 6,
+    "out": " * [new branch]      master     -> origin/master\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 7,
+    "out": "+ git reset --hard -q 62126a02ffea3dabd7789e5c5407553490973665\n"
+  },
+  {
+    "proc": "clone",
+    "pos": 8,
+    "out": "+ git submodule update --init --recursive\n"
   }
 ]
 ```
