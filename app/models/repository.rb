@@ -3,6 +3,7 @@ class Repository < ApplicationRecord
   belongs_to :project, :touch => true
   belongs_to :user
   has_one :mirror, foreign_key: :repo_id
+  has_one :dev_ops_cloud_account, foreign_key: :repo_id
   has_many :version_releases, dependent: :destroy
 
   validates :identifier, presence: true

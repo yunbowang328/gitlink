@@ -5,7 +5,7 @@ class DevOps::Drone::Ci
   # username: drone server's account
   # password: drone server's password
   # eq:
-  #   DevOps::Drone::Ci.new(@cloud_account.drone_ip, @cloud_account.account, @cloud_account.visible_secret).get_token
+  #   DevOps::Drone::Ci.new(@cloud_account.drone_ip, @cloud_account.account, @cloud_account.visible_secret, current_user.login).get_token
   def initialize(host, username, password, gitea_username)
     @host           = host
     @username       = username
