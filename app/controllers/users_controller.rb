@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list projects]
+  before_action :require_login, only: %i[me list]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def list
@@ -20,6 +20,7 @@ class UsersController < ApplicationController
       user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
+      @projects_sync_mirrior_count = user_projects.sync_mirror.size
   end
 
   def watch_users
@@ -143,6 +144,44 @@ class UsersController < ApplicationController
     token = Token.get_or_create_permanent_login_token(@user, 'autologin')
     token.update_column(:value, params[:token])
     render_ok
+  end
+
+  def trustie_related_projects
+    projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
+    projects_json = []
+    if projects.present?
+      projects.each do |p|
+        pj = {
+          id: p.id,
+          name: p.name,
+          is_public: p.is_public,
+          updated_on: p.updated_on.strftime("%Y-%m-%d"),
+          owner: {
+            name: p.owner.try(:show_real_name),
+            login: p.owner.login
+          },
+          members_count: p&.members.size,
+          issues_count: p.issues_count - p.pull_requests_count,
+          commits_count: p&.project_score&.changeset_num.to_i
+        }
+        projects_json.push(pj)
+      end
+    end
+    Rails.logger.info("==========projects_json========+########{projects_json}")
+    render json: { projects: projects_json }
+  end
+
+  def trustie_projects
+    user_id = User.select(:id, :login).where(login: params[:login])&.first&.id
+    projects = Project.visible
+    
+    projects = projects.joins(:members).where(members: { user_id: user_id })
+
+    search = params[:search].to_s.strip
+    projects = projects.where('projects.name LIKE ?', "%#{search}%") if search.present?
+
+    projects = projects.select(:id, :name).limit(10).as_json
+    render json: { projects: projects }
   end
 
   def projects

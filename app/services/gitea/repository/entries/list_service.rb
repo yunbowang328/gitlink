@@ -29,7 +29,7 @@ class Gitea::Repository::Entries::ListService < Gitea::ClientService
     when 200
       body
     else
-      {status: -1, message: "#{body['message']}"}
+     []
     end
   end
 end

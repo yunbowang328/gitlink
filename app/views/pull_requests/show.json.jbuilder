@@ -1,12 +1,17 @@
 json.partial! "commons/success"
+json.project_name @project.name
+json.pr_time time_from_now(@pull_request.updated_at)
+
 json.pull_request do
-  json.extract! @pull_request, :id,:base, :head, :status, :gpid
+  json.extract! @pull_request, :id,:base, :head, :status,:fork_project_id, :is_original
+  json.pull_request_staus @pull_request.status == 1 ? "merged" : (@pull_request.status == 2 ? "closed" : "open")
+  json.fork_project_user @pull_request&.fork_project&.owner.try(:login)
 end
 
 json.issue do
-  json.extract! @issue, :id,:subject,:is_lock,:description,:is_private, :start_date,:due_date,:estimated_hours,:issue_classify, :branch_name
-
-  json.user_permission @user_permission
+  json.extract! @issue, :id,:subject,:description,:is_private, :branch_name
+  json.project_author_name @project.owner.try(:login)
+  #json.user_permission @user_permission
   json.closed_on @issue.closed_on.present? ? format_time(@issue.closed_on) : ""
   json.created_at format_time(@issue.created_on)
   json.assign_user_name @issue_assign_to.try(:show_real_name)
@@ -14,26 +19,12 @@ json.issue do
   json.author_name @issue_user.try(:show_real_name)
   json.author_login @issue_user.try(:login)
   json.author_picture url_to_avatar(@issue_user)
-  json.tracker @issue.tracker.try(:name)
   json.issue_status @issue.issue_status.try(:name)
   json.priority @issue.priority.try(:name)
   json.version @issue.version.try(:name)
   json.issue_tags @issue.get_issue_tags
-  json.done_ratio @issue.done_ratio.to_s + "%"
-  json.issue_type @issue.issue_type == "1" ? "普通" : "悬赏"
-  json.token @issue.issue_type == "2" ? @issue.token : ""
-  json.join_users @join_users
-  # json.cost_time @cost_time_array
-  # json.total_cost_time Time.at(@all_cost_time).utc.strftime('%H h %M min %S s')
-  # json.be_depended_issues @be_depended_issues_array
-  # json.depended_issues @depended_issues_array
 end
 
-json.attachments do
-  json.array! @issue_attachments do |attachment|
-    json.partial! "attachments/attachment_simple", locals: {attachment: attachment}
-  end
-end
 
 
 

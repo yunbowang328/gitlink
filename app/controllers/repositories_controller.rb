@@ -7,15 +7,13 @@ class RepositoriesController < ApplicationController
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries]
-  before_action :get_latest_commit, :get_ref, only: %i[entries sub_entries]
+  before_action :get_ref, only: %i[entries sub_entries top_counts]
+  before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
+  before_action :get_statistics, only: %i[top_counts]
 
   def show
     @user = current_user
-    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
-    @commits_count = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
-      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call[:total_count]
-    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
+    @repo = @project.repository
     @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
@@ -31,7 +29,12 @@ class RepositoriesController < ApplicationController
     @project.increment!(:visits)
     @project_owner = @project.owner
     @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
-    @entries = @entries.sort_by{ |hash| hash['type'] }
+    @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
+    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+  end
+
+  def top_counts
+    @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
   end
 
   def sub_entries
@@ -50,6 +53,8 @@ class RepositoriesController < ApplicationController
     @project_owner = @project.owner
     @hash_commit = Gitea::Repository::Commits::ListService.new(@project_owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      Rails.logger.info("#####################_______hash_commit______############{@hash_commit}")
+      Rails.logger.info("#####################_______hash_commit_size______############{@hash_commit.size}")
   end
 
   def commit
@@ -95,11 +100,13 @@ class RepositoriesController < ApplicationController
   end
 
   def repo_hook
-    
+
   end
 
   def sync_mirror
-    @repo&.mirror.set_status!(Mirror.statuses[:waiting])
+    return render_error("正在镜像中..") if  @repo.mirror.waiting?
+
+    @repo.sync_mirror!
     SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)
     render_ok
   end
@@ -122,14 +129,24 @@ class RepositoriesController < ApplicationController
   end
 
   # TODO 获取最新commit信息
-  def get_latest_commit
-    @latest_commit = Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+  def project_commits
+    Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
       sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
-    @latest_commit = @latest_commit.blank? ? nil : @latest_commit[:body][0]
+  end
+
+  def get_statistics
+    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
+    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
   end
 
   def get_ref
     @ref = params[:ref] || "master"
+  end
+
+  def get_latest_commit 
+    latest_commit = project_commits
+    @latest_commit = latest_commit[:body][0] if latest_commit.present?
+    @commits_count = latest_commit[:total_count] if latest_commit.present?
   end
 
   def content_params

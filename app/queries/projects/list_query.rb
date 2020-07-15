@@ -10,7 +10,7 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-    q = Project.visible.ransack(name_or_identifier_cont: params[:search])
+    q = Project.visible.search_project(params[:search])
 
     scope = q.result(distinct: true)
       .includes(:project_category, :project_language, :repository, owner: :user_extension)

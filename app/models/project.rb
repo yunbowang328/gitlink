@@ -18,7 +18,6 @@ class Project < ApplicationRecord
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
-
   # has_many :commits, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
@@ -38,13 +37,16 @@ class Project < ApplicationRecord
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
 
 
+  def self.search_project(search)
+    ransack(name_or_identifier_cont: search)
+  end
   # 创建者
   def creator
     User.find(user_id).full_name
   end
 
   def members_user_infos
-    members.joins("left join users on members.user_id = users.id").includes(:user).where("users.type = ?", "User")
+    members.joins(:roles).where("roles.name in ('Manager', 'Developer')").joins("left join users on members.user_id = users.id ").includes(:user).where("users.type = ?", "User")
     # members.joins("left join users on members.user_id = users.id").select("users.id", "users.login","users.firstname","users.lastname")
     #   .pluck("users.id", "users.login","users.lastname", "users.firstname")
   end
@@ -156,6 +158,14 @@ class Project < ApplicationRecord
     member = members.find_by(user: user)
 
     member&.roles&.last&.name || permission
+  end
+
+  def fork_project 
+    Project.find_by(id: self.forked_from_project_id)
+  end
+
+  def self.members_projects(member_user_id)
+    joins(:members).where(members: { user_id: member_user_id})
   end
 
 end

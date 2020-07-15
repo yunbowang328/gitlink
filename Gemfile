@@ -40,7 +40,7 @@ gem 'oauth2'
 #导出为pdf
 gem 'pdfkit'
 gem 'wkhtmltopdf-binary'
-gem 'request_store'
+# gem 'request_store'
 #gem 'iconv'
 # markdown 转html
 gem 'redcarpet', '~> 3.4'
@@ -66,6 +66,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'prettier'
   gem 'rubocop', '~> 0.52.0'
   gem 'solargraph', '~> 0.38.0'
   gem 'awesome_print'

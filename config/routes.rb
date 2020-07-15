@@ -2,9 +2,11 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-  # mount Sidekiq::Web => '/sidekiq'
 
   mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+
+  # Serve websocket cable requests in-process
+  mount ActionCable.server => '/cable'
 
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
@@ -14,6 +16,11 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    resources :sync_forge, only: [:create] do 
+      collection do 
+        post :sync_users
+      end
+    end
     resources :composes do
       resources :compose_projects, only: [:create, :destroy]
     end
@@ -32,8 +39,8 @@ Rails.application.routes.draw do
     delete 'commons/delete',      to: 'commons#delete'
 
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
-      resources :journals, only: [:index, :create, :destroy, :edit, :update] do 
-        member do 
+      resources :journals, only: [:index, :create, :destroy, :edit, :update] do
+        member do
           get :get_children_journals
         end
       end
@@ -64,11 +71,13 @@ Rails.application.routes.draw do
       resources :pull_requests, except: [:destroy] do
         member do
           post :pr_merge
-          post :check_merge
-          post :simple_update
+          # post :check_merge
+          post :refuse_merge
         end
         collection do
           post :check_can_merge
+          get :create_merge_infos
+          get :get_branches
         end
       end
       resources :version_releases, only: [:index,:new, :create, :edit, :update, :destroy]
@@ -118,6 +127,7 @@ Rails.application.routes.draw do
         get :watch_users
         get :praise_users
         get :fork_users
+        get :simple
       end
     end
 
@@ -160,6 +170,8 @@ Rails.application.routes.draw do
         post :sync_token
         post :sync_gitea_pwd
         post :sync_salt
+        get :trustie_projects
+        get :trustie_related_projects
       end
 
       scope module: :users do
@@ -209,6 +221,7 @@ Rails.application.routes.draw do
         delete :delete_file
         post :repo_hook
         post :sync_mirror
+        get :top_counts
         get 'commits/:sha', to: 'repositories#commit', as: 'commit'
       end
     end

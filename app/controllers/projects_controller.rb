@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
-  before_action :require_login, except: %i[index branches group_type_list]
+  include ProjectsHelper
+  before_action :require_login, except: %i[index branches group_type_list simple]
   before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_users]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_user]
@@ -25,10 +26,8 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
-    ActiveRecord::Base.transaction do
-      Projects::MigrateForm.new(mirror_params).validate!
-      @project = Projects::MigrateService.new(current_user, mirror_params).call
-    end
+    Projects::MigrateForm.new(mirror_params).validate!
+    @project = Projects::MigrateService.new(current_user, mirror_params).call
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
@@ -98,6 +97,11 @@ class ProjectsController < ApplicationController
     fork_users = @project.fork_users.includes(:user, :project).order("fork_users.created_at desc").distinct
     @forks_count = fork_users.size
     @fork_users = paginate(fork_users)
+  end
+
+  def simple
+    project = Project.includes(:owner, :repository).select(:id, :name, :identifier, :user_id, :project_type).find params[:id]
+    json_response(project)
   end
 
   private

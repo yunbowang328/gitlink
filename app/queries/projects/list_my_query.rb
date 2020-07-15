@@ -17,10 +17,15 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.visible
     end
 
+    if params[:is_public].present?
+      projects = projects.is_private.members_projects(user.id) if params[:is_public].to_s == "private"
+      projects = projects.visible.members_projects(user.id) if params[:is_public].to_s == "public"
+    end
+
     if params[:category].blank?
-      projects = projects.joins(:members).where(members: { user_id: user.id })
+      projects = projects.members_projects(user.id)
     elsif params[:category].to_s == "join"
-      projects = projects.where.not(user_id: user.id).joins(:members).where(members: { user_id: user.id })
+      projects = projects.where.not(user_id: user.id).members_projects(user.id)
     elsif params[:category].to_s == "manage"
       projects = projects.where(user_id: user.id)
     elsif params[:category].to_s == "watched"  #我关注的
@@ -28,16 +33,18 @@ class Projects::ListMyQuery < ApplicationQuery
     elsif params[:category].to_s == "forked"  #我fork的
       fork_ids = user.fork_users.select(:id, :fork_project_id).pluck(:fork_project_id)
       projects = projects.where(id: fork_ids)
-    elsif params[:category].to_s == "public" 
-      projects = projects.visible.joins(:members).where(members: { user_id: user.id })
-    elsif params[:category].to_s == "private"
-      projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
+    # elsif params[:category].to_s == "public" 
+    #   projects = projects.visible.joins(:members).where(members: { user_id: user.id })
+    # elsif params[:category].to_s == "private"
+    #   projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
     end
 
     if params[:project_type].to_s === "common"
       projects = projects.common
     elsif params[:project_type].to_s === "mirror"
       projects = projects.mirror
+    elsif params[:project_type].to_s === "sync_mirror"
+      projects = projects.sync_mirror
     end
       
     q = projects.ransack(name_or_identifier_cont: params[:search])

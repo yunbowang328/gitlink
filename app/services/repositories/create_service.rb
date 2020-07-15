@@ -14,6 +14,8 @@ class Repositories::CreateService < ApplicationService
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
+      else
+        Rails.logger.info("#############___________create_repository_erros______###########{@repository.errors.messages}")
       end
       @repository
     end
@@ -24,7 +26,7 @@ class Repositories::CreateService < ApplicationService
 
   private
 
-  def sync_project(repository, gitea_repository)
+  def sync_project(repository, gitea_repository)    
     if gitea_repository
       project.update_columns(
         gpid: gitea_repository["id"],
