@@ -15,11 +15,11 @@ class SyncProjectsJob < ApplicationJob
       http.use_ssl = true
       response = http.send_request('GET', uri.path, sync_params.to_json, {'Content-Type' => 'application/json'})
 
-      SyncLog.sync_log("==========response_status::#{response.code}============")
+      SyncLog.sync_log("=======#{sync_params[:parent_id].present? ? sync_params[:parent_id] : sync_params[:new_project_id]}===response_status::#{response.code}============")
       if response.code == '200'
         target_jsons = eval(response.body)
         if sync_params[:type] == "Project"
-          SyncLog.sync_log("==========target_jsons: #{target_jsons}============")
+          # SyncLog.sync_log("==========target_jsons: #{target_jsons}============")
           update_new_project(target_jsons[:targets_params][0], sync_params[:new_project_id])
         else
           SyncLog.sync_log("========== #{sync_params[:type]}============")
@@ -47,10 +47,10 @@ class SyncProjectsJob < ApplicationJob
   end
 
   def create_target(target_jsons, target_type)
-    begin
-      SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
-      return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
-      target_jsons.each_with_index do |re,index|
+    SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
+    return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
+    target_jsons.each_with_index do |re,index|
+      begin
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
         if re[:target_params].present?
           SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
@@ -59,7 +59,7 @@ class SyncProjectsJob < ApplicationJob
           if target_type == "Issue"
             is_exists = Issue.exists?(author_id: u_id, project_id: re[:target_params][:project_id], subject: re[:target_params][:subject])
             unless is_exists
-              version_name = re[:target_params][:re_version]
+              version_name = re[:re_version]
               version_id = Version.where(project_id: re[:target_params][:project_id], name: version_name)&.first&.id if version_name.present?
               assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
               new_target = target_type.constantize.new(re[:target_params].merge(author_id: u_id))
@@ -85,7 +85,7 @@ class SyncProjectsJob < ApplicationJob
               new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
             end
           end
-
+  
           if !is_exists && new_target.save!
             SyncLog.sync_log("***【#{target_type}】. create_success---------------")
             if re[:journals].present?
@@ -107,11 +107,14 @@ class SyncProjectsJob < ApplicationJob
             SyncLog.sync_log("***【#{target_type}】. create_failed---or has_exists---------------")
           end
         end
+        SyncLog.sync_log("***111222. end_to_create_target---------------")
+      rescue => e
+        SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
+        next
       end
-      SyncLog.sync_log("***111222. end_to_create_target---------------")
-    rescue => e
-      SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
+
     end
+
     
   end
 
@@ -119,28 +122,35 @@ class SyncProjectsJob < ApplicationJob
     SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
     return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
     target_jsons.each_with_index do |re,index|
-      SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
-      if re[:target_params].present?
-        u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
-        is_exists = Journal.exists?(user_id: u_id, journalized_id: re[:target_params][:journalized_id], created_on: re[:target_params][:created_on].to_s.to_time)
-
-        if is_exists
-          SyncLog.sync_log("***00000. Journal:#{re[:target_params][:id]}-is exists--------------")
-        else
-          re[:target_params].delete(:id)
-          new_target = Journal.new(re[:target_params].merge(user_id: u_id))
-          new_target.journalized_id = issue_id
-          if new_target.save!
-            if re[:journal_details].present?
-              re[:journal_details].each do |j|
-                JournalDetail.create!(j.merge(journal_id: new_target.id))
-              end
-            end
+      begin
+        SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
+        if re[:target_params].present?
+          u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
+          is_exists = Journal.exists?(user_id: u_id, journalized_id: re[:target_params][:journalized_id], created_on: re[:target_params][:created_on].to_s.to_time)
+  
+          if is_exists
+            SyncLog.sync_log("***00000. Journal:#{re[:target_params][:id]}-is exists--------------")
           else
-            SyncLog.sync_log("***111222. journal_create failed---------------")
+            re[:target_params].delete(:id)
+            new_target = Journal.new(re[:target_params].merge(user_id: u_id))
+            new_target.journalized_id = issue_id
+            if new_target.save!
+              if re[:journal_details].present?
+                re[:journal_details].each do |j|
+                  JournalDetail.create!(j.merge(journal_id: new_target.id))
+                end
+              end
+            else
+              SyncLog.sync_log("***111222. journal_create failed---------------")
+  
+            end
           end
         end
+      rescue => e
+        SyncLog.sync_log("***111222. journal_create failed---#{e}------------")
+        next
       end
+
     end
     SyncLog.sync_log("***111222. end_to_create_journal---------------")
   end
