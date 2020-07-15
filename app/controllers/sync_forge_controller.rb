@@ -195,7 +195,7 @@ class SyncForgeController < ApplicationController
     begin
       forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
       sync_projects_params = {}
-      unless forge_issue_ids.size.to_i <= old_issues_params[:count].to_i
+      if forge_issue_ids.size.to_i <= old_issues_params[:count].to_i
         diff_issue_ids = old_issues_params[:ids] - forge_issue_ids
         if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
           forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
@@ -228,7 +228,7 @@ class SyncForgeController < ApplicationController
   def change_project_watchers(project, watchers,gitea_main)
     SyncLog.sync_log("***5. begin_to_sync_watchers---------------")
     forge_watchers_ids = project&.watchers&.select(:id)&.pluck(:id)
-    unless forge_watchers_ids.size.to_i <= watchers[:count].to_i
+    if forge_watchers_ids.size.to_i <= watchers[:count].to_i
       diff_target_ids = watchers[:ids] - forge_watchers_ids
       if diff_target_ids.size > 0
         sync_projects_params = {
@@ -247,7 +247,7 @@ class SyncForgeController < ApplicationController
   def change_project_versions(project, versions,gitea_main)
     SyncLog.sync_log("***4. begin_to_sync_versions---------------")
     forge_version_ids = project&.versions&.select(:id)&.pluck(:id)
-    unless forge_version_ids.size <= versions[:count].to_i
+    if forge_version_ids.size <= versions[:count].to_i
       diff_version_ids = versions[:ids] - forge_version_ids
       if diff_version_ids.size > 0
         sync_projects_params = {
@@ -266,7 +266,7 @@ class SyncForgeController < ApplicationController
   def change_project_members(project, members,gitea_main)
     SyncLog.sync_log("***3. begin_to_sync_members---------------")
     forge_member_ids = project&.members&.select(:id)&.pluck(:id)
-    unless forge_member_ids.size <= members[:count]
+    if forge_member_ids.size <= members[:count]
       diff_member_ids = members[:ids] - forge_member_ids
       if diff_member_ids.size > 0
         sync_projects_params = {
