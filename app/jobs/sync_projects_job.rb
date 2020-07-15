@@ -59,7 +59,7 @@ class SyncProjectsJob < ApplicationJob
           if target_type == "Issue"
             is_exists = Issue.exists?(author_id: u_id, project_id: re[:target_params][:project_id], subject: re[:target_params][:subject])
             unless is_exists
-              version_name = re[:target_params][:re_version]
+              version_name = re[:re_version]
               version_id = Version.where(project_id: re[:target_params][:project_id], name: version_name)&.first&.id if version_name.present?
               assing_u_id = User.select(:id, :login).where(login: re[:assign_login]).pluck(:id).first
               new_target = target_type.constantize.new(re[:target_params].merge(author_id: u_id))
