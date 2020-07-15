@@ -48,12 +48,12 @@ class SyncForgeController < ApplicationController
           SyncRepositoryJob.perform_later(sync_params[:owner_login], sync_params[:identifier], sync_params[:repository], get_sudomain) if sync_params[:repository].present?
           check_new_project(project, sync_params)
         else
-          SyncLog.sync_project_log("=============new_project_create_failed, trustie_project_id==:#{params[:sync_params][:id]}")
+          SyncLog.sync_log("=============new_project_create_failed, trustie_project_id==:#{params[:sync_params][:id]}")
         end
       end
     end
   rescue Exception => e
-    SyncLog.sync_project_log("=============sync_has_errors:==#{e.message}, project_id==:#{params[:sync_params][:id]}")
+    SyncLog.sync_log("=============sync_has_errors:==#{e.message}, project_id==:#{params[:sync_params][:id]}")
   end
 
   def sync_users
@@ -96,7 +96,7 @@ class SyncForgeController < ApplicationController
         #       SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
         #     end
         #   else
-        #     SyncLog.sync_project_log("=============sync_to_user_failed,user_login====#{new_user.login}")
+        #     SyncLog.sync_log("=============sync_to_user_failed,user_login====#{new_user.login}")
         #     SyncLog.sync_log("=================sync_to_user_failed,user_login====#{new_user.login}")
         #   end
         # end
