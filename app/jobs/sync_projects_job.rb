@@ -122,28 +122,35 @@ class SyncProjectsJob < ApplicationJob
     SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
     return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
     target_jsons.each_with_index do |re,index|
-      SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
-      if re[:target_params].present?
-        u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
-        is_exists = Journal.exists?(user_id: u_id, journalized_id: re[:target_params][:journalized_id], created_on: re[:target_params][:created_on].to_s.to_time)
-
-        if is_exists
-          SyncLog.sync_log("***00000. Journal:#{re[:target_params][:id]}-is exists--------------")
-        else
-          re[:target_params].delete(:id)
-          new_target = Journal.new(re[:target_params].merge(user_id: u_id))
-          new_target.journalized_id = issue_id
-          if new_target.save!
-            if re[:journal_details].present?
-              re[:journal_details].each do |j|
-                JournalDetail.create!(j.merge(journal_id: new_target.id))
-              end
-            end
+      begin
+        SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
+        if re[:target_params].present?
+          u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
+          is_exists = Journal.exists?(user_id: u_id, journalized_id: re[:target_params][:journalized_id], created_on: re[:target_params][:created_on].to_s.to_time)
+  
+          if is_exists
+            SyncLog.sync_log("***00000. Journal:#{re[:target_params][:id]}-is exists--------------")
           else
-            SyncLog.sync_log("***111222. journal_create failed---------------")
+            re[:target_params].delete(:id)
+            new_target = Journal.new(re[:target_params].merge(user_id: u_id))
+            new_target.journalized_id = issue_id
+            if new_target.save!
+              if re[:journal_details].present?
+                re[:journal_details].each do |j|
+                  JournalDetail.create!(j.merge(journal_id: new_target.id))
+                end
+              end
+            else
+              SyncLog.sync_log("***111222. journal_create failed---------------")
+  
+            end
           end
         end
+      rescue => e
+        SyncLog.sync_log("***111222. journal_create failed---#{e}------------")
+        next
       end
+
     end
     SyncLog.sync_log("***111222. end_to_create_journal---------------")
   end
