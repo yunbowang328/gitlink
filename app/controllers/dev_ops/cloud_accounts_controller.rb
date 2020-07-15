@@ -14,12 +14,12 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### create_params: #{create_params}"
 
 
-      if cloud_account = @project.dev_ops_cloud_account
+      if cloud_account = @repo.dev_ops_cloud_account
         cloud_account
       else
         cloud_account = DevOps::CloudAccount.new(create_params)
         cloud_account.user = current_user
-        cloud_account.project_id = @project.id
+        cloud_account.repo_id = @repo.id
         cloud_account.save!
       end
 
@@ -64,11 +64,10 @@ class DevOps::CloudAccountsController < ApplicationController
 
   private
     def devops_params
-      params.permit(:account, :secret, :ip_num, :project_id)
+      params.permit(:account, :secret, :ip_num, :repo_id)
     end
 
     def find_project
-      @project = Project.find_by_id params[:project_id]
-      render_not_found("未找到project_id为:#{params[:project_id]}相关的项目") if @project.blank?
+      @repo = Repository.find params[:repo_id]
     end
 end

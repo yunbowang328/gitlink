@@ -1,6 +1,6 @@
-class DevOps::BuildsController < ApplicationController
+class ::DevOps::BuildsController < ApplicationController
   before_action :require_login
-  before_action :find_project
+  before_action :find_repo
 
   def index
     cloud_account = @repo.dev_ops_cloud_account
@@ -37,7 +37,7 @@ class DevOps::BuildsController < ApplicationController
   end
 
   private
-    def find_project
-      @repo = Repository.find params[:id]
+    def find_repo
+      @repo = ::Repository.find params[:id]
     end
 end

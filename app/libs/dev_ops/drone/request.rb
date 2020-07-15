@@ -24,22 +24,22 @@
     end
 
     def get(endpoint, path, options={})
-      set_request_defaults(endpoint)
+      validate_request_params!(endpoint)
       request(:get, endpoint, path, options)
     end
 
     def post(endpoint, path, options={})
-      set_request_defaults(endpoint)
+      validate_request_params!(endpoint)
       request(:post, endpoint, path, options)
     end
 
     def put(endpoint, path, options={})
-      set_request_defaults(endpoint)
+      validate_request_params!(endpoint)
       request(:put, endpoint, path, options)
     end
 
     def delete(endpoint, path, options={})
-      set_request_defaults(endpoint)
+      validate_request_params!(endpoint)
       request(:delete, endpoint, path, options)
     end
 
@@ -47,27 +47,10 @@
       def request(method, endpoint, path, **params)
         Rails.logger.info("[drone] request: #{method} #{path} #{params.except(:secret).inspect}")
 
-        client = Faraday.new(path: domain)
+        client = Faraday.new(url: endpoint)
         response = client.public_send(method, path, params)
-        result = JSON.parse(response.body)
 
-        Rails.logger.info("[drone] response:#{response.status} #{result.inspect}")
-
-        if response.status != 200
-          raise DevOps::Drone::Error.parse(result)
-        end
-
-        if result['errcode'].present? && result['errcode'].to_i.nonzero?
-          raise DevOps::Drone::Error.parse(result)
-        end
-
-        result
-      end
-
-      # Sets a base_uri and default_params for requests.
-      # @raise [Error::MissingCredentials] if endpoint not set.
-      def set_request_defaults(endpoint, private_token, sudo=nil)
-        raise "Please set an endpoint to API" unless endpoint
+        json_response(response)
       end
 
       # Checks the response code for common errors.
@@ -89,8 +72,21 @@
         response.parsed_response
       end
 
+      # Checks a base_uri and params for requests.
+      def validate_request_params!(endpoint)
+        raise "Please set an endpoint to API" unless endpoint
+      end
+
       def error_message(response)
         "Server responded with code #{response.code}, message: #{response.parsed_response.message}. " \
         "Request URI: #{response.request.base_uri}#{response.request.path}"
+      end
+
+      def json_response(response)
+        result = JSON.parse(response.body)
+        status = response.status
+        Rails.logger.info("[drone] response:#{status} #{result.inspect}")
+
+        response.status != 200 ? result.merge!(status: response.status) : result
       end
   end
