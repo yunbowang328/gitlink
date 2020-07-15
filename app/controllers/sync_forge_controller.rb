@@ -188,7 +188,7 @@ class SyncForgeController < ApplicationController
   end
 
   def change_project_issues(project, old_issues_params,project_id, gitea_main)
-    SyncLog.sync_log("***2. begin_to_syncissues---------------")
+    SyncLog.sync_log("***2. begin_to_syncissues----old_issues_params:#{old_issues_params[:ids]}-----------")
     begin
       forge_issue_ids = project&.issues&.select(:id)&.pluck(:id)
       sync_projects_params = {}
