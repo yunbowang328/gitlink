@@ -210,37 +210,26 @@ class SyncForgeController < ApplicationController
             SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
           end
         else
-          # if diff_issue_ids.size > 200
-          #   new_diff_ids = diff_issue_ids.in_groups_of(200).map{|k| k.reject(&:blank?)}
-          #   new_diff_ids.each_with_index do |diff, index|
-          #     sync_projects_params = {
-          #       type: "Issue",
-          #       ids: diff,
-          #       token: get_token,
-          #       parent_id: project_id
-          #     }
-          #     SyncLog.sync_log("***2--030#{idnex+1}. sync_projects_params_groups-#{sync_projects_params}--------------")
-          #     SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
-          #   end
-          # else
-          #   sync_projects_params = {
-          #     type: "Issue",
-          #     ids: diff_issue_ids,
-          #     token: get_token,
-          #     parent_id: project_id
-          #   }
-          #   SyncLog.sync_log("***2--03. sync_projects_params_groups-#{sync_projects_params}--------------")
-          #   SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
-          # end
-
-          sync_projects_params = {
-            type: "Issue",
-            ids: diff_issue_ids,
-            token: get_token,
-            parent_id: project_id
-          }
-          SyncLog.sync_log("***2--03. sync_projects_params_groups-#{sync_projects_params}--------------")
-          SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
+          new_diff_ids = diff_issue_ids.in_groups_of(200).map{|k| k.reject(&:blank?)}
+          diff_len = new_diff_ids.length
+          (1..diff_len).each do |len|
+            sync_projects_params = {
+              type: "Issue",
+              ids: new_diff_ids[len-1],
+              token: get_token,
+              parent_id: project_id
+            }
+            SyncLog.sync_log("***2--030#{len}. sync_projects_params_groups-#{sync_projects_params}--------------")
+            SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
+          end
+          # sync_projects_params = {
+          #   type: "Issue",
+          #   ids: diff_issue_ids,
+          #   token: get_token,
+          #   parent_id: project_id
+          # }
+          # SyncLog.sync_log("***2--03. sync_projects_params_groups-#{sync_projects_params}--------------")
+          # SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
          
         end
       end
