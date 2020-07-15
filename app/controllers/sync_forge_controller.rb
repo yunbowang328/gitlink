@@ -109,9 +109,9 @@ class SyncForgeController < ApplicationController
   def check_sync_project(project,sync_params)
     begin
       gitea_main = "https://www.trustie.net/"
-      # if request.subdomain === 'testforgeplus'
-      #   gitea_main = "https://ucloudtest.trustie.net/"
-      # end
+      if request.subdomain === 'testforgeplus'
+        gitea_main = "https://ucloudtest.trustie.net/"
+      end
 
       SyncLog.sync_log("----begin_to_check_sync_project----project_id:#{project.id}---------------")
       change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score 
@@ -137,9 +137,9 @@ class SyncForgeController < ApplicationController
       }
 
       gitea_main = "https://www.trustie.net/"
-      # if request.subdomain === 'testforgeplus'
-      #   gitea_main = "https://ucloudtest.trustie.net/"
-      # end
+      if request.subdomain === 'testforgeplus'
+        gitea_main = "https://ucloudtest.trustie.net/"
+      end
       SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
       SyncLog.sync_log("***8. end_to_sync_new_project---------------")
   end

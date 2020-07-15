@@ -47,10 +47,10 @@ class SyncProjectsJob < ApplicationJob
   end
 
   def create_target(target_jsons, target_type)
-    begin
-      SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
-      return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
-      target_jsons.each_with_index do |re,index|
+    SyncLog.sync_log("***【#{target_type}】. begin_to_create_target---------------")
+    return SyncLog.sync_log("*** no target_jsons") if target_jsons.blank?
+    target_jsons.each_with_index do |re,index|
+      begin
         SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}-----#{index+1}")
         if re[:target_params].present?
           SyncLog.sync_log("***user_login:#{re[:user_login]}----target_type:#{target_type}")
@@ -85,7 +85,7 @@ class SyncProjectsJob < ApplicationJob
               new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
             end
           end
-
+  
           if !is_exists && new_target.save!
             SyncLog.sync_log("***【#{target_type}】. create_success---------------")
             if re[:journals].present?
@@ -107,11 +107,14 @@ class SyncProjectsJob < ApplicationJob
             SyncLog.sync_log("***【#{target_type}】. create_failed---or has_exists---------------")
           end
         end
+        SyncLog.sync_log("***111222. end_to_create_target---------------")
+      rescue => e
+        SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
+        next
       end
-      SyncLog.sync_log("***111222. end_to_create_target---------------")
-    rescue => e
-      SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
+
     end
+
     
   end
 
