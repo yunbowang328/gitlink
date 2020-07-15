@@ -46,12 +46,12 @@ class SyncForgeController < ApplicationController
           SyncRepositoryJob.perform_later(sync_params[:owner_login], sync_params[:identifier], sync_params[:repository], get_sudomain) if sync_params[:repository].present?
           check_new_project(project, sync_params)
         else
-          SyncLog.sync_log("=============new_project_create_failed, trustie_project_id==:#{params[:sync_params][:id]}")
+          SyncLog.sync_project_log("=============new_project_create_failed, trustie_project_id==:#{params[:sync_params][:id]}")
         end
       end
     end
   rescue Exception => e
-    SyncLog.sync_log("=============sync_has_errors:==#{e.message}, project_id==:#{params[:sync_params][:id]}")
+    SyncLog.sync_project_log("=============sync_has_errors:==#{e.message}, project_id==:#{params[:sync_params][:id]}")
   end
 
   def sync_users
@@ -75,11 +75,11 @@ class SyncForgeController < ApplicationController
 
         username = new_user.login
         password = "12345678"
-        if new_user.save!
-          SyncLog.sync_log("=================sync_to_user_success==#{new_user.login}")
-        else
-          SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
-        end
+        # if new_user.save!
+        #   SyncLog.sync_log("=================sync_to_user_success==#{new_user.login}")
+        # else
+        #   SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
+        # end
         ActiveRecord::Base.transaction do
           interactor = Gitea::RegisterInteractor.call({username: username, email: new_user.mail, password: password})
           if interactor.success?
@@ -206,18 +206,36 @@ class SyncForgeController < ApplicationController
               token: get_token,
               parent_id: project_id
             }
+            SyncLog.sync_log("***2--02. sync_projects_params-#{sync_projects_params}--------------")
+            SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
           end
         else
-          sync_projects_params = {
-            type: "Issue",
-            ids: diff_issue_ids,
-            token: get_token,
-            parent_id: project_id
-          }
+          if diff_issue_ids.size > 200
+            new_diff_ids = diff_issue_ids.in_groups_of(200).map{|k| k.reject(&:blank?)}
+            new_diff_ids.each_with_index do |diff, index|
+              sync_projects_params = {
+                type: "Issue",
+                ids: diff,
+                token: get_token,
+                parent_id: project_id
+              }
+              SyncLog.sync_log("***2--030#{idnex+1}. sync_projects_params_groups-#{sync_projects_params}--------------")
+              SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
+            end
+          else
+            sync_projects_params = {
+              type: "Issue",
+              ids: diff_issue_ids,
+              token: get_token,
+              parent_id: project_id
+            }
+          end
+          SyncLog.sync_log("***2--03. sync_projects_params_groups-#{sync_projects_params}--------------")
+          SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
         end
       end
-      SyncLog.sync_log("***2--02. sync_projects_params-#{sync_projects_params}--------------")
-      SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
+      
+      # SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
       SyncLog.sync_log("***2. end_to_syncissues---------------")
     rescue Exception => e
       SyncLog.sync_log("=========change_project_issues_errors:#{e}===================")
