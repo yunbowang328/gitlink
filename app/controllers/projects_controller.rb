@@ -100,7 +100,7 @@ class ProjectsController < ApplicationController
   end
 
   def simple
-    project = Project.includes(:owner, :repository).select(:id, :name, :identifier, :user_id, :project_type).find params[:id]
+    project = Project.includes(:owner, :repository).select(:id, :name, :identifier, :user_id, :project_type, :open_devops).find params[:id]
     json_response(project)
   end
 
