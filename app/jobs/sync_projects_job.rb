@@ -112,9 +112,7 @@ class SyncProjectsJob < ApplicationJob
         SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
         next
       end
-
     end
-
 
   end
 
