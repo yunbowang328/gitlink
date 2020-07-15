@@ -80,23 +80,23 @@ class SyncForgeController < ApplicationController
         else
           SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
         end
-        # ActiveRecord::Base.transaction do
-        #   interactor = Gitea::RegisterInteractor.call({username: username, email: new_user.mail, password: password})
-        #   if interactor.success?
-        #     gitea_user = interactor.result
-        #     result = Gitea::User::GenerateTokenService.new(username, password).call
-        #     new_user.gitea_token = result['sha1']
-        #     new_user.gitea_uid = gitea_user['id']
-        #     if new_user.save!
-        #       UserExtension.create!(u[:user_extensions][:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present? && u[:user_extensions][:user_extensions].present?
-        #     else
-        #       SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
-        #     end
-        #   else
-        #     SyncLog.sync_project_log("=============sync_to_user_failed,user_login====#{new_user.login}")
-        #     SyncLog.sync_log("=================sync_to_user_failed,user_login====#{new_user.login}")
-        #   end
-        # end
+        ActiveRecord::Base.transaction do
+          interactor = Gitea::RegisterInteractor.call({username: username, email: new_user.mail, password: password})
+          if interactor.success?
+            gitea_user = interactor.result
+            result = Gitea::User::GenerateTokenService.new(username, password).call
+            new_user.gitea_token = result['sha1']
+            new_user.gitea_uid = gitea_user['id']
+            if new_user.save!
+              UserExtension.create!(u[:user_extensions][:user_extensions].merge(user_id: new_user.id)) if u[:user_extensions].present? && u[:user_extensions][:user_extensions].present?
+            else
+              SyncLog.sync_log("=================sync_to_user_failed,user_login==#{new_user.login}")
+            end
+          else
+            SyncLog.sync_log("=============sync_to_user_failed,user_login====#{new_user.login}")
+            SyncLog.sync_log("=================sync_to_user_failed,user_login====#{new_user.login}")
+          end
+        end
       end
     end
     # normal_status(1, "completed_sync")
