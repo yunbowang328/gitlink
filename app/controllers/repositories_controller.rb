@@ -121,6 +121,7 @@ class RepositoriesController < ApplicationController
   end
 
   def authorizate!
+    return if current_user && current_user.admin?
     if @project.repository.hidden? && !@project.member?(current_user)
       render_forbidden
     end
@@ -141,7 +142,7 @@ class RepositoriesController < ApplicationController
     @ref = params[:ref] || "master"
   end
 
-  def get_latest_commit 
+  def get_latest_commit
     latest_commit = project_commits
     @latest_commit = latest_commit[:body][0] if latest_commit.present?
     @commits_count = latest_commit[:total_count] if latest_commit.present?
