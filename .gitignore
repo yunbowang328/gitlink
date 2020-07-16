@@ -66,6 +66,7 @@ vendor/bundle/
 /Users
 /files
 /public/images/avatars
+/public/cache_repository
 /public/files
 /workspace
 /log
