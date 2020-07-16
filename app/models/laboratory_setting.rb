@@ -63,10 +63,11 @@ class LaboratorySetting < ApplicationRecord
       navbar: [
         { 'name' => '首页', 'link' => '/projects',        'hidden' => false },
         { 'name' => '课程', 'link' => '/courses',      'hidden' => false },
-        { 'name' => '项目', 'link' => '/projects',      'hidden' => false },
+        { 'name' => '项目', 'link' => '',      'hidden' => true },
         { 'name' => '数据', 'link' => '/datas', 'hidden' => false },
         { 'name' => '竞赛', 'link' => '/competitions',   'hidden' => false },
         { 'name' => '问吧', 'link' => '/forums',       'hidden' => false },
+        { 'name' => '开源社区', 'link' => '/projects',       'hidden' => false },
       ],
       footer: nil
     }

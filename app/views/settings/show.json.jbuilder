@@ -19,6 +19,12 @@ json.setting do
   #   json.main_site current_laboratory.main_site?
   # end
 
+  nav_bar = default_setting.navbar
+  if current_user.present?
+    nav_bar[2]["link"] = "/users/#{current_user.login}"
+    nav_bar[2]["hidden"] = false
+  end
+
   json.name default_setting.name
   json.nav_logo_url default_setting.nav_logo_url&.[](1..-1)
   json.login_logo_url default_setting.login_logo_url&.[](1..-1)
@@ -30,7 +36,7 @@ json.setting do
   json.moop_cases_banner_url default_setting.moop_cases_banner_url&.[](1..-1)
   json.oj_banner_url default_setting.oj_banner_url&.[](1..-1)
 
-  json.navbar default_setting.navbar
+  json.navbar nav_bar
 
   json.footer default_setting.footer
 
