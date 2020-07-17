@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   before_action :require_login, except: %i[index branches group_type_list simple]
   before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_users]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
-  before_action :project_public?, only: %i[fork_users praise_users watch_user]
+  before_action :project_public?, only: %i[fork_users praise_users watch_users]
 
   def index
     scope = Projects::ListQuery.call(params)
@@ -116,8 +116,13 @@ class ProjectsController < ApplicationController
   end
 
   def project_public?
-    unless @project.is_public || current_user&admin?
-      tip_exception(403, "..")
+    return if @project.is_public?
+
+    if current_user
+      return if current_user.admin? || @project.member?(current_user.id)
+      render_forbidden('你没有权限访问.')
+    else
+      render_unauthorized('你还未登录.')
     end
   end
 end
