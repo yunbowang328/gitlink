@@ -88,6 +88,7 @@ class PullRequestsController < ApplicationController
                 if params[:title].to_s.include?("WIP:")
                   pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。", current_user&.id)
                 end
+                # render :json => { status: 0, message: "PullRequest创建成功", id:  pull_issue.id}
                 normal_status(0, "PullRequest创建成功")
               else
                 normal_status(-1, "PullRequest创建失败")
