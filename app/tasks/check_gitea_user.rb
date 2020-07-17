@@ -4,7 +4,7 @@ class CheckGiteaUser
     def call
       SyncLog.sync_log("=====begin to check gitea_user======")
 
-      all_users = User.select(:id, :gitea_token, :gitea_uid, :mail, :type,:login,:platform).where(type: "User", gitea_token: [nil, ""], gitea_uid: [nil, ""])
+      all_users = User.where(type: "User", gitea_token: [nil, ""], gitea_uid: [nil, ""])
       if all_users.present?
         new_password = "12345678"
         # EMAIL_REGEX = /^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+(\.[a-zA-Z0-9_-]+)+$/i
