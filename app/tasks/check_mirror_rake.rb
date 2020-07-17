@@ -8,7 +8,7 @@ class CheckMirrorRake
       all_projects = Project.select(:id,:identifier,:user_id, :gpid, :forked_count,:is_public).includes(:owner, :repository)
       all_projects.each do |project|
         SyncLog.sync_log("=====check_project_id:#{project.id}======")
-        if project&.owner&.login.present? && 
+        if project&.owner&.login.present?
           response = Gitea::Repository::Branches::ListService.new(project.owner, project.identifier).call
         else
           response = "224444"
