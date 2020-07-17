@@ -1,5 +1,5 @@
 class CheckGiteaUser
-  # 运行示例: 检查哪些用户的gitea不存在，bundle exec rails runner "CheckMirrorRake.new.call()"
+  # 运行示例: 检查哪些用户的gitea不存在，bundle exec rails runner "CheckGiteaUser.new.call()"
   
     def call
       SyncLog.sync_log("=====begin to check gitea_user======")
