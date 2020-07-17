@@ -23,7 +23,6 @@ class DevOps::CloudAccountsController < ApplicationController
         cloud_account.save!
       end
 
-
       # 2. 生成oauth2应用程序的client_id和client_secrete
       gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline", redirect_uris: ["#{cloud_account.drone_url}/login"]})
       logger.info "######### gitea_oauth: #{gitea_oauth}"
