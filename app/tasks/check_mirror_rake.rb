@@ -11,7 +11,7 @@ class CheckMirrorRake
         if project&.owner&.login.present? && 
           response = Gitea::Repository::Branches::ListService.new(project.owner, project.identifier).call
         else
-          response = "22"
+          response = "224444"
           empty_user.push(project.id)
         end
         unless response.present?
