@@ -4,14 +4,19 @@ class CheckGiteaUser
     def call
       SyncLog.sync_log("=====begin to check gitea_user======")
 
-      all_users = User.select(:id, :gitea_token, :gitea_uid, :mail, :type,:login).where(type: "User", gitea_token: [nil, ""], gitea_uid: [nil, ""])
+      all_users = User.select(:id, :gitea_token, :gitea_uid, :mail, :type,:login,:platform).where(type: "User", gitea_token: [nil, ""], gitea_uid: [nil, ""])
       if all_users.present?
         new_password = "12345678"
         all_users.each do |user|
           begin
             SyncLog.sync_log("=====check_user_login_is:#{user.login}======")
+            EMAIL_REGEX = /^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+(\.[a-zA-Z0-9_-]+)+$/
+            user_mail =  user&.mail.present? ? user.mail : "#{user.login}@example.com"
+            unless user_mail.match(EMAIL_REGEX).present?
+              user_mail = "#{user.login}@example.com"
+            end
             ActiveRecord::Base.transaction do
-              interactor = Gitea::RegisterInteractor.call({username: user.login, email: user&.mail.present? ? user.mail : "#{user.login}@example.com", password: new_password})
+              interactor = Gitea::RegisterInteractor.call({username: user.login, email: user_mail, password: new_password})
               if interactor.success?
                 gitea_user = interactor.result
                 result = Gitea::User::GenerateTokenService.new(user.login, new_password).call
