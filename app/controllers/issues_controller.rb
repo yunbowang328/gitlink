@@ -137,7 +137,8 @@ class IssuesController < ApplicationController
         end
 
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-        normal_status(0, "创建成功")
+        # normal_status(0, "创建成功",)
+        render :json => { status: 0, message: "创建成功", id:  @issue.id}
       else
         normal_status(-1, "创建失败")
       end
