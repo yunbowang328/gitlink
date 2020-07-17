@@ -8,25 +8,27 @@ class CheckGiteaUser
       if all_users.present?
         new_password = "12345678"
         all_users.each do |user|
-          SyncLog.sync_log("=====check_user_login_is:#{user.login}======")
-          ActiveRecord::Base.transaction do
-            interactor = Gitea::RegisterInteractor.call({username: user.login, email: user&.mail.present? ? user.mail : "#{user.login}@example.com", password: new_password})
-            if interactor.success?
-              gitea_user = interactor.result
-              result = Gitea::User::GenerateTokenService.new(user.login, new_password).call
-              user.gitea_token = result['sha1']
-              user.gitea_uid = gitea_user['id']
-              if user.save!
-                SyncLog.sync_log("=================create_gitea_user_success_login==#{user.login}")
+          begin
+            SyncLog.sync_log("=====check_user_login_is:#{user.login}======")
+            ActiveRecord::Base.transaction do
+              interactor = Gitea::RegisterInteractor.call({username: user.login, email: user&.mail.present? ? user.mail : "#{user.login}@example.com", password: new_password})
+              if interactor.success?
+                gitea_user = interactor.result
+                result = Gitea::User::GenerateTokenService.new(user.login, new_password).call
+                user.gitea_token = result['sha1']
+                user.gitea_uid = gitea_user['id']
+                if user.save!
+                  SyncLog.sync_log("=================create_gitea_user_success_login==#{user.login}")
+                else
+                  SyncLog.sync_log("=================create_gitea_user_success_login==#{user.login}")
+                end
               else
-                SyncLog.sync_log("=================create_gitea_user_success_login==#{user.login}")
+                SyncLog.sync_log("=============sync_to_user_failed,user_login====#{user.login}")
               end
-            else
-              SyncLog.sync_log("=============sync_to_user_failed,user_login====#{user.login}")
             end
+          rescue => exception
+            SyncLog.sync_log("=================create_gitea_user_has_erros=#{user.login}===#{exception}")
           end
-        rescue Exception => e
-          SyncLog.sync_log("=================create_gitea_user_has_erros=#{user.login}===#{e}")
         end
       end
       SyncLog.sync_log("=====end_to_check_gitea_user=====")
