@@ -110,40 +110,22 @@ class IssuesController < ApplicationController
       issue_params = issue_send_params(params)
 
       @issue = Issue.new(issue_params)
-      begin
-        if @issue.save!
-          if params[:attachment_ids].present?
-            params[:attachment_ids].each do |id|
-              attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
-              unless attachment.blank?
-                attachment.container = @issue
-                attachment.author_id = current_user.id
-                attachment.description = ""
-                attachment.save
-              end
+      if @issue.save!
+        if params[:attachment_ids].present?
+          params[:attachment_ids].each do |id|
+            attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
+            unless attachment.blank?
+              attachment.container = @issue
+              attachment.author_id = current_user.id
+              attachment.description = ""
+              attachment.save
             end
           end
-          if params[:issue_tag_ids].present?
-            params[:issue_tag_ids].each do |tag|
-              IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
-            end
+        end
+        if params[:issue_tag_ids].present?
+          params[:issue_tag_ids].each do |tag|
+            IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
           end
-          if params[:assigned_to_id].present?
-            Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
-                           container_id: @issue.id, container_type: 'Issue',
-                           parent_container_id: @project.id, parent_container_type: "Project",
-                           tiding_type: 'issue', status: 0)
-          end
-  
-          #为悬赏任务时, 扣除当前用户的积分
-          if params[:issue_type].to_s == "2"
-            post_to_chain("minus", params[:token].to_i, current_user.try(:login))
-          end
-  
-          @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-          normal_status(0, "创建成功")
-        else
-          normal_status(-1, "创建失败")
         end
         if params[:assigned_to_id].present?
           Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
@@ -152,11 +134,15 @@ class IssuesController < ApplicationController
                          tiding_type: 'issue', status: 0)
         end
 
+        #为悬赏任务时, 扣除当前用户的积分
+        if params[:issue_type].to_s == "2"
+          post_to_chain("minus", params[:token].to_i, current_user.try(:login))
+        end
+
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-        # normal_status(0, "创建成功",)
-        render :json => { status: 0, message: "创建成功", id:  @issue.id}
+        render json: {status: 0, message: "创建成", id: @issue.id}
       else
-        
+        normal_status(-1, "创建失败")
       end
 
     end
