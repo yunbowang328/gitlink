@@ -145,9 +145,16 @@ class IssuesController < ApplicationController
         else
           normal_status(-1, "创建失败")
         end
-      rescue => e
-        Rails.looger.info("##################________exception_________________######################{e.message}")
-        normal_status(-1, e.message)
+        if params[:assigned_to_id].present?
+          Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
+                         container_id: @issue.id, container_type: 'Issue',
+                         parent_container_id: @project.id, parent_container_type: "Project",
+                         tiding_type: 'issue', status: 0)
+        end
+
+        @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
+        # normal_status(0, "创建成功",)
+        render :json => { status: 0, message: "创建成功", id:  @issue.id}
       else
         
       end
