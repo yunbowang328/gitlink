@@ -62,7 +62,9 @@
             req.headers['Authorization']
           end
         end
-        response = client.public_send(method, path, params.except(:drone_token))
+        response = client.public_send(method, path) do |req|
+          req.body = params.except(:drone_token).to_json
+        end
 
         json_response(response)
       end
