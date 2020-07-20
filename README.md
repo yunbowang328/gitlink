@@ -2511,6 +2511,12 @@ GET  /api/dev_ops/builds
 curl -X GET http://localhost:3000/api/dev_ops/builds | jq
 ```
 
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|id          |是|int |repository's id  |
+
 *返回参数说明:*
 
 |参数名|类型|说明|
