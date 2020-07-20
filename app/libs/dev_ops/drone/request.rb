@@ -35,10 +35,10 @@
 
     def put(endpoint, path, options={})
       validate_request_params!(endpoint)
-
+      request(:put, endpoint, path, options)
     end
 
-    def patch(url, params={})
+    def patch(endpoint, path, options={})
       validate_request_params!(endpoint)
       request(:patch, endpoint, path, options)
     end
