@@ -14,7 +14,7 @@ class DevOps::Drone::Client
   def run
     `docker run -d \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -e DRONE_RPC_SERVER=drone-server-#{client_id}:9000 \
+      -e DRONE_PRC_HOST=drone-server-#{client_id}:9000 \
       -e DRONE_RPC_SECRET=#{rpc_secret} \
       -e DRONE_RUNNER_NAME=#{drone_ip} \
       --restart always \
@@ -27,7 +27,7 @@ class DevOps::Drone::Client
   def generate_cmd
     "docker run -d \
       -v /var/run/docker.sock:/var/run/docker.sock \
-      -e DRONE_RPC_SERVER=drone-server-#{client_id}:9000 \
+      -e DRONE_PRC_HOST=#{drone_ip}-#{client_id}:9000 \
       -e DRONE_RPC_SECRET=#{rpc_secret} \
       -e DRONE_RUNNER_NAME=#{drone_ip} \
       --restart always \
