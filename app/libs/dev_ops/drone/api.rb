@@ -39,7 +39,7 @@ class DevOps::Drone::API < DevOps::Drone::Request
   # Activate user's project with Drone CI
   # POST api/repos/{owner}/{name}
   # eq:
-  #  DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier).activate
+  #  DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, project.owner.login, project.identifier).activate
   def activate
     post(endpoint, "/api/repos/#{owner}/#{repo}", drone_token: drone_token)
   end
