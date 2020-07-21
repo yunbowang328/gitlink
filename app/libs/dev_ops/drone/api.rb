@@ -68,6 +68,6 @@ class DevOps::Drone::API < DevOps::Drone::Request
   # eq:
   # DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: build, stage: stage, step: step).logs
   def logs
-    get(endpoint, "/api/repos/#{owner}/#{repo}/builds/#{options[:build]}/logs/#{options[:stage]}/#{options[:step]}", drone_token: drone_token)
+    get(endpoint, "/api/repos/#{owner}/#{repo}/builds/#{options[:number]}/logs/#{options[:stage]}/#{options[:step]}", drone_token: drone_token)
   end
 end
