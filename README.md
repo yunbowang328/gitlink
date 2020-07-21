@@ -2740,7 +2740,7 @@ DELETE  /api/dev_ops/builds/:number
 ```
 curl -X DELETE \
 -d 'id=4844' \
-http://localhost:3000/api/dev_ops/builds/42 | jq
+http://localhost:3000/api/dev_ops/builds/2 | jq
 ```
 
 *请求参数说明:*
@@ -2848,7 +2848,7 @@ GET  /api/dev_ops/builds/:number/logs/:stage/:step
 ```
 curl -X GET \
 -d 'id=4844' \
-http://localhost:3000/api/dev_ops/builds/2/logs/1/3 | jq
+http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 ```
 
 *请求参数说明:*
@@ -2857,8 +2857,8 @@ http://localhost:3000/api/dev_ops/builds/2/logs/1/3 | jq
 |-|-|-|-|
 |id         |int|repository's id|
 |number      |是|int |build's number  |
-|stage          |是|int |build's stage id  |
-|step          |是|int |build's step id  |
+|stage          |是|int |build's stage number  |
+|step          |是|int |build's step number  |
 
 *返回参数说明:*
 
@@ -2872,49 +2872,44 @@ http://localhost:3000/api/dev_ops/builds/2/logs/1/3 | jq
 ```json
 [
   {
-    "proc": "clone",
     "pos": 0,
-    "out": "+ git init\n"
+    "out": "+ git fetch origin +refs/heads/master:\n",
+    "time": 1
   },
   {
-    "proc": "clone",
     "pos": 1,
-    "out": "Initialized empty Git repository in /drone/src/github.com/octocat/hello-world/.git/\n"
+    "out": "Initialized empty Git repository in /drone/src/.git/\n",
+    "time": 1
   },
   {
-    "proc": "clone",
     "pos": 2,
-    "out": "+ git remote add origin https://github.com/octocat/hello-world.git\n"
+    "out": "warning: redirecting to https://testgitea2.trustie.net/jasder/forgeplus.git/\n",
+    "time": 1
   },
   {
-    "proc": "clone",
     "pos": 3,
-    "out": "+ git fetch --no-tags origin +refs/heads/master:\n"
+    "out": "From http://testgitea2.trustie.net/jasder/forgeplus\n",
+    "time": 493
   },
   {
-    "proc": "clone",
     "pos": 4,
-    "out": "From https://github.com/octocat/hello-world\n"
+    "out": " * branch            master     -> FETCH_HEAD\n",
+    "time": 493
   },
   {
-    "proc": "clone",
     "pos": 5,
-    "out": " * branch            master     -> FETCH_HEAD\n"
+    "out": " * [new branch]      master     -> origin/master\n",
+    "time": 493
   },
   {
-    "proc": "clone",
     "pos": 6,
-    "out": " * [new branch]      master     -> origin/master\n"
+    "out": "+ git checkout 5e52ce51a239f5c8dd0b489a8a71e94f976179b4 -b master\n",
+    "time": 493
   },
   {
-    "proc": "clone",
     "pos": 7,
-    "out": "+ git reset --hard -q 62126a02ffea3dabd7789e5c5407553490973665\n"
-  },
-  {
-    "proc": "clone",
-    "pos": 8,
-    "out": "+ git submodule update --init --recursive\n"
+    "out": "Already on 'master'\n",
+    "time": 496
   }
 ]
 ```
