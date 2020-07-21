@@ -2332,7 +2332,7 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 
 
 返回值
-```
+```json
 {
   "commit": {
     "sha": "7b70509105b587e71f5692b9e8ab70851e321f64",
@@ -2390,7 +2390,7 @@ https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 |redirect_url         |string|重定向地址，请求成功后，需要调整到该地址进行认证|
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success",
@@ -2419,7 +2419,7 @@ curl -X GET http://localhost:3000/api/dev_ops/languages.json | jq
 |cover_url         |string|语言的logo链接|
 
 返回值
-```
+```json
 [
   {
     "id": 114,
@@ -2451,7 +2451,7 @@ curl -X GET http://localhost:3000/api/dev_ops/languages/common.json | jq
 |cover_url         |string|语言的logo链接|
 
 返回值
-```
+```json
 [
   {
     "id": 114,
@@ -2489,7 +2489,7 @@ curl -X GET http://localhost:3000/api/dev_ops/languages/114.json | jq
 |cover_url         |string|语言的logo链接|
 
 返回值
-```
+```json
 [
   {
     "id": 114,
@@ -2529,7 +2529,7 @@ http://localhost:3000/api/dev_ops/builds | jq
 |event         |string|build's event|
 
 返回值
-```
+```json
 [
   {
     "id": 1,
@@ -2591,7 +2591,7 @@ http://ocalhost:3000/api/dev_ops/builds/1 | jq
 |event         |string|build's event|
 
 返回值
-```
+```json
 {
   "id": 1,
   "repo_id": 8,
@@ -2699,7 +2699,7 @@ http://localhost:3000/api/dev_ops/builds/1 | jq
 |event         |string|build's event|
 
 返回值
-```
+```json
 {
   "id": 2,
   "repo_id": 8,
@@ -2759,7 +2759,7 @@ http://localhost:3000/api/dev_ops/builds/42 | jq
 |event         |string|build's event|
 
 返回值
-```
+```json
 {
   "id": 2,
   "repo_id": 8,
@@ -2848,7 +2848,7 @@ GET  /api/dev_ops/builds/:number/logs/:stage/:step
 ```
 curl -X GET \
 -d 'id=4844' \
-http://localhost:3000/api/dev_ops/builds/42/logs/ | jq
+http://localhost:3000/api/dev_ops/builds/2/logs/1/3 | jq
 ```
 
 *请求参数说明:*
@@ -2869,7 +2869,7 @@ http://localhost:3000/api/dev_ops/builds/42/logs/ | jq
 |event         |string|build's event|
 
 返回值
-```
+```json
 [
   {
     "proc": "clone",
