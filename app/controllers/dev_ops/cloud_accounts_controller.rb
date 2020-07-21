@@ -20,6 +20,7 @@ class DevOps::CloudAccountsController < ApplicationController
         cloud_account = DevOps::CloudAccount.new(create_params)
         cloud_account.user = current_user
         cloud_account.repo_id = @repo.id
+        cloud_account.project_id = @repo.project.id
         cloud_account.save!
       end
 
@@ -31,7 +32,7 @@ class DevOps::CloudAccountsController < ApplicationController
         redirect_uri: gitea_oauth['redirect_uris'],
         gitea_oauth_id: gitea_oauth['id'],
         user_id: current_user.id,
-        project_id: devops_params[:project_id])
+        project_id: @repo.project.id)
       oauth.save
 
       rpc_secret = SecureRandom.hex 16
