@@ -27,8 +27,7 @@ Rails.application.routes.draw do
           get ':number', to: 'builds#detail', as: 'detail'
           post ':number', to: 'builds#restart', as: 'restart'
           delete ':number', to: 'builds#delete', as: 'delete'
-          get ':number/logs/:stage/:step', to: 'builds#detail', as: 'logs'
-          post 'test_webhook', to: 'builds#test_webhook', as: 'test_webhook'
+          get ':number/logs/:stage/:step', to: 'builds#logs', as: 'logs'
         end
       end
     end

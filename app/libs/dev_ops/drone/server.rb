@@ -46,7 +46,6 @@ class DevOps::Drone::Server
       -e DRONE_SERVER_HOST=#{drone_host} \
       -e DRONE_SERVER_PROTO=http \
       -p '80:80' \
-      -p '9000:9000' \
       --restart=always \
       --detach=true \
       --name=drone-server-#{client_id} \

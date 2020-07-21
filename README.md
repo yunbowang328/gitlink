@@ -2508,7 +2508,9 @@ GET  /api/dev_ops/builds
 
 *示例*
 ```
-curl -X GET http://localhost:3000/api/dev_ops/builds | jq
+curl -X GET \
+-d 'id=4844' \
+http://localhost:3000/api/dev_ops/builds | jq
 ```
 
 *请求参数说明:*
@@ -2530,29 +2532,31 @@ curl -X GET http://localhost:3000/api/dev_ops/builds | jq
 ```
 [
   {
-    "id": 100207,
-    "repo_id": 296163,
-    "number": 42,
+    "id": 1,
+    "repo_id": 8,
+    "trigger": "@hook",
+    "number": 1,
     "status": "success",
-    "event": "pull_request",
-    "action": "sync",
-    "link": "https://github.com/octoat/hello-world/compare/e3320539a4c0...9fc1ad6ebf12",
-    "message": "updated README",
-    "before": "e3320539a4c03ccfda992641646deb67d8bf98f3",
-    "after": "9fc1ad6ebf12462f3f9773003e26b4c6f54a772e",
+    "event": "push",
+    "action": "",
+    "link": "",
+    "timestamp": 0,
+    "message": "更新 '.trustie-pipeline.yml'\n",
+    "before": "5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324",
+    "after": "5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
     "ref": "refs/heads/master",
-    "source_repo": "spaceghost/hello-world",
-    "source": "develop",
+    "source_repo": "",
+    "source": "master",
     "target": "master",
-    "author_login": "octocat",
-    "author_name": "The Octocat",
-    "author_email": "octocat@github.com",
-    "author_avatar": "http://www.gravatar.com/avatar/7194e8d48fa1d2b689f99443b767316c",
-    "sender": "bradrydzewski",
-    "started": 1564085874,
-    "finished": 1564086343,
-    "created": 1564085874,
-    "updated": 1564085874,
+    "author_login": "jasder",
+    "author_name": "jasder",
+    "author_email": "email.com",
+    "author_avatar": "",
+    "sender": "jasder",
+    "started": 1595317786,
+    "finished": 1595318426,
+    "created": 1595317786,
+    "updated": 1595317786,
     "version": 3
   }
 ]
@@ -2566,13 +2570,16 @@ GET  /api/dev_ops/builds/:number
 
 *示例*
 ```
-curl -X GET http://localhost:3000/api/dev_ops/builds/42 | jq
+curl -X GET \
+-d 'id=4844' \
+http://ocalhost:3000/api/dev_ops/builds/1 | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
+|id         |int|repository's id|
 |number          |是|int |build's number  |
 
 *返回参数说明:*
@@ -2586,53 +2593,79 @@ curl -X GET http://localhost:3000/api/dev_ops/builds/42 | jq
 返回值
 ```
 {
-  "id": 100207,
-  "repo_id": 296163,
-  "number": 42,
-  "status": "pending",
-  "event": "pull_request",
-  "action": "sync",
-  "link": "https://github.com/octoat/hello-world/compare/e3320539a4c0...9fc1ad6ebf12",
-  "message": "updated README",
-  "before": "e3320539a4c03ccfda992641646deb67d8bf98f3",
-  "after": "9fc1ad6ebf12462f3f9773003e26b4c6f54a772e",
+  "id": 1,
+  "repo_id": 8,
+  "trigger": "@hook",
+  "number": 1,
+  "status": "success",
+  "event": "push",
+  "action": "",
+  "link": "http://localhost:3000/jasder/forgeplus/compare/5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324...5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
+  "timestamp": 0,
+  "message": "更新 '.trustie-pipeline.yml'\n",
+  "before": "5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324",
+  "after": "5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
   "ref": "refs/heads/master",
-  "source_repo": "spaceghost/hello-world",
-  "source": "develop",
+  "source_repo": "",
+  "source": "master",
   "target": "master",
-  "author_login": "octocat",
-  "author_name": "The Octocat",
-  "author_email": "octocat@github.com",
-  "author_avatar": "http://www.gravatar.com/avatar/7194e8d48fa1d2b689f99443b767316c",
-  "sender": "bradrydzewski",
-  "started": 0,
-  "finished": 0,
-  "created": 1564085874,
-  "updated": 1564085874,
-  "version": 1,
+  "author_login": "jasder",
+  "author_name": "jasder",
+  "author_email": "2053003901@qq.com",
+  "author_avatar": "http://localhost:3000/user/avatar/jasder/-1",
+  "sender": "jasder",
+  "started": 1595317786,
+  "finished": 1595318426,
+  "created": 1595317786,
+  "updated": 1595317786,
+  "version": 3,
   "stages": [
-      {
-          "id": 199937,
-          "repo_id": 296163,
-          "build_id": 100207,
+    {
+      "id": 1,
+      "repo_id": 8,
+      "build_id": 1,
+      "number": 1,
+      "name": "default",
+      "kind": "pipeline",
+      "type": "docker",
+      "status": "success",
+      "errignore": false,
+      "exit_code": 0,
+      "machine": "121.36.81.172",
+      "os": "linux",
+      "arch": "arm64",
+      "started": 1595317786,
+      "stopped": 1595318426,
+      "created": 1595317786,
+      "updated": 1595318426,
+      "version": 4,
+      "on_success": true,
+      "on_failure": false,
+      "steps": [
+        {
+          "id": 1,
+          "step_id": 1,
           "number": 1,
-          "name": "default",
-          "kind": "pipeline",
-          "type": "docker",
-          "status": "pending",
-          "errignore": false,
+          "name": "clone",
+          "status": "success",
           "exit_code": 0,
-          "machine": "15e89c0f84f1",
-          "os": "linux",
-          "arch": "amd64",
-          "started": 0,
-          "stopped": 0,
-          "created": 1564085874,
-          "updated": 1564086343,
-          "version": 1,
-          "on_success": true,
-          "on_failure": false
-      }
+          "started": 1595317786,
+          "stopped": 1595318373,
+          "version": 4
+        },
+        {
+          "id": 2,
+          "step_id": 1,
+          "number": 2,
+          "name": "test",
+          "status": "success",
+          "exit_code": 0,
+          "started": 1595318373,
+          "stopped": 1595318426,
+          "version": 4
+        }
+      ]
+    }
   ]
 }
 ```
@@ -2645,13 +2678,16 @@ POST  /api/dev_ops/builds/:number
 
 *示例*
 ```
-curl -X POST http://localhost:3000/api/dev_ops/builds/42 | jq
+curl -X POST \
+-d 'id=4844' \
+http://localhost:3000/api/dev_ops/builds/1 | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
+|id         |int|repository's id|
 |number          |是|int |build's number  |
 
 *返回参数说明:*
@@ -2665,54 +2701,32 @@ curl -X POST http://localhost:3000/api/dev_ops/builds/42 | jq
 返回值
 ```
 {
-  "id": 100207,
-  "repo_id": 296163,
-  "number": 42,
+  "id": 2,
+  "repo_id": 8,
+  "trigger": "jasder",
+  "number": 2,
   "status": "pending",
-  "event": "pull_request",
-  "action": "sync",
-  "link": "https://github.com/octoat/hello-world/compare/e3320539a4c0...9fc1ad6ebf12",
-  "message": "updated README",
-  "before": "e3320539a4c03ccfda992641646deb67d8bf98f3",
-  "after": "9fc1ad6ebf12462f3f9773003e26b4c6f54a772e",
+  "event": "push",
+  "action": "",
+  "link": "http://localhost:3000/jasder/forgeplus/compare/5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324...5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
+  "timestamp": 0,
+  "message": "更新 '.trustie-pipeline.yml'\n",
+  "before": "5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324",
+  "after": "5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
   "ref": "refs/heads/master",
-  "source_repo": "spaceghost/hello-world",
-  "source": "develop",
+  "source_repo": "",
+  "source": "master",
   "target": "master",
-  "author_login": "octocat",
-  "author_name": "The Octocat",
-  "author_email": "octocat@github.com",
-  "author_avatar": "http://www.gravatar.com/avatar/7194e8d48fa1d2b689f99443b767316c",
-  "sender": "bradrydzewski",
+  "author_login": "jasder",
+  "author_name": "jasder",
+  "author_email": "2053003901@qq.com",
+  "author_avatar": "http://localhost:3000/user/avatar/jasder/-1",
+  "sender": "jasder",
   "started": 0,
   "finished": 0,
-  "created": 1564085874,
-  "updated": 1564085874,
-  "version": 1,
-  "stages": [
-      {
-          "id": 199937,
-          "repo_id": 296163,
-          "build_id": 100207,
-          "number": 1,
-          "name": "default",
-          "kind": "pipeline",
-          "type": "docker",
-          "status": "pending",
-          "errignore": false,
-          "exit_code": 0,
-          "machine": "15e89c0f84f1",
-          "os": "linux",
-          "arch": "amd64",
-          "started": 0,
-          "stopped": 0,
-          "created": 1564085874,
-          "updated": 1564086343,
-          "version": 1,
-          "on_success": true,
-          "on_failure": false
-      }
-  ]
+  "created": 1595321350,
+  "updated": 1595321350,
+  "version": 1
 }
 ```
 ---
@@ -2724,13 +2738,16 @@ DELETE  /api/dev_ops/builds/:number
 
 *示例*
 ```
-curl -X DELETE http://localhost:3000/api/dev_ops/builds/42 | jq
+curl -X DELETE \
+-d 'id=4844' \
+http://localhost:3000/api/dev_ops/builds/42 | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
+|id         |int|repository's id|
 |number          |是|int |build's number  |
 
 *返回参数说明:*
@@ -2743,6 +2760,82 @@ curl -X DELETE http://localhost:3000/api/dev_ops/builds/42 | jq
 
 返回值
 ```
+{
+  "id": 2,
+  "repo_id": 8,
+  "trigger": "jasder",
+  "number": 2,
+  "status": "killed",
+  "event": "push",
+  "action": "",
+  "link": "http://localhost:3000/jasder/forgeplus/compare/5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324...5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
+  "timestamp": 0,
+  "message": "更新 '.trustie-pipeline.yml'\n",
+  "before": "5e7c6f7dfd5ce6cc6e287fcbc000dadd9992b324",
+  "after": "5e52ce51a239f5c8dd0b489a8a71e94f976179b4",
+  "ref": "refs/heads/master",
+  "source_repo": "",
+  "source": "master",
+  "target": "master",
+  "author_login": "jasder",
+  "author_name": "jasder",
+  "author_email": "2053003901@qq.com",
+  "author_avatar": "http://localhost:3000/user/avatar/jasder/-1",
+  "sender": "jasder",
+  "started": 1595321352,
+  "finished": 1595321590,
+  "created": 1595321350,
+  "updated": 1595321352,
+  "version": 3,
+  "stages": [
+    {
+      "id": 2,
+      "repo_id": 8,
+      "build_id": 2,
+      "number": 1,
+      "name": "default",
+      "kind": "pipeline",
+      "type": "docker",
+      "status": "killed",
+      "errignore": false,
+      "exit_code": 0,
+      "machine": "121.36.81.172",
+      "os": "linux",
+      "arch": "arm64",
+      "started": 1595321352,
+      "stopped": 1595321590,
+      "created": 1595321350,
+      "updated": 1595321352,
+      "version": 4,
+      "on_success": true,
+      "on_failure": false,
+      "steps": [
+        {
+          "id": 3,
+          "step_id": 2,
+          "number": 1,
+          "name": "clone",
+          "status": "killed",
+          "exit_code": 130,
+          "started": 1595321353,
+          "stopped": 1595321590,
+          "version": 3
+        },
+        {
+          "id": 4,
+          "step_id": 2,
+          "number": 2,
+          "name": "test",
+          "status": "skipped",
+          "exit_code": 130,
+          "started": 1595321590,
+          "stopped": 1595321590,
+          "version": 2
+        }
+      ]
+    }
+  ]
+}
 ```
 ---
 
@@ -2753,14 +2846,17 @@ GET  /api/dev_ops/builds/:number/logs/:stage/:step
 
 *示例*
 ```
-curl -X GET http://localhost:3000/api/dev_ops/builds/42/logs/ | jq
+curl -X GET \
+-d 'id=4844' \
+http://localhost:3000/api/dev_ops/builds/42/logs/ | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|number          |是|int |build's number  |
+|id         |int|repository's id|
+|number      |是|int |build's number  |
 |stage          |是|int |build's stage id  |
 |step          |是|int |build's step id  |
 

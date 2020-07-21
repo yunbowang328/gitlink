@@ -50,7 +50,7 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### result: #{result}"
 
 
-      redirect_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{oauth.client_id}&redirect_uri=#{cloud_account.drone_url}/login&response_type=code"
+      redirect_url = "#{cloud_account.drone_url}/login&response_type=code"
       logger.info "######### redirect_url: #{redirect_url}"
       if result
         render_ok(redirect_url: redirect_url)
