@@ -31,7 +31,7 @@ class ::DevOps::BuildsController < ApplicationController
 
   def logs
     cloud_account = @repo.dev_ops_cloud_account
-    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: params[:build], stage: params[:stage], step: params[:step]).logs
+    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: params[:number], stage: params[:stage], step: params[:step]).logs
 
     render json: result
   end
