@@ -156,13 +156,16 @@ class UsersController < ApplicationController
           name: p.name,
           is_public: p.is_public,
           updated_on: p.updated_on.strftime("%Y-%m-%d"),
+          status: p.status,
+          is_member: p.member?(current_user.try(:id)),
           owner: {
             name: p.owner.try(:show_real_name),
             login: p.owner.login
           },
           members_count: p&.members.size,
           issues_count: p.issues_count - p.pull_requests_count,
-          commits_count: p&.project_score&.changeset_num.to_i
+          commits_count: p&.project_score&.changeset_num.to_i,
+          project_score: p&.project_score&.as_json(:except=>[:created_at, :updated_at]).merge!(commit_time: format_time(p&.project_score&.commit_time))
         }
         projects_json.push(pj)
       end
