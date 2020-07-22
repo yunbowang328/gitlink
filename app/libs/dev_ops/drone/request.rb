@@ -38,6 +38,11 @@
       request(:put, endpoint, path, options)
     end
 
+    def patch(endpoint, path, options={})
+      validate_request_params!(endpoint)
+      request(:patch, endpoint, path, options)
+    end
+
     def delete(endpoint, path, options={})
       validate_request_params!(endpoint)
       request(:delete, endpoint, path, options)
@@ -45,10 +50,21 @@
 
     private
       def request(method, endpoint, path, **params)
-        Rails.logger.info("[drone] request: #{method} #{path} #{params.except(:secret).inspect}")
+        Rails.logger.info("[drone] request: #{method} #{path} #{params.except(:drone_token).inspect}")
 
-        client = Faraday.new(url: endpoint)
-        response = client.public_send(method, path, params)
+        client ||= begin
+          Faraday.new(url: endpoint) do |req|
+            req.request :url_encoded
+            req.headers['Content-Type'] = 'application/json'
+            req.response :logger # 显示日志
+            req.adapter Faraday.default_adapter
+            req.authorization :Bearer, params[:drone_token]
+            req.headers['Authorization']
+          end
+        end
+        response = client.public_send(method, path) do |req|
+          req.body = params.except(:drone_token).to_json
+        end
 
         json_response(response)
       end

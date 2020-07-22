@@ -24,10 +24,11 @@ Rails.application.routes.draw do
       end
       resources :builds, only: :index do
         collection do
+          get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
           get ':number', to: 'builds#detail', as: 'detail'
           post ':number', to: 'builds#restart', as: 'restart'
           delete ':number', to: 'builds#delete', as: 'delete'
-          get ':number/logs/:stage/:step', to: 'builds#detail', as: 'logs'
+          get ':number/logs/:stage/:step', to: 'builds#logs', as: 'logs'
         end
       end
     end

@@ -1,25 +1,21 @@
 class DevOps::CloudAccountsController < ApplicationController
   before_action :require_login
   before_action :find_project
+  before_action :devops_authorize!
 
   def create
     ActiveRecord::Base.transaction do
       DevOps::CreateCloudAccountForm.new(devops_params).validate!
-      logger.info "######### devops_params: #{devops_params}"
-      logger.info "######### ......: #{(IPAddr.new devops_params[:ip_num]).to_i}"
-      logger.info "######### ......: #{DevOps::CloudAccount.encrypted_secret(devops_params[:secret])}"
+
       # 1. 保存华为云服务器帐号
-      logger.info "######### ......ff:  #{devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))}"
       create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))
-      logger.info "######### create_params: #{create_params}"
-
-
-      if cloud_account = @repo.dev_ops_cloud_account
-        cloud_account
+      if cloud_account = @project.dev_ops_cloud_account
+        return render_error('该仓库已绑定了云帐号.')
       else
         cloud_account = DevOps::CloudAccount.new(create_params)
         cloud_account.user = current_user
-        cloud_account.repo_id = @repo.id
+        cloud_account.repo_id = @project.repository.id
+        cloud_account.project_id = @project.id
         cloud_account.save!
       end
 
@@ -31,11 +27,12 @@ class DevOps::CloudAccountsController < ApplicationController
         redirect_uri: gitea_oauth['redirect_uris'],
         gitea_oauth_id: gitea_oauth['id'],
         user_id: current_user.id,
-        project_id: devops_params[:project_id])
+        project_id: @project.id)
       oauth.save
 
       rpc_secret = SecureRandom.hex 16
       logger.info "######### rpc_secret: #{rpc_secret}"
+
       # 3. 创建drone server
       drone_server_cmd = DevOps::Drone::Server.new(oauth.client_id, oauth.client_secret, cloud_account.drone_host, rpc_secret).generate_cmd
       logger.info "######### drone_server_cmd: #{drone_server_cmd}"
@@ -49,12 +46,14 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### result: #{result}"
 
 
-      redirect_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{oauth.client_id}&redirect_uri=#{cloud_account.drone_url}/login&response_type=code"
+      redirect_url = "#{cloud_account.drone_url}/login"
       logger.info "######### redirect_url: #{redirect_url}"
-      if result
+
+      if result && !result.blank?
         render_ok(redirect_url: redirect_url)
       else
-        render_error('激活失败')
+        render_error('激活失败, 请检查你的云服务器信息是否正确.')
+        raise ActiveRecord::Rollback
       end
     end
   rescue Exception => ex
@@ -63,10 +62,10 @@ class DevOps::CloudAccountsController < ApplicationController
 
   private
     def devops_params
-      params.permit(:account, :secret, :ip_num, :repo_id)
+      params.permit(:account, :secret, :ip_num, :project_id)
     end
 
     def find_project
-      @repo = Repository.find params[:repo_id]
+      @project = Project.find params[:project_id]
     end
 end
