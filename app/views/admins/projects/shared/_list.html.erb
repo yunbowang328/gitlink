@@ -28,8 +28,8 @@
       <td><%= project.is_public ? '√' : '' %></td>
       <td><%= project.issues.size %></td>
       <td><%= project.attachments.size %></td>
-      <td><%= project.project_score.try(:changeset_num).to_i %></td>
-      <td><%= project.project_score.try(:pull_request_num).to_i %></td>
+      <td><%= project&.project_score.try(:changeset_num).to_i %></td>
+      <td><%= project*.project_score.try(:pull_request_num).to_i %></td>
       <td><%= project.versions.size %></td>
       <td><%= project.members.size %></td>
       <td>
