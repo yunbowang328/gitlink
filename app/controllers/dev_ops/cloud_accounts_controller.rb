@@ -15,7 +15,7 @@ class DevOps::CloudAccountsController < ApplicationController
 
 
       if cloud_account = @repo.dev_ops_cloud_account
-        cloud_account
+        return render_error('该仓库已绑定了云帐号.')
       else
         cloud_account = DevOps::CloudAccount.new(create_params)
         cloud_account.user = current_user
