@@ -1,4 +1,6 @@
 class ::DevOps::BuildsController < ApplicationController
+  include RepositoriesHelper
+
   before_action :require_login
   before_action :find_repo
 
@@ -34,6 +36,19 @@ class ::DevOps::BuildsController < ApplicationController
     result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: params[:number], stage: params[:stage], step: params[:step]).logs
 
     render json: result
+  end
+
+  # get .trustie-pipeline.yml file
+  def get_trustie_pipeline
+    file_path_uri = URI.parse('.trustie-pipeline.yml')
+    interactor = Repositories::EntriesInteractor.call(@repo.user, @repo.identifier, file_path_uri, ref: params[:ref] || "master")
+    if interactor.success?
+      file = interactor.result
+      return render json: {} if file[:status]
+
+      json = {name: file['name'], path: file['path'], content: render_decode64_content(file['content'])}
+      render json: json
+    end
   end
 
   private

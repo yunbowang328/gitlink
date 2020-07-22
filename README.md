@@ -2399,6 +2399,41 @@ https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 ```
 ---
 
+#### 获取仓库的.trustie-pipeline.yml
+```
+GET /api/dev_ops/builds/get_trustie_pipeline
+```
+*示例*
+```
+curl -X GET \
+-d "id=4844" \
+http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|id              |是|int |repository's id  |
+|ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id             |int   |id |
+|name           |string|文件夹或文件名称|
+|path           |string|文件夹或文件相对路径|
+|content        |string|文件内容，|
+
+```
+{
+  "name": ".trustie-pipeline.yml",
+  "path": ".trustie-pipeline.yml",
+  "content": "..jsaf"
+}
+```
+
 #### 获取语言列表
 ```
 GET  /api/dev_ops/languages
