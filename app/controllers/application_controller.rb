@@ -342,7 +342,8 @@ class ApplicationController < ActionController::Base
 			elsif params[:debug] == 'student'
 				User.current = User.find 8686
 			elsif params[:debug] == 'admin'
-				user = User.find 1
+				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
+				user =  User.find 36480
 				User.current = user
 				cookies.signed[:user_id] = user.id
 			end
@@ -384,7 +385,7 @@ class ApplicationController < ActionController::Base
 
 	def current_user
 		if Rails.env.development?
-			User.current = User.find 1
+			User.current = User.find 36480
 		else
 			User.current
 		end
@@ -741,6 +742,11 @@ class ApplicationController < ActionController::Base
 
 	def render_response(interactor)
 		interactor.success? ? render_ok : render_error(interactor.error)
+	end
+
+	# devops 权限验证
+	def devops_authorize!
+		render_forbidden unless @project.owner?(current_user)
 	end
 
   private

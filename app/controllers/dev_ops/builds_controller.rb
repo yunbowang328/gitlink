@@ -3,6 +3,7 @@ class DevOps::BuildsController < ApplicationController
 
   before_action :require_login
   before_action :find_project
+  before_action :devops_authorize!
 
   def index
     cloud_account = @project.dev_ops_cloud_account
