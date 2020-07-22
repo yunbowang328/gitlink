@@ -50,7 +50,7 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### result: #{result}"
 
 
-      redirect_url = "#{cloud_account.drone_url}/login&response_type=code"
+      redirect_url = "#{cloud_account.drone_url}/login"
       logger.info "######### redirect_url: #{redirect_url}"
       if result
         render_ok(redirect_url: redirect_url)
