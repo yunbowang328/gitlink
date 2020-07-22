@@ -14,13 +14,13 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### create_params: #{create_params}"
 
 
-      if cloud_account = @repo.dev_ops_cloud_account
+      if cloud_account = @project.dev_ops_cloud_account
         return render_error('该仓库已绑定了云帐号.')
       else
         cloud_account = DevOps::CloudAccount.new(create_params)
         cloud_account.user = current_user
-        cloud_account.repo_id = @repo.id
-        cloud_account.project_id = @repo.project.id
+        cloud_account.repo_id = @project.repository.id
+        cloud_account.project_id = @project.id
         cloud_account.save!
       end
 
@@ -32,7 +32,7 @@ class DevOps::CloudAccountsController < ApplicationController
         redirect_uri: gitea_oauth['redirect_uris'],
         gitea_oauth_id: gitea_oauth['id'],
         user_id: current_user.id,
-        project_id: @repo.project.id)
+        project_id: @project.id)
       oauth.save
 
       rpc_secret = SecureRandom.hex 16
@@ -64,10 +64,10 @@ class DevOps::CloudAccountsController < ApplicationController
 
   private
     def devops_params
-      params.permit(:account, :secret, :ip_num, :repo_id)
+      params.permit(:account, :secret, :ip_num, :project_id)
     end
 
     def find_project
-      @repo = Repository.find params[:repo_id]
+      @project = Project.find params[:project_id]
     end
 end

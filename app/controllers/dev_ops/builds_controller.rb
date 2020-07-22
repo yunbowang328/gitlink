@@ -1,39 +1,39 @@
-class ::DevOps::BuildsController < ApplicationController
+class DevOps::BuildsController < ApplicationController
   include RepositoriesHelper
 
   before_action :require_login
-  before_action :find_repo
+  before_action :find_project
 
   def index
-    cloud_account = @repo.dev_ops_cloud_account
-    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier).builds
+    cloud_account = @project.dev_ops_cloud_account
+    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @project.owner.login, @project.identifier).builds
 
     render json: result
   end
 
   def detail
-    cloud_account = @repo.dev_ops_cloud_account
-    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: params[:number]).build
+    cloud_account = @project.dev_ops_cloud_account
+    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @project.owner.login, @project.identifier, number: params[:number]).build
 
     render json: result
   end
 
   def restart
-    cloud_account = @repo.dev_ops_cloud_account
-    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: params[:number]).restart
+    cloud_account = @project.dev_ops_cloud_account
+    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @project.owner.login, @project.identifier, number: params[:number]).restart
 
     render json: result
   end
 
   def delete
-    cloud_account = @repo.dev_ops_cloud_account
-    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: params[:number]).stop
+    cloud_account = @project.dev_ops_cloud_account
+    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @project.owner.login, @project.identifier, number: params[:number]).stop
     render json: result
   end
 
   def logs
-    cloud_account = @repo.dev_ops_cloud_account
-    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: params[:number], stage: params[:stage], step: params[:step]).logs
+    cloud_account = @project.dev_ops_cloud_account
+    result = DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @project.owner.login, @project.identifier, build: params[:number], stage: params[:stage], step: params[:step]).logs
 
     render json: result
   end
@@ -41,7 +41,7 @@ class ::DevOps::BuildsController < ApplicationController
   # get .trustie-pipeline.yml file
   def get_trustie_pipeline
     file_path_uri = URI.parse('.trustie-pipeline.yml')
-    interactor = Repositories::EntriesInteractor.call(@repo.user, @repo.identifier, file_path_uri, ref: params[:ref] || "master")
+    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: params[:ref] || "master")
     if interactor.success?
       file = interactor.result
       return render json: {} if file[:status]
@@ -52,7 +52,7 @@ class ::DevOps::BuildsController < ApplicationController
   end
 
   private
-    def find_repo
-      @repo = ::Repository.find params[:id]
+    def find_project
+      @project = Project.find params[:project_id]
     end
 end

@@ -2368,7 +2368,7 @@ curl -X POST \
 -d "account=xx" \
 -d "secret=xxx" \
 -d "ip_num=xx.xx.xx.xx" \
--d "repo_id=5988" \
+-d "project_id=5988" \
 https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 ```
 
@@ -2379,7 +2379,7 @@ https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 |account          |是|string |云服务器ssh连接登录用户名  |
 |secret       |是|string |云服务器ssh连接登录秘密 |
 |ip_num        |否|string |云服务器公网IP |
-|repo_id         |否|string |repository id|
+|project_id         |否|string |project's id|
 
 *返回参数说明:*
 
@@ -2406,14 +2406,14 @@ GET /api/dev_ops/builds/get_trustie_pipeline
 *示例*
 ```
 curl -X GET \
--d "id=4844" \
+-d "project_id=4844" \
 http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id              |是|int |repository's id  |
+|project_id              |是|int |project's id  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
 
@@ -2421,7 +2421,6 @@ http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
 
 |参数名|类型|说明|
 |-|-|-|
-|id             |int   |id |
 |name           |string|文件夹或文件名称|
 |path           |string|文件夹或文件相对路径|
 |content        |string|文件内容，|
@@ -2544,7 +2543,7 @@ GET  /api/dev_ops/builds
 *示例*
 ```
 curl -X GET \
--d 'id=4844' \
+-d 'project_id=4844' \
 http://localhost:3000/api/dev_ops/builds | jq
 ```
 
@@ -2552,7 +2551,7 @@ http://localhost:3000/api/dev_ops/builds | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id          |是|int |repository's id  |
+|project_id          |是|int |project's id  |
 
 *返回参数说明:*
 
@@ -2606,7 +2605,7 @@ GET  /api/dev_ops/builds/:number
 *示例*
 ```
 curl -X GET \
--d 'id=4844' \
+-d 'project_id=4844' \
 http://ocalhost:3000/api/dev_ops/builds/1 | jq
 ```
 
@@ -2614,7 +2613,7 @@ http://ocalhost:3000/api/dev_ops/builds/1 | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id         |int|repository's id|
+|project_id         |int|project's id|
 |number          |是|int |build's number  |
 
 *返回参数说明:*
@@ -2714,7 +2713,7 @@ POST  /api/dev_ops/builds/:number
 *示例*
 ```
 curl -X POST \
--d 'id=4844' \
+-d 'project_id=4844' \
 http://localhost:3000/api/dev_ops/builds/1 | jq
 ```
 
@@ -2722,7 +2721,7 @@ http://localhost:3000/api/dev_ops/builds/1 | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id         |int|repository's id|
+|project_id         |int|project's id|
 |number          |是|int |build's number  |
 
 *返回参数说明:*
@@ -2774,7 +2773,7 @@ DELETE  /api/dev_ops/builds/:number
 *示例*
 ```
 curl -X DELETE \
--d 'id=4844' \
+-d 'project_id=4844' \
 http://localhost:3000/api/dev_ops/builds/2 | jq
 ```
 
@@ -2782,7 +2781,7 @@ http://localhost:3000/api/dev_ops/builds/2 | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id         |int|repository's id|
+|project_id         |int|project's id|
 |number          |是|int |build's number  |
 
 *返回参数说明:*
@@ -2882,7 +2881,7 @@ GET  /api/dev_ops/builds/:number/logs/:stage/:step
 *示例*
 ```
 curl -X GET \
--d 'id=4844' \
+-d 'project_id=4844' \
 http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 ```
 
@@ -2890,7 +2889,7 @@ http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id         |int|repository's id|
+|project_id         |int|project's id|
 |number      |是|int |build's number  |
 |stage          |是|int |build's stage number  |
 |step          |是|int |build's step number  |
