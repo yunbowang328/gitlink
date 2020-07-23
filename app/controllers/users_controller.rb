@@ -171,7 +171,7 @@ class UsersController < ApplicationController
       end
     end
     Rails.logger.info("==========projects_json========+########{projects_json}")
-    render json: { projects: projects_json }
+    render json: { projects: projects_json.present? ? projects_json : {} }
   end
 
   def trustie_projects
