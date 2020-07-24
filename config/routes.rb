@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  resources :sponsorships
   require 'sidekiq/web'
   require 'admin_constraint'
 
