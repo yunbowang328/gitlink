@@ -1,0 +1,2 @@
+class StoppedSponsorship < ApplicationRecord
+end
