@@ -1,0 +1,2 @@
+class SponsorTier < ApplicationRecord
+end
