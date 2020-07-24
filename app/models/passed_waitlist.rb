@@ -1,0 +1,2 @@
+class PassedWaitlist < ApplicationRecord
+end
