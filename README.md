@@ -2429,6 +2429,7 @@ http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
 {
   "name": ".trustie-pipeline.yml",
   "path": ".trustie-pipeline.yml",
+  "sha": "548sfefsafef48sf485s4f",
   "content": "..jsaf"
 }
 ```

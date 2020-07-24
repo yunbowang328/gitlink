@@ -47,7 +47,7 @@ class DevOps::BuildsController < ApplicationController
       file = interactor.result
       return render json: {} if file[:status]
 
-      json = {name: file['name'], path: file['path'], content: render_decode64_content(file['content'])}
+      json = {name: file['name'], path: file['path'], sha: file['sha'], content: render_decode64_content(file['content'])}
       render json: json
     end
   end
