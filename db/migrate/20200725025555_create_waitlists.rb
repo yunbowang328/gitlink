@@ -1,8 +1,10 @@
 class CreateWaitlists < ActiveRecord::Migration[5.2]
   def change
     create_table :waitlists do |t|
-      t.integer :applicant_id
-      t.integer :reviewer_id
+      t.string :applicant_id
+      t.string :integer
+      t.string :reviewer_id
+      t.string :integer
 
       t.timestamps
     end

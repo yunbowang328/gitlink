@@ -92,6 +92,15 @@ class User < ApplicationRecord
   # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
 
+  # sponsor
+  has_many :as_sponsors, class_name: 'Sponsorship', foreign_key: 'sponsor_id', dependent: :destroy
+  has_many :as_sponsored, class_name: 'Sponsorship', foreign_key: 'developer_id', dependent: :destroy
+  has_many :stopped_sponsors, class_name: 'StoppedSponsorship', foreign_key: 'sponsor_id', dependent: :destroy
+  has_many :stopped_sponsored, class_name: 'StoppedSponsorship', foreign_key: 'developer_id', dependent: :destroy
+  has_many :sponsor_tier, dependent: :destroy
+  has_one :wallet, dependent: :destroy
+  # has_many :waitlist
+
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
