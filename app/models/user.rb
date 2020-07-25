@@ -99,7 +99,11 @@ class User < ApplicationRecord
   has_many :stopped_sponsored, class_name: 'StoppedSponsorship', foreign_key: 'developer_id', dependent: :destroy
   has_many :sponsor_tier, dependent: :destroy
   has_one :wallet, dependent: :destroy
-  # has_many :waitlist
+  has_many :waitlist, class_name: 'Waitlist', foreign_key: 'reviewer_id', optional: true
+  has_many :passed_waitlist, class_name: 'PassedWaitlist', foreign_key: 'reviewer_id', optional: true #as reviewer
+  has_one :application, class_name: 'Waitlist', foreign_key: 'applicant_id', optional: true
+  has_one :passed_application, class_name: 'PassedWaitlist', foreign_key: 'applicant_id', optional: true
+
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
