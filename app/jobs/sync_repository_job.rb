@@ -28,6 +28,7 @@ class SyncRepositoryJob < ApplicationJob
           SyncLog.sync_log("=============force_push_erros==#{path}/#{image_repo_name}++branch:#{branch}")
         else
           SyncLog.sync_log("=============force_push_success==#{path}/#{image_repo_name}++branch+++#{branch}")
+          system("rm -rf #{path}/#{image_repo_name}")
         end
       end
     else
