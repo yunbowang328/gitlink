@@ -2357,6 +2357,51 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 ### DevOps相关api
 ---
 
+#### 获取devops流程步骤(判断devops是否初始化)
+```
+GET  /api/users/devops
+```
+
+*示例*
+```
+curl -X GET \
+-d "project_id=5988" \
+https://localhost:3000/api/users/devops.json  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id         |是|string |项目id或者项目的标识identifier|
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|step         |int|初始化devops流程步骤; 0: 标识未开启devops，1: 标识用户已填写了云服务器相关信息，但并未开启认证， 2: 标识用户已开启了CI服务端的认证， 3: 标识用户已经授权并获取了CI服务的token|
+|account       |string|你的云服务器帐号|
+|ip         |string|你的云服务器帐号ip|
+|secret         |string|你的云服务器登录密码|
+|authenticate_url         |string|devops授权认证地址， 只有填写了服务器相关信息后才会有该地址|
+|get_drone_token_url         |string|获取CI服务端token地址, 只有认证成功后才会有该地址|
+
+返回值
+```json
+{
+  "step": 0,
+  "cloud_account": {
+    "id": 1,
+    "account": "xxx",
+    "ip": "xxx.xxx.xxx.x",
+    "secret": "11111",
+    "authenticate_url": "http://localhost:3000/login",
+    "get_drone_token_url": "http://localhost:3000/account"
+  }
+}
+```
+---
+
 #### 初始化DevOps流程
 ```
 POST  /api/dev_ops/cloud_accounts
@@ -2399,6 +2444,72 @@ https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 ```
 ---
 
+#### 用户认证CI服务端后，需要调用该接口进行更新devlops流程状态
+```
+PUT /api/users/devops_authenticate
+```
+*示例*
+```
+curl -X PUT \
+-d "project_id=5988" \
+http://localhost:3000/api/users/devops_authenticate.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id         |是|string |项目id或者项目的标识identifier|
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|0:成功， -1: 失败|
+
+```
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
+#### 激活项目
+```
+POST /api/dev_ops/cloud_accounts/:id/activate
+```
+*示例*
+```
+curl -X POST \
+-d "id=1" \
+-d "project_id=4844" \
+-d "drone_token=xxxxxxxxxx" \
+http://localhost:3000/api/dev_ops/cloud_accounts/1/activate.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id     |是|int |project's id or identifier |
+|id             |是|int |cloud_account's id  |
+|drone_token    |否|string |CI端用户的token值，只有当用户第一次激活时，才需要填写该值  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|0:成功， -1: 失败|
+
+```
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
 #### 获取仓库的.trustie-pipeline.yml
 ```
 GET /api/dev_ops/builds/get_trustie_pipeline
@@ -2433,6 +2544,7 @@ http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
   "content": "..jsaf"
 }
 ```
+---
 
 #### 获取语言列表
 ```

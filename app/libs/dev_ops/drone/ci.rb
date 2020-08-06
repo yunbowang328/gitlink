@@ -20,6 +20,6 @@ class DevOps::Drone::Ci
 
   private
     def cmd
-      "cd ..; cd var/lib/drone/; sqlite3 database.sqlite; .dump; select user_hash from users where user_login=#{gitea_username} "
+      "cd ..; cd var/lib/drone/; sqlite3 database.sqlite; .dump; select user_hash from users where user_login=#{gitea_username};"
     end
 end

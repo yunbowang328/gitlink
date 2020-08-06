@@ -1,7 +1,10 @@
 class DevOps::CloudAccountsController < ApplicationController
+  include Devopsable
+
   before_action :require_login
-  before_action :find_project
+  before_action :auto_load_project
   before_action :devops_authorize!
+  before_action :find_cloud_account, only: %i[activate]
 
   def create
     ActiveRecord::Base.transaction do
@@ -14,8 +17,6 @@ class DevOps::CloudAccountsController < ApplicationController
       else
         cloud_account = DevOps::CloudAccount.new(create_params)
         cloud_account.user = current_user
-        cloud_account.repo_id = @project.repository.id
-        cloud_account.project_id = @project.id
         cloud_account.save!
       end
 
@@ -50,6 +51,7 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### redirect_url: #{redirect_url}"
 
       if result && !result.blank?
+        current_user.set_drone_step!(User::DEVOPS_UNVERIFIED)
         render_ok(redirect_url: redirect_url)
       else
         render_error('激活失败, 请检查你的云服务器信息是否正确.')
@@ -60,12 +62,28 @@ class DevOps::CloudAccountsController < ApplicationController
     render_error(ex.message)
   end
 
+  def activate
+    result =
+      if current_user.devops_has_token?
+        # 已有drone_token的，直接激活项目
+         DevOps::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
+      else
+        # 没有token，说明是第一次激活devops, 需要用户填写token值
+        return render_error('请先在CI服务端做用户认证.') if !current_user.devops_verified?
+        DevOps::Drone::API.new(params[:drone_token], @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
+      end
+
+    if result
+      set_drone_token!(current_user, @cloud_account, params[:drone_token])
+      @project.update_column(:open_devops, true)
+      render_ok
+    else
+      render_error("激活失败，请检查你的token值是否正确.")
+    end
+  end
+
   private
     def devops_params
       params.permit(:account, :secret, :ip_num, :project_id)
-    end
-
-    def find_project
-      @project = Project.find params[:project_id]
     end
 end

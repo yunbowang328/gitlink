@@ -744,11 +744,6 @@ class ApplicationController < ActionController::Base
 		interactor.success? ? render_ok : render_error(interactor.error)
 	end
 
-	# devops 权限验证
-	def devops_authorize!
-		render_forbidden unless @project.owner?(current_user)
-	end
-
   private
 	def object_not_found
 		uid_logger("Missing template or cant't find record, responding with 404")

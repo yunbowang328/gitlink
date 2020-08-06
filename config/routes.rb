@@ -16,7 +16,11 @@ Rails.application.routes.draw do
   resources :edu_settings
   scope '/api' do
     namespace :dev_ops  do
-      resources :cloud_accounts, only: [:create]
+      resources :cloud_accounts, only: [:create] do
+        member do
+          post :activate
+        end
+      end
       resources :languages, only: [:index, :show] do
         collection do
           get :common
@@ -189,11 +193,12 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
+        get :devops
+        put :devops_authenticate
       end
 
       scope module: :users do
-        # resources :courses, only: [:index]
-        resources :projects, only: [:index]
+        # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]
         # 私信
