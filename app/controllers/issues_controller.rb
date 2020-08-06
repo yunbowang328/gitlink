@@ -248,7 +248,19 @@ class IssuesController < ApplicationController
     update_hash = {}
     update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
     update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
-    update_hash.merge!(status_id: params[:status_id]) if params[:status_id].present?
+    # update_hash.merge!(status_id: params[:status_id]) if params[:status_id].present?
+    if params[:status_id].present?
+      status_id = params[:status_id].to_i
+      update_hash.merge!(status_id: status_id)
+      done_ratio = nil
+      case status_id
+      when 1
+        done_ratio = 0
+      when 3
+        done_ratio = 100
+      end
+      update_hash.merge!(done_ratio: done_ratio) if done_ratio
+    end
     # update_hash = params[:issue]
     issue_ids = params[:ids]
     if issue_ids.present?
