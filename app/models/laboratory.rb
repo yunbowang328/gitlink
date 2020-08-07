@@ -22,9 +22,10 @@ class Laboratory < ApplicationRecord
 
   delegate :name, :navbar, :footer, :login_logo_url, :nav_logo_url, :tab_logo_url, :default_navbar, to: :laboratory_setting
 
+  # TODO 域名申请后更改
   def site
     rails_env = EduSetting.get('rails_env')
-    suffix = rails_env && rails_env != 'production' ? ".#{rails_env}.trustie.net" : '.trustie.net'
+    suffix = rails_env && rails_env != 'production' ? "39.105.176.215" : '39.105.176.215'
 
     identifier ? "#{identifier}#{suffix}" : ''
   end
