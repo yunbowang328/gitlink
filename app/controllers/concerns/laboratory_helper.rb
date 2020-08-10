@@ -46,4 +46,8 @@ module LaboratoryHelper
       register_url: "https://www.trustie.net/login?login=false"
     }
   end
+
+  def manager_url
+    {name: '管理', link: "#{EduSetting.get('host_name')/managements}"}
+  end
 end

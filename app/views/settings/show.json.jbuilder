@@ -20,14 +20,16 @@ json.setting do
   # end
 
   nav_bar = default_setting.navbar
-  if User.current.logged?
-    nav_bar[2]["link"] = "/users/#{current_user.login}/projects"
-    nav_bar[2]["hidden"] = false
-  else
-    nav_bar[2]["link"] = ""
-    nav_bar[2]["hidden"] = true
+  # if User.current.logged?
+  #   nav_bar[2]["link"] = "/users/#{current_user.login}/projects"
+  #   nav_bar[2]["hidden"] = false
+  # else
+  #   nav_bar[2]["link"] = ""
+  #   nav_bar[2]["hidden"] = true
+  # end
+  if current_user && current_user.admin?
+    nav_bar << manager_url
   end
-
   json.name default_setting.name
   json.nav_logo_url default_setting.nav_logo_url&.[](1..-1)
   json.login_logo_url default_setting.login_logo_url&.[](1..-1)
