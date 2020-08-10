@@ -8,7 +8,7 @@ module LaboratoryHelper
     helper_method :default_setting
     helper_method :default_yun_session
     helper_method :default_course_links
-    helper_method :manager_url
+    helper_method :manager_main_site_url
   end
 
   def current_laboratory
@@ -48,7 +48,7 @@ module LaboratoryHelper
     }
   end
 
-  def manager_url
-    {name: '管理', link: "#{EduSetting.get('host_name')}/managements"}
+  def manager_main_site_url
+    {name: '管理', link: "#{EduSetting.get('host_main_site')}/managements"}
   end
 end

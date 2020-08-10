@@ -28,7 +28,7 @@ json.setting do
   #   nav_bar[2]["hidden"] = true
   # end
   if current_user && current_user.admin?
-    nav_bar << manager_url
+    nav_bar << manager_main_site_url
   end
   json.name default_setting.name
   json.nav_logo_url default_setting.nav_logo_url&.[](1..-1)
