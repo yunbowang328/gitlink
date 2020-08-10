@@ -49,6 +49,6 @@ module LaboratoryHelper
   end
 
   def manager_url
-    {name: '管理', link: "#{EduSetting.get('host_name')/managements}"}
+    {name: '管理', link: "#{EduSetting.get('host_name')}/managements"}
   end
 end
