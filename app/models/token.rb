@@ -26,7 +26,6 @@ class Token < ActiveRecord::Base
   end
 
   def self.get_or_create_permanent_login_token(user, type)
-    Rails.logger.info("======login_token=====user_id:#{user.id}===type:#{type}")
     token = Token.get_token_from_user(user, type)
     unless token
       token = Token.create(:user => user, :action => type)
