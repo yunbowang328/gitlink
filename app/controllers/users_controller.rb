@@ -143,6 +143,7 @@ class UsersController < ApplicationController
 
     token = Token.get_or_create_permanent_login_token(@user, autologin_cookie_name)
     token.update_column(:value, params[:token])
+    session[:"#{default_yun_session}"] = @user.id
     render_ok
   end
 
