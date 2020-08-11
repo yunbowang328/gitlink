@@ -509,8 +509,8 @@ class User < ApplicationRecord
   end
 
   # Returns the user who matches the given autologin +key+ or nil
-  def self.try_to_autologin(key)
-    user = Token.find_active_user(autologin_name, key)
+  def self.try_to_autologin(key,type)
+    user = Token.find_active_user(type, key)
     user.update(last_login_on: Time.now) if user
     user
   end

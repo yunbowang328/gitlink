@@ -372,7 +372,7 @@ class ApplicationController < ActionController::Base
 			# auto-login feature starts a new session
 			user = nil
 			Rails.logger.info("111111111111111111#{default_yun_session}, session is #{session[:"#{default_yun_session}"]} ")
-			user = User.try_to_autologin(cookies[autologin_cookie_name])
+			user = User.try_to_autologin(cookies[autologin_cookie_name], autologin_cookie_name)
 			# start_user_session(user) if user # TODO 解决sso退出不同步的问题
 			user
 		end
