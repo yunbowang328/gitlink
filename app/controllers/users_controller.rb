@@ -140,9 +140,8 @@ class UsersController < ApplicationController
   # 其他平台登录后，必须将token同步到forge平台，实现sso登录功能
   def sync_token
     return render_error('未找相关用户!')  unless @user
-    return render_error('缺少参数!')  unless params[:type]
 
-    token = Token.get_or_create_permanent_login_token(@user, params[:type])
+    token = Token.get_or_create_permanent_login_token(@user)
     token.update_column(:value, params[:token])
     render_ok
   end
