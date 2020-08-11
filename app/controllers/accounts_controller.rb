@@ -256,23 +256,23 @@ class AccountsController < ApplicationController
     # UserDayCertification.create(user_id: user.id, status: 1)
   end
 
-  def set_autologin_cookie(user)
-    token = Token.get_or_create_permanent_login_token(user, "autologin")
-    cookie_options = {
-                      :value => token.value,
-                      :expires => 1.month.from_now,
-                      :path => '/',
-                      :secure => false,
-                      :httponly => true
-                     }
-    if edu_setting('cookie_domain').present?
-      cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
-    end
-    cookies[autologin_cookie_name] = cookie_options
-    cookies.signed[:user_id] ||= user.id
+  # def set_autologin_cookie(user)
+  #   token = Token.get_or_create_permanent_login_token(user, "autologin_forge_military")
+  #   cookie_options = {
+  #                     :value => token.value,
+  #                     :expires => 1.month.from_now,
+  #                     :path => '/',
+  #                     :secure => false,
+  #                     :httponly => true
+  #                    }
+  #   if edu_setting('cookie_domain').present?
+  #     cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
+  #   end
+  #   cookies[autologin_cookie_name] = cookie_options
+  #   cookies.signed[:user_id] ||= user.id
 
-    logger.info("cookies is #{cookies} ======> #{cookies.signed[:user_id]} =====> #{cookies[autologin_cookie_name]}")
-  end
+  #   logger.info("cookies is #{cookies} ======> #{cookies.signed[:user_id]} =====> #{cookies[autologin_cookie_name]}")
+  # end
 
   def logout
     Rails.logger.info("########___logout_current_user____________########{current_user.try(:id)}")
