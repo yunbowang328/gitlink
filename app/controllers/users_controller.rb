@@ -141,7 +141,7 @@ class UsersController < ApplicationController
   def sync_token
     return render_error('未找相关用户!')  unless @user
 
-    token = Token.get_or_create_permanent_login_token(@user)
+    token = Token.get_or_create_permanent_login_token(@user, autologin_cookie_name)
     token.update_column(:value, params[:token])
     render_ok
   end
