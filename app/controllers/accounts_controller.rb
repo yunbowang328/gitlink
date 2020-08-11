@@ -264,7 +264,7 @@ class AccountsController < ApplicationController
                       :path => '/',
                       :secure => false,
                       :httponly => true,
-                      :domain => "/"
+                      :domain => "123.59.135.93"
                      }
     # if edu_setting('cookie_domain').present?
     #   cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
