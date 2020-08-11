@@ -10,7 +10,8 @@ module LoginHelper
   end
 
   def set_autologin_cookie(user)
-    token = Token.get_or_create_permanent_login_token(user, autologin_cookie_name)
+    Rails.logger.info("set_cookie_user_id is=======> #{user.id}")
+    token = Token.get_or_create_permanent_login_token(user, "autologin")
     cookie_options = {
       :value => token.value,
       :expires => 1.month.from_now,
