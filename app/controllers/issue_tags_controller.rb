@@ -1,7 +1,7 @@
 class IssueTagsController < ApplicationController
   before_action :require_login, except: [:index]
-  before_action :find_project_with_id
-  before_action :set_project
+  before_action :load_repository
+  before_action :set_user
   before_action :check_issue_permission, except: :index
   before_action :set_issue_tag, only: [:edit, :update, :destroy]
 
@@ -121,13 +121,8 @@ class IssueTagsController < ApplicationController
 
   private
 
-  def set_project
-    # @project = Project.find_by_identifier! params[:project_id]
-    @repository = @project.repository
+  def set_user
     @user = @project.owner
-    normal_status(-1, "项目不存在") unless @project.present?
-    normal_status(-1, "仓库不存在") unless @repository.present?
-    normal_status(-1, "用户不存在") unless @user.present?
   end
 
   def check_issue_permission

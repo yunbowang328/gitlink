@@ -5,6 +5,7 @@ class User < ApplicationRecord
   include Likeable
   include BaseModel
   include ProjectOperable
+  include ProjectAbility
   # include Searchable::Dependents::User
 
   # Account statuses
@@ -70,8 +71,8 @@ class User < ApplicationRecord
   # 关注
   has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
   has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-  
-  has_many :watchers, as: :watchable, dependent: :destroy 
+
+  has_many :watchers, as: :watchable, dependent: :destroy
 
   # 认证
   has_many :apply_user_authentication

@@ -160,7 +160,7 @@ class Project < ApplicationRecord
     member&.roles&.last&.name || permission
   end
 
-  def fork_project 
+  def fork_project
     Project.find_by(id: self.forked_from_project_id)
   end
 
@@ -168,4 +168,15 @@ class Project < ApplicationRecord
     joins(:members).where(members: { user_id: member_user_id})
   end
 
+  def self.find_with_namespace(namespace_path, identifier)
+    logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
+
+    user = User.find_by_login namespace_path
+    return nil if user.blank?
+
+    project = user.projects.find_by(identifier: identifier)
+
+    return nil if project.blank?
+    project
+  end
 end
