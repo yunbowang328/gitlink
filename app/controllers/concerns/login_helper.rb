@@ -17,11 +17,12 @@ module LoginHelper
       :expires => 1.month.from_now,
       :path => '/',
       :secure => false,
-      :httponly => false
+      :httponly => false,
+      :domain => "/"
     }
-    if edu_setting('cookie_domain').present?
-      cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
-    end
+    # if edu_setting('cookie_domain').present?
+    #   cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
+    # end
     unless  cookies[autologin_cookie_name].present?
       cookies[autologin_cookie_name] = cookie_options
     end
