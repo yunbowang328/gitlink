@@ -263,12 +263,11 @@ class AccountsController < ApplicationController
                       :expires => 1.month.from_now,
                       :path => '/',
                       :secure => false,
-                      :httponly => true,
-                      :domain => "123.59.135.93"
+                      :httponly => true
                      }
-    # if edu_setting('cookie_domain').present?
-    #   cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
-    # end
+    if edu_setting('cookie_domain').present?
+      cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
+    end
     cookies[autologin_cookie_name] = cookie_options
     cookies.signed[:user_id] ||= user.id
 
