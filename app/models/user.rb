@@ -675,7 +675,7 @@ class User < ApplicationRecord
   end
 
   def autologin_name 
-    EduSetting.get('autologin_cookie_name') || "autologin_forge_military"
+    EduSetting.get('autologin_cookie_name') || "autologin"
   end
 
   def set_laboratory
