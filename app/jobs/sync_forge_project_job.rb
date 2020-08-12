@@ -37,7 +37,7 @@ class SyncForgeProjectJob < ApplicationJob
   private 
 
   def rand_user 
-    user_ids = User.select(:id, :type).where(type: "User").pluck(:id)
+    user_ids = User.select(:id, :type, :gitea_token, :gitea_uid).where("gitea_token is not null and gitea_uid is not null and type = ?", "User").pluck(:id)
     range_user_id = user_ids[rand(user_ids.length-1)]
     rand_sync_user = User.find_by_id(range_user_id)  #生成随机用户
     unless rand_sync_user.present?
