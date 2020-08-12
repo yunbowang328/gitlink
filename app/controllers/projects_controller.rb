@@ -103,6 +103,7 @@ class ProjectsController < ApplicationController
     json_response(@project)
   end
 
+
   private
   def project_params
     params.permit(:user_id, :name, :description, :repository_name,
@@ -115,7 +116,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_public?
-    return if @project.is_public?
+    return if @project.is_public
 
     if current_user
       return if current_user.admin? || @project.member?(current_user.id)
