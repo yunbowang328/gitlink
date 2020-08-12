@@ -1,6 +1,7 @@
 class PullRequestsController < ApplicationController
   before_action :require_login, except: [:index, :show]
   before_action :load_repository
+  before_action :set_user, only: [:new, :get_branches]
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos]
   # before_action :get_relatived, only: [:edit]
   include TagChosenHelper
@@ -233,6 +234,10 @@ class PullRequestsController < ApplicationController
 
 
   private
+  def set_user
+    @user = @project.owner
+  end
+
   def find_pull_request
     @pull_request = PullRequest.find_by_id(params[:id])
     @issue = @pull_request&.issue
