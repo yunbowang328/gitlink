@@ -25,6 +25,7 @@ class SyncForgeProjectJob < ApplicationJob
       Rails.logger.info("=======end to sync forge projects")
     rescue => e
       Rails.logger.info("=======sync forge projects has errors: #{e}")
+      raise ActiveRecord::Rollback
     end
   end
 
