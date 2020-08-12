@@ -12,7 +12,7 @@ class SyncProjectMilitaryJob < ApplicationJob
       repository: repository.as_json(except: %w(id project_id login user_id)), 
       project_socre: project_socre.as_json(except: %w(id project_id))
     }
-    url = "http://47.93.212.82:49999/api/sync_forge/sync_projects"  #trustie上的相关路由
+    url = "http://39.105.176.215:49999/api/sync_forge/sync_projects"  #trustie上的相关路由
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.hostname, uri.port)
     http.use_ssl = false
