@@ -15,7 +15,7 @@ class SyncForgeProjectJob < ApplicationJob
         if project.save 
           repository = Repository.new(repository_params.merge({ project_id: project.id, user_id: get_rand_user.id, login: get_rand_user.login }))
           if repository.save   # 同步镜像
-            repository.sync_mirror!
+            # repository.sync_mirror!
             SyncMirroredRepositoryJob.perform_later(repository.id, get_rand_user.id)
           end
           project_score = ProjectScore.new(project_socre_params.merge({project_id: project.id}))
