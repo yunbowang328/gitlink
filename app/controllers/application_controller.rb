@@ -750,7 +750,7 @@ class ApplicationController < ActionController::Base
 			@project
     elsif current_user.is_a?(AnonymousUser)
 			logger.info "###########：This is AnonymousUser"
-			@project = nil if !@project&.is_public?
+			@project = nil if !@project.is_public?
 			render_forbidden and return
     else
 			logger.info "###########：project not found"
