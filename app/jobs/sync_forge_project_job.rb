@@ -13,11 +13,16 @@ class SyncForgeProjectJob < ApplicationJob
         project_params = project_params.merge({user_id: get_rand_user.id })
         project = Project.new(project_params)
         if project.save 
-          repository = Repository.new(repository_params.merge({ project_id: project.id, user_id: get_rand_user.id, login: get_rand_user.login }))
-          if repository.save   # 同步镜像
-            # repository.sync_mirror!
-            SyncMirroredRepositoryJob.perform_later(repository.id, get_rand_user.id)
-          end
+          repository_params = {
+            hidden: false,
+            identifier: repository_params[:identifier],
+            mirror_url: repository_params[:url],
+            user_id: get_rand_user.id,
+            login: get_rand_user.login,
+            password: "",
+            is_mirror: false
+          }
+          Repositories::MigrateService.new(get_rand_user, project, repository_params).call
           project_score = ProjectScore.new(project_socre_params.merge({project_id: project.id}))
           project_score.save
         end
