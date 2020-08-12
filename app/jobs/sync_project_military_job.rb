@@ -6,11 +6,11 @@ class SyncProjectMilitaryJob < ApplicationJob
 
   def perform(project, repository, project_socre)
     Rails.logger.info("============begin to sync project ===========")
-    project_except_params = %w(praises_count watchers_count issues_count pull_requests_count versions_count issue_tags_count closed_issues_count)
+    project_except_params = %w(id user_id praises_count watchers_count issues_count pull_requests_count versions_count issue_tags_count closed_issues_count)
     project_params = {
       project: project.as_json(except: project_except_params),
-      repository: repository.as_json, 
-      project_socre: project_socre.as_json
+      repository: repository.as_json(except: %w(id project_id login user_id)), 
+      project_socre: project_socre.as_json(except: %w(id project_id))
     }
     url = "http://47.93.212.82:49999/sync_forge/sync_projects"  #trustie上的相关路由
     uri = URI.parse(url)
