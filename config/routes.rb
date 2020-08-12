@@ -235,36 +235,16 @@ Rails.application.routes.draw do
           to: 'project_trends#index',
           as: :project_activity
         )
+      end
 
-        get(
-          '/branches',
-          to: 'projects#branches',
-          as: :project_branches
-        )
-
-        get(
-          '/simple',
-          to: 'projects#simple',
-          as: :project_simple
-        )
-
-        get(
-          '/watchers',
-          to: 'projects#watch_users',
-          as: :project_watchers
-        )
-
-        get(
-          '/stargazers',
-          to: 'projects#praise_users',
-          as: :project_stargazers
-        )
-
-        get(
-          '/members',
-          to: 'projects#fork_users',
-          as: :project_members
-        )
+      resource :projects, path: '/' do
+        member do
+          get :branches
+          get :simple
+          get :watchers, to: 'projects#watch_users'
+          get :stargazers, to: 'projects#praise_users'
+          get :members, to: 'projects#fork_users'
+        end
       end
 
       resource :repositories, path: '/', only: [:show, :create, :edit] do
