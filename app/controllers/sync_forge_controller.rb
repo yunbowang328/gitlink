@@ -2,7 +2,10 @@ class SyncForgeController < ApplicationController
   # before_action :check_token
 
   def sync_projects
-    project_fork = params[:sync_params]
+    project_params = params[:project]
+    repository_params = params[:repository]
+    project_socre = params[:project_socre]
+
   end
 
   # def create 
