@@ -39,7 +39,7 @@ class SyncForgeProjectJob < ApplicationJob
   def rand_user 
     user_ids = User.select(:id, :type).where(type: "User").pluck(:id)
     range_user_id = user_ids[rand(user_ids.length-1)]
-    rand_sync_user = User.select(:id, :login).find_by_id(range_user_id)  #生成随机用户
+    rand_sync_user = User.find_by_id(range_user_id)  #生成随机用户
     unless rand_sync_user.present?
       rand_user
     end

@@ -2,7 +2,7 @@ require 'uri'
 require 'net/http'
 
 class SyncForgeProjectsRake
-  # 运行示例: 检查哪些项目的repo不存在，bundle exec rails runner "SyncForgeProjectsRake.new.call(5)"
+  # 运行示例: 检查哪些项目的repo不存在，bundle exec rails runner "SyncForgeProjectsRake.new.call(5)" -e production
   
     def call(count)
      
