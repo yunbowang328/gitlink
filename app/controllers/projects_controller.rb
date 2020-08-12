@@ -116,7 +116,7 @@ class ProjectsController < ApplicationController
   end
 
   def project_public?
-    return if @project.is_public?
+    return if @project.is_public
 
     if current_user
       return if current_user.admin? || @project.member?(current_user.id)

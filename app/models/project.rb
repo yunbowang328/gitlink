@@ -122,7 +122,7 @@ class Project < ApplicationRecord
 
 
   def can_visited?
-    is_public? || User.current.admin? || member?(User.current)
+    is_public || User.current.admin? || member?(User.current)
   end
 
   def releases_size(current_user_id, type)
