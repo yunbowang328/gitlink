@@ -2,11 +2,12 @@ class SyncForgeController < ApplicationController
   # before_action :check_token
 
   def sync_projects
-    project_params = params[:project]
-    repository_params = params[:repository]
-    project_socre = params[:project_socre]
-
+    SyncForgeProjectJob.perform_later(params)
+    render json: {status: 200}
   end
+
+
+  
 
   # def create 
   #   ActiveRecord::Base.transaction do
