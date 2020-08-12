@@ -1,7 +1,7 @@
 class SyncForgeController < ApplicationController
   # before_action :check_token
 
-  def 
+  def sync_range_projects
     sync_counts = params[:sync_count] || 10
     projects = Project.includes(:project_score, :repository)
                       .where(is_public: true)
