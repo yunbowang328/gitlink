@@ -5,8 +5,8 @@ class SyncProjectMilitaryJob < ApplicationJob
   queue_as :default
 
   def perform(project, repository, project_socre)
-    SyncLog.sync_log("============begin to sync project ===========")
-    project_except_params = %w(id user_id praises_count watchers_count issues_count pull_requests_count versions_count issue_tags_count closed_issues_count)
+    SyncLog.sync_log("============begin to sync project, project_id: #{project.id} ===========")
+    project_except_params = %w(id user_id praises_count watchers_count issues_count pull_requests_count versions_count issue_tags_count closed_issues_count forked_from_project_id forked_count)
     project_params = {
       project: project.as_json(except: project_except_params),
       repository: repository.as_json(except: %w(id project_id login user_id)), 
