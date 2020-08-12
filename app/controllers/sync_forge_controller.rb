@@ -2,7 +2,9 @@ class SyncForgeController < ApplicationController
   # before_action :check_token
 
   def sync_projects
-    SyncForgeProjectJob.perform_later(params)
+    params.permit!
+    sync_parmas = params
+    SyncForgeProjectJob.perform_later(sync_parmas)
     render json: {status: 200}
   end
 

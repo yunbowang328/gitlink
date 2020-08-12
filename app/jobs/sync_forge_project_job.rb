@@ -1,13 +1,13 @@
 class SyncForgeProjectJob < ApplicationJob
   queue_as :default
 
-  def perform(params)
-    params.permit!
-    Rails.logger.info("=======begin to sync forge projects, and params: #{params}")
+  def perform(sync_parmas)
+    sync_parmas.permit!
+    Rails.logger.info("=======begin to sync forge projects, and sync_parmas: #{sync_parmas}")
     get_rand_user = rand_user
-    project_params = params[:project]
-    repository_params = params[:repository]
-    project_socre_params = params[:project_socre]
+    project_params = sync_parmas[:project]
+    repository_params = sync_parmas[:repository]
+    project_socre_params = sync_parmas[:project_socre]
     begin
       unless Project.select(:identifier,:user_id).exists?(identifier: project_params[:identifier], user_id: get_rand_user.id)
         project_params = project_params.merge({user_id: get_rand_user.id })
