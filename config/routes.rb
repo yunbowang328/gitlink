@@ -155,23 +155,6 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :repositories, only: [:index, :show, :edit] do
-      member do
-        get :entries
-        match :sub_entries, :via => [:get, :put]
-        get :commits
-        post :files
-        get :tags
-        post :create_file
-        put :update_file
-        delete :delete_file
-        post :repo_hook
-        post :sync_mirror
-        get :top_counts
-        get 'commits/:sha', to: 'repositories#commit', as: 'commit'
-      end
-    end
-
     resources :users_for_private_messages, only: [:index]
 
     resources :files, only: [:index, :show, :update] do
@@ -286,12 +269,19 @@ Rails.application.routes.draw do
 
       resource :repositories, path: '/', only: [:show, :create, :edit] do
         member do
-          get 'archive'
-          get 'top_counts'
-          get 'entries'
-          get 'sub_entries'
-          get 'commits'
-          get 'tags'
+          get :archive
+          get :top_counts
+          get :entries
+          match :sub_entries, :via => [:get, :put]
+          get :commits
+          get :tags
+          post :create_file
+          put :update_file
+          delete :delete_file
+          post :repo_hook
+          post :sync_mirror
+          get :top_counts
+          get 'commits/:sha', to: 'repositories#commit', as: 'commit'
         end
       end
 
