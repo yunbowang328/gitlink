@@ -5,7 +5,7 @@ class SyncProjectMilitaryJob < ApplicationJob
   queue_as :default
 
   def perform(project, repository, project_socre)
-    Rails.logger.info("============begin to sync project ===========")
+    SyncLog.sync_log("============begin to sync project ===========")
     project_except_params = %w(id user_id praises_count watchers_count issues_count pull_requests_count versions_count issue_tags_count closed_issues_count)
     project_params = {
       project: project.as_json(except: project_except_params),
@@ -17,6 +17,6 @@ class SyncProjectMilitaryJob < ApplicationJob
     http = Net::HTTP.new(uri.hostname, uri.port)
     http.use_ssl = false
     response = http.send_request('POST', uri.path, project_params.to_json, {'Content-Type' => 'application/json'})
-    Rails.logger.info("============end to sync project, status: #{response.code} ===========")
+    SyncLog.sync_log("============end to sync project, status: #{response.code} ===========")
   end
 end
