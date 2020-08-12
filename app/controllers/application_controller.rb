@@ -740,8 +740,8 @@ class ApplicationController < ActionController::Base
 
 	# projects
 	def load_project
-    namespace = params[:namespace_id]
-    id = params[:project_id] || params[:id]
+    namespace = params[:owner]
+    id = params[:repo] || params[:id]
 
     @project = Project.find_with_namespace(namespace, id)
 
