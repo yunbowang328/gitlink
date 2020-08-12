@@ -9,14 +9,14 @@ class SyncForgeProjectJob < ApplicationJob
     repository_params = sync_parmas[:repository]
     project_socre_params = sync_parmas[:project_socre]
     begin
-      unless Project.select(:identifier,:user_id).exists?(identifier: project_params[:identifier], user_id: get_rand_user.id)
+      unless Project.select(:identifier).exists?(identifier: project_params[:identifier])
         project_params = project_params.merge({user_id: get_rand_user.id })
         project = Project.new(project_params)
         if project.save 
           repository_params = {
             hidden: false,
             identifier: repository_params[:identifier],
-            mirror_url: repository_params[:url],
+            mirror_url: repository_params[:url].to_s.gsub("https://gitea.", "https://git."),
             user_id: get_rand_user.id,
             login: get_rand_user.login,
             password: "",
