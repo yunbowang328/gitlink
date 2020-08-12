@@ -82,164 +82,6 @@ Rails.application.routes.draw do
       end
     end
 
-    # Project Area START
-    scope "/:owner/:repo" do
-      scope do
-        get(
-          '/activity',
-          to: 'project_trends#index',
-          as: :project_activity
-        )
-
-        get(
-          '/branches',
-          to: 'projects#branches',
-          as: :project_branches
-        )
-
-        get(
-          '/simple',
-          to: 'projects#simple',
-          as: :project_simple
-        )
-
-        get(
-          '/watchers',
-          to: 'projects#watch_users',
-          as: :project_watchers
-        )
-
-        get(
-          '/stargazers',
-          to: 'projects#praise_users',
-          as: :project_stargazers
-        )
-
-        get(
-          '/members',
-          to: 'projects#fork_users',
-          as: :project_members
-        )
-      end
-
-      resource :repositories, path: '/', only: [:show, :create, :edit] do
-        member do
-          get 'archive'
-          get 'top_counts'
-          get 'entries'
-          get 'sub_entries'
-          get 'commits'
-          get 'tags'
-        end
-      end
-
-      resources :issues do
-        collection do
-          get :commit_issues
-          get :index_chosen
-          post :clean
-          post :series_update
-        end
-        member do
-         post :copy
-         post :close_issue
-         post :lock_issue
-        end
-      end
-
-      resources :pull_requests, :path => :pulls, except: [:destroy] do
-        member do
-          post :pr_merge
-          # post :check_merge
-          post :refuse_merge
-        end
-        collection do
-          post :check_can_merge
-          get :create_merge_infos
-          get :get_branches
-        end
-      end
-
-      resources :versions, :path => :milestones do
-        member do
-          post :update_status
-        end
-      end
-
-      resources :members, :path => :collaborators, only: [:index, :create] do
-        collection do
-          delete :remove
-          put :change_role
-        end
-      end
-
-      resources :hooks
-      resources :forks, only: [:create]
-      resources :project_trends, :path => :activity, only: [:index, :create]
-      resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
-      resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
-
-      scope module: :projects do
-        scope do
-          get(
-            '/blob/*id/diff',
-            to: 'blob#diff',
-            constraints: { id: /.+/, format: false },
-            as: :blob_diff
-          )
-          get(
-            '/blob/*id',
-            to: 'blob#show',
-            constraints: { id: /.+/, format: false },
-            as: :blob
-          )
-          delete(
-            '/blob/*id',
-            to: 'blob#destroy',
-            constraints: { id: /.+/, format: false }
-          )
-          put(
-            '/blob/*id',
-            to: 'blob#update',
-            constraints: { id: /.+/, format: false }
-          )
-          post(
-            '/blob/*id',
-            to: 'blob#create',
-            constraints: { id: /.+/, format: false }
-          )
-        end
-
-        scope do
-          get(
-            '/raw/*id',
-            to: 'raw#show',
-            constraints: { id: /.+/, format: /(html|js)/ },
-            as: :raw
-          )
-        end
-
-        scope do
-          get(
-            '/blame/*id',
-            to: 'blame#show',
-            constraints: { id: /.+/, format: /(html|js)/ },
-            as: :blame
-          )
-        end
-
-        scope do
-          get(
-            '/tree/*id',
-            to: 'tree#show',
-            constraints: { id: /.+/, format: /(html|js)/ },
-            as: :tree
-          )
-        end
-      end
-    end
-    # Project Area END
-
     resources :accounts do
       collection do
         post :login
@@ -676,4 +518,163 @@ Rails.application.routes.draw do
 
   ## react用
   get '*path', to: 'main#index', constraints: ReactConstraint.new
+
+
+  # Project Area START
+  scope "/:owner/:repo" do
+    scope do
+      get(
+        '/activity',
+        to: 'project_trends#index',
+        as: :project_activity
+      )
+
+      get(
+        '/branches',
+        to: 'projects#branches',
+        as: :project_branches
+      )
+
+      get(
+        '/simple',
+        to: 'projects#simple',
+        as: :project_simple
+      )
+
+      get(
+        '/watchers',
+        to: 'projects#watch_users',
+        as: :project_watchers
+      )
+
+      get(
+        '/stargazers',
+        to: 'projects#praise_users',
+        as: :project_stargazers
+      )
+
+      get(
+        '/members',
+        to: 'projects#fork_users',
+        as: :project_members
+      )
+    end
+
+    resource :repositories, path: '/', only: [:show, :create, :edit] do
+      member do
+        get 'archive'
+        get 'top_counts'
+        get 'entries'
+        get 'sub_entries'
+        get 'commits'
+        get 'tags'
+      end
+    end
+
+    resources :issues do
+      collection do
+        get :commit_issues
+        get :index_chosen
+        post :clean
+        post :series_update
+      end
+      member do
+       post :copy
+       post :close_issue
+       post :lock_issue
+      end
+    end
+
+    resources :pull_requests, :path => :pulls, except: [:destroy] do
+      member do
+        post :pr_merge
+        # post :check_merge
+        post :refuse_merge
+      end
+      collection do
+        post :check_can_merge
+        get :create_merge_infos
+        get :get_branches
+      end
+    end
+
+    resources :versions, :path => :milestones do
+      member do
+        post :update_status
+      end
+    end
+
+    resources :members, :path => :collaborators, only: [:index, :create] do
+      collection do
+        delete :remove
+        put :change_role
+      end
+    end
+
+    resources :hooks
+    resources :forks, only: [:create]
+    resources :project_trends, :path => :activity, only: [:index, :create]
+    resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
+    resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+
+    scope module: :projects do
+      scope do
+        get(
+          '/blob/*id/diff',
+          to: 'blob#diff',
+          constraints: { id: /.+/, format: false },
+          as: :blob_diff
+        )
+        get(
+          '/blob/*id',
+          to: 'blob#show',
+          constraints: { id: /.+/, format: false },
+          as: :blob
+        )
+        delete(
+          '/blob/*id',
+          to: 'blob#destroy',
+          constraints: { id: /.+/, format: false }
+        )
+        put(
+          '/blob/*id',
+          to: 'blob#update',
+          constraints: { id: /.+/, format: false }
+        )
+        post(
+          '/blob/*id',
+          to: 'blob#create',
+          constraints: { id: /.+/, format: false }
+        )
+      end
+
+      scope do
+        get(
+          '/raw/*id',
+          to: 'raw#show',
+          constraints: { id: /.+/, format: /(html|js)/ },
+          as: :raw
+        )
+      end
+
+      scope do
+        get(
+          '/blame/*id',
+          to: 'blame#show',
+          constraints: { id: /.+/, format: /(html|js)/ },
+          as: :blame
+        )
+      end
+
+      scope do
+        get(
+          '/tree/*id',
+          to: 'tree#show',
+          constraints: { id: /.+/, format: /(html|js)/ },
+          as: :tree
+        )
+      end
+    end
+  end
+  # Project Area END
 end
