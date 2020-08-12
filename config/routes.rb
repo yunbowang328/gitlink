@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'admin_constraint'
 
-  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
-
+  # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+  mount Sidekiq::Web => '/admins/sidekiq'
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
 
