@@ -103,6 +103,7 @@ class ProjectsController < ApplicationController
     json_response(@project)
   end
 
+
   private
   def project_params
     params.permit(:user_id, :name, :description, :repository_name,
