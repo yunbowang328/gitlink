@@ -2,7 +2,7 @@ class SyncForgeProjectJob < ApplicationJob
   queue_as :default
 
   def perform(sync_parmas)
-    sync_parmas.permit!
+    # sync_parmas.permit!
     Rails.logger.info("=======begin to sync forge projects, and sync_parmas: #{sync_parmas}")
     get_rand_user = rand_user
     project_params = sync_parmas[:project]
