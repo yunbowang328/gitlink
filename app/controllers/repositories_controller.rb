@@ -66,7 +66,7 @@ class RepositoriesController < ApplicationController
   end
 
   def create_file
-    interactor = Gitea::CreateFileInteractor.call(current_user, content_params)
+    interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @project.owner.login, content_params)
     if interactor.success?
       @file = interactor.result
       create_new_pr(params)
@@ -76,7 +76,7 @@ class RepositoriesController < ApplicationController
   end
 
   def update_file
-    interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
+    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, @project.owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       create_new_pr(params)
@@ -87,7 +87,7 @@ class RepositoriesController < ApplicationController
   end
 
   def delete_file
-    interactor = Gitea::DeleteFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
+    interactor = Gitea::DeleteFileInteractor.call(current_user.gitea_token, @project.owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       render_result(1, "文件删除成功")
