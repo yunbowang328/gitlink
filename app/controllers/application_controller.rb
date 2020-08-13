@@ -728,11 +728,6 @@ class ApplicationController < ActionController::Base
 		render_not_found("未找到’#{project}’相关的项目") unless @project
 	end
 
-	def find_project_with_identifier
-		@project = Project.find_by_identifier! params[:id]
-		render_not_found("未找到’#{params[:id]}’相关的项目") unless @project
-	end
-
 	def find_project_with_id
 		@project = Project.find(params[:project_id] || params[:id])
 	rescue Exception => e
@@ -742,6 +737,32 @@ class ApplicationController < ActionController::Base
 
 	def render_response(interactor)
 		interactor.success? ? render_ok : render_error(interactor.error)
+	end
+
+	# projects
+	def load_project
+    namespace = params[:owner]
+    id = params[:repo] || params[:id]
+
+    @project = Project.find_with_namespace(namespace, id)
+
+    if @project and current_user.can_read_project?(@project)
+			logger.info "###########： has project and can read project"
+			@project
+    elsif current_user.is_a?(AnonymousUser)
+			logger.info "###########：This is AnonymousUser"
+			@project = nil if !@project.is_public?
+			render_forbidden and return
+    else
+			logger.info "###########：project not found"
+      @project = nil
+      render_not_found and return
+    end
+    @project
+	end
+
+	def load_repository
+		@repository ||= load_project.repository
 	end
 
   private

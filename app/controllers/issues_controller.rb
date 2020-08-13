@@ -1,7 +1,7 @@
 class IssuesController < ApplicationController
   before_action :require_login, except: [:index, :show, :index_chosen]
-  before_action :find_project_with_id
-  before_action :set_project_and_user
+  before_action :load_project
+  before_action :set_user
   before_action :check_issue_permission
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
@@ -16,7 +16,7 @@ class IssuesController < ApplicationController
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
-    
+
     @all_issues_size = issues.size
     @open_issues_size = issues.where.not(status_id: 5).size
     @close_issues_size = issues.where(status_id: 5).size
@@ -281,7 +281,19 @@ class IssuesController < ApplicationController
     update_hash = {}
     update_hash.merge!(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present?
     update_hash.merge!(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present?
-    update_hash.merge!(status_id: params[:status_id]) if params[:status_id].present?
+    # update_hash.merge!(status_id: params[:status_id]) if params[:status_id].present?
+    if params[:status_id].present?
+      status_id = params[:status_id].to_i
+      update_hash.merge!(status_id: status_id)
+      done_ratio = nil
+      case status_id
+      when 1
+        done_ratio = 0
+      when 3
+        done_ratio = 100
+      end
+      update_hash.merge!(done_ratio: done_ratio) if done_ratio
+    end
     # update_hash = params[:issue]
     issue_ids = params[:ids]
     if issue_ids.present?
@@ -371,11 +383,8 @@ class IssuesController < ApplicationController
   end
 
   private
-  def set_project_and_user
-    # @project = Project.find_by_identifier(params[:project_id]) || (Project.find params[:project_id]) || (Project.find params[:id])
+  def set_user
     @user = @project&.owner
-    # normal_status(-1, "项目不存在") unless @project.present?
-    normal_status(-1, "用户不存在") unless @user.present?
   end
 
   def check_project_public

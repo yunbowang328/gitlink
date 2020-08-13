@@ -2,8 +2,8 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
-  before_action :require_login, except: %i[index branches group_type_list simple]
-  before_action :find_project_with_id, only: %i[show branches update destroy fork_users praise_users watch_users]
+  before_action :require_login, except: %i[index branches group_type_list simple show]
+  before_action :load_project, except: %i[index group_type_list migrate]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
 
@@ -100,9 +100,9 @@ class ProjectsController < ApplicationController
   end
 
   def simple
-    project = Project.includes(:owner, :repository).select(:id, :name, :identifier, :user_id, :project_type, :open_devops).find params[:id]
-    json_response(project)
+    json_response(@project)
   end
+
 
   private
   def project_params

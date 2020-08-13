@@ -1,6 +1,6 @@
 class VersionsController < ApplicationController
   before_action :require_login, except: [:index, :show]
-  before_action :find_project_with_id
+  before_action :load_repository
   before_action :check_issue_permission, except: [:show, :index]
   before_action :set_version, only: [:edit, :update, :destroy, :show,:update_status]
 

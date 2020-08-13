@@ -1,6 +1,6 @@
 json.commit do
   json.sha commit['sha']
-  json.url EduSetting.get('host_name') + commit_repository_path(project.repository, commit['sha'])
+  # json.url EduSetting.get('host_name') + commit_repository_path(project.repository, commit['sha'])
   json.message commit['commit']['message']
   json.author commit['commit']['author']
   json.committer commit['commit']['committer']
