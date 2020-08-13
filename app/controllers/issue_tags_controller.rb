@@ -38,12 +38,12 @@ class IssueTagsController < ApplicationController
           begin
             issue_tag = IssueTag.new(tag_params.merge(project_id: @project.id, user_id: current_user.id))
             if issue_tag.save
-              gitea_tag = Gitea::Labels::CreateService.new(current_user, @repository.try(:identifier), tag_params).call
-              if gitea_tag && issue_tag.update_attributes(gid: gitea_tag["id"], gitea_url: gitea_tag["url"])
-                normal_status(0, "标签创建成功")
-              else
-                normal_status(-1, "标签创建失败")
-              end
+              # gitea_tag = Gitea::Labels::CreateService.new(current_user, @repository.try(:identifier), tag_params).call
+              # if gitea_tag && issue_tag.update_attributes(gid: gitea_tag["id"], gitea_url: gitea_tag["url"])
+              #   normal_status(0, "标签创建成功")
+              # else
+              #   normal_status(-1, "标签创建失败")
+              # end
             else
               normal_status(-1, "标签创建失败")
             end
@@ -79,12 +79,12 @@ class IssueTagsController < ApplicationController
         ActiveRecord::Base.transaction do
           begin
             if @issue_tag.update_attributes(tag_params)
-              gitea_tag = Gitea::Labels::UpdateService.new(current_user, @repository.try(:identifier),@issue_tag.try(:gid), tag_params).call
-              if gitea_tag
-                normal_status(0, "标签更新成功")
-              else
-                normal_status(-1, "标签更新失败")
-              end
+              # gitea_tag = Gitea::Labels::UpdateService.new(current_user, @repository.try(:identifier),@issue_tag.try(:gid), tag_params).call
+              # if gitea_tag
+              #   normal_status(0, "标签更新成功")
+              # else
+              #   normal_status(-1, "标签更新失败")
+              # end
             else
               normal_status(-1, "标签更新失败")
             end
@@ -103,12 +103,12 @@ class IssueTagsController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         if @issue_tag.destroy
-          issue_tag = Gitea::Labels::DeleteService.new(@user, @repository.try(:identifier), @issue_tag.try(:gid)).call
-          if issue_tag
-            normal_status(0, "标签删除成功")
-          else
-            normal_status(-1, "标签删除失败")
-          end
+          # issue_tag = Gitea::Labels::DeleteService.new(@user, @repository.try(:identifier), @issue_tag.try(:gid)).call
+          # if issue_tag
+          #   normal_status(0, "标签删除成功")
+          # else
+          #   normal_status(-1, "标签删除失败")
+          # end
         else
           normal_status(-1, "标签删除失败")
         end
