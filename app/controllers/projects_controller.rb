@@ -2,8 +2,8 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
-  before_action :require_login, except: %i[index branches group_type_list simple show]
-  before_action :load_project, except: %i[index group_type_list migrate]
+  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users]
+  before_action :load_project, except: %i[index group_type_list migrate create]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
 

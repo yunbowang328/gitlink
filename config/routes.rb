@@ -259,7 +259,7 @@ Rails.application.routes.draw do
         )
       end
 
-      resource :projects, path: '/', except: [:show] do
+      resource :projects, path: '/', except: [:show, :edit] do
         member do
           get :branches
           get :simple
