@@ -107,7 +107,7 @@ class ProjectsController < ApplicationController
   private
   def project_params
     params.permit(:user_id, :name, :description, :repository_name,
-                  :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
+                  :project_category_id, :project_language_id, :license_id, :ignore_id)
   end
 
   def mirror_params
