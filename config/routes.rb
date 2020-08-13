@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   get 'auth/cas/callback', to: 'oauth/cas#create'
   resources :edu_settings
   scope '/api' do
-    namespace :dev_ops  do
+    namespace :ci  do
       resources :cloud_accounts, only: [:create] do
         member do
           post :activate

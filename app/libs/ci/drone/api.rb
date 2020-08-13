@@ -1,4 +1,4 @@
-class DevOps::Drone::API < DevOps::Drone::Request
+class Ci::Drone::API < Ci::Drone::Request
   attr_reader :drone_token, :endpoint, :owner, :repo, :options
 
   # drone_token:

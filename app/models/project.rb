@@ -20,7 +20,7 @@ class Project < ApplicationRecord
   has_many :fork_users, dependent: :destroy
   # has_many :commits, dependent: :destroy
 
-  has_one :dev_ops_cloud_account, class_name: 'DevOps::CloudAccount', dependent: :destroy
+  has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy
   has_many :pull_requests, dependent: :destroy

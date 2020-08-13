@@ -6,6 +6,7 @@ class User < ApplicationRecord
   include BaseModel
   include ProjectOperable
   include ProjectAbility
+  include Droneable
   # include Searchable::Dependents::User
 
   # devops step
@@ -80,7 +81,7 @@ class User < ApplicationRecord
   has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
   has_many :watchers, as: :watchable, dependent: :destroy
 
-  has_one :dev_ops_cloud_account, class_name: 'DevOps::CloudAccount', dependent: :destroy
+  has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
   has_many :apply_user_authentication

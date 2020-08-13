@@ -1,4 +1,4 @@
-class DevOps::Drone::Client
+class Ci::Drone::Client
   attr_reader :client_id, :drone_ip, :rpc_secret
 
   # client_id: user's client_id from oauth

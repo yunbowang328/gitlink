@@ -4,8 +4,8 @@ module Devopsable
   included do
   end
 
-  # devops 权限验证
-	def devops_authorize!
+  # ci 权限验证
+	def ci_authorize!
 		render_forbidden unless @project.owner?(current_user)
 	end
 
@@ -21,7 +21,7 @@ module Devopsable
   end
 
   def find_cloud_account
-    @cloud_account = DevOps::CloudAccount.find params[:id]
+    @cloud_account = Ci::CloudAccount.find params[:id]
   end
 
   def set_drone_token!(user, cloud_account, drone_token)

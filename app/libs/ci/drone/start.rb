@@ -1,4 +1,4 @@
-class DevOps::Drone::Start
+class Ci::Drone::Start
   attr_reader :drone_username, :drone_password, :drone_host, :drone_server_cmd, :drone_client_cmd
 
   # drone_username="XXXX" 云服务器登录用户名

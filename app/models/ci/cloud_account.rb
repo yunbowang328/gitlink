@@ -1,4 +1,4 @@
-class DevOps::CloudAccount < ApplicationRecord
+class Ci::CloudAccount < ApplicationRecord
   belongs_to :project
   belongs_to :user
   belongs_to :repository, foreign_key: :repo_id

@@ -1,4 +1,4 @@
-class DevOps::Drone::Ci
+class Ci::Drone::Ci
   attr_reader :host, :username, :password, :gitea_username
 
   # host: drone server's ip

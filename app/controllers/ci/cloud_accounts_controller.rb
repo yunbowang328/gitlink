@@ -1,21 +1,20 @@
-class DevOps::CloudAccountsController < ApplicationController
+class Ci::CloudAccountsController < Ci::BaseController
   include Devopsable
 
-  before_action :require_login
   before_action :auto_load_project
-  before_action :devops_authorize!
+  before_action :ci_authorize!
   before_action :find_cloud_account, only: %i[activate]
 
   def create
     ActiveRecord::Base.transaction do
-      DevOps::CreateCloudAccountForm.new(devops_params).validate!
+      Ci::CreateCloudAccountForm.new(devops_params).validate!
 
       # 1. 保存华为云服务器帐号
-      create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: DevOps::CloudAccount.encrypted_secret(devops_params[:secret]))
+      create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: Ci::CloudAccount.encrypted_secret(devops_params[:secret]))
       if cloud_account = @project.dev_ops_cloud_account
         return render_error('该仓库已绑定了云帐号.')
       else
-        cloud_account = DevOps::CloudAccount.new(create_params)
+        cloud_account = Ci::CloudAccount.new(create_params)
         cloud_account.user = current_user
         cloud_account.save!
       end
@@ -35,15 +34,15 @@ class DevOps::CloudAccountsController < ApplicationController
       logger.info "######### rpc_secret: #{rpc_secret}"
 
       # 3. 创建drone server
-      drone_server_cmd = DevOps::Drone::Server.new(oauth.client_id, oauth.client_secret, cloud_account.drone_host, rpc_secret).generate_cmd
+      drone_server_cmd = Ci::Drone::Server.new(oauth.client_id, oauth.client_secret, cloud_account.drone_host, rpc_secret).generate_cmd
       logger.info "######### drone_server_cmd: #{drone_server_cmd}"
 
       # 4. 创建drone client
-      drone_client_cmd = DevOps::Drone::Client.new(oauth.client_id, cloud_account.drone_ip, rpc_secret).generate_cmd
+      drone_client_cmd = Ci::Drone::Client.new(oauth.client_id, cloud_account.drone_ip, rpc_secret).generate_cmd
       logger.info "######### drone_client_cmd: #{drone_client_cmd}"
 
       # 5. 登录远程服务器，启动drone服务
-      result = DevOps::Drone::Start.new(cloud_account.account, cloud_account.visible_secret, cloud_account.drone_ip, drone_server_cmd, drone_client_cmd).run
+      result = Ci::Drone::Start.new(cloud_account.account, cloud_account.visible_secret, cloud_account.drone_ip, drone_server_cmd, drone_client_cmd).run
       logger.info "######### result: #{result}"
 
 
@@ -66,11 +65,11 @@ class DevOps::CloudAccountsController < ApplicationController
     result =
       if current_user.devops_has_token?
         # 已有drone_token的，直接激活项目
-         DevOps::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
+         Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
       else
         # 没有token，说明是第一次激活devops, 需要用户填写token值
         return render_error('请先在CI服务端做用户认证.') if !current_user.devops_verified?
-        DevOps::Drone::API.new(params[:drone_token], @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
+        Ci::Drone::API.new(params[:drone_token], @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
       end
 
     if result
