@@ -25,7 +25,7 @@ class Gitea::Repository::Entries::CreateService < Gitea::ClientService
     @owner      = owner
     @repo_name = repo_name
     @filepath  = filepath
-    @body      = bodys
+    @body      = body
   end
 
   def call
