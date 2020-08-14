@@ -11,16 +11,17 @@ class OauthEducoderForm
   validate :check_auth!
 
   def check_auth!
+    Rails.logger.info "====login: #{login} ====token: #{token} ==== callback_url: #{callback_url}"
     secret = OauthEducoder.config[:access_key_secret]
     Rails.logger.info "==== secret: #{secret}"
-    before_raw_pay_load = "#{login}#{secret}#{Time.now.to_i/60-1}"
-    now_raw_pay_load = "#{login}#{secret}#{Time.now.to_i/60}"
+    before_raw_pay_load = Digest::SHA1.hexdigest("#{login}#{secret}#{Time.now.to_i/60-1}")
+    now_raw_pay_load = Digest::SHA1.hexdigest("#{login}#{secret}#{Time.now.to_i/60}")
 
     Rails.logger.info "==== before_raw_pay_load: #{before_raw_pay_load}"
     Rails.logger.info "==== now_raw_pay_load: #{now_raw_pay_load}"
     Rails.logger.info "==== token: #{token}"
 
-    if token != Digest::SHA1.hexdigest(now_raw_pay_load) || token != Digest::SHA1.hexdigest(before_raw_pay_load)
+    if token != now_raw_pay_load || token != before_raw_pay_load
       raise '你的请求无效值无效.'
     end
   end
