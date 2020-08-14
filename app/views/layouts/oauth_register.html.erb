@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'oauth', media: 'all','data-turbolinks-track': 'reload' %>
+  </head>
+  <body>
+    <div class="IndexContent">
+      <%= image_tag('/images/oauth/logo.png') %>
+      <%= yield %>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<div class="indexPanel">
+  <p class="indexTitle">完善信息，进入比赛</p>
+  <div class="indexInfos">
+    <%= form_tag(oauth_auto_register_path, method: :post, class: 'form-inline search-form flex-1') do %>
+      <%= hidden_field_tag 'callback_url', params[:callback_url] %>
+      <div class="indexInfo">
+        <span>用户名：</span>
+        <%= text_field_tag :mail, params[:login], placeholder: '请输入用户名', disabled: true, id: 'login' %>
+        <p class="checkInfo loginCheck"><span></span></p>
+      </div>
+      <div class="indexInfo">
+        <span>邮箱：</span>
+        <%= text_field_tag :mail, '', placeholder: '请输入绑定邮箱', maxlength: 40, id: 'email' %>
+        <p class="checkInfo emailCheck"><span></span></p>
+      </div>
+      <div class="indexInfo">
+        <span>密码：</span>
+        <%= password_field_tag :password, '', placeholder: '请输入账号密码', id: 'password'  %>
+        <p class="checkInfo passwordCheck"><span></span></p>
+      </div>
+      <div class="indexBtn">
+        <button class="indexSubmit" onclick="sureSubmit();">确定</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script type="text/javascript">
+  function sureSubmit(){
+    var login = $("#login").val();
+    var email = $("#email").val();
+    var password = $("#password").val();
+
+    alert(email)
+
+    if(!login){
+      $(".loginCheck span").html("请输入账号");
+      return;
+    }else{
+      $(".loginCheck span").html("");
+    }
+    if(!login){
+      $(".loginCheck span").html("请输入账号");
+      return;
+    }else{
+      $(".emailCheck span").html("");
+    }
+    if(!password){
+      $(".passwordCheck span").html("请输入账号密码");
+      return;
+    }else{
+      $(".passwordCheck span").html("");
+    }
+  }
+</script>

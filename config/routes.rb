@@ -13,6 +13,11 @@ Rails.application.routes.draw do
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
+
+  get 'oauth/bind', to: 'oauth/educoder#bind'
+  get 'oauth/register', to: 'oauth#register'
+  post 'oauth/auto_register', to: 'oauth#auto_register'
+  
   resources :edu_settings
   scope '/api' do
     namespace :ci  do

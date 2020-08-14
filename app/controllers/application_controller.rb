@@ -9,7 +9,8 @@ class ApplicationController < ActionController::Base
 	include GitHelper
 	include LoggerHelper
 	include LoginHelper
-
+	include RegisterHelper
+	
 	protect_from_forgery prepend: true, unless: -> { request.format.json? }
 
 	before_action :check_sign
