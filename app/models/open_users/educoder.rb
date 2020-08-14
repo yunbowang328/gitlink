@@ -1,4 +1,4 @@
-class OpenUsers::EduCoder < OpenUser
+class OpenUsers::Educoder < OpenUser
   def nickname
     extra&.[]('nickname')
   end
