@@ -3,10 +3,9 @@ class Oauth::EducoderController < Oauth::BaseController
     begin
       login = params[:login]
       callback_url = params[:callback_url]
-      oauth_token = params[:key]
-      raw_pay_load = params[:raw_pay_load]
+      token = params[:token]
 
-      ::OauthEducoderForm.new({login: login, oauth_token: oauth_token, callback_url: callback_url, raw_pay_load: raw_pay_load}).validate!
+      ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
 
       open_user= OpenUser::Educoder.find_by(uid: login)
 
