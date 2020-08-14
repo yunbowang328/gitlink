@@ -52,7 +52,16 @@
     $.ajax({
       url: "<%=  oauth_auto_register_path %>",
       data: $("#oauth_form").serialize(),
-      type: 'post'
-    })
+      type: 'post',
+      dataType: "json",
+      success: function(data) {
+        console.log(data)
+        if (data) {
+          // data.redirect contains the string URL to redirect to
+          // window.location.href = "<%#= params[:callback_url] %>";
+           window.location.href = data.callback_url;
+        }
+      }
+    });
   }
 </script>
