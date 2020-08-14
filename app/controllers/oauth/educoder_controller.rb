@@ -21,7 +21,7 @@ class Oauth::EducoderController < Oauth::BaseController
         # 未存在需要进行绑定
         if current_user.blank? || !current_user.logged?
           # forge平台未登录
-          redirect_to oauth_register_path(user_id: login, callback_url: callback_url)
+          redirect_to oauth_register_path(login: login, callback_url: callback_url)
         else
           # forge平台已登录
           OpenUsers::Educoder.create!(user: current_user, uid: login)
