@@ -21,7 +21,7 @@ class OauthEducoderForm
     Rails.logger.info "==== now_raw_pay_load: #{now_raw_pay_load}"
     Rails.logger.info "==== token: #{token}"
 
-    if token != now_raw_pay_load || token != before_raw_pay_load
+    if token != now_raw_pay_load && token != before_raw_pay_load
       raise '你的请求无效值无效.'
     end
   end
