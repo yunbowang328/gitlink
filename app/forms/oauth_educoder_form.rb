@@ -8,7 +8,7 @@ class OauthEducoderForm
   validates :callback_url, presence: true
 
   validate :check_callback_url!
-  valitate :check_auth!
+  validate :check_auth!
 
   def check_auth!
     secret = OauthEducoder.config[:access_key_secret]
