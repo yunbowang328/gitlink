@@ -1,4 +1,6 @@
 class OauthController < ApplicationController
+  layout "oauth_register", only: [:register]
+
   DEFAULT_PASSWORD = "a12345678"
   TOKEN_CALL_BACK = "/oauth/get_token_callback"
   USER_INFO = "/oauth/userinfo"
@@ -51,4 +53,24 @@ class OauthController < ApplicationController
 
   def get_token_callback
   end
+
+  def register
+    # redirect_to params[:callback_url]
+  end
+
+  def auto_register
+    login = params[:login]
+    email = params[:email]
+    password = params[:login]
+    platform = params[:plathform] || 'forge'
+
+    result = autologin_register(login, email, password, platform)
+
+    if result[:message].blank?
+      redirect_to params[:callback_url]
+    else
+      render :action => "auto_register"
+    end
+  end
+
 end
