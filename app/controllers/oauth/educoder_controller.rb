@@ -9,7 +9,7 @@ class Oauth::EducoderController < Oauth::BaseController
 
       open_user= OpenUsers::Educoder.find_by(uid: login)
 
-      if open_user.present? && open_user.user.present? && open_user.user.email_bind?
+      if open_user.present? && open_user.user.present? && open_user.user.email_binded??
         # 存在说明绑定了,验证信息是否齐全,
         if current_user != open_user.user
           logout_user
