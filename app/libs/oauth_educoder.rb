@@ -5,7 +5,7 @@ module OauthEducoder
 
       begin
         config = Rails.application.config_for(:configuration).symbolize_keys!
-        educoder_config = config[:oauth][:educoder].symbolize_keys!
+        educoder_config = config[:oauth_educoder].symbolize_keys!
         raise 'oauth educoder config missing' if educoder_config.blank?
       rescue => ex
         raise ex if Rails.env.production?
