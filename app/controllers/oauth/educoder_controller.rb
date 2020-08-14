@@ -7,7 +7,7 @@ class Oauth::EducoderController < Oauth::BaseController
 
       ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
 
-      open_user= OpenUser::Educoder.find_by(uid: login)
+      open_user= OpenUsers::Educoder.find_by(uid: login)
 
       if open_user.present? && open_user.user.present? && open_user.user.email_bind?
         # 存在说明绑定了,验证信息是否齐全,
