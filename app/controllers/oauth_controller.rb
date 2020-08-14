@@ -55,22 +55,27 @@ class OauthController < ApplicationController
   end
 
   def register
-    logger.info "=====auto_register=======login: #{params[:login]}"
-    logger.info "=====auto_register=======callback_url: #{params[:callback_url]}"
-    # redirect_to params[:callback_url]
   end
 
   def auto_register
     login = params[:login]
     email = params[:mail]
     password = params[:password]
+    callback_url =  params[:callback_url]
     platform = params[:plathform] || 'forge'
 
     result = autologin_register(login, email, password, platform)
-
+    logger.info "[Oauth educoer] =====#{result}"
     if result[:message].blank?
-      redirect_to params[:callback_url]
+      logger.info "[Oauth educoer] ====auto_register success"
+      user = User.find result[:user][:id]
+      successful_authentication(user)
+      OpenUsers::Educoder.create!(user: user, uid: user.login)
+
+      render_ok({callback_url: callback_url})
+      # redirect_to callback_url
     else
+      logger.info "[Oauth educoer] ====auto_register failed."
       render :action => "auto_register"
     end
   end
