@@ -60,8 +60,8 @@ class OauthController < ApplicationController
 
   def auto_register
     login = params[:login]
-    email = params[:email]
-    password = params[:login]
+    email = params[:mail]
+    password = params[:password]
     platform = params[:plathform] || 'forge'
 
     result = autologin_register(login, email, password, platform)
