@@ -55,6 +55,8 @@ class OauthController < ApplicationController
   end
 
   def register
+    logger.info "=====auto_register=======login: #{params[:login]}"
+    logger.info "=====auto_register=======callback_url: #{params[:callback_url]}"
     # redirect_to params[:callback_url]
   end
 
