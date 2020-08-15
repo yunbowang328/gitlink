@@ -240,6 +240,13 @@ class PullRequestsController < ApplicationController
     @user = @project.owner
   end
 
+  def set_repository
+    @repository = @project.repository
+    @user = @project.owner
+    normal_status(-1, "仓库不存在") unless @repository.present?
+    normal_status(-1, "用户不存在") unless @user.present?
+  end
+
   def find_pull_request
     @pull_request = PullRequest.find_by_id(params[:id])
     @issue = @pull_request&.issue
