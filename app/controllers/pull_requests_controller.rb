@@ -29,7 +29,7 @@ class PullRequestsController < ApplicationController
     @projects_names = [{
       project_user_login: @user.try(:login),
       project_name: "#{@user.try(:show_real_name)}/#{@repository.try(:identifier)}",
-      project_id: @project.id
+      project_id: @project.identifier
     }]
     @merge_projects = @projects_names
     fork_project = @project.fork_project if @is_fork
@@ -37,7 +37,7 @@ class PullRequestsController < ApplicationController
       @merge_projects.push({
         project_user_login: fork_project.owner.try(:login),
         project_name: "#{fork_project.owner.try(:show_real_name)}/#{fork_project.repository.try(:identifier)}",
-        project_id: fork_project.id
+        project_id: fork_project.identifier
       })
     end
   end
@@ -70,11 +70,7 @@ class PullRequestsController < ApplicationController
             if local_requests.save
               remote_pr_params = @local_params
               remote_pr_params = remote_pr_params.merge(head: "#{params[:merge_user_login]}:#{params[:head]}").compact if local_requests.is_original && params[:merge_user_login]
-              if @project.forked_from_project_id.present?
-                gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.fork_project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
-              else
-                gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
-              end
+              gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
               if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
