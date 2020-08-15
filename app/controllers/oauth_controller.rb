@@ -62,7 +62,11 @@ class OauthController < ApplicationController
     email = params[:mail]
     password = params[:password]
     callback_url =  params[:callback_url]
-    platform = params[:plathform] || 'forge'
+    platform = params[:plathform] || 'educoder'
+
+    if User.where(mail: email).exists?
+      render_error("该邮箱已使用过.") and return
+    end
 
     result = autologin_register(login, email, password, platform)
     logger.info "[Oauth educoer] =====#{result}"

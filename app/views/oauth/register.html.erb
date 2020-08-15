@@ -46,6 +46,9 @@
     if(!password){
       $(".passwordCheck span").html("请输入账号密码");
       return;
+    }else if(password.length < 8){
+      $(".passwordCheck span").html("密码最少为8位数");
+      return;
     }else{
       $(".passwordCheck span").html("");
     }
@@ -57,11 +60,19 @@
       success: function(data) {
         console.log(data)
         if (data) {
+          if(data.message){
+            $(".emailCheck span").html("该邮箱已存在.");
+            return;
+          }
           // data.redirect contains the string URL to redirect to
           // window.location.href = "<%#= params[:callback_url] %>";
            window.location.href = data.callback_url;
         }
-      }
+      },
+    	error: function (data) {
+    		console.log('ajax error handling',data);
+    	}
+
     });
   }
 </script>
