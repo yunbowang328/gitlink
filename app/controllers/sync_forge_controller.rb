@@ -5,7 +5,7 @@ class SyncForgeController < ApplicationController
     sync_counts = params[:sync_count] || 10
     projects = Project.includes(:project_score, :repository)
                       .where(is_public: true)
-                      .where.not(identifier: ["educoder","trustieforge", "gitlab"])
+                      .where.not(identifier: ["educoder","trustieforge", "gitlab", "rGDBbQmOK", "socialforge"])
                       .joins(:project_score).order("project_scores.changeset_num desc").limit(sync_counts.to_i)
     projects.each do | project |
       SyncProjectMilitaryJob.perform_later(project, project.repository, project.project_score)

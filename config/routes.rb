@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'admin_constraint'
 
-  mount Sidekiq::Web => '/sidekiq'
+  # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'oauth/bind', to: 'oauth/educoder#bind'
   get 'oauth/register', to: 'oauth#register'
   post 'oauth/auto_register', to: 'oauth#auto_register'
-  
+
   resources :edu_settings
   scope '/api' do
     namespace :ci  do
@@ -401,6 +401,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admins do
+    mount Sidekiq::Web => '/sidekiq'
     get '/', to: 'dashboards#index'
     resources :project_statistics, only: [:index] do
       collection do
