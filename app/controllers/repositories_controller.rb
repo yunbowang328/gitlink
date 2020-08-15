@@ -1,11 +1,10 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
+
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
-  before_action :find_project_with_includes, only: :show
-  before_action :find_project, except: [:tags, :commit, :sync_mirror, :show]
+  before_action :load_repository
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
-  before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
   before_action :get_ref, only: %i[entries sub_entries top_counts]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
@@ -56,18 +55,18 @@ class RepositoriesController < ApplicationController
   end
 
   def commit
-    @commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token).call
+    @commit = Gitea::Repository::Commits::GetService.new(@repository.user.login, @repository.identifier, params[:sha], current_user.gitea_token).call
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @repo.user.login, @repo.identifier, {page: params[:page], limit: params[:limit]}).call
+    @tags = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier, {page: params[:page], limit: params[:limit]}).call
   end
 
   def edit
   end
 
   def create_file
-    interactor = Gitea::CreateFileInteractor.call(current_user, content_params)
+    interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @project.owner.login, content_params)
     if interactor.success?
       @file = interactor.result
       create_new_pr(params)
@@ -77,7 +76,7 @@ class RepositoriesController < ApplicationController
   end
 
   def update_file
-    interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
+    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, @project.owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       create_new_pr(params)
@@ -88,7 +87,7 @@ class RepositoriesController < ApplicationController
   end
 
   def delete_file
-    interactor = Gitea::DeleteFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
+    interactor = Gitea::DeleteFileInteractor.call(current_user.gitea_token, @project.owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       render_result(1, "文件删除成功")
@@ -102,10 +101,10 @@ class RepositoriesController < ApplicationController
   end
 
   def sync_mirror
-    return render_error("正在镜像中..") if  @repo.mirror.waiting?
+    return render_error("正在镜像中..") if  @repository.mirror.waiting?
 
-    @repo.sync_mirror!
-    SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)
+    @repository.sync_mirror!
+    SyncMirroredRepositoryJob.perform_later(@repository.id, current_user.id)
     render_ok
   end
 

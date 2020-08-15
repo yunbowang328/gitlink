@@ -13,24 +13,12 @@ class AccountsController < ApplicationController
     password = params[:password]
     platform = (params[:platform] || 'forge')&.gsub(/\s+/, "")
 
-    @user = User.new(admin: false, login: username, mail: email, type: "User")
-    @user.password = password
-    @user.platform = platform
-    @user.activate
-
     ActiveRecord::Base.transaction do
-      interactor = Gitea::RegisterInteractor.call({username: username, email: email, password: password})
-      if interactor.success?
-        gitea_user = interactor.result
-        result = Gitea::User::GenerateTokenService.new(username, password).call
-        @user.gitea_token = result['sha1']
-        @user.gitea_uid = gitea_user['id']
-        if @user.save!
-          UserExtension.create!(user_id: @user.id)
-          render_ok({user: {id: @user.id, token: @user.gitea_token}})
-        end
+      result = autologin_register(username, email, password, platform)
+      if result[:message].blank?
+        render_ok({user: result[:user]})
       else
-        render_error(interactor.error)
+        render_error(result[:message])
       end
     end
   rescue Exception => e

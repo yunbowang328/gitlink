@@ -1,4 +1,4 @@
-class DevOps::Drone::Ci
+class Ci::Drone::Ci
   attr_reader :host, :username, :password, :gitea_username
 
   # host: drone server's ip
@@ -20,6 +20,6 @@ class DevOps::Drone::Ci
 
   private
     def cmd
-      "cd ..; cd var/lib/drone/; sqlite3 database.sqlite; .dump; select user_hash from users where user_login=#{gitea_username} "
+      "cd ..; cd var/lib/drone/; sqlite3 database.sqlite; .dump; select user_hash from users where user_login=#{gitea_username};"
     end
 end

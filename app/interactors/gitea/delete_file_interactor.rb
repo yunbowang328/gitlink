@@ -1,15 +1,16 @@
 module Gitea
   class DeleteFileInteractor
-    def self.call(user, params={})
-      interactor = new(user, params)
+    def self.call(token, owner, params={})
+      interactor = new(token, owner, params)
       interactor.run
       interactor
     end
 
     attr_reader :error, :result
 
-    def initialize(user, params)
-      @user   = user
+    def initialize(token, owner, params)
+      @token  = token
+      @owner   = owner
       @params = params
     end
 
@@ -23,7 +24,7 @@ module Gitea
 
     def run
       Contents::DeleteForm.new(valid_params).validate!
-      response = Gitea::Repository::Entries::DeleteService.new(user, @params[:identifier], @params[:filepath], file_params).call
+      response = Gitea::Repository::Entries::DeleteService.new(token, owner, @params[:identifier], @params[:filepath], file_params).call
       render_result(response)
     rescue Exception => exception
       fail!(exception.message)
@@ -31,7 +32,7 @@ module Gitea
 
     private
 
-    attr_reader :params, :user
+    attr_reader :params, :owner, :token
 
     def fail!(error)
       puts "[exception]: error"

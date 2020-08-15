@@ -5,7 +5,16 @@ class User < ApplicationRecord
   include Likeable
   include BaseModel
   include ProjectOperable
+  include ProjectAbility
+  include Droneable
   # include Searchable::Dependents::User
+
+  # devops step
+  # devops_step column:  0: 未填写服务器信息；1: 已填写服务器信息(未认证)； 2: 已认证, 3: 已填写token值
+  DEVOPS_UNINIT = 0
+  DEVOPS_UNVERIFIED = 1
+  DEVOPS_VERIFIED = 2
+  DEVOPS_HAS_TOKEN = 3
 
   # Account statuses
   STATUS_ANONYMOUS  = 0
@@ -70,8 +79,9 @@ class User < ApplicationRecord
   # 关注
   has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
   has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-  
-  has_many :watchers, as: :watchable, dependent: :destroy 
+  has_many :watchers, as: :watchable, dependent: :destroy
+
+  has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
   has_many :apply_user_authentication

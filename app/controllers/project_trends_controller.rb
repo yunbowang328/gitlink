@@ -1,5 +1,5 @@
 class ProjectTrendsController < ApplicationController
-  before_action :find_project_with_id
+  before_action :load_repository
   before_action :check_project_public
 
   def index

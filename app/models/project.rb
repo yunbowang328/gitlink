@@ -20,7 +20,7 @@ class Project < ApplicationRecord
   has_many :fork_users, dependent: :destroy
   # has_many :commits, dependent: :destroy
 
-  has_one :dev_ops_cloud_account, class_name: 'DevOps::CloudAccount', dependent: :destroy
+  has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy
   has_many :pull_requests, dependent: :destroy
@@ -169,4 +169,15 @@ class Project < ApplicationRecord
     joins(:members).where(members: { user_id: member_user_id})
   end
 
+  def self.find_with_namespace(namespace_path, identifier)
+    logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
+
+    user = User.find_by_login namespace_path
+    return nil if user.blank?
+
+    project = user.projects.find_by(identifier: identifier)
+
+    return nil if project.blank?
+    project
+  end
 end

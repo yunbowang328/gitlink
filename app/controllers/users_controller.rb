@@ -1,8 +1,10 @@
 class UsersController < ApplicationController
+  include Devopsable
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list]
+  before_action :require_login, only: %i[me list devops_authenticate devops]
+  before_action :auto_load_project, only: %i[devops devops_authenticate]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def list
@@ -177,7 +179,7 @@ class UsersController < ApplicationController
   def trustie_projects
     user_id = User.select(:id, :login).where(login: params[:login])&.first&.id
     projects = Project.visible
-    
+
     projects = projects.joins(:members).where(members: { user_id: user_id })
 
     search = params[:search].to_s.strip
@@ -209,6 +211,19 @@ class UsersController < ApplicationController
     user = User.find_by_login params[:login]
     return if user.blank?
     user.update_column(:salt, params[:salt])
+    render_ok
+  end
+
+  def devops
+    @user = current_user
+    limit_owner_can_devops!(user)
+    @cloud_account = @user.dev_ops_cloud_account
+  end
+
+  # devops 认证
+  def devops_authenticate
+    limit_owner_can_devops!(current_user)
+    current_user.set_drone_step!(User::DEVOPS_VERIFIED)
     render_ok
   end
 

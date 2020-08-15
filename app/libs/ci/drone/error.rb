@@ -1,4 +1,4 @@
-class DevOps::Drone::Error < StandardError
+class Ci::Drone::Error < StandardError
   attr_reader :code
 
   def initialize(code, message)

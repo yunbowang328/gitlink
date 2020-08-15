@@ -531,17 +531,18 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 #### 项目详情
 ```
-GET api/projects/:id
+GET /api/:namespace_id/:id
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/projects/3263  | jq
+curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id            |是|int    |项目id  |
+|namespace_id             |是|string |用户登录名  |
+|id             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -566,6 +567,50 @@ curl -X GET http://localhost:3000/api/projects/3263  | jq
   "description": "my first project mirror_demo",
   "repo_id": 75073,
   "repo_identifier": "mirror_demo"
+}
+```
+---
+
+#### 项目详情(简版)
+```
+GET /api/:namespace_id/:id/simple
+```
+*示例*
+```
+curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|id            |是|int    |项目id  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id             |int   |id |
+|name           |string|项目名称|
+|identifier     |string|项目标识|
+|is_public      |boolean|项目是否公开， true:公开，false:私有|
+|description    |string|项目简介|
+|repo_id        |int|仓库id|
+|repo_identifier|string|仓库标识|
+
+
+返回值
+```
+{
+  "identifier": "jasder_test",
+  "name": "jasder的测试项目",
+  "id": 4967,
+  "type": 0,
+  "author": {
+    "login": "jasder",
+    "name": "姓名",
+    "image_url": "avatars/User/b"
+  }
 }
 ```
 ---
@@ -897,13 +942,13 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 #### 获取代码目录列表
 ```
-POST /api/repositories/:id/entries.json
+POST /api/:namespace_id/:project_id/repository/entries
 ```
 *示例*
 ```
 curl -X GET \
 -d "ref=develop" \
-http://localhost:3000//api/repositories/3687/entries.json  | jq
+http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 ```
 *请求参数说明:*
 
@@ -1320,11 +1365,11 @@ http://localhost:3000/api/projects  | jq
 
 ### 获取分支列表
 ```
-GET /api/projects/:id/branches
+GET /api/:namespace_id/:id/branches
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/projects/4797/branches | jq
+curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 ```
 *请求参数说明:*
 
@@ -1487,18 +1532,19 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 ## 仓库详情
 ```
-GET /api/repositories/:id
+GET /api/:namespace_id/:project_id/repository
 ```
 *示例*
 ```
 curl -X GET \
-http://localhost:3000/api/repositories/23.json | jq
+http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id             |是|string |项目id  |
+|namespace_id             |是|string |用户登录名  |
+|project_id             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -2357,6 +2403,51 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 ### DevOps相关api
 ---
 
+#### 获取devops流程步骤(判断devops是否初始化)
+```
+GET  /api/users/devops
+```
+
+*示例*
+```
+curl -X GET \
+-d "project_id=5988" \
+https://localhost:3000/api/users/devops.json  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id         |是|string |项目id或者项目的标识identifier|
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|step         |int|初始化devops流程步骤; 0: 标识未开启devops，1: 标识用户已填写了云服务器相关信息，但并未开启认证， 2: 标识用户已开启了CI服务端的认证， 3: 标识用户已经授权并获取了CI服务的token|
+|account       |string|你的云服务器帐号|
+|ip         |string|你的云服务器帐号ip|
+|secret         |string|你的云服务器登录密码|
+|authenticate_url         |string|devops授权认证地址， 只有填写了服务器相关信息后才会有该地址|
+|get_drone_token_url         |string|获取CI服务端token地址, 只有认证成功后才会有该地址|
+
+返回值
+```json
+{
+  "step": 0,
+  "cloud_account": {
+    "id": 1,
+    "account": "xxx",
+    "ip": "xxx.xxx.xxx.x",
+    "secret": "11111",
+    "authenticate_url": "http://localhost:3000/login",
+    "get_drone_token_url": "http://localhost:3000/account"
+  }
+}
+```
+---
+
 #### 初始化DevOps流程
 ```
 POST  /api/dev_ops/cloud_accounts
@@ -2399,6 +2490,72 @@ https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
 ```
 ---
 
+#### 用户认证CI服务端后，需要调用该接口进行更新devlops流程状态
+```
+PUT /api/users/devops_authenticate
+```
+*示例*
+```
+curl -X PUT \
+-d "project_id=5988" \
+http://localhost:3000/api/users/devops_authenticate.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id         |是|string |项目id或者项目的标识identifier|
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|0:成功， -1: 失败|
+
+```
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
+#### 激活项目
+```
+POST /api/dev_ops/cloud_accounts/:id/activate
+```
+*示例*
+```
+curl -X POST \
+-d "id=1" \
+-d "project_id=4844" \
+-d "drone_token=xxxxxxxxxx" \
+http://localhost:3000/api/dev_ops/cloud_accounts/1/activate.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id     |是|int |project's id or identifier |
+|id             |是|int |cloud_account's id  |
+|drone_token    |否|string |CI端用户的token值，只有当用户第一次激活时，才需要填写该值  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|0:成功， -1: 失败|
+
+```
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
 #### 获取仓库的.trustie-pipeline.yml
 ```
 GET /api/dev_ops/builds/get_trustie_pipeline
@@ -2429,9 +2586,11 @@ http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
 {
   "name": ".trustie-pipeline.yml",
   "path": ".trustie-pipeline.yml",
+  "sha": "548sfefsafef48sf485s4f",
   "content": "..jsaf"
 }
 ```
+---
 
 #### 获取语言列表
 ```

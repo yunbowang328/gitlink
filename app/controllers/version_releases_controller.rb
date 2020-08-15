@@ -1,6 +1,6 @@
 class VersionReleasesController < ApplicationController
-  before_action :find_project_with_id
-  before_action :set_user_and_project
+  before_action :load_repository
+  before_action :set_user
   before_action :require_login, except: [:index]
   before_action :find_version , only: [:edit, :update, :destroy]
 
@@ -78,14 +78,14 @@ class VersionReleasesController < ApplicationController
       ActiveRecord::Base.transaction do
         begin
           version_params = releases_params
-         
+
           if @version.update_attributes!(version_params)
             create_attachments(params[:attachment_ids], @version) if params[:attachment_ids].present?
             git_version_release = Gitea::Versions::UpdateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
             unless git_version_release
               raise Error, "更新失败"
             end
-            
+
             normal_status(0, "更新成功")
           else
             normal_status(-1, "更新失败")
@@ -123,14 +123,8 @@ class VersionReleasesController < ApplicationController
 
 
   private
-
-  def set_user_and_project
-    # @project = Project.find_by_id(params[:project_id])
-    @repository = @project.repository  #项目的仓库
-    @user = @project.owner
-    unless @user.present? && @project.present? && @repository.present?
-      normal_status(-1, "仓库不存在")
-    end
+  def set_user
+    @user = @repository.user
   end
 
   def find_version
@@ -140,7 +134,7 @@ class VersionReleasesController < ApplicationController
     end
   end
 
-  def releases_params 
+  def releases_params
    {
       body:	params[:body],
       draft: params[:draft] || false,
@@ -151,7 +145,7 @@ class VersionReleasesController < ApplicationController
     }
   end
 
-  def create_attachments(attachment_ids, target) 
+  def create_attachments(attachment_ids, target)
     attachment_ids.each do |id|
       attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
       unless attachment.blank?

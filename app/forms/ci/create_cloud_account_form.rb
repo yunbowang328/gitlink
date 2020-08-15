@@ -1,4 +1,4 @@
-class DevOps::CreateCloudAccountForm
+class Ci::CreateCloudAccountForm
   include ActiveModel::Model
 
   attr_accessor :project_id, :ip_num, :account, :secret
