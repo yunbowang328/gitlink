@@ -10,12 +10,12 @@ class Oauth::EducoderController < Oauth::BaseController
       open_user= OpenUsers::Educoder.find_by(uid: login)
 
       if open_user.present? && open_user.user.present? && open_user.user.email_binded?
-        if current_user != open_user.user
-          logout_user
-          successful_authentication(open_user.user)
-        end
+        Rails.logger.info "######## open_user exist and open_user.user exsit and email is binded ok"
+        successful_authentication(open_user.user)
+
         redirect_to callback_url
       else
+        Rails.logger.info "######## open user not exits"
         if current_user.blank? || !current_user.logged?
           user = User.find_by(login: login)
           if user
