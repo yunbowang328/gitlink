@@ -234,6 +234,9 @@ class PullRequestsController < ApplicationController
 
 
   private
+  def set_user
+    @user = @project.owner
+  end
 
   def set_repository
     @repository = @project.repository
