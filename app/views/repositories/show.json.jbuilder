@@ -31,6 +31,7 @@ json.fork_info do
   if @fork_project.present?
     json.fork_form_name @fork_project.try(:name)
     json.fork_project_user_login @fork_project_user.try(:login)
+    json.fork_project_identifier @fork_project.identifier
     json.fork_project_user_name @fork_project_user.try(:show_real_name)
   end
 end

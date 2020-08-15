@@ -1,4 +1,6 @@
 class OauthController < ApplicationController
+  layout "oauth_register", only: [:register]
+
   DEFAULT_PASSWORD = "a12345678"
   TOKEN_CALL_BACK = "/oauth/get_token_callback"
   USER_INFO = "/oauth/userinfo"
@@ -51,4 +53,35 @@ class OauthController < ApplicationController
 
   def get_token_callback
   end
+
+  def register
+  end
+
+  def auto_register
+    login = params[:login]
+    email = params[:mail]
+    password = params[:password]
+    callback_url =  params[:callback_url]
+    platform = params[:plathform] || 'educoder'
+
+    if User.where(mail: email).exists?
+      render_error("该邮箱已使用过.") and return
+    end
+
+    result = autologin_register(login, email, password, platform)
+    logger.info "[Oauth educoer] =====#{result}"
+    if result[:message].blank?
+      logger.info "[Oauth educoer] ====auto_register success"
+      user = User.find result[:user][:id]
+      successful_authentication(user)
+      OpenUsers::Educoder.create!(user: user, uid: user.login)
+
+      render_ok({callback_url: callback_url})
+      # redirect_to callback_url
+    else
+      logger.info "[Oauth educoer] ====auto_register failed."
+      render :action => "auto_register"
+    end
+  end
+
 end
