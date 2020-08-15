@@ -61,11 +61,14 @@ class PullRequestsController < ApplicationController
           merge_params
           pull_issue = Issue.new(@issue_params)
           if pull_issue.save!
+            if params[:fork_project_id].present?
+              _fork_project = @project.fork_project
+            end
             pr_params = {
               user_id: current_user.try(:id),
               project_id: @project.id,
               issue_id: pull_issue.id,
-              fork_project_id: params[:fork_project_id],
+              fork_project_id: _fork_project.id,
               is_original: params[:is_original]
             }
             local_requests = PullRequest.new(@local_params.merge(pr_params))
@@ -74,7 +77,7 @@ class PullRequestsController < ApplicationController
               if local_requests.is_original && params[:merge_user_login]
                 remote_pr_params = remote_pr_params.merge(head: "#{params[:merge_user_login]}:#{params[:head]}").compact
 
-                gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.fork_project.owner, @project.fork_project.try(:identifier), remote_pr_params.except(:milestone))
+                gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), _fork_project.owner, _fork_project.try(:identifier), remote_pr_params.except(:milestone))
               else
                 gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
 
