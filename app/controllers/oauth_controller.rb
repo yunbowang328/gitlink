@@ -65,22 +65,22 @@ class OauthController < ApplicationController
     platform = params[:plathform] || 'educoder'
 
     if User.where(mail: email).exists?
-      render_error("该邮箱已使用过.") and return
-    end
-
-    result = autologin_register(login, email, password, platform)
-    logger.info "[Oauth educoer] =====#{result}"
-    if result[:message].blank?
-      logger.info "[Oauth educoer] ====auto_register success"
-      user = User.find result[:user][:id]
-      successful_authentication(user)
-      OpenUsers::Educoder.create!(user: user, uid: user.login)
-
-      render_ok({callback_url: callback_url})
-      # redirect_to callback_url
+      render json: { email_exist: '该邮箱已使用过' }
     else
-      logger.info "[Oauth educoer] ====auto_register failed."
-      render :action => "auto_register"
+      result = autologin_register(login, email, password, platform)
+      logger.info "[Oauth educoer] =====#{result}"
+      if result[:message].blank?
+        logger.info "[Oauth educoer] ====auto_register success"
+        user = User.find result[:user][:id]
+        successful_authentication(user)
+        OpenUsers::Educoder.create!(user: user, uid: user.login)
+
+        render json: { callback_url: callback_url }
+        # redirect_to callback_url
+      else
+        logger.info "[Oauth educoer] ====auto_register failed."
+        render :action => "auto_register"
+      end
     end
   end
 

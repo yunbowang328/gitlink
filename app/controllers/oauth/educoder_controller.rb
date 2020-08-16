@@ -16,20 +16,14 @@ class Oauth::EducoderController < Oauth::BaseController
         redirect_to callback_url
       else
         Rails.logger.info "######## open user not exits"
-        if current_user.blank? || !current_user.logged?
-          user = User.find_by(login: login)
-          if user
-            successful_authentication(user)
-            OpenUsers::Educoder.create!(user: user, uid: user.login)
+        user = User.find_by(login: login)
+        if user
+          OpenUsers::Educoder.create!(user: user, uid: user.login)
+          successful_authentication(user)
 
-            redirect_to callback_url
-          else
-            redirect_to oauth_register_path(login: login, callback_url: callback_url)
-          end
-        else
-          # forge平台已登录
-          OpenUsers::Educoder.create!(user: current_user, uid: login)
           redirect_to callback_url
+        else
+          redirect_to oauth_register_path(login: login, callback_url: callback_url)
         end
       end
     rescue WechatOauth::Error => ex
