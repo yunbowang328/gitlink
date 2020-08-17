@@ -1,4 +1,5 @@
 class Journal < ApplicationRecord
+  include DunCheckAble
   belongs_to :user
   belongs_to :issue, foreign_key: :journalized_id, :touch => true
   has_many :journal_details, :dependent => :delete_all

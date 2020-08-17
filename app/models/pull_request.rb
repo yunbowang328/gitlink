@@ -1,5 +1,6 @@
 class PullRequest < ApplicationRecord
   #status 0 默认未合并， 1表示合并, 2表示请求拒绝
+  include DunCheckAble
   belongs_to :issue
   belongs_to :user
   belongs_to :project, :counter_cache => true
