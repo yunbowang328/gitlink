@@ -5,7 +5,7 @@ class Oauth::EducoderController < Oauth::BaseController
       callback_url = params[:callback_url]
       token = params[:token]
 
-      ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
+      ::OauthEducoderForm.new({login: login, token: token, mail: mail, callback_url: callback_url}).validate!
 
       open_user= OpenUsers::Educoder.find_by(uid: login)
 
@@ -16,8 +16,9 @@ class Oauth::EducoderController < Oauth::BaseController
         redirect_to callback_url
       else
         Rails.logger.info "######## open user not exits"
-        user = User.find_by(login: login)
-        if user
+        user = User.find_by('login = ? or mail = ?', login, mail)
+
+        if user.is_a?(User)
           OpenUsers::Educoder.create!(user: user, uid: user.login)
           successful_authentication(user)
 
