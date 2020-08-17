@@ -2,6 +2,7 @@ class Oauth::EducoderController < Oauth::BaseController
   def bind
     begin
       login = params[:login]
+      mail = params[:mail]
       callback_url = params[:callback_url]
       token = params[:token]
 
