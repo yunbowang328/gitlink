@@ -11,6 +11,7 @@ module LoginHelper
 
   def set_autologin_cookie(user)
     token = Token.get_or_create_permanent_login_token(user, "autologin")
+    Rails.logger.info "###### def set_autologin_cookie and get_or_create_permanent_login_token result: #{token&.value}"
     cookie_options = {
       :value => token.value,
       :expires => 1.month.from_now,
@@ -21,9 +22,11 @@ module LoginHelper
     if edu_setting('cookie_domain').present?
       cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
     end
-    unless  cookies[autologin_cookie_name].present?
-      cookies[autologin_cookie_name] = cookie_options
-    end
+    # unless  cookies[autologin_cookie_name].present?
+    #   cookies[autologin_cookie_name] = cookie_options
+    # end
+    cookies[autologin_cookie_name] = cookie_options
+
     # for action cable
     cookies.signed[:user_id] ||= user.id
 

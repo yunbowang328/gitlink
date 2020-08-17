@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'admin_constraint'
 
-  mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
+  # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
@@ -13,12 +13,18 @@ Rails.application.routes.draw do
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
+
+  get 'oauth/bind', to: 'oauth/educoder#bind'
+  get 'oauth/register', to: 'oauth#register'
+  post 'oauth/auto_register', to: 'oauth#auto_register'
+  
   resources :edu_settings
 
   scope '/api' do
-    resources :sync_forge, only: [:create] do 
-      collection do 
+    resources :sync_forge, only: [:create] do
+      collection do
         post :sync_users
+        post :sync_range_projects
       end
     end
     resources :composes do
@@ -67,41 +73,6 @@ Rails.application.routes.draw do
       end
     end
     resources :projects do
-      resources :hooks
-      resources :pull_requests, except: [:destroy] do
-        member do
-          post :pr_merge
-          # post :check_merge
-          post :refuse_merge
-        end
-        collection do
-          post :check_can_merge
-          get :create_merge_infos
-          get :get_branches
-        end
-      end
-      resources :version_releases, only: [:index,:new, :create, :edit, :update, :destroy]
-      resources :project_trends, only: [:index, :create]
-      resources :issues do
-        collection do
-          get :commit_issues
-          get :index_chosen
-          post :clean
-          post :series_update
-        end
-        member do
-         post :copy
-         post :close_issue
-         post :lock_issue
-        end
-      end
-      resources :issue_tags, only: [:create, :edit, :update, :destroy, :index]
-      resources :versions do
-        member do
-          post :update_status
-        end
-      end
-
       resources :praise_tread, only: [:index] do
         collection do
           post :like
@@ -109,25 +80,10 @@ Rails.application.routes.draw do
           get :check_like
         end
       end
-      resources :members, only: [:index, :create] do
-        collection do
-          delete :remove
-          put :change_role
-        end
-      end
-      resources :forks, only: [:create]
+
       collection do
         post :migrate
         get :group_type_list
-        post :watch
-      end
-      member do
-        get :branches
-        post :watch
-        get :watch_users
-        get :praise_users
-        get :fork_users
-        get :simple
       end
     end
 
@@ -176,7 +132,7 @@ Rails.application.routes.draw do
 
       scope module: :users do
         # resources :courses, only: [:index]
-        resources :projects, only: [:index]
+        # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]
         # 私信
@@ -184,11 +140,6 @@ Rails.application.routes.draw do
         # resources :recent_contacts, only: [:index]
         # resource :private_message_details, only: [:show]
         # resource :unread_message_info, only: [:show]
-      end
-
-
-      resources :projects, module: :users, only: [] do
-        get :search, on: :collection
       end
 
       resources :tidings, only: [:index]
@@ -206,23 +157,6 @@ Rails.application.routes.draw do
           resource :professional_auth_apply, only: [:create, :destroy]
           resources :open_users, only: [:destroy]
         end
-      end
-    end
-
-    resources :repositories, only: [:index, :show, :edit] do
-      member do
-        get :entries
-        match :sub_entries, :via => [:get, :put]
-        get :commits
-        post :files
-        get :tags
-        post :create_file
-        put :update_file
-        delete :delete_file
-        post :repo_hook
-        post :sync_mirror
-        get :top_counts
-        get 'commits/:sha', to: 'repositories#commit', as: 'commit'
       end
     end
 
@@ -244,119 +178,6 @@ Rails.application.routes.draw do
         get :histories
       end
     end
-
-    resources :courses do
-      member do
-        get 'settings', :action => 'settings', :as => 'settings'
-        post 'set_invite_code_halt'
-        post 'set_public_or_private'
-        post 'search_teacher_candidate'
-        post 'add_teacher'
-        post 'create_graduation_group'
-        post 'join_graduation_group'
-        post 'set_course_group'
-        post 'change_course_admin'
-        post 'change_member_role'
-        post 'change_course_teacher'
-        post 'delete_course_teacher'
-        post 'teacher_application_review'
-        post 'transfer_to_course_group'
-        post 'delete_from_course'
-        post 'add_students_by_search'
-        post 'create_group_by_importing_file'
-        post 'duplicate_course'
-        post 'visits_plus_one'
-        get 'get_historical_courses'
-        get 'get_historical_course_students'
-        get 'course_group_list'
-        get 'add_teacher_popup'
-        get 'teachers'
-        get 'apply_teachers'
-        get 'graduation_group_list'
-        get 'top_banner'
-        get 'left_banner'
-        get 'students'
-        get 'all_course_groups'
-        get 'search_users'
-        get 'base_info'
-        get 'attahcment_category_list'
-        get 'export_member_scores_excel'  #导出课堂信息
-        get 'export_couser_info'
-        get 'export_member_act_score'
-        post 'switch_to_teacher'
-        post 'switch_to_assistant'
-        post 'switch_to_student'
-        post 'exit_course'
-        get 'informs'
-        post 'update_informs'
-        post 'new_informs'
-        delete 'delete_informs'
-        get 'online_learning'
-        post 'join_excellent_course'
-        get 'tasks_list'
-        post 'update_task_position'
-        get 'course_groups'
-        post 'join_course_group'
-        get 'work_score'
-        get 'act_score'
-        get 'statistics'
-        get 'course_videos'
-        delete 'delete_course_video'
-        post :inform_up
-        post :inform_down
-      end
-
-      collection do
-        post 'apply_to_join_course'
-        post 'search_course_list'
-        get 'board_list'
-        get 'mine'
-        get 'search_slim'
-      end
-
-      resources :course_stages, shallow: true do
-        member do
-          post :up_position
-          post :down_position
-        end
-      end
-
-      resources :course_groups, shallow: true do
-        member do
-          post 'rename_group'
-          post 'move_category'
-          post 'set_invite_code_halt'
-        end
-      end
-    end
-
-
-    resources :course_modules, shallow: true do
-      member do
-        get 'sticky_module'
-        get 'hidden_module'
-        post 'rename_module'
-        post 'add_second_category'
-      end
-      collection do
-        post 'unhidden_modules'
-      end
-    end
-
-    resources :course_second_categories, shallow: true do
-      member do
-        post 'rename_category'
-        post 'move_category'
-      end
-    end
-
-
-    resources :repertoires, only: [:index]
-
-    scope module: :projects do
-      resources :project_applies, only: [:create]
-    end
-
 
     namespace :wechats do
       resource :js_sdk_signature, only: [:create]
@@ -410,9 +231,155 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    # Project Area START
+    scope "/:owner/:repo" do
+      scope do
+        get(
+          '/activity',
+          to: 'project_trends#index',
+          as: :project_activity
+        )
+      end
+
+      resource :projects, path: '/', except: [:show, :edit] do
+        member do
+          get :branches
+          get :simple
+          get :watchers, to: 'projects#watch_users'
+          get :stargazers, to: 'projects#praise_users'
+          get :members, to: 'projects#fork_users'
+        end
+      end
+
+      resource :repositories, path: '/', only: [:show, :create, :edit] do
+        member do
+          get :archive
+          get :top_counts
+          get :entries
+          match :sub_entries, :via => [:get, :put]
+          get :commits
+          get :tags
+          post :create_file
+          put :update_file
+          delete :delete_file
+          post :repo_hook
+          post :sync_mirror
+          get :top_counts
+          get 'commits/:sha', to: 'repositories#commit', as: 'commit'
+        end
+      end
+
+      resources :issues do
+        collection do
+          get :commit_issues
+          get :index_chosen
+          post :clean
+          post :series_update
+        end
+        member do
+         post :copy
+         post :close_issue
+         post :lock_issue
+        end
+      end
+
+      resources :pull_requests, :path => :pulls, except: [:destroy] do
+        member do
+          post :pr_merge
+          # post :check_merge
+          post :refuse_merge
+        end
+        collection do
+          post :check_can_merge
+          get :create_merge_infos
+          get :get_branches
+        end
+      end
+
+      resources :versions, :path => :milestones do
+        member do
+          post :update_status
+        end
+      end
+
+      resources :members, :path => :collaborators, only: [:index, :create] do
+        collection do
+          delete :remove
+          put :change_role
+        end
+      end
+
+      resources :hooks
+      resources :forks, only: [:create]
+      resources :project_trends, :path => :activity, only: [:index, :create]
+      resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
+      resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+
+      scope module: :projects do
+        scope do
+          get(
+            '/blob/*id/diff',
+            to: 'blob#diff',
+            constraints: { id: /.+/, format: false },
+            as: :blob_diff
+          )
+          get(
+            '/blob/*id',
+            to: 'blob#show',
+            constraints: { id: /.+/, format: false },
+            as: :blob
+          )
+          delete(
+            '/blob/*id',
+            to: 'blob#destroy',
+            constraints: { id: /.+/, format: false }
+          )
+          put(
+            '/blob/*id',
+            to: 'blob#update',
+            constraints: { id: /.+/, format: false }
+          )
+          post(
+            '/blob/*id',
+            to: 'blob#create',
+            constraints: { id: /.+/, format: false }
+          )
+        end
+
+        scope do
+          get(
+            '/raw/*id',
+            to: 'raw#show',
+            constraints: { id: /.+/, format: /(html|js)/ },
+            as: :raw
+          )
+        end
+
+        scope do
+          get(
+            '/blame/*id',
+            to: 'blame#show',
+            constraints: { id: /.+/, format: /(html|js)/ },
+            as: :blame
+          )
+        end
+
+        scope do
+          get(
+            '/tree/*id',
+            to: 'tree#show',
+            constraints: { id: /.+/, format: /(html|js)/ },
+            as: :tree
+          )
+        end
+      end
+    end
+    # Project Area END
   end
 
   namespace :admins do
+    mount Sidekiq::Web => '/sidekiq'
     get '/', to: 'dashboards#index'
     resources :project_statistics, only: [:index] do
       collection do
@@ -685,4 +652,6 @@ Rails.application.routes.draw do
 
   ## react用
   get '*path', to: 'main#index', constraints: ReactConstraint.new
+
+
 end

@@ -1,7 +1,7 @@
 class PullRequestsController < ApplicationController
   before_action :require_login, except: [:index, :show]
-  before_action :find_project_with_id
-  before_action :set_repository
+  before_action :load_repository
+  before_action :set_user, only: [:new, :get_branches]
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos]
   # before_action :get_relatived, only: [:edit]
   include TagChosenHelper
@@ -29,7 +29,8 @@ class PullRequestsController < ApplicationController
     @projects_names = [{
       project_user_login: @user.try(:login),
       project_name: "#{@user.try(:show_real_name)}/#{@repository.try(:identifier)}",
-      project_id: @project.id
+      project_id: @project.identifier,
+      id: @project.id
     }]
     @merge_projects = @projects_names
     fork_project = @project.fork_project if @is_fork
@@ -37,7 +38,8 @@ class PullRequestsController < ApplicationController
       @merge_projects.push({
         project_user_login: fork_project.owner.try(:login),
         project_name: "#{fork_project.owner.try(:show_real_name)}/#{fork_project.repository.try(:identifier)}",
-        project_id: fork_project.id
+        project_id: fork_project.identifier,
+        id: fork_project.id
       })
     end
   end
@@ -234,12 +236,8 @@ class PullRequestsController < ApplicationController
 
 
   private
-
-  def set_repository
-    @repository = @project.repository
+  def set_user
     @user = @project.owner
-    normal_status(-1, "仓库不存在") unless @repository.present?
-    normal_status(-1, "用户不存在") unless @user.present?
   end
 
   def find_pull_request

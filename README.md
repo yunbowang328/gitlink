@@ -532,17 +532,18 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 #### 项目详情
 ```
-GET api/projects/:id
+GET /api/:namespace_id/:id
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/projects/3263  | jq
+curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id            |是|int    |项目id  |
+|namespace_id             |是|string |用户登录名  |
+|id             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -567,6 +568,50 @@ curl -X GET http://localhost:3000/api/projects/3263  | jq
   "description": "my first project mirror_demo",
   "repo_id": 75073,
   "repo_identifier": "mirror_demo"
+}
+```
+---
+
+#### 项目详情(简版)
+```
+GET /api/:namespace_id/:id/simple
+```
+*示例*
+```
+curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|id            |是|int    |项目id  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id             |int   |id |
+|name           |string|项目名称|
+|identifier     |string|项目标识|
+|is_public      |boolean|项目是否公开， true:公开，false:私有|
+|description    |string|项目简介|
+|repo_id        |int|仓库id|
+|repo_identifier|string|仓库标识|
+
+
+返回值
+```
+{
+  "identifier": "jasder_test",
+  "name": "jasder的测试项目",
+  "id": 4967,
+  "type": 0,
+  "author": {
+    "login": "jasder",
+    "name": "姓名",
+    "image_url": "avatars/User/b"
+  }
 }
 ```
 ---
@@ -898,13 +943,13 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 #### 获取代码目录列表
 ```
-POST /api/repositories/:id/entries.json
+POST /api/:namespace_id/:project_id/repository/entries
 ```
 *示例*
 ```
 curl -X GET \
 -d "ref=develop" \
-http://localhost:3000//api/repositories/3687/entries.json  | jq
+http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 ```
 *请求参数说明:*
 
@@ -1321,11 +1366,11 @@ http://localhost:3000/api/projects  | jq
 
 ### 获取分支列表
 ```
-GET /api/projects/:id/branches
+GET /api/:namespace_id/:id/branches
 ```
 *示例*
 ```
-curl -X GET http://localhost:3000/api/projects/4797/branches | jq
+curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 ```
 *请求参数说明:*
 
@@ -1488,18 +1533,19 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 ## 仓库详情
 ```
-GET /api/repositories/:id
+GET /api/:namespace_id/:project_id/repository
 ```
 *示例*
 ```
 curl -X GET \
-http://localhost:3000/api/repositories/23.json | jq
+http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id             |是|string |项目id  |
+|namespace_id             |是|string |用户登录名  |
+|project_id             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
