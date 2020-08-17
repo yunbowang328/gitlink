@@ -1,7 +1,6 @@
 class Ci::CloudAccount < ApplicationRecord
   belongs_to :project
   belongs_to :user
-  belongs_to :repository, foreign_key: :repo_id
 
   def drone_host
     [drone_ip, ":80"].join

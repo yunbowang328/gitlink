@@ -19,7 +19,7 @@ class Ci::Drone::Server
     "service docker start; docker rm -f `docker ps -qa`; docker run \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e DRONE_DATABASE_DRIVER=mysql \
-      -e DRONE_DATABASE_DATASOURCE=#{database_username}:#{database_password}@#{database_host}:3306/drone?parseTime=true \
+      -e DRONE_DATABASE_DATASOURCE=#{database_username}:#{database_password}@#{database_host}:#{database_port}/drone?parseTime=true \
       -e DRONE_GITEA_SERVER=#{gitea_url} \
       -e DRONE_GITEA_CLIENT_ID=#{client_id} \
       -e DRONE_GITEA_CLIENT_SECRET=#{client_secret} \
@@ -49,6 +49,10 @@ class Ci::Drone::Server
 
     def database_host
       database_config[Rails.env]["ci"]["host"]
+    end
+
+    def database_port
+      database_config[Rails.env]["ci"]["port"] || 3306
     end
 
     def database
