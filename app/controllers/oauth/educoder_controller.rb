@@ -20,7 +20,7 @@ class Oauth::EducoderController < Oauth::BaseController
         user = User.find_by('login = ? or mail = ?', login, mail)
 
         if user.is_a?(User)
-          OpenUsers::Educoder.create!(user: user, uid: user.login)
+          OpenUsers::Educoder.create!(user: user, uid: login)
           successful_authentication(user)
 
           redirect_to callback_url
