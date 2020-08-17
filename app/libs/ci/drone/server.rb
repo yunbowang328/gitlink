@@ -40,19 +40,19 @@ class Ci::Drone::Server
     end
 
     def database_username
-      database_config[Rails.env]["username"]
+      database_config[Rails.env]["ci"]["username"]
     end
 
     def database_password
-      database_config[Rails.env]["password"]
+      database_config[Rails.env]["ci"]["password"]
     end
 
     def database_host
-      database_config[Rails.env]["host"]
+      database_config[Rails.env]["ci"]["host"]
     end
 
     def database
-      database_config[Rails.env]["database"]
+      database_config[Rails.env]["ci"]["database"]
     end
 
     def database_config

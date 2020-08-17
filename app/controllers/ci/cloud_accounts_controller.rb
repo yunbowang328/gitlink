@@ -11,7 +11,7 @@ class Ci::CloudAccountsController < Ci::BaseController
 
       # 1. 保存华为云服务器帐号
       create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: Ci::CloudAccount.encrypted_secret(devops_params[:secret]))
-      if cloud_account = @project.dev_ops_cloud_account
+      if cloud_account = @project.ci_cloud_account
         return render_error('该仓库已绑定了云帐号.')
       else
         cloud_account = Ci::CloudAccount.new(create_params)
