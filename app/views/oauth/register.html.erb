@@ -60,7 +60,7 @@
       success: function(data) {
         console.log(data)
         if (data) {
-          if(data.message){
+          if(data.email_exist){
             $(".emailCheck span").html("该邮箱已存在.");
             return;
           }
