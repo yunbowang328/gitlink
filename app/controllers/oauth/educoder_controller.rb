@@ -16,10 +16,9 @@ class Oauth::EducoderController < Oauth::BaseController
         redirect_to callback_url
       else
         Rails.logger.info "######## open user not exits"
-        user = User.find_by(login: login) || User.find_by(mail: mail)
         user = User.find_by('login = ? or mail = ?', login, mail)
 
-        if user && user.is_a?(User)
+        if user.is_a?(User)
           OpenUsers::Educoder.create!(user: user, uid: user.login)
           successful_authentication(user)
 
