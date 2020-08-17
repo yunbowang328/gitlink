@@ -1,5 +1,5 @@
-module DevOps
+module Ci
   def self.table_name_prefix
-    'dev_ops_'
+    'ci_'
   end
 end
