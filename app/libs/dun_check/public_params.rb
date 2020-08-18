@@ -6,8 +6,8 @@ class DunCheck::PublicParams
   def call
    
     public_params = {
-      secretId: Redmine::Configuration['dun']['secretId'], 
-      businessId: Redmine::Configuration['dun']["#{@type}_businessId"],
+      secretId: EduSetting.get("dun_secret_id"), 
+      businessId: EduSetting.get("dun_#{@type}_businessId"),
       timestamp: DateTime.current.strftime('%Q').to_i,
       nonce: rand(10 ** 11).to_i
     }
@@ -15,7 +15,7 @@ class DunCheck::PublicParams
   end
 
   def generate_sign(params)
-    secretkey = Redmine::Configuration['dun']['secretKey']
+    secretkey = EduSetting.get("dun_secrect_key")
     sort_params = params.sort.to_h 
     sign_str = ""
     sort_params.each do |k,v|

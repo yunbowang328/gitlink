@@ -15,7 +15,7 @@ class DunCheck::ImageCheck
       Rails.logger.info("==========@image_params===========#{@image_params}")
       dun_params = check_dun_params(@image_params)
       
-      api_url = Redmine::Configuration['dun']['image_api']
+      api_url = EduSetting.get("dun_image_api")
 
       uri = URI.parse(api_url)
 

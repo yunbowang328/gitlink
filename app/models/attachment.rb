@@ -3,7 +3,7 @@ class Attachment < ApplicationRecord
   include Publicable
   include Publishable
   include Lockable
-
+  include DunCheckImageAble
   belongs_to :container, polymorphic: true, optional: true
   belongs_to :author, class_name: "User", foreign_key: :author_id
   # belongs_to :course, foreign_key: :container_id, optional: true

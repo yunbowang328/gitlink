@@ -44,8 +44,8 @@ class DunCheck::TextCheck
     begin
       dun_params = check_dun_params(text_params)
       
-      api_url = Redmine::Configuration['dun']['text_api']
-
+      # api_url = Redmine::Configuration['dun']['text_api']
+      api_url = EduSetting.get("dun_text_api")
       uri = URI.parse(api_url)
 
       http = Net::HTTP.new(uri.hostname, uri.port)
