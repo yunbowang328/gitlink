@@ -12,11 +12,11 @@ class SyncForgeController < ApplicationController
     end
   end
 
-  # def create 
+  # def create
   #   ActiveRecord::Base.transaction do
   #     params.permit!
   #     sync_params = params[:sync_params]
-  #     project_user = User.where(login: sync_params[:owner_login])&.first 
+  #     project_user = User.where(login: sync_params[:owner_login])&.first
   #     #以前已同步的项目,那么肯定存在仓库
   #     SyncLog.sync_log("=================begin_to_sync_forge: project_identifier: #{sync_params[:identifier]}========")
   #     user_projects = Project.where(user_id: project_user.id)
@@ -38,7 +38,7 @@ class SyncForgeController < ApplicationController
   #       check_sync_project(project, sync_params)
   #     else #新建项目
   #       SyncLog.sync_log("=================begin_to_create_new_project========")
-        
+
   #       project_params = {
   #         repository_name: sync_params[:identifier],
   #         user_id: project_user.id,
@@ -53,7 +53,7 @@ class SyncForgeController < ApplicationController
   #           new_project_score = ProjectScore.create(score_params)
   #           SyncLog.sync_log("=================new_project_score:#{new_project_score.try(:id)}========")
   #         end
-              
+
   #         SyncRepositoryJob.perform_later(sync_params[:owner_login], sync_params[:identifier], sync_params[:repository], get_sudomain) if sync_params[:repository].present?
   #         check_new_project(project, sync_params)
   #       else
@@ -115,7 +115,7 @@ class SyncForgeController < ApplicationController
   #    SyncLog.sync_log("=================sync_user_failed====#{e}")
   # end
 
-  # private 
+  # private
 
   # def check_sync_project(project,sync_params)
   #   begin
@@ -125,8 +125,8 @@ class SyncForgeController < ApplicationController
   #     # end
 
   #     SyncLog.sync_log("----begin_to_check_sync_project----project_id:#{project.id}---------------")
-  #     change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score 
-  #     change_project_issues(project, sync_params[:issues],project.id, gitea_main) 
+  #     change_project_score(project, sync_params[:project_score], sync_params[:repository]) if sync_params[:repository].present?  #更新project_score
+  #     change_project_issues(project, sync_params[:issues],project.id, gitea_main)
   #     change_project_members(project, sync_params[:members],gitea_main)
   #     change_project_versions(project, sync_params[:project_versions],gitea_main)
   #     change_project_watchers(project, sync_params[:project_watchers],gitea_main)
@@ -134,7 +134,7 @@ class SyncForgeController < ApplicationController
   #   rescue => e
   #     SyncLog.sync_log("=========check_sync_project_errors:#{e}===================")
   #   end
-    
+
   # end
 
   # def check_new_project(project,sync_params)
@@ -167,7 +167,7 @@ class SyncForgeController < ApplicationController
   #       parent_id: project.id
   #     }
   #     SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
-      
+
   #     SyncLog.sync_log("***6. end_to_sync_parises---------------")
   #   end
   # end
@@ -189,7 +189,7 @@ class SyncForgeController < ApplicationController
   #         end
   #       end
   #       pre_project_score.save! if change_num > 0   #如果 project_score有变化则更新
-  #     else 
+  #     else
   #       ProjectScore.create!(project_scores.merge(project_id: project.id))
   #     end
   #     SyncLog.sync_log("***1. end_to_sync_project_score---------------")
@@ -206,7 +206,7 @@ class SyncForgeController < ApplicationController
   #     SyncLog.sync_log("***2--01. forge_issue_ids-#{forge_issue_ids.size.to_i}--------------")
   #     if forge_issue_ids.size.to_i <= old_issues_params[:count].to_i
   #       diff_issue_ids = old_issues_params[:ids] - forge_issue_ids
-        
+
   #       if diff_issue_ids.size == 0  #issue数量一样，判断评论是否有增减
   #         forge_journal_ids = Journal.select([:id, :journalized_id, :journalized_type]).where(journalized_id: forge_issue_ids).pluck(:id)
   #         diff_journal_ids = old_issues_params[:journals][:ids] - forge_journal_ids
@@ -241,10 +241,10 @@ class SyncForgeController < ApplicationController
   #         # }
   #         # SyncLog.sync_log("***2--03. sync_projects_params_groups-#{sync_projects_params}--------------")
   #         # SyncProjectsJob.perform_later(sync_projects_params, gitea_main)
-         
+
   #       end
   #     end
-      
+
   #     # SyncProjectsJob.perform_later(sync_projects_params, gitea_main) if sync_projects_params.present?
   #     SyncLog.sync_log("***2. end_to_syncissues---------------")
   #   rescue Exception => e
@@ -265,7 +265,7 @@ class SyncForgeController < ApplicationController
   #         parent_id: project.id
   #       }
   #       SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
-        
+
   #     end
   #   end
   #   SyncLog.sync_log("***5. begin_to_sync_watchers---------------")
@@ -285,7 +285,7 @@ class SyncForgeController < ApplicationController
   #       }
   #       SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
   #   end
-    
+
   #     SyncLog.sync_log("***4. end_to_sync_versions---------------")
   #   end
   # end
@@ -304,12 +304,13 @@ class SyncForgeController < ApplicationController
   #       }
   #       SyncProjectsJob.perform_later(sync_projects_params,gitea_main)
   #   end
-    
+
   #     SyncLog.sync_log("***3. end_to_sync_members---------------")
+<<<<<<< HEAD
   #   end
   # end
 
-  # def check_token 
+  # def check_token
   #   sync_params = params[:sync_params]
   #   unless sync_params[:token] && sync_params[:token] == get_token
   #     render json: {message: "token_errors"}
@@ -320,6 +321,22 @@ class SyncForgeController < ApplicationController
   #   "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
   # end
 
+=======
+  #   end
+  # end
+
+  # # def check_token
+  # #   sync_params = params[:sync_params]
+  # #   unless sync_params[:token] && sync_params[:token] == get_token
+  # #     render json: {message: "token_errors"}
+  # #   end
+  # # end
+
+  # def get_token
+  #   "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
+  # end
+
+>>>>>>> e0bedf175fa89ad61d0759c620f4050758307288
   # def get_sudomain
   #   SyncLog.sync_log("=================request.subdomain:#{request.subdomain}========")
   #   gitea_main = "gitea.trustie.net"

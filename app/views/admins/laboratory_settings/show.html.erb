@@ -19,10 +19,14 @@
                              maxlength: 15, class: 'form-control font-16',
                              'onKeyUp': 'value=value.replace(/[^\w\-\/]/ig,"").toLowerCase()',
                              style: 'text-transform:lowercase'%>
-          <div class="input-group-append">
+          <%
+=begin%>
+ <div class="input-group-append">
             <% rails_env = EduSetting.get('rails_env') %>
             <span class="input-group-text font-14" id="site-prefix"><%= rails_env && rails_env != 'production' ? ".#{rails_env}.educoder.net" : '.educoder.net' %></span>
-          </div>
+          </div> 
+<%
+=end%>
         </div>
         <%# if @laboratory.errors && @laboratory.errors.key?(:identifier) %>
 <!--          <span id="identifier-error" class="danger text-danger">二级域名已被使用</span>-->

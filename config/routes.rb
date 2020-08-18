@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'oauth/bind', to: 'oauth/educoder#bind'
   get 'oauth/register', to: 'oauth#register'
   post 'oauth/auto_register', to: 'oauth#auto_register'
-  
+
   resources :edu_settings
 
   scope '/api' do

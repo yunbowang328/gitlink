@@ -124,7 +124,7 @@ class User < ApplicationRecord
 
   # 删除自动登录的token，一旦退出下次会提示需要登录
   def delete_autologin_token(value)
-    Token.where(:user_id => id, :action => 'autologin', :value => value).delete_all
+    Token.where(:user_id => id, :action => autologin_name, :value => value).delete_all
   end
 
   def delete_session_token(value)
@@ -510,8 +510,8 @@ class User < ApplicationRecord
   end
 
   # Returns the user who matches the given autologin +key+ or nil
-  def self.try_to_autologin(key)
-    user = Token.find_active_user('autologin', key)
+  def self.try_to_autologin(key,type)
+    user = Token.find_active_user(type, key)
     user.update(last_login_on: Time.now) if user
     user
   end
@@ -673,6 +673,10 @@ class User < ApplicationRecord
   def validate_sensitive_string
     raise("真实姓名包含敏感词汇，请重新输入") if lastname && !HarmoniousDictionary.clean?(lastname)
     raise("昵称包含敏感词汇，请重新输入") if nickname && !HarmoniousDictionary.clean?(nickname)
+  end
+
+  def autologin_name 
+    EduSetting.get('autologin_cookie_name') || "autologin_forge_military"
   end
 
   def set_laboratory

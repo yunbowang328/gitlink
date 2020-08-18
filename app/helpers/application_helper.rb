@@ -149,7 +149,7 @@ module ApplicationHelper
         File.join("images/avatars", ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       end
     elsif source.class.to_s == 'User'
-      str = source.user_extension.try(:gender).to_i == 0 ? "b" : "g"
+      str = source.user_extension.try(:gender).to_i == 0 ? "boy.jpg" : "girl.jpg"
       File.join(relative_path, "#{source.class}", str)
     elsif source.class.to_s == 'Subject'
       File.join("images","educoder", "index", "subject", "subject#{rand(17)}.jpg")

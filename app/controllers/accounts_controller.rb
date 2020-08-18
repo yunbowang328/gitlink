@@ -245,7 +245,7 @@ class AccountsController < ApplicationController
   end
 
   def set_autologin_cookie(user)
-    token = Token.get_or_create_permanent_login_token(user, "autologin")
+    token = Token.get_or_create_permanent_login_token(user, autologin_cookie_name)
     cookie_options = {
                       :value => token.value,
                       :expires => 1.month.from_now,

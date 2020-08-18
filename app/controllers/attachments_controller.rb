@@ -33,6 +33,7 @@ class AttachmentsController < ApplicationController
     # 2. 上传到云
     begin
       upload_file = params["file"] || params["#{params[:file_param_name]}"]# 这里的file_param_name是为了方便其他插件名称
+      dun_check_file = upload_file.dup
       uid_logger("#########################file_params####{params["#{params[:file_param_name]}"]}")
       raise "未上传文件" unless upload_file
 
@@ -71,7 +72,15 @@ class AttachmentsController < ApplicationController
         @attachment.author_id = current_user.id
         @attachment.disk_directory = month_folder
         @attachment.cloud_url = remote_path
-        @attachment.save!
+        # @attachment.save!
+        if @attachment.save!
+          check_result = Attachment.check_image_able(dun_check_file)
+          if check_result[:status].to_i == -1
+            @attachment.destroy
+            raise "上传失败，#{check_result[:message]}"
+            # return render json: {status: -1, message: "上传失败，#{check_result[:message]}" } 
+          end
+        end
       else
         logger.info "文件已存在，id = #{@attachment.id}, filename = #{@attachment.filename}"
       end

@@ -54,7 +54,7 @@ class Token < ActiveRecord::Base
 
   # Delete all expired tokens
   def self.destroy_expired
-    Token.delete_all ["action NOT IN (?) AND created_on < ?", ['feeds', 'api', 'autologin'], Time.now - @@validity_time]
+    Token.delete_all ["action NOT IN (?) AND created_on < ?", ['feeds', 'api', 'autologin', 'autologin_forge_military'], Time.now - @@validity_time]
   end
 
   # Returns the active user who owns the key for the given action

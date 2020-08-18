@@ -47,7 +47,8 @@ module Gitea
       {
         filepath: @params[:filepath],
         branch: @params[:branch],
-        new_branch: @params[:new_branch]
+        new_branch: @params[:new_branch],
+        content: @params[:content]
       }
     end
 
