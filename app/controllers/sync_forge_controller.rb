@@ -306,22 +306,6 @@ class SyncForgeController < ApplicationController
   #   end
 
   #     SyncLog.sync_log("***3. end_to_sync_members---------------")
-<<<<<<< HEAD
-  #   end
-  # end
-
-  # def check_token
-  #   sync_params = params[:sync_params]
-  #   unless sync_params[:token] && sync_params[:token] == get_token
-  #     render json: {message: "token_errors"}
-  #   end
-  # end
-
-  # def get_token
-  #   "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
-  # end
-
-=======
   #   end
   # end
 
@@ -336,7 +320,6 @@ class SyncForgeController < ApplicationController
   #   "34c82f51e0b699d9d16d70fd6497c9b1e4821d6ea3e872558a6537a091076b8e"
   # end
 
->>>>>>> e0bedf175fa89ad61d0759c620f4050758307288
   # def get_sudomain
   #   SyncLog.sync_log("=================request.subdomain:#{request.subdomain}========")
   #   gitea_main = "gitea.trustie.net"
