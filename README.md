@@ -2450,7 +2450,7 @@ https://localhost:3000/api/users/devops.json  | jq
 
 #### 初始化DevOps流程
 ```
-POST  /api/dev_ops/cloud_accounts
+POST  /api/ci/cloud_accounts
 ```
 
 *示例*
@@ -2460,7 +2460,7 @@ curl -X POST \
 -d "secret=xxx" \
 -d "ip_num=xx.xx.xx.xx" \
 -d "project_id=5988" \
-https://localhost:3000/api/dev_ops/cloud_accounts.json  | jq
+https://localhost:3000/api/ci/cloud_accounts.json  | jq
 ```
 
 *请求参数说明:*
@@ -2528,7 +2528,6 @@ POST /api/dev_ops/cloud_accounts/:id/activate
 *示例*
 ```
 curl -X POST \
--d "id=1" \
 -d "project_id=4844" \
 -d "drone_token=xxxxxxxxxx" \
 http://localhost:3000/api/dev_ops/cloud_accounts/1/activate.json | jq
