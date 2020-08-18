@@ -2,11 +2,11 @@ class Oauth::EducoderController < Oauth::BaseController
   def bind
     begin
       login = params[:login]
-      mail = params[:mail]
+      mail = params[:mail] || nil
       callback_url = params[:callback_url]
       token = params[:token]
 
-      ::OauthEducoderForm.new({login: login, token: token, mail: mail, callback_url: callback_url}).validate!
+      ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
 
       open_user= OpenUsers::Educoder.find_by(uid: login)
 
