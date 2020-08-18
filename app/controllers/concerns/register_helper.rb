@@ -3,8 +3,11 @@ module RegisterHelper
 
   def autologin_register(username, email, password, platform= '')
     result = {message: nil, user: nil}
+    email ||=  "#{username@example.org}"
 
-    user = User.new(admin: false, login: username, mail: email, type: "User")
+    user = User.find_by(login: username)
+    user ||= User.new(admin: false, login: username, mail: email, type: "User")
+    
     user.password = password
     user.platform = platform
     user.activate
@@ -16,7 +19,7 @@ module RegisterHelper
       user.gitea_token = result['sha1']
       user.gitea_uid = gitea_user['id']
       if user.save!
-        UserExtension.create!(user_id: user.id)
+        UserExtension.create!(user_id: user.id) if user.user_extension.blank?
         result[:user] = {id: user.id, token: user.gitea_token}
       end
     else
