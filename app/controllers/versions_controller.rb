@@ -83,7 +83,7 @@ class VersionsController < ApplicationController
         if version.save
           normal_status(0, "里程碑创建成功")
         else
-          normal_status(-1, "里程碑创建失败")
+          normal_status(-1, version.errors.messages.values[0][0])
         end
       end
 
@@ -121,7 +121,7 @@ class VersionsController < ApplicationController
         if @version.update_attributes(tag_params)
           normal_status(0, "里程碑更新成功")
         else
-          normal_status(-1, "里程碑更新失败")
+          normal_status(-1, version.errors.messages.values[0][0])
         end
       end
     else

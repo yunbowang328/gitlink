@@ -1,4 +1,5 @@
 class Version < ApplicationRecord
+  include DunCheckAble
   belongs_to :project, counter_cache: true
   has_many :issues, class_name: "Issue", foreign_key: "fixed_version_id"
   belongs_to :user, optional: true

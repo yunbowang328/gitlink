@@ -46,7 +46,7 @@ class JournalsController < ApplicationController
         render :json => { status: 0, message: "评论成功", id:  journal.id}
         # normal_status(0, "评论成功")
       else
-        normal_status(-1, "评论失败")
+        normal_status(-1, journal.errors.messages.values[0][0])
       end
     end
   end
@@ -70,7 +70,7 @@ class JournalsController < ApplicationController
       if @journal.update_attribute(:notes, content)
         normal_status(0, "更新成功")
       else
-        normal_status(-1, "更新失败")
+        normal_status(-1, @journal.errors.messages.values[0][0])
       end
     else
       normal_status(-1, "评论的内容不能为空")

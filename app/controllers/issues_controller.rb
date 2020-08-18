@@ -140,7 +140,7 @@ class IssuesController < ApplicationController
         # normal_status(0, "创建成功",)
         render :json => { status: 0, message: "创建成功", id:  @issue.id}
       else
-        normal_status(-1, "创建失败")
+        normal_status(-1, @issue.errors.messages.values[0][0])
       end
     end
 
@@ -202,7 +202,7 @@ class IssuesController < ApplicationController
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
       normal_status(0, "更新成功")
     else
-      normal_status(-1, "更新失败")
+      normal_status(-1, @issue.errors.messages.values[0][0])
     end
 
   end

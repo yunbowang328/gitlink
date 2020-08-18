@@ -94,8 +94,10 @@ class PullRequestsController < ApplicationController
                 normal_status(-1, "PullRequest创建失败")
               end
             else
-              normal_status(-1, "PullRequest创建失败")
+              normal_status(-1, local_requests.errors.messages.values[0][0])
             end
+          else
+            normal_status(-1, pull_issue.errors.messages.values[0][0])
           end
         rescue => e
           normal_status(-1, e.message)
@@ -145,8 +147,10 @@ class PullRequestsController < ApplicationController
                 normal_status(-1, "PullRequest更新失败")
               end
             else
-              normal_status(-1, "PullRequest更新失败")
+              normal_status(-1, @pull_request.errors.messages.values[0][0])
             end
+          else
+            normal_status(-1, @issue.errors.messages.values[0][0])
           end
         rescue => e
           normal_status(-1, e.message)
