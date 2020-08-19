@@ -1,5 +1,6 @@
 class Ci::BuildsController < Ci::BaseController
   include RepositoriesHelper
+  include Devopsable
 
   before_action :find_project, :find_cloud_account
   before_action :find_cloud_account, except: :get_trustie_pipeline
