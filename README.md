@@ -2523,14 +2523,14 @@ http://localhost:3000/api/users/devops_authenticate.json | jq
 
 #### 激活项目
 ```
-POST /api/dev_ops/cloud_accounts/:id/activate
+POST /api/ci/cloud_accounts/:id/activate
 ```
 *示例*
 ```
 curl -X POST \
 -d "project_id=4844" \
 -d "drone_token=xxxxxxxxxx" \
-http://localhost:3000/api/dev_ops/cloud_accounts/1/activate.json | jq
+http://localhost:3000/api/ci/cloud_accounts/1/activate.json | jq
 ```
 *请求参数说明:*
 
@@ -2557,13 +2557,13 @@ http://localhost:3000/api/dev_ops/cloud_accounts/1/activate.json | jq
 
 #### 获取仓库的.trustie-pipeline.yml
 ```
-GET /api/dev_ops/builds/get_trustie_pipeline
+GET /api/ci/builds/get_trustie_pipeline
 ```
 *示例*
 ```
 curl -X GET \
 -d "project_id=4844" \
-http://localhost:3000/api/dev_ops/builds/get_trustie_pipeline.json | jq
+http://localhost:3000/api/ci/builds/get_trustie_pipeline.json | jq
 ```
 *请求参数说明:*
 
