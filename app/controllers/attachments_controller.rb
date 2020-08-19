@@ -71,7 +71,7 @@ class AttachmentsController < ApplicationController
         @attachment.digest = digest
         @attachment.author_id = current_user.id
         @attachment.disk_directory = month_folder
-        @attachment.cloud_url = remote_path
+        # @attachment.cloud_url = remote_path
         # @attachment.save!
         if @attachment.save!
           check_result = Attachment.check_image_able(dun_check_file)
