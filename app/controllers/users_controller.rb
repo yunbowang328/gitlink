@@ -151,8 +151,10 @@ class UsersController < ApplicationController
   def trustie_related_projects
     projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
     projects_json = []
+    domain_url = EduSetting.get('host_name') + '/projects'
     if projects.present?
       projects.each do |p|
+        project_url = "/#{p.owner.login}/#{p.identifier}"
         pj = {
           id: p.id,
           name: p.name,
@@ -167,6 +169,10 @@ class UsersController < ApplicationController
           members_count: p&.members.size,
           issues_count: p.issues_count - p.pull_requests_count,
           commits_count: p&.project_score&.changeset_num.to_i,
+          http_url: domain_url + project_url,
+          http_collaborator_url: domain_url + project_url + "/setting/collaborator",
+          http_issues_url: domain_url + project_url + "/issues",
+          http_commits_url: domain_url + project_url + "/commits",
           project_score: p&.project_score.present? ? p&.project_score&.as_json(:except=>[:created_at, :updated_at]).merge!(commit_time: format_time(p&.project_score&.commit_time)) : {}
         }
         projects_json.push(pj)
