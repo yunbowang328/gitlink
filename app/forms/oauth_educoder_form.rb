@@ -1,11 +1,10 @@
 class OauthEducoderForm
   include ActiveModel::Model
 
-  attr_accessor :login, :token, :mail, :callback_url
+  attr_accessor :login, :token, :callback_url
 
   validates :login, presence: true
   validates :token, presence: true
-  validates :mail, presence: true
   validates :callback_url, presence: true
 
   validate :check_callback_url!
