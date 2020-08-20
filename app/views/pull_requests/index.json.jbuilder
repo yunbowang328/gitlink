@@ -19,6 +19,7 @@ json.issues do
     json.pull_request_staus pr.status == 1 ? "merged" : (pr.status == 2 ? "closed" : "open")
     json.is_original pr.is_original
     json.fork_project_id pr&.fork_project_id
+    json.fork_project_identifier pr&.fork_project&.identifier
     json.fork_project_user pr&.fork_project&.owner.try(:login)
 
     
