@@ -31,15 +31,15 @@ Rails.application.routes.draw do
           get :common
         end
       end
-      resources :builds, only: :index do
-        collection do
-          get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
-          get ':number', to: 'builds#detail', as: 'detail'
-          post ':number', to: 'builds#restart', as: 'restart'
-          delete ':number', to: 'builds#delete', as: 'delete'
-          get ':number/logs/:stage/:step', to: 'builds#logs', as: 'logs'
-        end
-      end
+      # resources :builds, only: :index do
+      #   collection do
+      #     get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
+      #     get ':number', to: 'builds#detail', as: 'detail'
+      #     post ':number', to: 'builds#restart', as: 'restart'
+      #     delete ':number', to: 'builds#delete', as: 'delete'
+      #     get ':number/logs/:stage/:step', to: 'builds#logs', as: 'logs'
+      #   end
+      # end
     end
 
     resources :sync_forge, only: [:create] do
@@ -337,6 +337,10 @@ Rails.application.routes.draw do
       resources :project_trends, :path => :activity, only: [:index, :create]
       resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
       resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+
+      scope module: :ci do
+        resources :builds, param: :build
+      end
 
       scope module: :projects do
         scope do

@@ -1,2 +1,0 @@
-module DevOps::LanguagesHelper
-end

@@ -40,23 +40,23 @@ class Ci::Drone::Server
     end
 
     def database_username
-      database_config[Rails.env]["ci"]["username"]
+      database_config[Rails.env]["ci_server_db"]["username"]
     end
 
     def database_password
-      database_config[Rails.env]["ci"]["password"]
+      database_config[Rails.env]["ci_server_db"]["password"]
     end
 
     def database_host
-      database_config[Rails.env]["ci"]["host"]
+      database_config[Rails.env]["ci_server_db"]["host"]
     end
 
     def database_port
-      database_config[Rails.env]["ci"]["port"] || 3306
+      database_config[Rails.env]["ci_server_db"]["port"] || 3306
     end
 
     def database
-      database_config[Rails.env]["ci"]["database"]
+      database_config[Rails.env]["ci_server_db"]["database"]
     end
 
     def database_config

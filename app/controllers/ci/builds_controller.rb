@@ -2,14 +2,18 @@ class Ci::BuildsController < Ci::BaseController
   include RepositoriesHelper
   include Devopsable
 
-  before_action :find_project, :find_cloud_account
-  before_action :find_cloud_account, except: :get_trustie_pipeline
-  before_action :ci_authorize!
+  before_action :load_repo
 
   def index
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier).builds
+    scope = @repo.builds
 
-    render json: result
+    scope = Ci::Builds::ListQuery.call(@repo, params)
+    @total_count = scope.map(&:build_id).size
+    @builds = paginate scope
+  end
+
+  def show
+    @build = @repo.builds.includes(stages: [:steps]).find_by(build_number: params[:build])
   end
 
   def detail
@@ -49,10 +53,6 @@ class Ci::BuildsController < Ci::BaseController
   end
 
   private
-    def find_project
-      @project = Project.find params[:project_id]
-    end
-
     def find_cloud_account
       @cloud_account = @project.ci_cloud_account
     end

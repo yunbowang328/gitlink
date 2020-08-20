@@ -1,2 +1,0 @@
-module DevOps::BuildsHelper
-end

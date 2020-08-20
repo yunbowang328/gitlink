@@ -1,4 +1,4 @@
-class Ci::Language < ApplicationRecord
+class Ci::Language < Local::Base
   # before_save :encode_content
 
   belongs_to :cover, class_name: "Attachment", foreign_key: :cover_id, optional: true

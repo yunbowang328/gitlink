@@ -1,4 +1,5 @@
-class Ci::CloudAccount < ApplicationRecord
+class Ci::CloudAccount < Local::Base
+
   belongs_to :project
   belongs_to :user
 

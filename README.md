@@ -2695,21 +2695,14 @@ curl -X GET http://localhost:3000/api/dev_ops/languages/114.json | jq
 
 #### 获取构建列表
 ```
-GET  /api/dev_ops/builds
+GET  /api/:owner/:repo/builds
 ```
 
 *示例*
 ```
 curl -X GET \
--d 'project_id=4844' \
-http://localhost:3000/api/dev_ops/builds | jq
+http://localhost:3000/api/Jason/forge/builds | jq
 ```
-
-*请求参数说明:*
-
-|参数名|必选|类型|说明|
-|-|-|-|-|
-|project_id          |是|int |project's id  |
 
 *返回参数说明:*
 
@@ -2745,10 +2738,11 @@ http://localhost:3000/api/dev_ops/builds | jq
     "author_email": "email.com",
     "author_avatar": "",
     "sender": "jasder",
-    "started": 1595317786,
-    "finished": 1595318426,
-    "created": 1595317786,
-    "updated": 1595317786,
+    "started": "2020-08-19 06:22",
+    "finished": "2020-08-19 06:22",
+    "created": "2020-08-19 06:22",
+    "updated": "2020-08-19 06:22",
+    "duration_time": 0,
     "version": 3
   }
 ]
@@ -2757,22 +2751,20 @@ http://localhost:3000/api/dev_ops/builds | jq
 
 #### 获取某条构建详情信息
 ```
-GET  /api/dev_ops/builds/:number
+GET  /api/:owner/:repo/builds/:build
 ```
 
 *示例*
 ```
 curl -X GET \
--d 'project_id=4844' \
-http://ocalhost:3000/api/dev_ops/builds/1 | jq
+http://ocalhost:3000/api/jasder/forge/builds/1 | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id         |int|project's id|
-|number          |是|int |build's number  |
+|build          |是|int |build's number  |
 
 *返回参数说明:*
 
