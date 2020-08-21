@@ -21,8 +21,6 @@ json.issues do
     json.fork_project_id pr&.fork_project_id
     json.fork_project_identifier pr&.fork_project&.identifier
     json.fork_project_user pr&.fork_project&.owner.try(:login)
-
-    
     json.id issue.id
     json.name issue.subject
     json.pr_time time_from_now(pr.status == 1 ? pr.updated_at : issue.updated_on)
