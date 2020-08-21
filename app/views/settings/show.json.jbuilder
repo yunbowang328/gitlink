@@ -44,6 +44,6 @@ json.setting do
   json.navbar nav_bar
 
   json.footer default_setting.footer
-
+  json.new_course default_course_links
   json.main_site current_laboratory.main_site?
 end
