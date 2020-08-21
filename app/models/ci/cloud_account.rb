@@ -1,5 +1,4 @@
-class Ci::CloudAccount < Local::Base
-
+class Ci::CloudAccount < Ci::LocalBase
   belongs_to :project
   belongs_to :user
 
@@ -12,7 +11,7 @@ class Ci::CloudAccount < Local::Base
   end
 
   def drone_url
-    ["http://", drone_host].join
+    ["http://", self.drone_host].join
   end
 
   def visible_secret
