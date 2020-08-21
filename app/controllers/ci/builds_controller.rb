@@ -8,6 +8,7 @@ class Ci::BuildsController < Ci::BaseController
     scope = @repo.builds
 
     scope = Ci::Builds::ListQuery.call(@repo, params)
+    
     @total_count = scope.map(&:build_id).size
     @builds = paginate scope
   end
