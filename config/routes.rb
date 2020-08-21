@@ -344,6 +344,11 @@ Rails.application.routes.draw do
             to: 'projects#get_trustie_pipeline',
             as: :get_trustie_pipeline
           )
+          put(
+            'update_trustie_pipeline',
+            to: 'projects#update_trustie_pipeline',
+            as: :update_trustie_pipeline
+          )
         end
         resources :cloud_accounts, only: [:create] do
           member do

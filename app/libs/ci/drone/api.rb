@@ -15,7 +15,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # Build List
   # GET api/repos/{owner}/{name}/builds
   # eq:
-  #  DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier)
+  #  Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier)
   def builds
     get(endpoint, "api/repos/#{owner}/#{repo}/builds", drone_token: drone_token)
   end
@@ -23,7 +23,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # Build Info
   # GET api/repos/{owner}/{name}/builds/{number}
   # eq:
-  # DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier, number: number).build
+  # Ci::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier, number: number).build
   def build
     get(endpoint, "api/repos/#{owner}/#{repo}/builds/#{options[:number]}", drone_token: drone_token)
   end
@@ -31,7 +31,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # Update .trustie-pipeline.yml file
   # PATCH api/repos/{owner}/{name}\
   # eq:
-  #  DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier, config_path: config_path).config_yml
+  #  Ci::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier, config_path: config_path).config_yml
   def config_yml
     patch(endpoint, "/api/repos/#{owner}/#{repo}", drone_token: drone_token, config_path: options[:config_path])
   end
@@ -39,7 +39,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # Activate user's project with Drone CI
   # POST api/repos/{owner}/{name}
   # eq:
-  #  DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, project.owner.login, project.identifier).activate
+  #  Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, project.owner.login, project.identifier).activate
   def activate
     post(endpoint, "/api/repos/#{owner}/#{repo}", drone_token: drone_token)
   end
@@ -48,7 +48,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # POST api/repos/{owner}/{name}/builds/{number}
   # Restart the specified build. Please note this api requires read and write access to the repository and the request parameter {build} is not the build id but the build number.
   # eq:
-  # DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: number).restart
+  # Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: number).restart
   def restart
     post(endpoint, "/api/repos/#{owner}/#{repo}/builds/#{options[:number]}", drone_token: drone_token)
   end
@@ -57,7 +57,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # DELETE api/repos/{owner}/{name}/builds/{number}
   # Stop the specified build. Please note this api requires administrative privileges and the request parameter {build} is not the build id but the build number.
   # eq:
-  # DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: number).stop
+  # Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: number).stop
   def stop
     delete(endpoint, "/api/repos/#{owner}/#{repo}/builds/#{options[:number]}", drone_token: drone_token)
   end
@@ -66,7 +66,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # GET /api/repos/{owner}/{repo}/builds/{build}/logs/{stage}/{step}
   # Please note this api requires read access to the repository.
   # eq:
-  # DevOps::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: build, stage: stage, step: step).logs
+  # Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, build: build, stage: stage, step: step).logs
   def logs
     get(endpoint, "/api/repos/#{owner}/#{repo}/builds/#{options[:build]}/logs/#{options[:stage]}/#{options[:step]}", drone_token: drone_token)
   end

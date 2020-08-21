@@ -35,19 +35,6 @@ class Ci::BuildsController < Ci::BaseController
     render json: result
   end
 
-  # get .trustie-pipeline.yml file
-  def get_trustie_pipeline
-    file_path_uri = URI.parse('.trustie-pipeline.yml')
-    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: params[:ref] || "master")
-    if interactor.success?
-      file = interactor.result
-      return render json: {} if file[:status]
-
-      json = {name: file['name'], path: file['path'], sha: file['sha'], content: render_decode64_content(file['content'])}
-      render json: json
-    end
-  end
-
   private
     def find_cloud_account
       @cloud_account = current_user.cloud_account

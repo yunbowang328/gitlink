@@ -2583,6 +2583,39 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 ```
 ---
 
+#### 更新'.trustie-pipeline.yml'文件
+```
+PUT /api/:owner/:repo/update_trustie_pipeline
+```
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner          |是|string |用户登录名  |
+|repo       |是|string |project's identifier |
+|ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|接口返回状态， 1: 请求成功， -1: 请求失败|
+|message           |string|文件夹或文件相对路径|
+
+```
+{
+  "status": 1,
+  "message": ".trustie-pipeline.yml"
+}
+```
+---
+
 #### 获取语言列表
 ```
 GET  /api/ci/languages
