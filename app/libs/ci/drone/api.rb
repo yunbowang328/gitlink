@@ -23,7 +23,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # Build Info
   # GET api/repos/{owner}/{name}/builds/{number}
   # eq:
-  # Ci::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier, number: number).build
+  # Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, project.owner.login, project.identifier, number: number).build
   def build
     get(endpoint, "api/repos/#{owner}/#{repo}/builds/#{options[:number]}", drone_token: drone_token)
   end
@@ -31,7 +31,7 @@ class Ci::Drone::API < Ci::Drone::Request
   # Update .trustie-pipeline.yml file
   # PATCH api/repos/{owner}/{name}\
   # eq:
-  #  Ci::Drone::API.new(cloud_account.drone_token, cloud_account.endpoint, project.owner.login, project.identifier, config_path: config_path).config_yml
+  #  Ci::Drone::API.new(cloud_account.drone_token, cloud_account.drone_url, project.owner.login, project.identifier, config_path: config_path).config_yml
   def config_yml
     patch(endpoint, "/api/repos/#{owner}/#{repo}", drone_token: drone_token, config_path: options[:config_path])
   end

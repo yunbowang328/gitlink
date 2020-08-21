@@ -31,7 +31,7 @@ class Ci::ProjectsController < Ci::BaseController
     interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
-      Ci::Drone::API.new(current_user.cloud_account.drone_token, current_user.cloud_account.endpoint, params[:owner], @project.identifier, config_path: '.trustie-pipeline.yml').config_yml
+      Ci::Drone::API.new(current_user.cloud_account.drone_token, current_user.cloud_account.drone_url, params[:owner], @project.identifier, config_path: '.trustie-pipeline.yml').config_yml
       render_result(1, "更新成功")
     else
       render_error(interactor.error)
