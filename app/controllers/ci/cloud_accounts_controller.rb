@@ -85,4 +85,8 @@ class Ci::CloudAccountsController < Ci::BaseController
     def devops_params
       params.permit(:account, :secret, :ip_num)
     end
+
+    def find_cloud_account
+      @cloud_account = Ci::CloudAccount.find params[:id]
+    end
 end
