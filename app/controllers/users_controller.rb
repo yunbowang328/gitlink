@@ -220,19 +220,6 @@ class UsersController < ApplicationController
     render_ok
   end
 
-  def devops
-    @user = current_user
-    limit_owner_can_devops!(user)
-    @cloud_account = @user.dev_ops_cloud_account
-  end
-
-  # devops 认证
-  def devops_authenticate
-    limit_owner_can_devops!(current_user)
-    current_user.set_drone_step!(User::DEVOPS_VERIFIED)
-    render_ok
-  end
-
   private
   def load_user
     @user = User.find_by_login(params[:id]) || User.find_by(id: params[:id])

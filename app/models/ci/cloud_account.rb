@@ -1,5 +1,4 @@
 class Ci::CloudAccount < Ci::LocalBase
-  belongs_to :project
   belongs_to :user
 
   def drone_host

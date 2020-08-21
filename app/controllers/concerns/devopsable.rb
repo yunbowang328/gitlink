@@ -15,8 +15,8 @@ module Devopsable
 	end
 
   # TODO 暂时限制项目拥有者才有权限操作
-  def limit_owner_can_devops!(user)
-    return if @project.owner? user
+  def limit_project_owner_can_devops!(user, project)
+    return if project.owner? user
     render_forbidden
   end
 

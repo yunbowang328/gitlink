@@ -2403,29 +2403,28 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 ### DevOps相关api
 ---
 
-#### 获取devops流程步骤(判断devops是否初始化)
+#### 获取devops流程步骤
 ```
-GET  /api/users/devops
+GET  /api/:owner/:repo/ci_authorize
 ```
 
 *示例*
 ```
 curl -X GET \
--d "project_id=5988" \
-https://localhost:3000/api/users/devops.json  | jq
+http://localhost:3000/api/jasder/forgeplus/ci_authorize.json  | jq
 ```
-
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id         |是|string |项目id或者项目的标识identifier|
+|owner          |是|string |用户登录名  |
+|repo       |是|string |project's identifier |
 
 *返回参数说明:*
 
 |参数名|类型|说明|
 |-|-|-|
-|step         |int|初始化devops流程步骤; 0: 标识未开启devops，1: 标识用户已填写了云服务器相关信息，但并未开启认证， 2: 标识用户已开启了CI服务端的认证， 3: 标识用户已经授权并获取了CI服务的token|
+|step         |int|初始化devops流程步骤; 0: 标识未开启devops，1: 标识用户已填写了云服务器相关信息，但并未开启认证， 2: 标识用户已开启了CI服务端的认证， 3: 标识用户ci服务已初始化|
 |account       |string|你的云服务器帐号|
 |ip         |string|你的云服务器帐号ip|
 |secret         |string|你的云服务器登录密码|
@@ -2450,7 +2449,7 @@ https://localhost:3000/api/users/devops.json  | jq
 
 #### 初始化DevOps流程
 ```
-POST  /api/ci/cloud_accounts
+POST  /api/:owner/:repo/cloud_accounts
 ```
 
 *示例*
@@ -2459,18 +2458,18 @@ curl -X POST \
 -d "account=xx" \
 -d "secret=xxx" \
 -d "ip_num=xx.xx.xx.xx" \
--d "project_id=5988" \
-https://localhost:3000/api/ci/cloud_accounts.json  | jq
+https://localhost:3000/api/jasder/forgeplus/cloud_accounts.json  | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
+|owner          |是|string |用户登录名  |
+|repo       |是|string |project's identifier |
 |account          |是|string |云服务器ssh连接登录用户名  |
 |secret       |是|string |云服务器ssh连接登录秘密 |
 |ip_num        |否|string |云服务器公网IP |
-|project_id         |否|string |project's id|
 
 *返回参数说明:*
 
@@ -2492,20 +2491,13 @@ https://localhost:3000/api/ci/cloud_accounts.json  | jq
 
 #### 用户认证CI服务端后，需要调用该接口进行更新devlops流程状态
 ```
-PUT /api/users/devops_authenticate
+PUT  /api/:owner/:repo/ci_authorize
 ```
 *示例*
 ```
 curl -X PUT \
--d "project_id=5988" \
-http://localhost:3000/api/users/devops_authenticate.json | jq
+http://localhost:3000/api/jasder/forgeplus/ci_authorize.json | jq
 ```
-*请求参数说明:*
-
-|参数名|必选|类型|说明|
-|-|-|-|-|
-|project_id         |是|string |项目id或者项目的标识identifier|
-
 
 *返回参数说明:*
 
@@ -2523,20 +2515,20 @@ http://localhost:3000/api/users/devops_authenticate.json | jq
 
 #### 激活项目
 ```
-POST /api/ci/cloud_accounts/:id/activate
+POST /api/:owner/:repo/cloud_accounts/:id/activate
 ```
 *示例*
 ```
 curl -X POST \
--d "project_id=4844" \
 -d "drone_token=xxxxxxxxxx" \
-http://localhost:3000/api/ci/cloud_accounts/1/activate.json | jq
+http://localhost:3000/api/jasder/forgeplus/cloud_accounts/1/activate.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id     |是|int |project's id or identifier |
+|owner          |是|string |用户登录名  |
+|repo       |是|string |project's identifier |
 |id             |是|int |cloud_account's id  |
 |drone_token    |否|string |CI端用户的token值，只有当用户第一次激活时，才需要填写该值  |
 
@@ -2557,19 +2549,19 @@ http://localhost:3000/api/ci/cloud_accounts/1/activate.json | jq
 
 #### 获取仓库的.trustie-pipeline.yml
 ```
-GET /api/ci/builds/get_trustie_pipeline
+GET /api/:owner/:repo/get_trustie_pipeline
 ```
 *示例*
 ```
 curl -X GET \
--d "project_id=4844" \
-http://localhost:3000/api/ci/builds/get_trustie_pipeline.json | jq
+http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id              |是|int |project's id  |
+|owner          |是|string |用户登录名  |
+|repo       |是|string |project's identifier |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
 
@@ -2593,12 +2585,12 @@ http://localhost:3000/api/ci/builds/get_trustie_pipeline.json | jq
 
 #### 获取语言列表
 ```
-GET  /api/dev_ops/languages
+GET  /api/ci/languages
 ```
 
 *示例*
 ```
-curl -X GET http://localhost:3000/api/dev_ops/languages.json | jq
+curl -X GET http://localhost:3000/api/ci/languages.json | jq
 ```
 
 *返回参数说明:*
@@ -2625,12 +2617,12 @@ curl -X GET http://localhost:3000/api/dev_ops/languages.json | jq
 
 #### 获取常用的6大语言
 ```
-GET  /api/dev_ops/languages/common
+GET  /api/ci/languages/common
 ```
 
 *示例*
 ```
-curl -X GET http://localhost:3000/api/dev_ops/languages/common.json | jq
+curl -X GET http://localhost:3000/api/ci/languages/common.json | jq
 ```
 
 *返回参数说明:*
@@ -2657,12 +2649,12 @@ curl -X GET http://localhost:3000/api/dev_ops/languages/common.json | jq
 
 #### 获取语言详情
 ```
-GET  /api/dev_ops/languages/:id
+GET  /api/ci/languages/:id
 ```
 
 *示例*
 ```
-curl -X GET http://localhost:3000/api/dev_ops/languages/114.json | jq
+curl -X GET http://localhost:3000/api/ci/languages/114.json | jq
 ```
 
 *请求参数说明:*
@@ -2857,22 +2849,20 @@ http://ocalhost:3000/api/jasder/forge/builds/1 | jq
 
 #### 重启构建/重新构建
 ```
-POST  /api/dev_ops/builds/:number
+POST  /api/:owner/:repo/builds/:build/restart
 ```
 
 *示例*
 ```
 curl -X POST \
--d 'project_id=4844' \
-http://localhost:3000/api/dev_ops/builds/1 | jq
+http://localhost:3000/api/jasder/forgeplus/builds/1 | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id         |int|project's id|
-|number          |是|int |build's number  |
+|build          |是|int |build's number  |
 
 *返回参数说明:*
 
@@ -2917,22 +2907,20 @@ http://localhost:3000/api/dev_ops/builds/1 | jq
 
 #### 关闭构建
 ```
-DELETE  /api/dev_ops/builds/:number
+DELETE  /api/:owner/:repo/builds/:build/stop
 ```
 
 *示例*
 ```
 curl -X DELETE \
--d 'project_id=4844' \
-http://localhost:3000/api/dev_ops/builds/2 | jq
+http://localhost:3000/api/jaser/forge/builds/2 | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id         |int|project's id|
-|number          |是|int |build's number  |
+|build          |是|int |build's number  |
 
 *返回参数说明:*
 
@@ -3025,13 +3013,12 @@ http://localhost:3000/api/dev_ops/builds/2 | jq
 
 #### 获取某条构建的log信息
 ```
-GET  /api/dev_ops/builds/:number/logs/:stage/:step
+GET  /api/:owner/:repo/builds/:build/logs/:stage/:step
 ```
 
 *示例*
 ```
 curl -X GET \
--d 'project_id=4844' \
 http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 ```
 
@@ -3039,8 +3026,7 @@ http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|project_id         |int|project's id|
-|number      |是|int |build's number  |
+|build      |是|int |build's number  |
 |stage          |是|int |build's stage number  |
 |step          |是|int |build's step number  |
 

@@ -3,12 +3,13 @@ class Ci::BuildsController < Ci::BaseController
   include Devopsable
 
   before_action :load_repo
+  before_action :find_cloud_account, except: [:index, :show]
 
   def index
     scope = @repo.builds
 
     scope = Ci::Builds::ListQuery.call(@repo, params)
-    
+
     @total_count = scope.map(&:build_id).size
     @builds = paginate scope
   end
@@ -17,25 +18,19 @@ class Ci::BuildsController < Ci::BaseController
     @build = @repo.builds.includes(stages: [:steps]).find_by(build_number: params[:build])
   end
 
-  def detail
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier, number: params[:number]).build
-
-    render json: result
-  end
-
   def restart
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier, number: params[:number]).restart
+    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:number]).restart
 
     render json: result
   end
 
-  def delete
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier, number: params[:number]).stop
+  def stop
+    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:number]).stop
     render json: result
   end
 
   def logs
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier, build: params[:number], stage: params[:stage], step: params[:step]).logs
+    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, build: params[:number], stage: params[:stage], step: params[:step]).logs
 
     render json: result
   end
@@ -55,6 +50,14 @@ class Ci::BuildsController < Ci::BaseController
 
   private
     def find_cloud_account
-      @cloud_account = @project.ci_cloud_account
+      @cloud_account = current_user.cloud_account
+    end
+
+    def load_ci_user
+      begin
+        @ci_user = Ci::User.find_by(user_login: params[:owner])
+      rescue
+        render_not_found
+      end
     end
 end

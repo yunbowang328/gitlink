@@ -21,11 +21,6 @@ Rails.application.routes.draw do
   resources :edu_settings
   scope '/api' do
     namespace :ci  do
-      resources :cloud_accounts, only: [:create] do
-        member do
-          post :activate
-        end
-      end
       resources :languages, only: [:index, :show] do
         collection do
           get :common
@@ -149,8 +144,6 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
-        get :devops
-        put :devops_authenticate
       end
 
       scope module: :users do
@@ -339,7 +332,31 @@ Rails.application.routes.draw do
       resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
 
       scope module: :ci do
-        resources :builds, param: :build
+        scope do
+          match(
+            'ci_authorize',
+            to: 'projects#authorize',
+            as: :ci_authorize,
+            :via => [:get, :put]
+          )
+          get(
+            'get_trustie_pipeline',
+            to: 'projects#get_trustie_pipeline',
+            as: :get_trustie_pipeline
+          )
+        end
+        resources :cloud_accounts, only: [:create] do
+          member do
+            post :activate
+          end
+        end
+        resources :builds, param: :build do
+          member do
+            post :restart
+            delete :stop
+            get '/logs/:stage/:step', to: 'builds#logs', as: 'logs'
+          end
+        end
       end
 
       scope module: :projects do

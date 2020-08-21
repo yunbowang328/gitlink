@@ -1,7 +1,7 @@
 class Ci::CloudAccountsController < Ci::BaseController
   include Devopsable
 
-  before_action :auto_load_project
+  before_action :load_project
   before_action :ci_authorize!
   before_action :find_cloud_account, only: %i[activate]
 
@@ -83,6 +83,6 @@ class Ci::CloudAccountsController < Ci::BaseController
 
   private
     def devops_params
-      params.permit(:account, :secret, :ip_num, :project_id)
+      params.permit(:account, :secret, :ip_num)
     end
 end
