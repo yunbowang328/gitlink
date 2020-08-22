@@ -8,7 +8,7 @@ class Oauth::EducoderController < Oauth::BaseController
 
       ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
 
-      open_user= OpenUsers::Educoder.find_by(uid: login)
+      open_user= OpenUsers::Educoder.find_by(uid: login) || OpenUsers::Educoder.find_by(uid: mail)
 
       if open_user.present? && open_user.user.present? && open_user.user.email_binded?
         Rails.logger.info "######## open_user exist and open_user.user exsit and email is binded ok"
@@ -17,10 +17,20 @@ class Oauth::EducoderController < Oauth::BaseController
         redirect_to callback_url
       else
         Rails.logger.info "######## open user not exits"
-        user = User.find_by('login = ? or mail = ?', login, mail)
+        user, uid = nil
+        login_user = User.find_by(login: login)
+
+        if login_user
+          uid = login
+          user = login_user
+        else
+          mail_user = User.find_by(mail: mail)
+          uid = mail
+          user = mail_user
+        end
 
         if user.is_a?(User)
-          OpenUsers::Educoder.create!(user: user, uid: login)
+          OpenUsers::Educoder.create!(user: user, uid: uid)
           successful_authentication(user)
 
           redirect_to callback_url
