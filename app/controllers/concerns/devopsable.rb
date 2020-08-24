@@ -5,7 +5,8 @@ module Devopsable
   end
 
   # ci 权限验证
-	def ci_authorize!
+  def ci_authorize!
+    Rails.logger.info("================project_id :#{@project&.id}")
 		render_forbidden unless @project.owner?(current_user)
 	end
 
