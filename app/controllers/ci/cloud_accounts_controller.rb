@@ -6,6 +6,7 @@ class Ci::CloudAccountsController < Ci::BaseController
   before_action :find_cloud_account, only: %i[activate]
 
   def create
+    logger.info "#########project_id: #{@project&.id}"
     ActiveRecord::Base.transaction do
       Ci::CreateCloudAccountForm.new(devops_params).validate!
 
