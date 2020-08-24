@@ -1,7 +1,7 @@
 class Ci::CreateCloudAccountForm
   include ActiveModel::Model
 
-  attr_accessor :project_id, :ip_num, :account, :secret
+  attr_accessor :ip_num, :account, :secret
 
   # validates :project_id, :account, :secret, presence: true
   validates :account, :secret, presence: true
