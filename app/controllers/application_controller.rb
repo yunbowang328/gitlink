@@ -749,7 +749,7 @@ class ApplicationController < ActionController::Base
 
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"
-			@project
+			@project and return
     elsif current_user.is_a?(AnonymousUser)
 			logger.info "###########：This is AnonymousUser"
 			@project = nil if !@project.is_public?
@@ -759,7 +759,7 @@ class ApplicationController < ActionController::Base
       @project = nil
       render_not_found and return
     end
-    @project
+    # @project
 	end
 
 	def load_repository
