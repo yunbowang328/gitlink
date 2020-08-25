@@ -1,6 +1,5 @@
 module Ci::BuildsHelper
   def format_utc_time(unix_time)
-    Rails.logger.info "00000000000000 #{unix_time}"
     return nil if unix_time == 0
     DateTime.strptime(unix_time.to_s,'%s').strftime("%Y-%m-%d %H:%M")
   end
