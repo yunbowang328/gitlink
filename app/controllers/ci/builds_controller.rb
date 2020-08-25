@@ -37,7 +37,7 @@ class Ci::BuildsController < Ci::BaseController
 
   private
     def find_cloud_account
-      @cloud_account = current_user.cloud_account
+      @cloud_account = current_user.ci_cloud_account
     end
 
     def load_ci_user
