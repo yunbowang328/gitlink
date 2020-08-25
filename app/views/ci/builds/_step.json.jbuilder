@@ -5,4 +5,4 @@ json.status step.step_status
 json.exit_code step.step_exit_code
 json.started format_utc_time(step.step_started)
 json.stopped format_utc_time(step.step_stopped)
-json.version step.build_version
+json.version step.step_version
