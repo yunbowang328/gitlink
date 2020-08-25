@@ -1,5 +1,6 @@
 class Ci::ProjectsController < Ci::BaseController
   include Devopsable
+  include RepositoriesHelper
 
   before_action :load_project
 
