@@ -8,6 +8,6 @@ class Ci::Build < Ci::RemoteBase
   scope :failed,    -> { by_status('failure') }
   scope :running,   -> { by_status('running') }
   scope :errored,   -> { by_status('error') }
-  scope :pending,  -> { by_status('pending') }
+  scope :pending,   -> { by_status('pending') }
   scope :by_status, ->(status) { where(build_status: status) }
 end

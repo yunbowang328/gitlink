@@ -13,21 +13,16 @@ class Ci::Builds::ListQuery < ApplicationQuery
   def call
     scope = @repo.builds
 
-    scope =
+    builds =
       case params[:search]
-      when 'success'
-        scope.successed
-      when 'pending'
-        scope.pending
-      when 'error'
-        scope.errored
-      when 'running'
-        scope.running
-      when 'failure'
-        scope.failed
+      when 'success' then scope.successed
+      when 'pending' then scope.pending
+      when 'error' then scope.errored
+      when 'running' then scope.running
+      when 'failure' then scope.failed
       else
         scope
       end
-    custom_sort(scope, params[:sort_by], params[:sort_direction])
+    custom_sort(builds, params[:sort_by], params[:sort_direction])
   end
 end
