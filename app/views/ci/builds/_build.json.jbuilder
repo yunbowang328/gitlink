@@ -12,4 +12,8 @@ json.finished format_utc_time build.build_finished
 json.created format_utc_time build.build_created
 json.updated format_utc_time build.build_updated
 json.version build.build_version
+json.build_after_sha build.build_after
+json.build_before_sha build.build_before
+json.branch_source build.build_source
+json.branch_target build.build_target
 json.duration_time render_duartion_time(build.build_finished, build.build_started)
