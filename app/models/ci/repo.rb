@@ -16,4 +16,11 @@ class Ci::Repo < Ci::RemoteBase
     [user, repo]
   end
 
+  def enable
+    update_column(:repo_config, '.trustie-pipeline.yml')
+  end
+
+  def activate
+    
+  end
 end

@@ -2599,6 +2599,14 @@ http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
 |owner          |是|string |用户登录名  |
 |repo       |是|string |project's identifier |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
+|filepath       |是|string |文件相对于仓库的路径(或修改后的文件路径) |
+|from_path      |是|string |原文件相对于仓库的路径, 只有当需要修改原文件名称时，才需要该参数 |
+|sha            |是|string |文件的sha标识值 |
+|content        |是|string |内容  |
+|message        |否|string |提交说明 |
+|branch         |否|string |分支名称, branch和new_branch必须存在一个,且只能存在一个 |
+|new_branch     |否|string |新的分支名称 |
+|ci_language_id     |否|string |新的分支名称 |
 
 
 *返回参数说明:*
@@ -2728,6 +2736,16 @@ GET  /api/:owner/:repo/builds
 curl -X GET \
 http://localhost:3000/api/Jason/forge/builds | jq
 ```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner          |是|string |项目拥有者  |
+|repo          |是|string |项目identifier  |
+|page          |否|string |页数，第几页  |
+|limit         |否|string |每页多少条数据，默认20条  |
+|search          |是|string |构建状态条件过滤; 值说明：pending: 准备中，failure: 构建失败，running: 运行中，error：构建失败(.trustie-pipeline.yml文件错误)，success: 构建成功  |
 
 *返回参数说明:*
 

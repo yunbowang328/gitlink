@@ -11,8 +11,23 @@ class Ci::Builds::ListQuery < ApplicationQuery
   end
 
   def call
-    course_lists = @repo.builds
+    scope = @repo.builds
 
-    custom_sort(course_lists, params[:sort_by], params[:sort_direction])
+    scope =
+      case params[:search]
+      when 'success'
+        scope.successed
+      when 'pending'
+        scope.pending
+      when 'error'
+        scope.errored
+      when 'running'
+        scope.running
+      when 'failure'
+        scope.failed
+      else
+        scope
+      end
+    custom_sort(scope, params[:sort_by], params[:sort_direction])
   end
 end

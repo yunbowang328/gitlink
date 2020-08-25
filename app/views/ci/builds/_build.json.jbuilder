@@ -6,7 +6,9 @@ json.event build.build_event
 json.action build.build_action
 # json.link build.build_link
 json.message build.build_message
-json.author build.build_author
+json.author do
+  json.partial! 'author', user: current_user
+end
 json.started format_utc_time build.build_started
 json.finished format_utc_time build.build_finished
 json.created format_utc_time build.build_created

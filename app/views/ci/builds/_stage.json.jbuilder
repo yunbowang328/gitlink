@@ -11,7 +11,7 @@ json.exit_code stage.stage_exit_code
 json.os stage.stage_os
 json.arch stage.stage_arch
 json.started format_utc_time(stage.stage_started)
-json.stopped format_utc_time(stage.stage_stoped)
+json.stopped format_utc_time(stage.stage_stopped)
 json.created format_utc_time(stage.stage_created)
 json.updated format_utc_time(stage.stage_updated)
 json.version stage.stage_version
