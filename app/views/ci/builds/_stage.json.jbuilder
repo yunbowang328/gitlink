@@ -14,6 +14,7 @@ json.started format_utc_time(stage.stage_started)
 json.stopped format_utc_time(stage.stage_stopped)
 json.created format_utc_time(stage.stage_created)
 json.updated format_utc_time(stage.stage_updated)
+json.duration_time render_duartion_time(stage.stage_started, stage.stage_stopped)
 json.version stage.stage_version
 json.on_success stage.stage_on_success
 json.on_failure stage.stage_on_failure
