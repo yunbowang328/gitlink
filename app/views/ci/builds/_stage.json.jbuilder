@@ -17,6 +17,6 @@ json.updated format_utc_time(stage.stage_updated)
 json.version stage.stage_version
 json.on_success stage.stage_on_success
 json.on_failure stage.stage_on_failure
-json.steps build.steps do |stage|
+json.steps stage.steps do |step|
   json.partial! "/ci/builds/step", step: step
 end
