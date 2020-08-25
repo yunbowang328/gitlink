@@ -20,6 +20,7 @@ class Ci::Builds::ListQuery < ApplicationQuery
       when 'error' then scope.errored
       when 'running' then scope.running
       when 'failure' then scope.failed
+      when 'killed' then scope.killed
       else
         scope
       end

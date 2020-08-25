@@ -2745,7 +2745,7 @@ http://localhost:3000/api/Jason/forge/builds | jq
 |repo          |是|string |项目identifier  |
 |page          |否|string |页数，第几页  |
 |limit         |否|string |每页多少条数据，默认20条  |
-|search          |是|string |构建状态条件过滤; 值说明：pending: 准备中，failure: 构建失败，running: 运行中，error：构建失败(.trustie-pipeline.yml文件错误)，success: 构建成功  |
+|search          |是|string |构建状态条件过滤; 值说明：pending: 准备中，failure: 构建失败，running: 运行中，error：构建失败(.trustie-pipeline.yml文件错误)，success: 构建成功，killed: 撤销构建  |
 
 *返回参数说明:*
 
