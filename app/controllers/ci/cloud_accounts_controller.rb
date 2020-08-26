@@ -14,7 +14,7 @@ class Ci::CloudAccountsController < Ci::BaseController
       if current_user&.ci_cloud_account.present?
         return render_error('该仓库已绑定了云帐号.')
       else
-        cloud_account = Ci::CloudAccount.new(create_params.merge(project_id: @project.id))
+        cloud_account = Ci::CloudAccount.new create_params
         cloud_account.user = current_user
         cloud_account.save!
       end
