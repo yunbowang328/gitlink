@@ -4,6 +4,7 @@ class Ci::CloudAccountsController < Ci::BaseController
   before_action :load_project
   before_action :ci_authorize!
   before_action :find_cloud_account, only: %i[activate]
+  before_action :load_repo, only: %i[activate]
 
   def create
     ActiveRecord::Base.transaction do
@@ -75,6 +76,7 @@ class Ci::CloudAccountsController < Ci::BaseController
     if result
       set_drone_token!(current_user, @cloud_account, params[:drone_token])
       @project.update_column(:open_devops, true)
+      @repo.config_trustie_pipeline
       render_ok
     else
       render_error("激活失败，请检查你的token值是否正确.")
