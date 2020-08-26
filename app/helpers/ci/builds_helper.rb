@@ -5,7 +5,7 @@ module Ci::BuildsHelper
   end
 
   def render_duartion_time(end_time, start_time)
-    return nil if end_time == 0 || state_time == 0
+    return nil if end_time == 0 || start_time == 0
     game_spend_time(end_time - start_time)
   end
 end
