@@ -16,11 +16,13 @@ class Ci::Repo < Ci::RemoteBase
     [user, repo]
   end
 
-  def enable
+  def config_trustie_pipeline
     update_column(:repo_config, '.trustie-pipeline.yml')
   end
 
   def activate
-    
+    # repo_active、repo_signer、repo_secret、repo_updated
+    update_columns(repo_active: 1, repo_signer: generate_code, repo_secret: generate_code, repo_updated: Time.now.to_i)
   end
+
 end
