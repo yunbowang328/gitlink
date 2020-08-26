@@ -16,7 +16,7 @@ class Ci::Drone::Server
   # TODO 一下代码方便测试，正式环境请移除
   #   docker rm -f `docker ps -qa`
   def generate_cmd
-    "service docker start; docker rm -f `docker ps -qa`; docker run \
+    "service docker start; docker run \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e DRONE_DATABASE_DRIVER=mysql \
       -e DRONE_DATABASE_DATASOURCE=#{database_username}:#{database_password}@tcp\\(#{database_host}:#{database_port}\\)/drone?parseTime=true \
