@@ -10,7 +10,6 @@ class Ci::ProjectsController < Ci::BaseController
 
     if request.put?
       @user.set_drone_step!(User::DEVOPS_VERIFIED)
-      render_ok
     end
     @cloud_account = @user.ci_cloud_account
   end
