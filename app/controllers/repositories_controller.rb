@@ -67,7 +67,7 @@ class RepositoriesController < ApplicationController
 
   def create_file
     content_params = content_params.merge(committer: {email: current_user.mail, name: current_user.login})
-    
+
     interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @project.owner.login, content_params)
     if interactor.success?
       @file = interactor.result
@@ -156,6 +156,10 @@ class RepositoriesController < ApplicationController
       new_branch: params[:new_branch],
       content: params[:content],
       message: params[:message],
+      committer: {
+        email: current_user.mail,
+        name: current_user.login
+      },
       identifier: @project.identifier
     }
   end
