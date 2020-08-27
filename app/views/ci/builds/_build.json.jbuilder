@@ -4,7 +4,7 @@ json.number build.build_number
 json.status build.build_status
 json.event build.build_event
 json.action build.build_action
-# json.link build.build_link
+json.error build.build_error  if build.build_status == 'error'
 json.message build.build_message
 json.author do
   json.partial! 'author', user: current_user
