@@ -16,6 +16,7 @@ json.permission  User.current&.admin? ? "Manager" : @project.get_premission(@use
 json.mirror_url @project&.repository.mirror_url
 json.mirror @project&.repository.mirror_url.present?
 json.type @project.numerical_for_project_type
+json.open_devops @project.open_devops?
 
 unless @project.common?
   json.mirror_status @repo.mirror_status
