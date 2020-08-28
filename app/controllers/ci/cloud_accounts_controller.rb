@@ -72,7 +72,7 @@ class Ci::CloudAccountsController < Ci::BaseController
     begin
       repo.activate!(ci_user.user_id)
       @project.update_column(:open_devops, true)
-      @cloud_account.update_column(ci_user_id: ci_user.user_id)
+      @cloud_account.update_column(:ci_user_id, ci_user.user_id)
       render_ok
     rescue Exception => ex
       render_error(ex.message)
