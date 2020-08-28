@@ -9,9 +9,6 @@ class Ci::ProjectsController < Ci::BaseController
     @user = current_user
     limit_project_owner_can_devops!(@user, @project)
 
-    if request.put?
-      @user.set_drone_step!(User::DEVOPS_VERIFIED)
-    end
     @cloud_account = @user.ci_cloud_account
   end
 
