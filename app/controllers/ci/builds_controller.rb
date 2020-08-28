@@ -19,18 +19,18 @@ class Ci::BuildsController < Ci::BaseController
   end
 
   def restart
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).restart
+    result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).restart
 
     render json: result
   end
 
   def stop
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).stop
+    result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).stop
     render json: result
   end
 
   def logs
-    result = Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, build: params[:build], stage: params[:stage], step: params[:step]).logs
+    result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, build: params[:build], stage: params[:stage], step: params[:step]).logs
 
     render json: result
   end
