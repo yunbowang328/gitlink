@@ -32,7 +32,6 @@ class Ci::ProjectsController < Ci::BaseController
     interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
-      @repo.config_trustie_pipeline
       render_result(1, "更新成功")
     else
       render_error(interactor.error)

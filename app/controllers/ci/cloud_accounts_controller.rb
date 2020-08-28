@@ -15,7 +15,7 @@ class Ci::CloudAccountsController < Ci::BaseController
       if current_user&.ci_cloud_account.present?
         return render_error('该仓库已绑定了云帐号.')
       else
-        cloud_account = Ci::CloudAccount.new(create_params.merge(project_id: @project.id))
+        cloud_account = Ci::CloudAccount.new(create_params)
         cloud_account.user = current_user
         cloud_account.save!
       end
@@ -63,23 +63,18 @@ class Ci::CloudAccountsController < Ci::BaseController
   end
 
   def activate
-    result =
-      if current_user.devops_has_token?
-        # 已有drone_token的，直接激活项目
-         Ci::Drone::API.new(@cloud_account.drone_token, @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
-      else
-        # 没有token，说明是第一次激活devops, 需要用户填写token值
-        return render_error('请先在CI服务端做用户认证.') if !current_user.devops_verified?
-        Ci::Drone::API.new(params[:drone_token], @cloud_account.drone_url, @project.owner.login, @project.identifier).activate
-      end
+    return render_error('请先在指定地址做用户认证') unless current_user.ci_certification?
 
-    if result
-      set_drone_token!(current_user, @cloud_account, params[:drone_token])
+    return render_error('该项目已经激活') if @repo.repo_active?
+
+    ci_user = Ci::User.find_by(user_login: current_user.login)
+    begin
+      @repo.activate!
       @project.update_column(:open_devops, true)
-      @repo.config_trustie_pipeline
+      @cloud_account.update_column(ci_user_id: ci_user.user_id)
       render_ok
-    else
-      render_error("激活失败，请检查你的token值是否正确.")
+    rescue Exception => ex
+      render_error(ex.message)
     end
   end
 

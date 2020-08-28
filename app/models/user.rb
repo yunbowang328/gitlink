@@ -10,11 +10,9 @@ class User < ApplicationRecord
   # include Searchable::Dependents::User
 
   # devops step
-  # devops_step column:  0: 未填写服务器信息；1: 已填写服务器信息(未认证)； 2: 已认证, 3: 已填写token值
+  # devops_step column:  0: 未填写服务器信息；1: 已填写服务器信息(未认证)；
   DEVOPS_UNINIT = 0
   DEVOPS_UNVERIFIED = 1
-  DEVOPS_VERIFIED = 2
-  DEVOPS_HAS_TOKEN = 3
 
   # Account statuses
   STATUS_ANONYMOUS  = 0

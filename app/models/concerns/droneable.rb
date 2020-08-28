@@ -12,16 +12,12 @@ module Droneable
     self.devops_step === User::DEVOPS_UNVERIFIED
   end
 
-  def devops_verified?
-    self.devops_step === User::DEVOPS_VERIFIED
-  end
-
-  def devops_has_token?
-    self.devops_step === User::DEVOPS_HAS_TOKEN
-  end
-
   def set_drone_step!(step)
     self.update_column(:devops_step, step)
+  end
+
+  def ci_certification?
+    Ci::User.exists?(user_login: self.login)
   end
 
   module ClassMethods
