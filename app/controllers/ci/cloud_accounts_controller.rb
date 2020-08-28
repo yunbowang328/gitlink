@@ -65,11 +65,12 @@ class Ci::CloudAccountsController < Ci::BaseController
   def activate
     return render_error('请先在指定地址做用户认证') unless current_user.ci_certification?
 
-    return render_error('该项目已经激活') if @repo.repo_active?
+    return render_error('该项目已经激活') if @repo && @repo.repo_active?
 
     ci_user = Ci::User.find_by(user_login: current_user.login)
+    repo = Ci::Repo.where(repo_namespace: current_user.login, repo_name: params[:repo]).first
     begin
-      @repo.activate!
+      repo.activate!(ci_user.user_id)
       @project.update_column(:open_devops, true)
       @cloud_account.update_column(ci_user_id: ci_user.user_id)
       render_ok
