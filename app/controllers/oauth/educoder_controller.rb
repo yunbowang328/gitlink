@@ -29,7 +29,7 @@ class Oauth::EducoderController < Oauth::BaseController
           user = mail_user
         end
 
-        if user.is_a?(User)
+        if user.is_a?(User) && !user.is_a?(AnonymousUser)
           OpenUsers::Educoder.create!(user: user, uid: uid)
           successful_authentication(user)
 
