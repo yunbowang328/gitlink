@@ -26,7 +26,7 @@ Rails.application.routes.draw do
           get :common
         end
       end
-      # resources :builds, only: :index do
+      # resources :repos, only: :index do
       #   collection do
       #     get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
       #     get ':number', to: 'builds#detail', as: 'detail'
