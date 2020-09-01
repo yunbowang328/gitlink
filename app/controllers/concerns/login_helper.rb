@@ -130,7 +130,7 @@ module LoginHelper
     url = "#{api_host}/api/v1/users/sync_user_token"
     sync_json = {
       "token": token,
-      "login": type,
+      "login": login,
       "user_token": token_value
     }
     uri = URI.parse(url)
