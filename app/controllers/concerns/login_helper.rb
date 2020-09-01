@@ -142,7 +142,7 @@ module LoginHelper
         http.use_ssl = true
       end
 
-      http.send_request('PUT', uri.path, sync_json.to_json, {'Content-Type' => 'application/json'})
+      http.send_request('POST', uri.path, sync_json.to_json, {'Content-Type' => 'application/json'})
     end
 
   end
