@@ -2489,30 +2489,6 @@ https://localhost:3000/api/jasder/forgeplus/cloud_accounts.json  | jq
 ```
 ---
 
-#### 用户认证CI服务端后，需要调用该接口进行更新devlops流程状态
-```
-PUT  /api/:owner/:repo/ci_authorize
-```
-*示例*
-```
-curl -X PUT \
-http://localhost:3000/api/jasder/forgeplus/ci_authorize.json | jq
-```
-
-*返回参数说明:*
-
-|参数名|类型|说明|
-|-|-|-|
-|status           |int|0:成功， -1: 失败|
-
-```
-{
-  "status": 0,
-  "message": "success"
-}
-```
----
-
 #### 激活项目
 ```
 POST /api/:owner/:repo/cloud_accounts/:id/activate
@@ -2520,7 +2496,6 @@ POST /api/:owner/:repo/cloud_accounts/:id/activate
 *示例*
 ```
 curl -X POST \
--d "drone_token=xxxxxxxxxx" \
 http://localhost:3000/api/jasder/forgeplus/cloud_accounts/1/activate.json | jq
 ```
 *请求参数说明:*
@@ -2530,8 +2505,6 @@ http://localhost:3000/api/jasder/forgeplus/cloud_accounts/1/activate.json | jq
 |owner          |是|string |用户登录名  |
 |repo       |是|string |project's identifier |
 |id             |是|int |cloud_account's id  |
-|drone_token    |否|string |CI端用户的token值，只有当用户第一次激活时，才需要填写该值  |
-
 
 *返回参数说明:*
 
