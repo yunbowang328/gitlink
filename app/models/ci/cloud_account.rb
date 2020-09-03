@@ -1,5 +1,6 @@
 class Ci::CloudAccount < Ci::LocalBase
   belongs_to :user
+  belongs_to :ci_user, class_name: 'Ci::User', foreign_key: :ci_user_id
 
   def drone_host
     [drone_ip, ":80"].join

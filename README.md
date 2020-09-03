@@ -2424,7 +2424,7 @@ http://localhost:3000/api/jasder/forgeplus/ci_authorize.json  | jq
 
 |参数名|类型|说明|
 |-|-|-|
-|step         |int|初始化devops流程步骤; 0: 标识未开启devops，1: 标识用户已填写了云服务器相关信息，但并未开启认证， 2: 标识用户已开启了CI服务端的认证， 3: 标识用户ci服务已初始化|
+|step         |int|初始化devops流程步骤; 0: 标识未开启devops，1: 标识用户已填写了云服务器相关信息，但并未开启认证， 2: 标识用户已开启了CI服务端的认证|
 |account       |string|你的云服务器帐号|
 |ip         |string|你的云服务器帐号ip|
 |secret         |string|你的云服务器登录密码|
@@ -3106,5 +3106,184 @@ http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
     "time": 496
   }
 ]
+```
+---
+
+#### 获取CI服务器配置信息
+```
+GET  /api/users/ci/cloud_account
+```
+
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/users/ci/cloud_account | jq
+```
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|step         |int|0: 未绑定；1: 未认证(已绑定)，2: 已认证|
+|ip       |string|ci服务器ip|
+|redirect_url         |string|认证地址|
+
+返回值
+```json
+{
+  "step": 0,
+  "cloud_account": {
+    "ip": "xxx.xxx.xxx.x",
+    "redirect_url": "http://localhost:3000/login",
+  }
+}
+```
+---
+
+#### 绑定CI服务器
+```
+POST  /api/users/ci/cloud_account/bind
+```
+
+*示例*
+```
+curl -X POST \
+-d "account=xx" \
+-d "secret=xxx" \
+-d "ip_num=xx.xx.xx.xx" \
+https://localhost:3000/api/users/ci/cloud_account/bind.json  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|account          |是|string |云服务器ssh连接登录用户名  |
+|secret       |是|string |云服务器ssh连接登录秘密 |
+|ip_num        |否|string |云服务器公网IP |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|step         |int|0: 未绑定；1: 未认证(已绑定)，2: 已认证|
+|ip       |string|ci服务器ip|
+|redirect_url         |string|认证地址|
+
+返回值
+```json
+{
+  "step": 0,
+  "cloud_account": {
+    "ip": "xxx.xxx.xxx.x",
+    "redirect_url": "http://localhost:3000/login",
+  }
+}
+```
+---
+
+
+### 解除CI服务器绑定
+```
+DELETE  /api/users/ci/cloud_account/unbind
+```
+
+*示例*
+```
+curl -X DELETE \
+http://localhost:3000/api/users/ci/cloud_account/unbind.json | jq
+```
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status       |int|状态码， 0: 成功，-1: 失败|
+|message         |string|返回信息说明|
+
+返回值
+```json
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
+### 项目列表
+```
+GET  /api/users/:login/projects
+```
+
+*示例*
+```
+curl -X GET \
+-d "page=1" \
+-d "limit=20" \
+http://localhost:3000/api/users/Jason/projects.json | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|page          |否|int |页数，第几页  |
+|limit         |否|int |每页多少条数据，默认20条  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|total_count     |int   |项目总条数 |
+|id              |string   |项目id |
+|name            |string|项目名称|
+|description     |string|项目简介|
+|open_devops     |boolean|激活状态，true: 激活； false：未激活|
+|visits          |int|流量数|
+|forked_count    |int|被fork的数量|
+|praises_count   |int|star数量|
+|is_public       |boolean|是否公开， true:公开，false:未公开|
+|mirror_url      |string|镜像url|
+|last_update_time|int|最后更新时间，为UNIX格式的时间戳|
+|author          |object|项目创建者|
+|-- name         |string|用户名，也是用户标识|
+|category        |object|项目类别|
+|-- id           |int|项目类型id|
+|-- name         |string|项目类型名称|
+|language        |object|项目语言|
+|-- id           |int|项目语言id|
+|-- name         |string|项目语言名称|
+
+
+返回值
+```
+{
+  "total_count": 3096,
+  "projects": [
+    {
+      "id": 1,
+      "name": "hnfl_demo1",
+      "description": "my first project",
+      "visits": 0,
+      "praises_count": 0,
+      "forked_count": 0,
+      "is_public": true,
+      "mirror_url": null,
+      "last_update_time": 1577697461,
+      "author": {
+        "name": "18816895620",
+        "image_url": "avatars/User/b"
+      },
+      "category": {
+        "id": 1,
+        "name": "大数据"
+      },
+      "language": {
+        "id": 2,
+        "name": "C"
+      }
+    }
+  ]
+}
 ```
 ---

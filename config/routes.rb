@@ -26,6 +26,7 @@ Rails.application.routes.draw do
           get :common
         end
       end
+
       # resources :repos, only: :index do
       #   collection do
       #     get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
@@ -144,6 +145,28 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
+
+        scope '/ci', module: :ci do
+          scope do
+            post(
+              '/cloud_account/bind',
+              to: 'cloud_accounts#bind',
+              as: :bind_cloud_acclount
+            )
+
+            get(
+              '/cloud_account',
+              to: 'cloud_accounts#show',
+              as: :get_cloud_account
+            )
+
+            delete(
+              '/cloud_account/unbind',
+              to: 'cloud_accounts#unbind',
+              as: :unbind_cloud_acclount
+            )
+          end
+        end
       end
 
       scope module: :users do
