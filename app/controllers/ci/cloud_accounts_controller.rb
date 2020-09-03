@@ -1,8 +1,8 @@
 class Ci::CloudAccountsController < Ci::BaseController
   include Devopsable
 
-  before_action :load_project
-  before_action :ci_authorize!
+  before_action :load_project, only: %i[create activate]
+  before_action :ci_authorize!, only: %i[create activate]
   before_action :find_cloud_account, only: %i[activate]
   before_action :load_repo, only: %i[activate]
 
