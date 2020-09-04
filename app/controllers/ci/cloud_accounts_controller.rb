@@ -134,7 +134,7 @@ class Ci::CloudAccountsController < Ci::BaseController
       if user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
         return render_error('你未绑定CI服务器')
       elsif user.devops_step == User::DEVOPS_UNVERIFIED || user.ci_certification?
-        ci_user.destroy! if ci_user
+        ci_user.destroy! unless ci_user.blank?
         Ci::Repo.where(repo_namespace: user.login).delete_all
         cloud_account.destroy!
       end
@@ -154,15 +154,16 @@ class Ci::CloudAccountsController < Ci::BaseController
 
     def bind_hook!(user, cloud_account, repo)
       hook_params = {
-        "active": true,
-        "config": {
-          "content_type": "json",
-          "url": cloud_account.drone_url + "/hook?secret=#{repo.repo_signer}"
+        active: true,
+        config: {
+          content_type: json,
+          url: cloud_account.drone_url + "/hook?secret=#{repo.repo_signer}"
         },
-        "type": "gitea"
+        type: gitea
       }
-      Rails.logger.info "----------bind hook --------"
+      Rails.logger.info "----------bind hook -------- #{hook_params}"
       result = Gitea::Hooks::CreateService.call(user.gitea_token, user.login, repo.repo_name, hook_params)
+      Rails.logger.info "----------gitea bind hook status -------- #{result.status}"
       regurn nil unless result.status == 201
       Rails.logger.info "----------bind hook success--------"
       body = JSON.parse(result.body)
