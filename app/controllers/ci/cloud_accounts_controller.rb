@@ -125,15 +125,16 @@ class Ci::CloudAccountsController < Ci::BaseController
 
     def unbind_account!(user)
       cloud_account = user.ci_cloud_account
-      case user.devops_step
-      when User::DEVOPS_UNINIT, cloud_account.blank?
+      ci_user = cloud_account.ci_user
+
+      if user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
         return render_error('你未绑定CI服务器')
-      when User::DEVOPS_UNVERIFIED
-        cloud_account.destroy!
-      when User::DEVOPS_CERTIFICATION
-        cloud_account.ci_user.destroy!
+      elsif user.devops_step == User::DEVOPS_UNVERIFIED || user.ci_certification?
+        ci_user.destroy! if ci_user
         Ci::Repo.where(repo_namespace: user.login).delete_all
+        cloud_account.destroy!
       end
+
       user.projects.update_all(open_devops: false)
       user.set_drone_step!(User::DEVOPS_UNINIT)
 

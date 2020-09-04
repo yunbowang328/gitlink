@@ -3124,7 +3124,8 @@ http://localhost:3000/api/users/ci/cloud_account | jq
 
 |参数名|类型|说明|
 |-|-|-|
-|step         |int|0: 未绑定；1: 未认证(已绑定)，2: 已认证|
+|step         |int|0: 未绑定；1: 未认证(已绑定)|
+|devops_certification         |boolean|true: 已认证， false: 未认证|
 |ip       |string|ci服务器ip|
 |redirect_url         |string|认证地址|
 
@@ -3132,6 +3133,7 @@ http://localhost:3000/api/users/ci/cloud_account | jq
 ```json
 {
   "step": 0,
+  "devops_certification": false,
   "cloud_account": {
     "ip": "xxx.xxx.xxx.x",
     "redirect_url": "http://localhost:3000/login",
