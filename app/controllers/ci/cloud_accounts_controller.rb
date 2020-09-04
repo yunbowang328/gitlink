@@ -141,8 +141,10 @@ class Ci::CloudAccountsController < Ci::BaseController
       # TODO
       # 删除用户项目下的与ci相关的所有webhook
       user.projects.select(:id, :identifier, :gitea_webhook_id).each do |project|
-        result = Gitea::Hooks::DestroyService.call(user.gitea_token, user.login, project.identifier, project.gitea_webhook_id) unless project.gitea_webhook_id.blank?
-        project.update_column(:gitea_webhook_id, nil) if result.status == 204
+        if project.gitea_webhook_id
+          result = Gitea::Hooks::DestroyService.call(user.gitea_token, user.login, project.identifier, project.gitea_webhook_id)
+          project.update_column(:gitea_webhook_id, nil) if result.status == 204
+        end
       end
     end
 
