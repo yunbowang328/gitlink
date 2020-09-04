@@ -134,6 +134,7 @@ class Ci::CloudAccountsController < Ci::BaseController
         cloud_account.destroy!
       when User::DEVOPS_CERTIFICATION
         cloud_account.ci_user.destroy!
+        Ci::Repo.where(repo_namespace: user.login).delete_all
       end
       user.projects.update_all(open_devops: false)
       user.set_drone_step!(User::DEVOPS_UNINIT)
