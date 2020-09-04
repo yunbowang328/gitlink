@@ -16,6 +16,7 @@ class Ci::CloudAccountsController < Ci::BaseController
         raise ActiveRecord::Rollback
       else
         current_user.set_drone_step!(User::DEVOPS_UNVERIFIED)
+        render_ok(redirect_url: @cloud_account.authenticate_url)
       end
     end
   rescue Exception => ex

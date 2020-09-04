@@ -22,4 +22,8 @@ class Ci::CloudAccount < Ci::LocalBase
      Base64.encode64(str.strip).gsub(/\n/, '')
   end
 
+  def authenticate_url
+    [drone_url, '/login'].join
+  end
+
 end
