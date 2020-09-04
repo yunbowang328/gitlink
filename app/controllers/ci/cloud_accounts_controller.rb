@@ -30,11 +30,12 @@ class Ci::CloudAccountsController < Ci::BaseController
     ci_user = Ci::User.find_by(user_login: current_user.login)
     repo = Ci::Repo.where(repo_namespace: current_user.login, repo_name: params[:repo]).first
     begin
-      bind_result = bind_hook!(current_user, @cloud_account, @repo)
-      return render_error('hook激活失败') unless bind_result
+      result = bind_hook!(current_user, @cloud_account, @repo)
+      return render_error('hook激活失败') unless result
 
       repo.activate!(ci_user.user_id)
-      @project.update_column(:open_devops, true)
+      @project.update_columns(:open_devops, true, gitea_webhook_id: result['id'])
+
       @cloud_account.update_column(:ci_user_id, ci_user.user_id)
       render_ok
     rescue Exception => ex
@@ -139,17 +140,9 @@ class Ci::CloudAccountsController < Ci::BaseController
 
       # TODO
       # 删除用户项目下的与ci相关的所有webhook
-      user.projects.each do |project|
-        result = Gitea::Hooks::ListService.call(user.gitea_token, user.login, project.identifier)
-
-        if result.status == 200
-          hooks = JSON.parse(result.body)
-          hooks.each do |hook|
-            if hook['config']['url'].include? cloud_account.drone_host
-              Gitea::Hooks::DestroyService.call(user.gitea_token, user.login, project.identifier, hook['id'])
-            end
-          end
-        end
+      user.projects.pluck(:identifier, :gitea_webhook_id).each do |project|
+        result = Gitea::Hooks::DestroyService.call(user.gitea_token, user.login, project.identifier, project.gitea_webhook_id)
+        project.update_column(:gitea_webhook_id, nil) if result.status == 204
       end
     end
 
@@ -163,6 +156,10 @@ class Ci::CloudAccountsController < Ci::BaseController
         "type": "gitea"
       }
       result = Gitea::Hooks::CreateService.call(user.gitea_token, user.login, repo.repo_name, hook_params)
-      result.status == 201 ? true : false
+      regurn nil if result.status unless result.status == 201
+
+      body = JSON.parse(result.body)
+      @project.update_column(:gitea_webhook_id, body['id'])
+      body
     end
 end
