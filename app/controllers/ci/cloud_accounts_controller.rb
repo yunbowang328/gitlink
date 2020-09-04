@@ -30,6 +30,9 @@ class Ci::CloudAccountsController < Ci::BaseController
     ci_user = Ci::User.find_by(user_login: current_user.login)
     repo = Ci::Repo.where(repo_namespace: current_user.login, repo_name: params[:repo]).first
     begin
+      bind_result = bind_hook!(current_user, @cloud_account, @repo)
+      return render_error('hook激活失败') unless bind_result
+
       repo.activate!(ci_user.user_id)
       @project.update_column(:open_devops, true)
       @cloud_account.update_column(:ci_user_id, ci_user.user_id)
@@ -148,5 +151,18 @@ class Ci::CloudAccountsController < Ci::BaseController
           end
         end
       end
+    end
+
+    def bind_hook!(user, cloud_account, repo)
+      hook_params = {
+        "active": true,
+        "config": {
+          "content_type": "json",
+          "url": cloud_account.drone_url + "/hook?secret=#{repo.repo_signer}"
+        },
+        "type": "gitea"
+      }
+      result = Gitea::Hooks::CreateService.call(user.gitea_token, user.login, repo.repo_name, hook_params)
+      result.status == 201 ? true : false
     end
 end
