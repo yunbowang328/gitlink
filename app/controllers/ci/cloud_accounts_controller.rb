@@ -156,10 +156,10 @@ class Ci::CloudAccountsController < Ci::BaseController
       hook_params = {
         active: true,
         config: {
-          content_type: json,
+          content_type: "json",
           url: cloud_account.drone_url + "/hook?secret=#{repo.repo_signer}"
         },
-        type: gitea
+        type: "gitea"
       }
       Rails.logger.info "----------bind hook -------- #{hook_params}"
       result = Gitea::Hooks::CreateService.call(user.gitea_token, user.login, repo.repo_name, hook_params)
