@@ -1,4 +1,6 @@
 class Ci::Perm < Ci::RemoteBase
-  belongs_to :user, foreign_key: :perm_user_id
+  self.primary_key = nil
+
+  belongs_to :ci_user, class_name: 'Ci::User', foreign_key: :perm_user_id
 
 end

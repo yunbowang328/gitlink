@@ -123,16 +123,30 @@ class Ci::CloudAccountsController < Ci::BaseController
 
     def unbind_account!(user)
       cloud_account = user.ci_cloud_account
-
       case user.devops_step
-      when User::DEVOPS_UNINIT
-        return render_error('你还未绑定CI服务器')
+      when User::DEVOPS_UNINIT, cloud_account.blank?
+        return render_error('你未绑定CI服务器')
       when User::DEVOPS_UNVERIFIED
-        cloud_account.destroy
+        cloud_account.destroy!
       when User::DEVOPS_CERTIFICATION
-        cloud_account.ci_user.destroy
+        cloud_account.ci_user.destroy!
       end
       user.projects.update_all(open_devops: false)
       user.set_drone_step!(User::DEVOPS_UNINIT)
+
+      # TODO
+      # 删除用户项目下的与ci相关的所有webhook
+      user.projects.each do |project|
+        result = Gitea::Hooks::ListService.call(user.gitea_token, user.login, project.identifier)
+
+        if result.status == 200
+          hooks = JSON.parse(result.body)
+          hooks.each do |hook|
+            if hook['config']['url'].include? cloud_account.drone_host
+              Gitea::Hooks::DestroyService.call(user.gitea_token, user.login, project.identifier, hook['id'])
+            end
+          end
+        end
+      end
     end
 end

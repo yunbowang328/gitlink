@@ -1,23 +1,23 @@
 class Gitea::Hooks::DestroyService < Gitea::ClientService
-  attr_reader :user, :repo_name,:hook_id
+  attr_reader :token, :owner, :repo, :hook_id
 
-  def initialize(user, repo_name, hook_id)
-    @user = user 
-    @repo_name = repo_name 
+  def initialize(token, owner, repo, hook_id)
+    @token   = token
+    @owner   = owner
+    @repo    = repo
     @hook_id = hook_id
   end
 
-  def call 
-    response = delete(url, params)
+  def call
+    delete(url, params)
   end
 
   private
   def params
-    Hash.new.merge(token: user.gitea_token)
+    Hash.new.merge(token: token)
   end
 
   def url
-    "/repos/#{user.login}/#{repo_name}/hooks/#{hook_id}".freeze
+    "/repos/#{owner}/#{repo}/hooks/#{hook_id}".freeze
   end
-
 end
