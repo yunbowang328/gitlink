@@ -30,10 +30,8 @@ class Ci::CloudAccountsController < Ci::BaseController
     ci_user = Ci::User.find_by(user_login: current_user.login)
     repo = Ci::Repo.where(repo_namespace: current_user.login, repo_name: params[:repo]).first
     begin
-      result = bind_hook!(current_user, @cloud_account, @repo)
-      return render_error('hook激活失败') unless result
-
       repo.activate!(ci_user.user_id)
+      bind_hook!(current_user, @cloud_account, repo)
       @project.update_columns(:open_devops, true, gitea_webhook_id: result['id'])
 
       @cloud_account.update_column(:ci_user_id, ci_user.user_id)
