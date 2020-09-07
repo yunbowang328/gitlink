@@ -1,5 +1,5 @@
 json.step current_user.devops_step
-json.devops_certification  current_user.ci_certification?
+json.ci_certification  current_user.ci_certification?
 json.cloud_account do
   if @cloud_account && !current_user.devops_uninit?
     json.ip @cloud_account.drone_ip

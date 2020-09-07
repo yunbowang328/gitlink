@@ -1,4 +1,5 @@
 json.step @user.devops_step
+json.ci_certification @user.ci_certification?
 json.cloud_account do
   if @cloud_account && !@user.devops_uninit?
     json.id @cloud_account.id
