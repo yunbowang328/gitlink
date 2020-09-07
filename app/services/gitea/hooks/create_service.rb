@@ -29,7 +29,7 @@ class Gitea::Hooks::CreateService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: token, data: body).compact!
+    Hash.new.merge(token: token, data: body).compact
   end
 
   def url

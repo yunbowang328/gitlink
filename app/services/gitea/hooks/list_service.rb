@@ -17,7 +17,7 @@ class Gitea::Hooks::ListService < Gitea::ClientService
     Hash.new.merge(token: token,
       page: params[:page],
       limit: params[:limit]
-    ).compact!
+    ).compact
   end
 
   def url
