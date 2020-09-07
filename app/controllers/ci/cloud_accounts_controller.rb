@@ -163,7 +163,6 @@ class Ci::CloudAccountsController < Ci::BaseController
       }
       Rails.logger.info "----------bind hook -------- #{hook_params}"
       result = Gitea::Hooks::CreateService.call(user.gitea_token, user.login, repo.repo_name, hook_params)
-      Rails.logger.info "----------gitea bind hook status -------- #{result.status}"
       regurn nil if result[:status].present?
       Rails.logger.info "----------bind hook success--------"
       body = JSON.parse(result.body)
