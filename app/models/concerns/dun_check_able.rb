@@ -6,15 +6,16 @@ module DunCheckAble
   end
 
   def check_text_able
-    dun_check_params = get_model    
-    if dun_check_params[:is_change]
-      dun_check_params.delete(:is_change)
-      check_result = DunCheck::TextCheck.new(dun_check_params).call
-      if check_result[:status].to_i == -1
-        errors.add(:base, "内容含有：#{check_result[:extra_params][:infos]}，请修改")
-        # raise ActiveRecord::RecordInvalid.new(self)
-      end
-    end
+    return true
+    # dun_check_params = get_model    
+    # if dun_check_params[:is_change]
+    #   dun_check_params.delete(:is_change)
+    #   check_result = DunCheck::TextCheck.new(dun_check_params).call
+    #   if check_result[:status].to_i == -1
+    #     errors.add(:base, "内容含有：#{check_result[:extra_params][:infos]}，请修改")
+    #     # raise ActiveRecord::RecordInvalid.new(self)
+    #   end
+    # end
   end
 
   def get_model
