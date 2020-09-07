@@ -31,11 +31,8 @@ class Ci::CloudAccountsController < Ci::BaseController
     ci_user = Ci::User.find_by(user_login: current_user.login)
     repo = Ci::Repo.where(repo_namespace: current_user.login, repo_name: params[:repo]).first
     begin
-      Rails.logger.info "============activate ========  #{ci_user.user_login} -- #{repo.repo_name}"
       repo.activate!(ci_user.user_id)
-      Rails.logger.info "==========activate start create hook ========"
       result = bind_hook!(current_user, @cloud_account, repo)
-      Rails.logger.info "=========activate create hook result #{result}"
       @project.update_columns(open_devops: true, gitea_webhook_id: result['id']) if result
 
       @cloud_account.update_column(:ci_user_id, ci_user.user_id)
@@ -129,12 +126,12 @@ class Ci::CloudAccountsController < Ci::BaseController
 
     def unbind_account!(user)
       cloud_account = user.ci_cloud_account
-      ci_user = cloud_account.ci_user
+      ci_user = cloud_account.ci_user || Ci::User.find_by(user_login: user.login)
 
       if user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
         return render_error('你未绑定CI服务器')
       elsif user.devops_step == User::DEVOPS_UNVERIFIED || user.ci_certification?
-        ci_user.destroy! unless ci_user.blank?
+        ci_user.destroy!
         Ci::Repo.where(repo_namespace: user.login).delete_all
         cloud_account.destroy!
       end
@@ -161,12 +158,8 @@ class Ci::CloudAccountsController < Ci::BaseController
         },
         type: "gitea"
       }
-      Rails.logger.info "----------bind hook -------- #{hook_params}"
       result = Gitea::Hooks::CreateService.call(user.gitea_token, user.login, repo.repo_name, hook_params)
-      regurn nil if result[:status].present?
-      Rails.logger.info "----------bind hook success--------"
-      body = JSON.parse(result.body)
-      @project.update_column(:gitea_webhook_id, body['id'])
-      body
+
+      result[:status].present? ? nil : result
     end
 end
