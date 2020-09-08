@@ -70,4 +70,12 @@ class Ci::Drone::API < Ci::Drone::Request
   def logs
     get(endpoint, "/api/repos/#{owner}/#{repo}/builds/#{options[:build]}/logs/#{options[:stage]}/#{options[:step]}", drone_token: drone_token)
   end
+
+  # Synchronize the currently authenticated user’s repository list.
+  # POST /api/user/repos
+  # eq:
+  # Ci::Drone::API.new(drone_token, cloud_account.drone_url, @repo.user.login, @repo.identifier, number: number).sync
+  def sync_repos
+    post(endpoint, "/api/users/repos", drone_token: drone_token)
+  end
 end
