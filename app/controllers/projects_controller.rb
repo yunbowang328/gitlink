@@ -101,7 +101,7 @@ class ProjectsController < ApplicationController
   end
 
   def simple
-    json_response(@project)
+    json_response(@project, current_user)
   end
 
 

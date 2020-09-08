@@ -28,7 +28,7 @@ module ProjectsHelper
     (User.find_by_login identifier) || (User.find_by_mail identifier)
   end
 
-  def json_response(project)
+  def json_response(project, user)
     repo = project.repository
     tmp_json = {}
     unless project.common?
@@ -45,7 +45,7 @@ module ProjectsHelper
       name: project.name,
       id: project.id,
       repo_id: repo.id,
-      open_devops: project.open_devops?,
+      open_devops: (user.blank? || user.is_a?(AnonymousUser)) ? false : project.open_devops?,
       type: project.numerical_for_project_type,
       author: {
         login: project.owner.login,
