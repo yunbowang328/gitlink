@@ -8,16 +8,13 @@ class Ci::Repo < Ci::RemoteBase
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
     user = Ci::User.find_by_user_login namespace_path
-    return nil if user.blank?
+    repo = Ci::Repo.where(repo_namespace: namespace_path, repo_name: identifier).first
 
-    repo = user.repos.find_by(repo_name: identifier)
-
-    return nil if repo.blank?
-    [user, repo]
+    (user.blank? || repo.blank?) ? nil : [user, repo]
   end
 
   def activate!(ci_user_id)
-    update_columns(repo_active: 1,
+    update(repo_active: 1,
       repo_signer: generate_code,
       repo_secret: generate_code,
       repo_user_id: ci_user_id,

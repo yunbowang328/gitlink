@@ -24,18 +24,16 @@ class Ci::CloudAccountsController < Ci::BaseController
   end
 
   def activate
-    return render_error('请先在指定地址做用户认证') unless current_user.ci_certification?
+    return render_error('请先在指定地址做用户认证') unless @user.ci_certification?
 
     return render_error('该项目已经激活') if @repo && @repo.repo_active?
-
-    ci_user = Ci::User.find_by(user_login: current_user.login)
-    repo = Ci::Repo.where(repo_namespace: current_user.login, repo_name: params[:repo]).first
     begin
-      repo.activate!(ci_user.user_id)
-      result = bind_hook!(current_user, @cloud_account, repo)
-      @project.update_columns(open_devops: true, gitea_webhook_id: result['id']) if result
-
-      @cloud_account.update_column(:ci_user_id, ci_user.user_id)
+      ActiveRecord::Base.transaction do
+        repo.activate!(@user.user_id)
+        result = bind_hook!(@user, @cloud_account, @repo)
+        @project.update_columns(open_devops: true, gitea_webhook_id: result['id'])
+        @cloud_account.update_column(:ci_user_id, @user.user_id)
+      end
       render_ok
     rescue Exception => ex
       render_error(ex.message)
@@ -45,7 +43,6 @@ class Ci::CloudAccountsController < Ci::BaseController
   def show
     @cloud_account = current_user.ci_cloud_account
   end
-
 
   def bind
     Ci::CreateCloudAccountForm.new(devops_params).validate!
