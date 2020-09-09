@@ -40,8 +40,10 @@ class RepositoriesController < ApplicationController
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
     interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
     if interactor.success?
-      @sub_entries = interactor.result
-      @sub_entries = [] << @sub_entries unless @sub_entries.is_a? Array
+      result = interactor.result
+      return @sub_entries = [] if result[:status] == -1
+
+      @sub_entries = [] << result unless result.is_a? Array
       @sub_entries = @sub_entries.sort_by{ |hash| hash['type'] }
     else
       render_error(interactor.error)
