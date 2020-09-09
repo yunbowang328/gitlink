@@ -21,6 +21,7 @@ class Ci::Repo < Ci::RemoteBase
       repo_signer: generate_code,
       repo_secret: generate_code,
       repo_user_id: ci_user_id,
+      repo_timeout: 60,
       repo_config: '.trustie-pipeline.yml',
       repo_updated: Time.now.to_i)
   end
