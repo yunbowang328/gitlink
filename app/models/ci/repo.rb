@@ -11,7 +11,7 @@ class Ci::Repo < Ci::RemoteBase
     user = Ci::User.find_by_user_login namespace_path
     repo = Ci::Repo.where(repo_namespace: namespace_path, repo_name: identifier).first
 
-    (user.blank? || repo.blank?) ? nil : [user, repo]
+    [user, repo]
   end
 
   def activate!(ci_user_id)
@@ -24,4 +24,32 @@ class Ci::Repo < Ci::RemoteBase
       repo_updated: Time.now.to_i)
   end
 
+  def self.auto_create!(user, project)
+    repo = new(
+      repo_user_id: user.user_id,
+      repo_namespace: project.owner.login,
+      repo_name: project.identifier,
+      repo_slug: "#{project.owner.login}/#{project.identifier}",
+      repo_clone_url: project.repository.url,
+      repo_active: 1,
+      repo_private: true,
+      repo_visibility: 'private',
+      repo_branch: 'master',
+      repo_counter: 0,
+      repo_trusted: false,
+      repo_protected: false,
+      repo_synced: 0,
+      repo_version: 1,
+      repo_signer: generate_code,
+      repo_secret: generate_code,
+      repo_timeout: 60,
+      repo_config: '.trustie-pipeline.yml',
+      repo_created: Time.now.to_i,
+      repo_updated: Time.now.to_i
+    )
+    if repo.save!
+      Ci::Perm.auto_create!(user, repo)
+      repo
+    end
+  end
 end
