@@ -1,10 +1,7 @@
 class UsersController < ApplicationController
-  include Devopsable
-
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list devops_authenticate devops]
-  before_action :auto_load_project, only: %i[devops devops_authenticate]
+  before_action :require_login, only: %i[me list]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def list

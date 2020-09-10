@@ -1,15 +1,13 @@
 class Ci::ProjectsController < Ci::BaseController
-  include Devopsable
   include RepositoriesHelper
 
   before_action :load_project
   before_action :load_repo, only: [:update_trustie_pipeline]
+  before_action :authorize_owner_project!, only: [:authorize]
+  before_action :find_cloud_account, only: [:authorize]
 
   def authorize
     @user = current_user
-    limit_project_owner_can_devops!(@user, @project)
-
-    @cloud_account = @user.ci_cloud_account
   end
 
   # get .trustie-pipeline.yml file

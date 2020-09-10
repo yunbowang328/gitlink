@@ -1,9 +1,8 @@
 class Ci::BuildsController < Ci::BaseController
   include RepositoriesHelper
-  include Devopsable
 
   before_action :load_project
-  before_action :ci_authorize!
+  before_action :authorize_owner_project!
   before_action :load_repo
   before_action :find_cloud_account, except: [:index, :show]
 
@@ -36,17 +35,4 @@ class Ci::BuildsController < Ci::BaseController
 
     render json: result
   end
-
-  private
-    def find_cloud_account
-      @cloud_account = current_user.ci_cloud_account
-    end
-
-    def load_ci_user
-      begin
-        @ci_user = Ci::User.find_by(user_login: params[:owner])
-      rescue
-        render_not_found
-      end
-    end
 end
