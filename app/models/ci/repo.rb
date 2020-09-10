@@ -2,6 +2,7 @@ class Ci::Repo < Ci::RemoteBase
   self.primary_key = 'repo_id'
 
   belongs_to :user, foreign_key: :repo_user_id
+  has_one :perm, foreign_key: :perm_repo_uid, dependent: :destroy
   has_many :builds, foreign_key: "build_repo_id", dependent: :destroy
 
   def self.find_with_namespace(namespace_path, identifier)
