@@ -2,6 +2,8 @@ class Ci::BuildsController < Ci::BaseController
   include RepositoriesHelper
   include Devopsable
 
+  before_action :load_project
+  before_action :ci_authorize!
   before_action :load_repo
   before_action :find_cloud_account, except: [:index, :show]
 
