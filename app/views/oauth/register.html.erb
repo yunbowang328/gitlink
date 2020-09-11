@@ -11,7 +11,7 @@
       </div>
       <div class="indexInfo">
         <span>邮箱：</span>
-        <%= text_field_tag :mail, '', placeholder: '请输入绑定邮箱', maxlength: 40, id: 'email' %>
+        <%= text_field_tag :mail, params[:mail], placeholder: '请输入绑定邮箱', maxlength: 40, id: 'email' %>
         <p class="checkInfo emailCheck"><span></span></p>
       </div>
       <div class="indexInfo">
