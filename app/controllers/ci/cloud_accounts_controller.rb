@@ -31,15 +31,15 @@ class Ci::CloudAccountsController < Ci::BaseController
       ActiveRecord::Base.transaction do
         if @repo
           return render_error('该项目已经激活') if @repo.repo_active?
-          @repo.activate!(current_user.user_id)
+          @repo.activate!(@user.user_id)
         else
-          @repo = Ci::Repo.auto_create!(current_user, @project)
+          @repo = Ci::Repo.auto_create!(@user, @project)
           @user.update_column(:user_syncing, false)
         end
 
         result = bind_hook!(current_user, @cloud_account, @repo)
         @project.update_columns(open_devops: true, gitea_webhook_id: result['id'])
-        @cloud_account.update_column(:ci_user_id, current_user.user_id)
+        @cloud_account.update_column(:ci_user_id, @user.user_id)
       end
       render_ok
     rescue Exception => ex
