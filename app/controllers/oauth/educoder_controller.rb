@@ -25,7 +25,7 @@ class Oauth::EducoderController < Oauth::BaseController
 
           redirect_to callback_url
         else
-          redirect_to oauth_register_path(login: login, callback_url: callback_url)
+          redirect_to oauth_register_path(login: login, mail: mail, callback_url: callback_url)
         end
       end
     rescue WechatOauth::Error => ex

@@ -41,9 +41,9 @@ class RepositoriesController < ApplicationController
     interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
     if interactor.success?
       result = interactor.result
-      return @sub_entries = [] if result[:status] == -1
+      return @sub_entries = [] if result.is_a?(Hash) && result[:status] == -1
 
-      @sub_entries = [] << result unless result.is_a? Array
+      @sub_entries = result.is_a?(Array) ? result : [result]
       @sub_entries = @sub_entries.sort_by{ |hash| hash['type'] }
     else
       render_error(interactor.error)
