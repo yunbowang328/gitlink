@@ -44,7 +44,7 @@ class Ci::BuildsController < Ci::BaseController
 
     log = step.log
 
-    result = log.blank? ? nil : JSON.parse(log.log_data)
+    result = log.blank? ? nil : (log.log_data[0..5].include?('null') ? nil : JSON.parse(log.log_data))
 
     # result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, build: params[:build], stage: params[:stage], step: params[:step]).logs
 
