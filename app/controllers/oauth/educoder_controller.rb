@@ -7,7 +7,7 @@ class Oauth::EducoderController < Oauth::BaseController
       token = params[:token]
 
       ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
-
+      
       open_user= OpenUsers::Educoder.find_by(uid: login)
 
       if open_user.present? && open_user.user.present? && open_user.user.email_binded?

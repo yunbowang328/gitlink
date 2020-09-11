@@ -44,7 +44,8 @@ class ProjectsController < ApplicationController
     #   projects = Project.visible
     # end
     projects = Project.no_anomory_projects.visible
-    @project_group_list = projects.group(:project_type).size
+    language_lists = projects.joins(:project_language).group("project_languages.name", "project_languages.id").size.keys.sort.to_h
+    @project_group_list = language_lists.delete_if { |k, v| k.blank? }
   end
 
   def update
