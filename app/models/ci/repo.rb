@@ -40,13 +40,14 @@ class Ci::Repo < Ci::RemoteBase
       repo_protected: false,
       repo_synced: 0,
       repo_version: 1,
-      repo_signer: generate_code,
-      repo_secret: generate_code,
       repo_timeout: 60,
       repo_config: '.trustie-pipeline.yml',
       repo_created: Time.now.to_i,
       repo_updated: Time.now.to_i
     )
+
+    repo.repo_signer = repo.generate_code
+    repo.repo_secret = repo.generate_code
     if repo.save!
       Ci::Perm.auto_create!(user, repo)
       repo
