@@ -31,7 +31,22 @@ class Ci::BuildsController < Ci::BaseController
   end
 
   def logs
-    result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, build: params[:build], stage: params[:stage], step: params[:step]).logs
+    # TODO **待优化**
+    # 因直接操作ci库，如下查询待优化，可直接根据log id查询即可
+    build = @repo.builds.find_by(build_number: params[:build])
+    return render_not_found("Couldn't found build with 'number'= #{params[:build]}") if build.blank?
+
+    stage = build.stages.includes(steps: [:log]).find_by(stage_number: params[:stage])
+    return render_not_found("Couldn't found build with 'number'= #{params[:stage]}") if stage.blank?
+
+    step = stage.steps.find_by(step_number: params[:step])
+    return render_not_found("Couldn't found build with 'number'= #{params[:step]}") if step.blank?
+
+    log = step.log
+
+    result = log.blank? ? nil : JSON.parse(log.log_data)
+
+    # result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, build: params[:build], stage: params[:stage], step: params[:step]).logs
 
     render json: result
   end
