@@ -50,6 +50,7 @@ class Ci::Repo < Ci::RemoteBase
     repo.repo_secret = repo.generate_code
     if repo.save!
       Ci::Perm.auto_create!(user, repo)
+      repo.update_column(:repo_uid, repo.id)
       repo
     end
   end
