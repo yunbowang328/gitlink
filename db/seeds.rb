@@ -29,3 +29,10 @@
 #   published_at: nil,
 #   filesize: 14877403
 # }
+
+
+# lan_ids = ProjectLanguage.select(:name, :id).pluck(:id) * 4
+# projects = Project.where(project_language_id: [nil, ""])
+# projects.each_with_index do |p,index|
+#   p.update_attribute(:project_language_id, lan_ids[index])
+# end
