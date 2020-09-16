@@ -43,7 +43,7 @@ module LaboratoryHelper
       # my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
       # default_url: "https://www.trustie.net/",
       tiding_url: "http://39.105.176.215/users/#{current_user.try(:login)}/user_tidings",
-      register_url: "http://39.105.176.215/login"
+      register_url: "http://39.105.176.215/user_join"
     }
   end
 
