@@ -17,7 +17,7 @@ module Droneable
   end
 
   def ci_certification?
-    Ci::User.exists?(user_login: self.login)
+    devops_unverified? && Ci::User.exists?(user_login: self.login)
   end
 
   module ClassMethods

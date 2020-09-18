@@ -20,7 +20,7 @@ class Ci::Drone::Server
     "service docker start; docker run \
       -v /var/run/docker.sock:/var/run/docker.sock \
       -e DRONE_DATABASE_DRIVER=mysql \
-      -e DRONE_DATABASE_DATASOURCE=#{database_username}:#{database_password}@tcp\\(#{database_host}:#{database_port}\\)/drone_#{user_login}?parseTime=true \
+      -e DRONE_DATABASE_DATASOURCE=#{database_username}:#{database_password}@tcp\\(#{database_host}:#{database_port}\\)/#{user_login}_drone?parseTime=true \
       -e DRONE_GITEA_SERVER=#{gitea_url} \
       -e DRONE_GITEA_CLIENT_ID=#{client_id} \
       -e DRONE_GITEA_CLIENT_SECRET=#{client_secret} \
