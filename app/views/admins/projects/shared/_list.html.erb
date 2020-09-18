@@ -23,7 +23,7 @@
       <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
       <td><%= project.id %></td>
       <td class="text-left">
-        <%= link_to(project.name, "/projects/#{project.id}", target: '_blank') %>
+        <%= link_to(project.name, "/projects/#{project.owner.login}/#{project.identifier}", target: '_blank') %>
       </td>
       <td><%= project.is_public ? '√' : '' %></td>
       <td><%= project.issues.size %></td>
