@@ -7,7 +7,7 @@ module Ci::DbConnectable
   # Dynamically sets the database connection.
   def connect_to_ci_database
     config = Rails.application.config_for(:configuration).symbolize_keys!
-    db_config = config[:gitea].symbolize_keys!
+    db_config = config[:ci_db_server].symbolize_keys!
     raise 'ci database config missing' if db_config.blank?
 
     req_params = {
