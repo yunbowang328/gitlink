@@ -7,6 +7,7 @@ class Ci::BuildsController < Ci::BaseController
   before_action :find_cloud_account, except: [:index, :show]
 
   def index
+    @user = current_user
     scope = @repo.builds
 
     scope = Ci::Builds::ListQuery.call(@repo, params)
@@ -20,13 +21,13 @@ class Ci::BuildsController < Ci::BaseController
   end
 
   def restart
-    result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).restart
+    result = Ci::Drone::API.new(@ci_user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).restart
 
     render json: result
   end
 
   def stop
-    result = Ci::Drone::API.new(@user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).stop
+    result = Ci::Drone::API.new(@ci_user.user_hash, @cloud_account.drone_url, @repo.repo_namespace, @repo.repo_name, number: params[:build]).stop
     render json: result
   end
 

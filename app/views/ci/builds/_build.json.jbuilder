@@ -7,7 +7,7 @@ json.action build.build_action
 json.error build.build_error  if build.build_status == 'error'
 json.message build.build_message
 json.author do
-  json.partial! 'author', user: current_user
+  json.partial! 'author', user: user
 end
 json.started format_utc_time build.build_started
 json.finished format_utc_time build.build_finished

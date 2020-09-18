@@ -1,4 +1,4 @@
 json.total_count @total_count
 json.builds @builds do |build|
-  json.partial! "/ci/builds/build", build: build
+  json.partial! "/ci/builds/build", build: build, user: @user
 end

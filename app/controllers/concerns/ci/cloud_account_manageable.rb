@@ -28,7 +28,7 @@ module Ci::CloudAccountManageable
     logger.info "######### rpc_secret: #{rpc_secret}"
 
     # 3. 创建drone server
-    drone_server_cmd = Ci::Drone::Server.new(oauth.client_id, oauth.client_secret, cloud_account.drone_host, rpc_secret).generate_cmd
+    drone_server_cmd = Ci::Drone::Server.new(current_user.login, oauth.client_id, oauth.client_secret, cloud_account.drone_host, rpc_secret).generate_cmd
     logger.info "######### drone_server_cmd: #{drone_server_cmd}"
 
     # 4. 创建drone client
