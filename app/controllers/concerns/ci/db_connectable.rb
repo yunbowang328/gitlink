@@ -11,10 +11,10 @@ module Ci::DbConnectable
     raise 'ci database config missing' if db_config.blank?
 
     req_params = {
-      host: db_config["host"],
-      username: db_config['username'],
-      password: db_config['password'],
-      port: db_config['port'],
+      host: db_config[:host],
+      username: db_config[:username],
+      password: db_config[:password],
+      port: db_config[:port],
       database: "#{current_user.login}_drone"
     }
     db_params = Ci::Database.get_connection_params(req_params)
