@@ -209,6 +209,15 @@ class UsersController < ApplicationController
     render_ok
   end
 
+  def update_description
+    @user = User.find params[:id]
+    if @user.id == User.current.id && @user.update(description: params[:description])
+      render_ok
+    else
+      render_error
+    end
+  end
+
   private
   def load_user
     @user = User.find_by_login(params[:id]) || User.find_by(id: params[:id])

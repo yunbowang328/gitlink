@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :sponsor_tiers
-  resources :sponsorships
   require 'sidekiq/web'
   require 'admin_constraint'
 
@@ -18,6 +16,10 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+
+    resources :sponsor_tiers
+    resources :sponsorships
+
     resources :sync_forge, only: [:create] do 
       collection do 
         post :sync_users
@@ -154,6 +156,7 @@ Rails.application.routes.draw do
         get :projects
         get :watch_users
         get :fan_users
+        put :update_description
       end
       collection do
         post :following
