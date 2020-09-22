@@ -24,8 +24,13 @@ module Ci::CloudAccountManageable
       user_id: current_user.id)
     oauth.save!
 
-    # 初始化ci端数据库
-    ci_db_structure!(@connection, "#{current_user.login}_drone")
+    # 创建数据ci端数据库
+    database_result = auto_create_database!(@connection, "#{current_user.login}_drone")
+    cloud_account = nil and return unless database_result.present?
+
+    # 初始化表结构
+    sub_connection = connect_to_ci_database
+    auto_create_table_structure!(sub_connection)
 
     rpc_secret = SecureRandom.hex 16
     logger.info "######### rpc_secret: #{rpc_secret}"

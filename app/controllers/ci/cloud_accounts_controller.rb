@@ -1,14 +1,14 @@
 class Ci::CloudAccountsController < Ci::BaseController
   include Ci::CloudAccountManageable
 
+  skip_before_action :connect_to_ci_database, only: %i[create bind]
   before_action :load_project, only: %i[create activate]
   before_action :authorize_owner_project!, only: %i[create activate]
   before_action :load_repo, only: %i[activate]
   before_action :find_cloud_account, only: %i[show]
   before_action :validate_params!, only: %i[create bind]
   before_action only: %i[create bind] do
-    master_db = true
-    connect_to_ci_database(master_db)
+    connect_to_ci_database(master_db: true)
   end
 
   def create
