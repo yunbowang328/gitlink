@@ -22,7 +22,10 @@ module Ci::CloudAccountManageable
       redirect_uri: gitea_oauth['redirect_uris'],
       gitea_oauth_id: gitea_oauth['id'],
       user_id: current_user.id)
-    oauth.save
+    oauth.save!
+
+    # 初始化ci端数据库
+    ci_db_structure!(@connection, "#{current_user.login}_drone")
 
     rpc_secret = SecureRandom.hex 16
     logger.info "######### rpc_secret: #{rpc_secret}"
@@ -43,25 +46,7 @@ module Ci::CloudAccountManageable
     redirect_url = "#{cloud_account.drone_url}/login"
     logger.info "######### redirect_url: #{redirect_url}"
 
-    if result && !result.blank?
-      # Ci::Schema.execute(username, password, port, host, database)
-      # con_result = @connection.execute(Ci::Schema.statement)
-
-      Ci::Schema.sqls.split(';').map(&:strip).each do |sql|
-        con_result = @connection.execute(sql)
-        Rails.logger.info "=============> ci create tabels result: #{con_result}"
-      end
-
-
-      # if con_result.present?
-      #   puts "==========> connection con_result: #{con_result}"
-      # else
-      #   puts "----------创建ci数据库失败"
-      # end
-      cloud_account
-    else
-      nil
-    end
+    result && !result.blank? ? cloud_account : nil
   end
 
   def unbind_account!
