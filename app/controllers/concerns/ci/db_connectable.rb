@@ -30,12 +30,9 @@ module Ci::DbConnectable
 
   def auto_create_table_structure!(connection)
     Rails.logger.info "[CI::DbConnectable] auto_create_table_structure's connection: #{connection}"
-    # Ci::Schema.execute(username, password, port, host, database)
-    # con_result = @connection.execute(Ci::Schema.statement)
 
     sqls = Ci::Schema.statement.split(';').map(&:strip).reject { |e| e.to_s.empty? }
     sqls.each do |sql|
-      Rails.logger.info "[CI::DbConnectable] auto_create_table_structure's sql: #{sql}"
       con_result = connection.execute(sql)
       Rails.logger.info "=============> ci create tabels result: #{con_result}"
     end
