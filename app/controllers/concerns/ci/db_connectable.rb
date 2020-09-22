@@ -18,7 +18,7 @@ module Ci::DbConnectable
       database: "#{current_user.login}_drone"
     }
     db_params = Ci::Database.get_connection_params(req_params)
-    Ci::Database.set_connection(db_params)
+    @connection = Ci::Database.set_connection(db_params)
   end
 
 end
