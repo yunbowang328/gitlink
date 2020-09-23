@@ -32,7 +32,7 @@ class Ci::Repo < Ci::RemoteBase
       repo_slug: "#{project.owner.login}/#{project.identifier}",
       repo_scm: "git",
       repo_ssh_url: "",
-      repo_html: "",
+      repo_html_url: "",
       repo_clone_url: project.repository.url,
       repo_active: 1,
       repo_private: true,
