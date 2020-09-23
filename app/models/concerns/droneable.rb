@@ -18,7 +18,7 @@ module Droneable
 
   def ci_certification?
     return false if self.is_a?(AnonymousUser)
-    devops_unverified? && Ci::User.exists?(user_login: self.login) if @user.devops_unverified?
+    devops_unverified? && Ci::User.exists?(user_login: self.login)
   end
 
   module ClassMethods
