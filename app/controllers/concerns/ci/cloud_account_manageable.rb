@@ -91,6 +91,14 @@ module Ci::CloudAccountManageable
     result[:status].present? ? nil : result
   end
 
+
+  def check_bind_cloud_account!
+    return [true, "你已经绑定了云帐号."] unless current_user.ci_cloud_account.blank?
+
+    ip_num = IPAddr.new(devops_params[:ip_num]).to_i
+    Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
+  end
+
   private
     def devops_params
       params.permit(:account, :secret, :ip_num)

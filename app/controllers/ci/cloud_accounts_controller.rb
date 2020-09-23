@@ -12,10 +12,8 @@ class Ci::CloudAccountsController < Ci::BaseController
   end
 
   def create
-    return render_error('你已绑定了云帐号.') unless current_user.ci_cloud_account.blank?
-
-    ip_num = IPAddr.new(devops_params[:ip_num]).to_i
-    return render_error("#{devops_params[:ip_num]}服务器已被使用.") if Ci::CloudAccount.exists?(ip_num: ip_num)
+    flag, msg = check_bind_cloud_account!
+    return render_error(msg) if flag === true
 
     ActiveRecord::Base.transaction do
       @cloud_account = bind_account!
@@ -56,10 +54,17 @@ class Ci::CloudAccountsController < Ci::BaseController
     end
   end
 
+  def unactivate
+
+  end
+
   def show
   end
 
   def bind
+    flag, msg = check_bind_cloud_account!
+    return render_error(msg) if flag === true
+
     ActiveRecord::Base.transaction do
       @cloud_account = bind_account!
       if @cloud_account.blank?
