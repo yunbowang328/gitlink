@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 	include LoggerHelper
 	include LoginHelper
 	include RegisterHelper
-	
+
 	protect_from_forgery prepend: true, unless: -> { request.format.json? }
 
 	before_action :check_sign
@@ -749,7 +749,7 @@ class ApplicationController < ActionController::Base
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"
 			@project
-    elsif current_user.is_a?(AnonymousUser)
+    elsif @project && current_user.is_a?(AnonymousUser)
 			logger.info "###########：This is AnonymousUser"
 			@project = nil if !@project.is_public?
 			render_forbidden and return
