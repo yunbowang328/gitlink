@@ -24,7 +24,7 @@ module Ci::CloudAccountManageable
 
     # 创建数据ci端数据库
     database_result = auto_create_database!(@connection, "#{current_user.login}_drone")
-    cloud_account = nil and return unless database_result.present?
+    logger.info "[CI::DbConnectable] auto_create_database's result: #{database_result}"
 
     # 初始化表结构
     sub_connection = connect_to_ci_database
