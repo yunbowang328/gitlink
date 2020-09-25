@@ -31,6 +31,9 @@ Rails.application.routes.draw do
       resources :compose_projects, only: [:create, :destroy]
     end
     resources :attachments do
+      member do 
+        post :preview_attachment
+      end
       collection do
         delete :destroy_files
       end

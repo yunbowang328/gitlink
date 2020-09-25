@@ -385,7 +385,7 @@ class ApplicationController < ActionController::Base
 
 	def current_user
 		if Rails.env.development?
-			User.current = User.find 36480
+			User.current = User.find 1
 		else
 			User.current
 		end
