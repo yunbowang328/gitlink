@@ -2,7 +2,7 @@
 #
 #  文件上传
 class AttachmentsController < ApplicationController
-  before_action :require_login, :check_auth, except: [:show]
+  before_action :require_login, :check_auth, except: [:show, :preview_attachment]
   before_action :find_file, only: %i[show destroy]
   before_action :attachment_candown, only: [:show]
   skip_before_action :check_sign, only: [:show, :create]
@@ -95,6 +95,26 @@ class AttachmentsController < ApplicationController
       uid_logger_error(e.message)
       tip_exception(e.message)
       raise ActiveRecord::Rollback
+    end
+  end
+
+  # 附件为视频时，点击播放
+  def preview_attachment 
+    attachment = Attachment.find_by(id: params[:id])
+    dir_path = "#{Rails.root}/public/preview"
+    Dir.mkdir(dir_path) unless Dir.exist?(dir_path)
+    if params[:status] == "preview"
+      if system("cp -r #{absolute_path(local_path(attachment))} #{dir_path}/")
+        render json: {status: 1, url: "#{dir_path}/#{attachment.disk_filename}"}
+      else
+        normal_status(-1, "出现错误，请稍后重试")
+      end
+    else 
+      if system("rm -rf #{dir_path}/#{attachment.disk_filename}")
+        normal_status(1, "操作成功")
+      else 
+        normal_status(-1, "出现错误，请稍后重试")
+      end
     end
   end
 

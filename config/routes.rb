@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     resources :attachments do
       collection do
         delete :destroy_files
+        post :preview_attachment
       end
     end
     get 'home/index'
