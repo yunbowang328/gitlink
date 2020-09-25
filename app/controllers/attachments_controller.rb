@@ -105,7 +105,7 @@ class AttachmentsController < ApplicationController
     Dir.mkdir(dir_path) unless Dir.exist?(dir_path)
     if params[:status] == "preview"
       if system("cp -r #{absolute_path(local_path(attachment))} #{dir_path}/")
-        render json: {status: 1, url: "#{dir_path}/#{attachment.disk_filename}"}
+        render json: {status: 1, url: "/preview/#{attachment.disk_filename}"}
       else
         normal_status(-1, "出现错误，请稍后重试")
       end
