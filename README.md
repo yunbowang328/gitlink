@@ -2521,7 +2521,7 @@ http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 
 #### 取消激活项目
 ```
-POST /api/:owner/:repo/deactivate
+DELETE /api/:owner/:repo/deactivate
 ```
 *示例*
 ```
