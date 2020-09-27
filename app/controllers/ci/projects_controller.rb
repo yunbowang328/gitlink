@@ -1,5 +1,6 @@
 class Ci::ProjectsController < Ci::BaseController
   include RepositoriesHelper
+  include Ci::CloudAccountManageable
 
   before_action :load_project
   before_action :load_repo, only: [:update_trustie_pipeline, :activate, :deactivate]
