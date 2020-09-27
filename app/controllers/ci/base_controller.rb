@@ -36,7 +36,7 @@ class Ci::BaseController < ApplicationController
 
     def find_cloud_account
       @cloud_account ||= current_user.ci_cloud_account
-      @cloud_account.blank? ? raise("未找到相关的记录") : @cloud_account
+      @cloud_account.blank? ? nil : @cloud_account
     end
 
     def load_ci_user

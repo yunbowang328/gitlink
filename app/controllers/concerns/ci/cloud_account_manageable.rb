@@ -93,17 +93,11 @@ module Ci::CloudAccountManageable
   end
 
   def gitea_oauth_grant!(gitea_uid, application_id)
-    gitea_server_config = Rails.configuration.database_configuration[Rails.env]["gitea_server"]
-    if gitea_server_config.blank?
-      puts "[Gitea Server]: gitea database config missing"
-      return
-    else
-      puts "[Gitea Server]: gitea db config is exists."
-    end
-
-    connection =  establish_connection gitea_server_config
+    connection = Gitea::Database.set_connection.connection
 
     unix_time = Time.now.to_i
+    # TODO
+    # 目前直接操作db，可以建立对应的model进行操作
     sql = "INSERT INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{gitea_uid}, #{application_id}, 0, #{unix_time}, #{unix_time} );"
 
     connection.execute(sql)

@@ -22,7 +22,7 @@ module Droneable
   end
 
   def unbind_account!
-    user_projects = selef.projects
+    user_projects = self.projects
 
     user_projects.update_all(open_devops: false, open_devops_count: 0)
     set_drone_step!(User::DEVOPS_UNINIT)
