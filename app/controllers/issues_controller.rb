@@ -196,7 +196,7 @@ class IssuesController < ApplicationController
 
       if params[:status_id].to_i == 5
         @issue.issue_times.update_all(end_time: Time.now)
-        @issue.update_closed_issues_count_in_project!
+        #@issue.update_closed_issues_count_in_project!
       end
 
       @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
