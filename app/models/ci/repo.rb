@@ -57,4 +57,8 @@ class Ci::Repo < Ci::RemoteBase
       repo
     end
   end
+
+  def deactivate!
+    update_column(:repo_active, 0)
+  end
 end

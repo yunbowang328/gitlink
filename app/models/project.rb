@@ -180,4 +180,14 @@ class Project < ApplicationRecord
     return nil if project.blank?
     project
   end
+
+  def ci_reactivate?
+    open_devops_count > 0
+  end
+
+  def ci_reactivate!(ci_repo)
+    ci_repo.update_column(:repo_active, 1)
+    update_column(:open_devops, true)
+    increment!(:open_devops_count)
+  end
 end

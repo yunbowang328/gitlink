@@ -36,14 +36,12 @@ class Ci::BaseController < ApplicationController
 
     def find_cloud_account
       @cloud_account ||= current_user.ci_cloud_account
+      @cloud_account.blank? ? raise("未找到相关的记录") : @cloud_account
     end
 
     def load_ci_user
-      begin
-        @ci_user = Ci::User.find_by(user_login: params[:owner])
-      rescue
-        render_not_found
-      end
+      @ci_user ||= Ci::User.find_by(user_login: params[:owner])
+      @ci_user.blank? ? raise("未找到相关的记录") : @ci_user
     end
 
 end

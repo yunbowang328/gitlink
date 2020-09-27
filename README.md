@@ -2491,12 +2491,12 @@ https://localhost:3000/api/jasder/forgeplus/cloud_accounts.json  | jq
 
 #### 激活项目
 ```
-POST /api/:owner/:repo/cloud_accounts/:id/activate
+POST /api/:owner/:repo/activate
 ```
 *示例*
 ```
 curl -X POST \
-http://localhost:3000/api/jasder/forgeplus/cloud_accounts/1/activate.json | jq
+http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 ```
 *请求参数说明:*
 
@@ -2504,7 +2504,36 @@ http://localhost:3000/api/jasder/forgeplus/cloud_accounts/1/activate.json | jq
 |-|-|-|-|
 |owner          |是|string |用户登录名  |
 |repo       |是|string |project's identifier |
-|id             |是|int |cloud_account's id  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|0:成功， -1: 失败|
+
+```
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
+#### 取消激活项目
+```
+POST /api/:owner/:repo/deactivate
+```
+*示例*
+```
+curl -X POST \
+http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner          |是|string |用户登录名  |
+|repo       |是|string |project's identifier |
 
 *返回参数说明:*
 

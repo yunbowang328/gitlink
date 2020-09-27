@@ -372,10 +372,22 @@ Rails.application.routes.draw do
             to: 'projects#update_trustie_pipeline',
             as: :update_trustie_pipeline
           )
+          post(
+            'activate',
+            to: 'projects#activate',
+            as: :ci_activate_project
+          )
+          delete(
+            'deactivate',
+            to: 'projects#deactivate',
+            as: :ci_deactivate_project
+          )
         end
+
         resources :cloud_accounts, only: [:create] do
           member do
             post :activate
+            delete :deactivate
           end
         end
         resources :builds, param: :build do

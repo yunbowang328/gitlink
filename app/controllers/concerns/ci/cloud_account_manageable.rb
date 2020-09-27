@@ -49,7 +49,11 @@ module Ci::CloudAccountManageable
     redirect_url = "#{cloud_account.drone_url}/login"
     logger.info "######### redirect_url: #{redirect_url}"
 
-    result && !result.blank? ? cloud_account : nil
+    return nil unless result.present?
+
+    gitea_oauth_grant!(current_user.gitea_uid, oauth.gitea_oauth_id)
+    return cloud_account
+    # result && !result.blank? ? cloud_account : nil
   end
 
   def unbind_account!
@@ -64,17 +68,7 @@ module Ci::CloudAccountManageable
       cloud_account.destroy!
     end
 
-    current_user.projects.update_all(open_devops: false)
-    current_user.set_drone_step!(User::DEVOPS_UNINIT)
-
-    # TODO
-    # 删除用户项目下的与ci相关的所有webhook
-    current_user.projects.select(:id, :identifier, :gitea_webhook_id).each do |project|
-      if project.gitea_webhook_id
-        result = Gitea::Hooks::DestroyService.call(current_user.gitea_token, current_user.login, project.identifier, project.gitea_webhook_id)
-        project.update_column(:gitea_webhook_id, nil) if result.status == 204
-      end
-    end
+    current_user.unbind_account!
   end
 
   def bind_hook!(user, cloud_account, repo)
@@ -91,12 +85,28 @@ module Ci::CloudAccountManageable
     result[:status].present? ? nil : result
   end
 
-
   def check_bind_cloud_account!
     return [true, "你已经绑定了云帐号."] unless current_user.ci_cloud_account.blank?
 
     ip_num = IPAddr.new(devops_params[:ip_num]).to_i
     Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
+  end
+
+  def gitea_oauth_grant!(gitea_uid, application_id)
+    gitea_server_config = Rails.configuration.database_configuration[Rails.env]["gitea_server"]
+    if gitea_server_config.blank?
+      puts "[Gitea Server]: gitea database config missing"
+      return
+    else
+      puts "[Gitea Server]: gitea db config is exists."
+    end
+
+    connection =  establish_connection gitea_server_config
+
+    unix_time = Time.now.to_i
+    sql = "INSERT INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{gitea_uid}, #{application_id}, 0, #{unix_time}, #{unix_time} );"
+
+    connection.execute(sql)
   end
 
   private

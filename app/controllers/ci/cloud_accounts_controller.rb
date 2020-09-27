@@ -54,10 +54,6 @@ class Ci::CloudAccountsController < Ci::BaseController
     end
   end
 
-  def unactivate
-
-  end
-
   def show
   end
 
