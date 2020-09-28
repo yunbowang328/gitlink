@@ -65,7 +65,7 @@ class Ci::ProjectsController < Ci::BaseController
   def deactivate
     return render_error('该项目已经取消激活') if !@repo.repo_active?
 
-    @project.update_column(open_devops: false)
+    @project.update_column(:open_devops, false)
     @repo.deactivate!
     render_ok
   end
