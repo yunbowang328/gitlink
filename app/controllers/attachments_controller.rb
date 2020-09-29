@@ -31,7 +31,8 @@ class AttachmentsController < ApplicationController
   
   def get_file 
     normal_status(-1, "参数缺失") if params[:download_url].blank?
-    response = Faraday.get(URI.parse(params[:download_url].to_s.gsub("http:", "https:")))
+    url = URI.encode(params[:download_url].to_s.gsub("http:", "https:"))
+    response = Faraday.get(url)
     filename = params[:download_url].to_s.split("/").pop()
     send_data(response.body.force_encoding("UTF-8"),  filename: filename, type: "application/octet-stream", disposition: 'attachment')
   end
