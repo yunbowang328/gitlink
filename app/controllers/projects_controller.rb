@@ -94,7 +94,7 @@ class ProjectsController < ApplicationController
   end
 
   def fork_users
-    fork_users = @project.fork_users.includes(:user, :project).order("fork_users.created_at desc").distinct
+    fork_users = @project.fork_users.includes(:user, :project, :fork_project).order("fork_users.created_at desc").distinct
     @forks_count = fork_users.size
     @fork_users = paginate(fork_users)
   end
