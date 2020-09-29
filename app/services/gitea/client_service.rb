@@ -22,7 +22,7 @@ class Gitea::ClientService < ApplicationService
     puts "[gitea] request params: #{params}"
     auth_token = authen_params(params[:token])
     response = conn(auth_token).post do |req|
-      req.url "#{request_url}"
+      req.url full_url(url)
       req.body = params[:data].to_json
     end
     render_status(response)
