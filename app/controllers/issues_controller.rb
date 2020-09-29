@@ -183,16 +183,23 @@ class IssuesController < ApplicationController
       end
     end
 
-    if @issue.issue_type.to_s == "2" && @issue.status_id == 5    #已关闭的情况下，只能更新标题和内容，附件
-      new_issue_params = {
-        subject: params[:subject],
-        description: params[:description],
-      }
-      if @issue.update_attributes(new_issue_params)
-        normal_status(0, "更新成功")
-      else 
-        normal_status(-1, "更新失败")
-      end
+      # if params[:issue_tag_ids].present?
+      #   issue_current_tags = @issue&.issue_tags&.select(:id)&.pluck(:id)
+      #   new_tag_ids = params[:issue_tag_ids] - issue_current_tags
+      #   old_tag_ids = issue_current_tags - params[:issue_tag_ids]
+      #   if old_tag_ids.size > 0
+      #     @issue.issue_tags_relates.where(issue_tag_id: old_tag_ids).delete_all
+      #   end
+      #   if new_tag_ids.size > 0
+      #     new_tag_ids.each do |tag|
+      #       IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
+      #     end
+      #   end
+      # end
+
+    if params[:status_id].to_i == 5
+      @issue.issue_times.update_all(end_time: Time.now)
+      # @issue.update_closed_issues_count_in_project!   #已经有after_update方法了，这里就不需要了
     elsif @issue.issue_type.to_s == "2" &&  params[:status_id].to_i == 5 && @issue.author_id != current_user.try(:id)
       normal_status(-1, "不允许修改为关闭状态")
     else
@@ -205,12 +212,12 @@ class IssuesController < ApplicationController
           if @issue.issue_type.to_s == "2" && last_status_id != 5
             if @issue.assigned_to_id.present? && last_status_id == 3 #只有当用户完成100%时，才给token
               post_to_chain("add", @issue.token, @issue.get_assign_user.try(:login))
-            else 
+            else
               post_to_chain("add", @issue.token, @issue.user.try(:login))
             end
           end
         end
-  
+
         if @issue.issue_type.to_s == "2" && @issue.status_id != 5 && @issue.saved_change_to_attribute("token")
           #表示修改token值
           change_token = last_token - @issue.token
@@ -483,7 +490,7 @@ class IssuesController < ApplicationController
     PostChainJob.perform_later(change_params)
   end
 
-  def check_token_enough 
+  def check_token_enough
     if params[:issue_type].to_s == "2" && (@issue.blank? || (@issue.present? && @issue.author_id == current_user.try(:id)))
       return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
       query_params = {
@@ -494,7 +501,7 @@ class IssuesController < ApplicationController
         }
       }
       response = Gitea::Chain::ChainGetService.new(query_params).call
-      return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200 
+      return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200
       return normal_status(-1, "您的token值不足") if JSON.parse(response.body)["balance"].to_i < params[:token].to_i
     end
   end
