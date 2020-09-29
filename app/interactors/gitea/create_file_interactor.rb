@@ -9,7 +9,8 @@ module Gitea
     attr_reader :error, :result
 
     def initialize(token, owner, params)
-      @owner   = owner
+      @token  = token
+      @owner  = owner
       @params = params
     end
 
