@@ -20,10 +20,6 @@ class Gitea::ClientService < ApplicationService
   # }
   def post(url, params={})
     puts "[gitea] request params: #{params}"
-    request_url = [api_url, url].join('').freeze
-    Rails.logger.info("######_____api____request_url_______###############{request_url}")
-    Rails.logger.info("######_____api____request_params_______###############{params}")
-
     auth_token = authen_params(params[:token])
     response = conn(auth_token).post do |req|
       req.url "#{request_url}"
@@ -35,7 +31,7 @@ class Gitea::ClientService < ApplicationService
   def get(url, params={})
     auth_token = authen_params(params[:token])
     conn(auth_token).get do |req|
-      req.url full_url(url)
+      req.url full_url(url, 'get')
       params.except(:token).each_pair do |key, value|
         req.params["#{key}"] = value
       end
@@ -117,14 +113,15 @@ class Gitea::ClientService < ApplicationService
     [domain, base_url].join('')
   end
 
-  def full_url(api_rest)
-    [api_url, api_rest].join('').freeze
+  def full_url(api_rest, action='post')
+    url = [api_url, api_rest].join('').freeze
+    url = action === 'get' ? url : URI.escape(url)
+    puts "[gitea] request url: #{url}"
+    return url
   end
 
   def render_status(response)
-    Rails.logger.info("###############____response__#{response}")
-    Rails.logger.info("###############____response_status_#{response.status}")
-    Rails.logger.info("###############____response_body_#{response.body}")
+    puts "[gitea] response status: #{response.status}"
     mark = "[gitea] "
     case response.status
     when 201, 200, 202
