@@ -2,7 +2,7 @@
 #
 #  文件上传
 class AttachmentsController < ApplicationController
-  before_action :require_login, :check_auth, except: [:show, :preview_attachment]
+  before_action :require_login, :check_auth, except: [:show, :preview_attachment, :get_file]
   before_action :find_file, only: %i[show destroy]
   before_action :attachment_candown, only: [:show]
   skip_before_action :check_sign, only: [:show, :create]
@@ -26,6 +26,15 @@ class AttachmentsController < ApplicationController
       send_file(absolute_path(local_path(@file)), filename: @file.title,stream:false, type: @file.content_type.presence || 'application/octet-stream')
     end
     update_downloads(@file)
+  end
+
+  
+  def get_file 
+    normal_status(-1, "参数缺失") if params[:download_url].blank?
+    url = URI.encode(params[:download_url].to_s.gsub("http:", "https:"))
+    response = Faraday.get(url)
+    filename = params[:download_url].to_s.split("/").pop()
+    send_data(response.body.force_encoding("UTF-8"),  filename: filename, type: "application/octet-stream", disposition: 'attachment')
   end
 
   def create

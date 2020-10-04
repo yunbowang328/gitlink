@@ -7,7 +7,7 @@ json.sha entry['sha']
 json.path entry['path']
 json.type entry['type']
 json.size entry['size']
-json.content entry['content'].present? && !direct_download ? render_decode64_content(entry['content']).force_encoding('UTF-8') : ""
+json.content entry['content'].present? && !direct_download ? render_decode64_content(entry['content']) : ""
 json.target entry['target']
 json.download_url entry['download_url']
 json.direct_download direct_download

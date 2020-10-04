@@ -1,11 +1,11 @@
 module RepositoriesHelper
   def render_decode64_content(str)
     return nil if str.blank?
-    Base64.decode64(str).force_encoding('UTF-8')
+    Base64.decode64(str).force_encoding("UTF-8")
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx)
     default_type.include?(str&.downcase)
   end
 
