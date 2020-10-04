@@ -1422,6 +1422,91 @@ http://localhost:3000/api/projects/recommend  | jq
 ```
 ---
 
+#### 项目主页
+```
+GET api/:namespace_id/:id/about
+```
+
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/:jason/forgeplus/about  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|namespace_id             |是|string |用户登录名  |
+|id             |是|string |项目标识identifier  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|identifier     |string|project's identifier|
+|content     |string|主页内容|
+|attachments     |array|附件|
+|-- name         |string|用户名，也是用户标识|
+
+
+返回值
+```
+{
+  "content": "",
+  "identifier": "forgeplus",
+  attachments: [
+
+  ]
+}
+
+```
+---
+
+#### 修改项目主页内容
+```
+POST api/:namespace_id/:id
+```
+
+*示例*
+```
+curl -X POST \
+-d "content=内容" \
+-d "attachment_ids=[1, 2, 2]" \
+http://localhost:3000/api/:jasder/forgeplus  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|namespace_id             |是|string |用户登录名  |
+|id             |是|string |项目标识identifier  |
+|content        |是|string |内容信息  |
+|attachment_ids |是|array |附件id  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|identifier     |string|project's identifier|
+|content     |string|主页内容|
+|attachments     |array|附件|
+|-- name         |string|用户名，也是用户标识|
+
+返回值
+```
+{
+  "content": "",
+  "identifier": "forgeplus",
+  attachments: [
+
+  ]
+}
+
+```
+---
+
 ### 获取分支列表
 ```
 GET /api/:namespace_id/:id/branches

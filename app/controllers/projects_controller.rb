@@ -107,6 +107,33 @@ class ProjectsController < ApplicationController
     @projects = Project.recommend.includes(:repository, :project_category, owner: :user_extension).limit(5)
   end
 
+  def about
+    @project_detail = @project.project_detail
+    @attachments = Array(@project_detail&.attachments) if request.get?
+    ActiveRecord::Base.transaction do
+      if request.post?
+        authorizate_user_can_edit_project!
+        unless @project_detail.present?
+          @project_detail = ProjectDetail.new(
+            content: params[:content],
+            project_id: @project.id)
+        else
+          @project_detail.content = params[:content]
+        end
+        if @project_detail.save!
+          attachment_ids = Array(params[:attachment_ids])
+          logger.info "=============> #{Array(params[:attachment_ids])}"
+          @attachments =  Attachment.where(id: attachment_ids).select(:id, :container_id, :container_type)
+          @attachments.update_all(
+            container_id: @project_detail.id,
+            container_type: @project_detail.model_name.name,
+            author_id: current_user.id,
+            description: "")
+        end
+      end
+    end
+  end
+
 
   private
   def project_params

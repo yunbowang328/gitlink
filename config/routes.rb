@@ -295,6 +295,7 @@ Rails.application.routes.draw do
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
           get :members, to: 'projects#fork_users'
+          match :about, :via => [:get, :put, :post]
         end
       end
 
