@@ -1363,6 +1363,65 @@ http://localhost:3000/api/projects  | jq
 ```
 ---
 
+#### 推荐项目
+```
+GET api/projects/recommend
+```
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/projects/recommend  | jq
+```
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|total_count     |int   |项目总条数 |
+|id              |string   |项目id |
+|name            |string|项目名称|
+|description     |string|项目简介|
+|visits          |int|流量数|
+|forked_count    |int|被fork的数量|
+|praises_count   |int|star数量|
+|is_public       |boolean|是否公开， true:公开，false:未公开|
+|mirror_url      |string|镜像url|
+|last_update_time|int|最后更新时间，为UNIX格式的时间戳|
+|author          |object|项目创建者|
+|-- name         |string|用户名，也是用户标识|
+|category        |object|项目类别|
+|-- id           |int|项目类型id|
+|-- name         |string|项目类型名称|
+|language        |object|项目语言|
+|-- id           |int|项目语言id|
+|-- name         |string|项目语言名称|
+
+
+返回值
+```
+[
+  {
+    "id": 20,
+    "repo_id": null,
+    "identifier": "PNAekinmH",
+    "name": "FNILL",
+    "visits": 13567,
+    "author": {
+      "name": "王一达",
+      "login": "wangyida",
+      "image_url": "avatars/User/b"
+    },
+    "category": {
+      "id": 8,
+      "name": "其他"
+    }
+  },
+  ...
+]
+
+```
+---
+
 ### 获取分支列表
 ```
 GET /api/:namespace_id/:id/branches
