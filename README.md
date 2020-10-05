@@ -1466,7 +1466,7 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 #### 修改项目主页内容
 ```
-POST api/:namespace_id/:id
+POST api/:namespace_id/:id/about
 ```
 
 *示例*
@@ -1474,7 +1474,7 @@ POST api/:namespace_id/:id
 curl -X POST \
 -d "content=内容" \
 -d "attachment_ids=[1, 2, 2]" \
-http://localhost:3000/api/:jasder/forgeplus  | jq
+http://localhost:3000/api/:jasder/forgeplus/about  | jq
 ```
 
 *请求参数说明:*
