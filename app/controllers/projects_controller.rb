@@ -123,7 +123,7 @@ class ProjectsController < ApplicationController
         if @project_detail.save!
           attachment_ids = Array(params[:attachment_ids])
           logger.info "=============> #{Array(params[:attachment_ids])}"
-          @attachments =  Attachment.where(id: attachment_ids).select(:id, :container_id, :container_type)
+          @attachments =  Attachment.where(id: attachment_ids)
           @attachments.update_all(
             container_id: @project_detail.id,
             container_type: @project_detail.model_name.name,
