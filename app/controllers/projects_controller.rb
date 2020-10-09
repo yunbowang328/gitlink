@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend]
+  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about]
   before_action :load_project, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
@@ -112,6 +112,7 @@ class ProjectsController < ApplicationController
     @attachments = Array(@project_detail&.attachments) if request.get?
     ActiveRecord::Base.transaction do
       if request.post?
+        require_login
         authorizate_user_can_edit_project!
         unless @project_detail.present?
           @project_detail = ProjectDetail.new(
