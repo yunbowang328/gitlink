@@ -1,0 +1,33 @@
+<div class="edu-back-white mt20 mb20 clearfix padding20">
+  <ul class="fl mt2 nav_blueline_status">
+    <li class="<%= @select_type == "unconfirm" ? "active" : "" %>" >
+      <%= link_to "待审批", admin_forum_applies_path(select_type: "unconfirm"),remote: true %>
+    </li>
+    <li class="<%= @select_type == "confirm" ? "active" : "" %>">
+      <%= link_to "已审批", admin_forum_applies_path(select_type: "confirm"),remote: true %>
+    </li>
+  </ul>
+  <ul class="fr">
+    <input type="text" name="search_section_name" value="<%= @section_name %>" class="winput-240-35 fl mr10 " placeholder="请输入板块名称进行检索">
+    <input type="text" name="search_user_name" value="<%= @search_name %>" class="winput-240-35 fl mr10 " placeholder="请输入用户名称进行检索">
+    <a href="javascript:void(0)" class="edu-default-btn edu-blueback-btn fl mr15 mt2" id="searchApplies">搜索</a>
+    <%= link_to "清除", admin_forum_applies_path(user_name: nil,section_name: nil, select_type: @select_type),remote: true, class: "edu-default-btn edu-greyback-btn fl mt2 mr15" %>
+  </ul>
+</div>
+<div id="forum-apply-item">
+  <%= render partial: "admin/forum_applies/forum_apply_item" %>
+</div>
+
+<script>
+  $("#searchApplies").on("click",function () {
+    let select_status  = "<%= @select_type %>";
+    let search_name =$("input[name='search_user_name']").val();
+    let section_name = $("input[name='search_section_name']").val();
+    $.ajax({
+      url: "<%= admin_forum_applies_path %>",
+      type: "get",
+      dataType: "script",
+      data: {select_type:select_status,user_name: search_name, section_name: section_name }
+    });
+  });
+</script>

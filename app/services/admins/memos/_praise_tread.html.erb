@@ -1,0 +1,36 @@
+<!-- get_praise_num(obj,1)函数中 1代表返回顶得次数 0返回踩的次数  -->
+   <% if User.current.logged? %>
+    <% if horizontal %>
+        <!-- 横排 -->
+        <div id="praise_tread_<%= obj.id %>" style="float:right; " >
+          <% @is_valuate = is_praise_or_tread(obj,user_id)%>
+          <% if @is_valuate.size > 0 %> <!-- 评价过   1代表赞 0代表踩 -->
+              <% @flag = @is_valuate.first.praise_or_tread %>
+              <% if @flag == 1 %> <!-- 顶过  --><!-- modified by bai -->
+                  <a href="javascript:void(0);" class="<%= (obj.author.id == User.current.id || obj.forum.creator == User.current || User.current.admin?) ? 'linkGrey2 postLikeIcon mr30':'linkGrey2 postLikeIcon' %>" title="<%= l(:label_issue_praise_over)%>" >   <%= get_praise_num(obj)%></a>
+              <% end %>
+          <% else %>
+              <% if user_id == obj.author_id %>
+                        <!--<%#= image_tag "/images/praise_tread/praise_true.png" , weight:"22px", height:"22px",:title => l(:label_issue_not_praise_over) %>-->
+                        <a href="javascript:void(0);" class="linkGrey2 postLikeIcon mr30" title="<%= l(:label_issue_not_praise_over)%>" >   <%= get_praise_num(obj)%></a>
+              <% elsif user_id == obj.forum.creator_id || User.current.admin? %>
+                  <a href="<%= praise_tread_praise_plus_path({:obj_id => obj.id,:obj_type => obj.class, :horizontal => horizontal })%>" data-remote="true" class="linkGrey2 postLikeIcon mr30" title="<%=  l(:label_issue_praise)%>" >   <%= get_praise_num(obj) %></a>
+              <% else %>
+                  <!-- 积分少于2分不能踩帖 -->
+                  <%# if OptionNumber.get_user_option_number(user_id).nil? || OptionNumber.get_user_option_number(user_id).total_score < 2 %>
+
+                            <%#= link_to image_tag("/images/praise_tread/praise_true.png",weight:"22px", height:"22px",:title => l(:label_issue_praise)),
+                                           :controller=>"praise_tread",:action=>"praise_plus",:remote=>true,:obj_id => obj.id,:obj_type => obj.class,:horizontal => horizontal %>
+                      <a href="<%= praise_tread_praise_plus_path({:obj_id=>obj.id,:obj_type=>obj.class,:horizontal => horizontal })%>" data-remote="true" class="<%= params[:controller] == 'memos' ? 'linkGrey2 postLikeIcon': 'linkGrey2 postLikeIcon mr30' %>" title="<%=  l(:label_issue_praise)%>" >   <%= get_praise_num(obj)%></a>
+                  <!--<%# else %>-->
+
+                            <!--<%#= link_to image_tag("/images/praise_tread/praise_true.png",weight:"22px", height:"22px",:title => l(:label_issue_praise)),-->
+                                            <!--:controller=>"praise_tread",:action=>"praise_plus",:remote=>true,:obj_id => obj.id,:obj_type => obj.class,:horizontal => horizontal %>-->
+                      <!--<a href="javascript:void(0);" class="linkGrey2 postLikeIcon" title="<%#=  l(:label_issue_praise)%>" target="_blank">   <%#= get_praise_num(obj)%></a>-->
+
+                  <!--<%# end %>-->
+              <% end %>
+          <% end %>
+        </div>
+    <% end %>
+   <% end %>

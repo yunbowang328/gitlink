@@ -1,0 +1,313 @@
+<%= content_for(:header_tags) do %>
+    <%= import_ke(enable_at: false, prettify: false, init_activity: false) %>
+<% end %>
+<ul>
+  <!--<li class="clearfix mb15 pl30 pr30">
+      <label class="panel-form-label fl color-dark-grey"><span class="color-orange mr5">*</span>类别&nbsp;&nbsp;&nbsp;</label>
+      <div class="with30 fl pr" select-for>
+          <input type="hidden" name="major_level" id="major_level" value="0">
+          <input class="task-height-40 task-form-100 panel-box-sizing pr20 color-grey3" readonly placeholder="选择话题类别"/>
+          <div class="down-select bor-grey-e user_bg_shadow" id="major_level_option">
+             <p data-major="3">通 告</p>
+             <p data-major="2">智能课堂</p>
+             <p data-major="1">实训项目</p>
+          </div>
+      </div>
+  </li>-->
+  <li class="clearfix mb15 pl30 pr30">
+    <label class="panel-form-label fl color-dark-grey"><span class="color-orange mr5">*</span>标题&nbsp;&nbsp;&nbsp;</label>
+    <input type="text" name="memo[subject]" id="memo_subject" value="<%= @memo.try(:subject) %>" class="panel-form-width-690 panel-form-height-30 fl panel-box-sizing" maxlength="60" id="memo_subject" placeholder="最多60个字符">
+    <p class="color-red undis" style="margin-left: 10%;" id="memo_notice"><i class="fa fa-exclamation-circle mr5"></i>标题不能超过60个字符</p>
+  </li>
+  <% if User.current.admin? %>
+      <li class="clearfix">
+        <label class="fl panel-form-label" style="width: 12%;">&nbsp;</label>
+                <span class="fl mr20">
+                    <input type="checkbox" name="memo[sticky]" <%= @memo.sticky ? 'checked' : '' %> value="<%= @memo.sticky ? 1 : 0 %>" id="to_top" class="ml-3 mr5 magic-checkbox">
+                    <label for="to_top">置顶</label>
+                </span>
+      </li>
+  <% end %>
+  <li class="clearfix mb5 pl30 pr30">
+    <label class="panel-form-label fl color-dark-grey"><span class="color-orange mr5">*</span>内容&nbsp;&nbsp;&nbsp;</label>
+    <%= hidden_field_tag :asset_id, params[:asset_id], :required => false, :style => 'display:none' %>
+    <textarea class="panel-form-width-690 panel-form-height-150 fl panel-box-sizing" style="display: none"></textarea>
+    <%= f.kindeditor :content, :editor_id => 'memo_content_editor',
+                     :owner_id => @memo.nil? ? 0: @memo.id,
+                     :owner_type => OwnerTypeHelper::MESSAGE,
+                     :width => '89.8%',
+                     :height => 300,
+                     :minHeight=>300,
+                     :class => 'talk_text fl',
+                     :input_html => { :id => 'memo_content',
+                                      :class => 'talk_text fl',
+                                      :maxlength => 5000 }
+    %>
+    <p class="color-red undis" style="margin-left: 10%;" id="new_memo_content_notice"><i class="fa fa-exclamation-circle mr5"></i>内容不能为空</p>
+  </li>
+  <li class="clearfix mb5 pl30 pr30 ml25">
+      <%= render :partial => 'forums/file_form', :locals => {:container => @memo} %>
+  </li>
+
+  <div class="clearfix mb15 pl92 pr30">
+    <p class="color-dark-grey h40">
+      <span class="color-orange mr5">*</span>
+      选择话题分类（技术可选三项）
+      <span id="forum_type_notice" class="undis color-red ml20"><i class="fa fa-exclamation-circle mr5"></i>请选择话题分类</span>
+    </p>
+    <input type="hidden" id="forum_type" name="forum_type" value="<%= edit ? (@memo.try(:forum).try(:id) == 1 ? 1 : (@memo.try(:forum).try(:id) == 3 ? 3 : (@memo.try(:forum).try(:id) == 5 && @memo.try(:language) ? @memo.try(:language) : 'other'))) : '' %>">
+    <div class="ml55 clearfix topic-hover">
+      <li class="fl mb10">
+        <span data-val="1" class="un_language_type font-14 mr8 bor-gray-c ptl5-10 forum_type <%= @memo.try(:forum).try(:id) == 1 ? 'forum_type_active' : '' %>">问题反馈</span>
+      </li>
+      <li class="fl mb10">
+        <span data-val="3" class="un_language_type font-14 mr8 bor-gray-c ptl5-10 forum_type <%= @memo.try(:forum).try(:id) == 3 ? 'forum_type_active' : '' %>">操作指南</span>
+      </li>
+      <% @mirrors_name.each do |language| %>
+          <li class="fl mb10">
+            <span data-val="<%= language %>" class="language_type font-14 mr8 bor-gray-c ptl5-10 forum_type <%= @memo.try(:language) && @memo.try(:language).split("/").include?(language) ? 'forum_type_active' : '' %>"><%= language %></span>
+          </li>
+      <% end %>
+      <li class="fl mb10">
+        <span data-val="other" class="language_type font-14 mr8 bor-gray-c ptl5-10 forum_type <%= @memo.try(:forum).try(:id) == 5 && (@memo.language.nil? || @memo.try(:language).split("/").include?('other')) ? 'forum_type_active' : '' %>">技术分享（其它）</span>
+      </li>
+    </div>
+  </div>
+  <li class="clearfix mt10 pl30 pr30 mt50">
+    <a href="javascript:void(0);" class="task-btn task-btn-orange fr" onclick="submitCoursesBoard()">保存</a>
+    <a href="<%= forums_path %>" class="task-btn fr mr10">取消</a>
+  </li>
+</ul>
+<script>
+  $(function(){
+      $("span.forum_type").on('click', function(){
+          if($(this).hasClass("language_type")){
+              if($(this).hasClass("forum_type_active")){
+                  $(this).removeClass("forum_type_active");
+              } else{
+                  if($("span.un_language_type.forum_type_active").length > 0){
+                      $("span.un_language_type").removeClass("forum_type_active");
+                  }
+                  if($("span.language_type.forum_type_active").length < 3){
+                      $(this).addClass("forum_type_active");
+                  }
+              }
+
+              $("#forum_type").val("");
+              for(var i=0; i < $("span.language_type.forum_type_active").length; i++){
+                  $("#forum_type").val().trim() != "" ? $("#forum_type").val($("#forum_type").val() + "/" + $($("span.language_type.forum_type_active")[i]).attr("data-val")) : $("#forum_type").val($($("span.language_type.forum_type_active")[i]).attr("data-val"));
+              }
+          } else{
+              if($(this).hasClass("forum_type_active")){
+                  $(this).removeClass("forum_type_active");
+                  $("#forum_type").val('');
+              } else{
+                  $("span.forum_type").removeClass("forum_type_active");
+                  $(this).addClass("forum_type_active");
+                  $("#forum_type").val($(this).attr("data-val"));
+              }
+          }
+      });
+//      var count = 0;
+//      $("span.forum_type").on('click', function(){
+//             count++;
+//          if(count>3){
+//              $("span.forum_type").removeClass("forum_type_active");
+//              count=1;
+//          }
+//          $(this).addClass("forum_type_active");
+//          $("#forum_type").val($(this).attr("data-val"));
+//
+//      });
+  })
+
+
+    function regexSubject() {
+        var content = $.trim($("#memo_subject").val());
+        if (content.length == 0) {
+            $("#memo_notice").show();
+            return  false;
+        }
+        else {
+            $("#memo_notice").hide();
+            return true;
+        }
+        return false;
+    }
+    function regexContent() {
+        if(memo_content_editor.isEmpty()){
+            $("#new_memo_content_notice").show();
+            return  false;
+        }
+        else {
+            $("#new_memo_content_notice").hide();
+            return true;
+        }
+        return false;
+    }
+    function regexForumType(){
+        if($("#forum_type").val().trim() == ""){
+            $("#forum_type_notice").show();
+            return false;
+        } else{
+            $("#forum_type_notice").hide();
+            return true;
+        }
+    }
+    function submitCoursesBoard(){
+        if(regexSubject() && regexContent() && regexForumType()){
+            memo_content_editor.sync();
+            $("#memo-form").submit();
+        }
+    }
+    document.onkeydown = function(event) {
+        var target, code, tag;
+        if (!event) {
+            event = window.event; //针对ie浏览器
+            target = event.srcElement;
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "INPUT") { return true; }
+                else { return false; }
+            }
+        }
+        else {
+            target = event.target; //针对遵循w3c标准的浏览器，如Firefox
+            code = event.keyCode;
+            if (code == 13) {
+                tag = target.tagName;
+                if (tag == "INPUT") { return false; }
+                else { return true; }
+            }
+        }
+    };
+</script>
+
+
+
+<% if false %>
+<%= content_for(:header_tags) do %>
+    <%= import_ke(enable_at: false, prettify: false, init_activity: false) %>
+<% end %>
+
+<div class="wenba-tiwenbox fl mr10 mb10">
+  <div class="wenba-tiwen-con">
+    <ul >
+      <li class="mb10">
+        <%= f.text_field :subject,
+                         :no_label => true,
+                         :id => "memo_subject",
+                         :maxlength => "50",
+                         :style => "width:708px",
+                         :onblur => "check_memo_name();",
+                         :onfocus => "$('#memo_name_error_tips').hide();",
+                         :onmouseover => "this.style.borderColor='#d9d9d9'",
+                         :class => "wenba-tiwen-input",
+                         :placeholder => "请输入标题" %>
+        <p class="c_red" style="display: none" id="memo_name_error_tips"></p>
+        <script>
+            var textarea1 = document.getElementById('memo_subject');
+            autoTextarea(textarea1);
+        </script>
+      </li>
+      <li class="mb10">
+        <%= f.kindeditor :content, :editor_id => "memo_content", :height => 300, :no_label => true %>
+      </li>
+      <p class="c_red" style="display: none" id="memo_contents_error_tips"></p>
+      <li class="clear mb10">
+        <%= render :partial => 'forums/file_form', :locals => {:container => @memo} %>
+      </li>
+    </ul>
+    <ul class="wenba-tagbox clearfix">
+      <h3 class="mb5 c_red" id="memo_classify_tips">请选择分类</h3>
+      <% @forums.each do |forum| %>
+          <li class="hidden" style="max-width: 200px;"><a href="javascript:void(0)" class="wenba-tiwen-tag" name="<%= forum.name %>" id="forums_question_<%= forum.id %>" onclick="add_forum('forums_question_<%= forum.id %>')" ><%= forum.name %></a></li>
+      <% end %>
+    </ul>
+    <input type="text" style="display: none" id="forum_name" name="forum_name" value="">
+    <div class="clear ">
+      <%= link_to "取消", forum_path(@forum), :class => "btn fr" %>
+      <a href="javascript:void(0);" class="btn btn-blue fr mr5" onclick="memo_commit();">确定</a>
+    </div>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        <% if params[:forum_index] != 'true'%>
+            $("#forums_question_"+<%= params[:forum_id] %>).addClass("wenba-tiwen-tag-active");
+        <% end %>
+    });
+    function add_forum(id){
+        $("#memo_classify_tips").attr('style','color: #333;');
+        $('a').removeClass("wenba-tiwen-tag-active");
+        $("#"+id).addClass("wenba-tiwen-tag-active");
+    }
+    function check_memo_name(){
+        if($("#memo_subject").val().trim().length > 50){
+            $("#memo_name_error_tips").html("主题 过长（最长为 50 个字符）").show();
+            return false;
+        }
+        if(memo_content.html().length > 20000){
+            $("#memo_contents_error_tips").html("内容 过长（最长为 20000 个字符）").show();
+            $("html,body").animate({scrollTop:$("#memo_contents_error_tips").offset().top},1000);
+            return false;
+        }
+        if($("#memo_subject").val().trim() == ""){
+            $("#memo_name_error_tips").html("标题不能为空").show();
+        }
+        return true;
+    }
+
+    var first_click = true;
+    function check_and_submit(){
+        if(!check_memo_name()){
+            return;
+        }
+        if($("textarea[name='memo[subject]']").val().trim() != "" && !memo_content.isEmpty() && first_click){
+            first_click = false;
+            memo_content.sync();
+            $.ajax({
+                url:'/forums/'+'<%= @forum.id.to_s%>'+'/memos',
+                type:'post',
+                data:$("#new_memo").serialize(),
+                success:function(data){
+
+                },
+                error:function(){
+                    alert('请检查当前网络连接')
+                }
+            });
+            //$("#new_memo").submit();
+        }else if($("textarea[name='memo[subject]']").val().trim() == "" && memo_content.isEmpty()){
+            $("#memo_error_tips").html("主题和内容不能为空").show();
+        }
+        else if($("textarea[name='memo[subject]']").val().trim() == "" && !memo_content.isEmpty() ){
+            $("#memo_error_tips").html("主题不能为空").show();
+        }else if($("textarea[name='memo[subject]']").val().trim() != "" && memo_content.isEmpty()){
+            $("#memo_error_tips").html("内容不能为空").show();
+        }
+    }
+    var first_click = true;
+  function memo_commit(){
+      $("#memo_name_error_tips").hide();
+      $("#memo_contents_error_tips").hide();
+      var f_name = $('.wenba-tiwen-tag-active').attr('name');
+      $("#forum_name").attr('value',f_name);
+      if($("#memo_subject").val().trim() != "" && !memo_content.isEmpty() && first_click && $("#forum_name").attr('value') != ""){
+//         alert($("#forum_name").attr('name'));
+         memo_content.sync();
+         $("#new_memo").submit();
+      } else if($("#memo_subject").val().trim() == ""){
+          $("#memo_name_error_tips").html("标题不能为空").show();
+      }else if(memo_content.isEmpty()){
+          $("#memo_contents_error_tips").html("内容不能为空").show();
+      }else if ($("#forum_name").attr('value')== ""){
+          $("#memo_classify_tips").attr('style','color: #F00;');
+      }
+  }
+
+
+</script>
+<% end %>

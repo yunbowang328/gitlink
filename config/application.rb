@@ -43,5 +43,12 @@ module Educoderplus
         resource '/*', :headers => :any, :methods => [:get, :post, :delete, :options, :put]
       end
     end
+    config.middleware.use Rack::Cors do
+      allow do
+        origins '*'
+        # location of your API
+        resource '/api/*', :headers => :any, :methods => [:get, :post, :delete, :options, :put]
+      end
+    end
   end
 end

@@ -1,0 +1,9 @@
+
+<% if @status > 0%>
+  <% if @is_confirm == 0 %>
+  $("#forum-apply-action-<%= @forum_apply.id %>").remove()
+  <% else %>
+  $("#forum-apply-action-<%= @forum_apply.id %>").html("<%= j render partial: "admin/forum_applies/item_list", locals: {user: @forum_apply.user, apply: @forum_apply} %>")
+  <% end %>
+<% end %>
+op_know("<%= @message %>")

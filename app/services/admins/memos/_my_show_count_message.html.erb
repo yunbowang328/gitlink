@@ -1,0 +1,142 @@
+<div class="homepageLeft-new">
+  <div class="postDetailContainer">
+    <div class="fl mr10 pr"> <%= link_to image_tag(url_to_avatar(@forum.creator),:width => 60,:height => 60,:alt => '贴吧图像' ), user_path( @forum.creator) %>
+      <!--<div class="homepageEditProfile"><a href="javascript:void(0);" class="homepageEditProfileIcon"></a></div>-->
+    </div>
+    <div class="fl" style="width: 135px;">
+      <% user_name =  @forum.creator.show_name.empty? ? @forum.creator.name : @forum.creator.show_name %>
+      <div class="fl mb8 mt10">吧主：</div>
+      <a href="<%= user_path(@forum.creator)%>" target="_blank" class="linkBlue w80 fl mb8 mt10" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis; "><%= user_name %></a>
+      <div class="fontGrey3 fl">回答：<a href="javascript:void(0);" class="linkOrange mr5" style="cursor: default"><%= @my_replies_count %></a>
+        <% unless @my_topic_count == 0 %>
+            帖子：<a href="javascript:void(0);" class="linkOrange" style="cursor: default"><%= @my_topic_count %></a>
+        <% end %>
+      </div>
+    </div>
+    <div class="cl"></div>
+    <div class="fl">
+      <%= link_to @forum.name, forum_path(@forum), :class => "f16 fontBlue", :style => "word-break: break-all; word-wrap:break-word;white-space:pre-wrap;" %>
+    </div>
+    <div class="cl"></div>
+    <div class="fontGrey2 mt10">
+      <span id="forum_desc_span" style="word-break:normal; width:auto; display:block; white-space:pre-wrap;word-wrap : break-word ;overflow: hidden ;"><%= h @forum.description.html_safe%></span>
+      <% if @forum.creator.id == User.current.id %>
+          <a href="javascript:void(0);" onclick="edit_desc();">
+            <%= image_tag('signature_edit.png',{:width => 12,:height => 12}) %>
+          </a>
+      <% end %>
+    </div>
+  </div>
+  <% unless params[:controller] == "forums" %>
+      <div class="f1">
+        <%= link_to "<span class='btn-big-blue mt10'>我要提问</span>".html_safe, new_forum_memo_path(:forum_id => @forum) %>
+      </div>
+  <% end %>
+</div>
+<script>
+    var desc;
+    function edit_desc(){
+        desc = $("#forum_desc_span").html();
+        $("#forum_desc_span").html("<textarea id='forum_desc_input' onblur='change_forum_desc();'  style='width: 200px;height: 80px; max-width: 207px; max-height: 80px; border: 1px solid #d9d9d9;outline: none;margin: 0px 0px 12px 0px;'>" + desc + "</textarea>");
+        $("#forum_desc_input").focus();
+    }
+
+    function change_forum_desc(){
+        $.ajax({
+            url: '<%= update_memo_description_forum_path(@forum) %>',
+            type: 'post',
+            data:{"forum[description]":$("#forum_desc_input").val().trim()},
+            success:function(data){
+                if(data.result == true){
+                    $("#forum_desc_input").hide();
+                    $("#forum_desc_span").html($("#forum_desc_input").val().trim());
+                }else{
+                    alert("保存失败");
+                    $("#forum_desc_input").hide();
+                    $("#forum_desc_span").html(desc);
+                }
+            }
+        });
+    }
+
+    function delete_forum_tag(doc){
+        tag_name = doc.parent().children().eq(0).html().trim();
+        $.ajax(
+                        "<%= delete_forum_tag_forum_path(@forum)+ '.js?tag_name='%>"+tag_name,
+                {},
+                function(data){
+                    alert(data == true)
+                    if(data == true){
+                        doc.parent().remove();
+                    }else{
+
+                    }
+                }
+        );
+    }
+
+    function addTag(){
+        if(<%=@forum.creator.id == User.current.id%>) {
+            if ($("input[name='addTag']").val().trim() != ""   ) {
+                if($("input[name='addTag']").val().trim().length <= 120) {
+                    $.get(
+                                    '<%= add_forum_tag_forum_path(@forum)%>' + "?tag_str=" + $("input[name='addTag']").val(),
+                            {}
+                    );
+                    $("input[name='addTag']").val('');
+                }else{
+                    alert("标签名字长度不能超过120个字符");
+                }
+            }
+        }
+    }
+
+    var tagNameHtml; //当前双击的链接的父节点的html
+    var tagName;  //标签的值
+    var parentCssBorder; //当前双击的链接的父节点
+    var ele;    //当前双击的链接
+    var taggableId; //标签的id
+    var taggableType; //被标签的类型
+    //这里renameTag有两种情况，一种是改变某个资源的tag名称。如果其他资源也有这个tag。则新增一个改变后的tag名
+    //第二种是改变某个tag名称。其他所有的资源如果拥有这个tag。那么对应的tag名也要改掉。
+    //目前这两种依据 的来源就是 是否 传了参数 id。如果有id。就指定了资源id，就是第一种情况。如果没有id。就是第二种情况
+    function rename_tag(domEle,name,id,type){
+        if(domEle.children().get(0) != undefined ){ //已经是编辑框的情况下不要动
+            return;
+        }
+        tagNameHtml = domEle.parent().html();
+        tagName = name;
+        parentCssBorder = domEle.parent().css("border");
+        ele = domEle;
+        taggableId = id;
+        taggableType = type;
+        width = parseInt(domEle.css('width').replace('px','')) >=100 ?  parseInt(domEle.css('width').replace('px','')) : 100;
+        domEle.html('<input name="" id="renameTagName" maxlength="<%=Setting.tags_max_length%>" minlength="<%= Setting.tags_min_length%>" style="width:'+width+'px;" value="'+name+'"/>');
+        domEle.parent().css("border","1px solid #ffffff");
+        $("#renameTagName").focus();
+    }
+    $("#renameTagName").live('blur',function(){
+        if($("#renameTagName")[0] != undefined ){//存在renameTagName,则处于编辑状态
+            if($("#renameTagName").val().trim() == tagName){ //如果值一样，则恢复原来的状态
+                ele.parent().css("border","");
+                ele.parent().html(tagNameHtml);
+
+            }else{ //否则就要更新tag名称了
+                if(confirm("是否将标签改为 "+ $("#renameTagName").val().trim())){
+                    $.post(
+                            '<%= update_tag_name_path %>',
+                            {"taggableId": taggableId, "taggableType": taggableType, "tagName": tagName, "renameName": $("#renameTagName").val().trim()}
+                    )
+                }else{
+                    ele.parent().css("border","");
+                    ele.parent().html(tagNameHtml);
+                }
+            }
+        }
+    });
+    function del_forum_confirm(){
+        if(confirm('您确定要删除么?')){
+            $("#del_link").click();
+        }
+    }
+</script>

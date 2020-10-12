@@ -1,0 +1,8 @@
+<a href="javascript:void(0)" class="fl" ><%= children_forum.try(:title) %></a>
+<span href="javascript:void(0)" class="menu_operate ml20 fr" onclick="first_menu_action(this)">
+  <i class="iconfont icon-sandian color-grey-6 font-12"> </i>
+  <div class="operateList">
+    <%= link_to "重命名", edit_admin_forum_section_path(children_forum, children_forum: true), remote: true %>
+    <%= link_to "删除", admin_forum_section_path(children_forum, children_forum: true),method: :delete, data:{confirm: "确认删除吗?"}, remote: true %>
+  </div>
+</span>

@@ -1,0 +1,8 @@
+<% if image_type == "partner" %>
+<%= image_tag(logo_url,class: "upload-partner-250") %>
+<div class="partner-again-upload none">重新上传</div>
+<% else %>
+<%= image_tag(logo_url,class: "avatar100") %>
+<div class="admin-show-again-upload none">重新上传</div>
+<% end %>
+<%= hidden_field_tag "attachments[]","#{attachment.id}", readonly: "true" %>

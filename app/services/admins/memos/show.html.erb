@@ -1,0 +1,233 @@
+<%= content_for(:header_tags) do %>
+    <%= import_ke(enable_at: false, prettify: false, init_activity: true) %>
+<% end %>
+<div class="clearfix">
+  <div class="edu-class-container edu-position">
+    <p class="mb10 font-14">
+      <i class="fa fa-map-marker mr5 color-grey"></i>
+      <a href="<%= user_path(@user)%>"><%= @user.show_name %></a>  &gt; <a href="<%= forums_path %>">讨论区 </a>
+    </p>
+    <div class="edu-con-top user_bg_shadow bor-grey-e clearfix mb20">
+      <p class="ml15 color-grey3 fl">
+       帖子详情
+      </p>
+      <%= link_to '返回', forums_path(:type => @type, :page => @forum_page), :class => 'fr font-12 mr15 mt3 color-grey' %>
+     <!-- <p class="color-grey fr font-12 mr15 mt5"><a href="javascript:void(0)">返回</a></p>-->
+    </div>
+    <div class="edu-tab clearfix mb20 user_bg_shadow bor-grey-e">
+      <div class="panel-inner-fourm nobg">
+        <div class="clearfix pr">
+          <a href="<%= user_path(@memo.author) %>" class="fl">
+            <%= image_tag(url_to_avatar(@memo.author), :width => 60, :height => 60, :alt=>'用户头像', :class=>"panel-list-img mr15" ) %>
+          </a>
+          <div class="panel-list-infobox fl" style="margin:0;margin-left: 6px">
+            <div class="clearfix mb5">
+              <p class="color-grey3 fl" style="font-size: 16px;">
+                <%= h @memo.subject %>
+                <% if @memo.sticky %>
+                    <span class="btn-top btn-cir-orange mt5 ml5">置顶</span>
+                <% end %>
+
+              </p>
+              <!-- <p class="color-grey fr font-12 mr15 mt5"><a href="javascript:void(0)">返回</a></p>-->
+            </div>
+            <p class="mb10">
+              <a href="<%= user_path(@memo.author) %>" class="font-14 mr15 color-grey" target="_blank"><%= @memo.author.show_name %></a><span class="font-14 color-grey">更新于<%= time_from_now @memo.updated_at %></span>
+              <span id="reword_score_<%= @memo.id %>">
+                <% if @memo.try(:reward).present? %>
+                  <span class="ml15 color-orange03" style="cursor: default;" data-tip-down="获得平台奖励金币：<%= @memo.try(:reward) %>"><i class="fa fa-gift mr5 font-16"></i><%= @memo.try(:reward) %></span>
+                <% end %>
+              </span>
+            </p>
+            <!--<p class="color-grey panel-lightgrey fl mt3">-->
+              <!--<span class="fl mr10 mt2">类别：分享</span>-->
+           <!-- </p>-->
+          </div>
+          <% if @user.admin? || @user == @memo.author %>
+              <div class="edu-position-hidebox" style="position: absolute;right: 10px;top:0px;">
+                <a href="javascript:void(0);"><i class="fa fa-bars font-16"></i></a>
+                <ul class="edu-position-hide undis">
+                  <% if @user.admin? %>
+                      <% if @memo.sticky %>
+                          <li><a href="<%= change_sticky_forum_memo_path(@memo.forum,@memo) %>">取消置顶</a></li>
+                      <% else %>
+                          <li><a href="<%= change_sticky_forum_memo_path(@memo.forum,@memo) %>">置&nbsp;&nbsp;顶</a></li>
+                      <% end %>
+                  <% end %>
+                  <li><a href="<%= edit_forum_memo_path(@memo.forum, @memo)%>">编&nbsp;&nbsp;辑</a></li>
+                  <li><a href="javascript:void(0)" onclick="delete_confirm_box_3('<%= forum_memo_path(@memo.forum, @memo) %>', '您确定要删除吗？')">删&nbsp;&nbsp;除</a></li>
+                </ul>
+              </div>
+          <% end %>
+        </div>
+        <div class="panel-inner-info clearfix memos_con" style="line-height: 1.5">
+          <!--帖子内容-->
+          <%= @memo.content.html_safe %>
+        </div>
+        <ul class="panel-inner-info clearfix">
+          <!--上传的文件内容-->
+          <% if @memo.attachments.any?%>
+              <% options = {:author => true, :deletable => @memo.deleted_attach_able_by?(User.current) } %>
+              <%= render :partial => 'attachments_links', :locals => {:attachments => @memo.attachments, :options => options, :is_float => true} %>
+          <% end %>
+        </ul>
+      </div>
+      <div class="panel-mesbox" id="message_replies_box">
+        <%= render :partial => "memo_all_replies" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function ThumbUp(item){
+        $(item).toggleClass("orange-btn");
+        $(item).toggleClass("orange-bg-btn");
+        if($(item).attr("attr-thumb")=="0"){
+            $(item).find("span").html(parseInt($(item).find("span").html())+1);
+            $(item).attr("attr-thumb","1");
+        }else{
+            $(item).find("span").html(parseInt($(item).find("span").html())-1);
+            $(item).attr("attr-thumb","0");
+        }
+    }
+    $(function(){
+        sd_create_editor_from_data(<%= @memo.id %>, null, "100%", "<%= @memo.class.to_s %>");
+    });
+</script>
+
+
+
+<% if false %>
+    <%= content_for(:header_tags) do %>
+        <%= import_ke(enable_at: false, prettify: false, init_activity: true) %>
+        <%= javascript_include_tag 'forum' %>
+    <% end %>
+
+    <div class="banner-big f16 fontGrey3 mb10">
+      <%= link_to "问吧", forums_path, :class => "c_blue" %> > <%= link_to @forum.name, forum_path(@forum), :class => "c_blue" %> > <%=h @memo.subject %>
+    </div>
+
+    <script>
+        $(function() {
+            sd_create_editor_from_data(<%= @memo.id%>,null,"100%", "<%=@memo.class.to_s%>");
+        });
+
+        function del_confirm(){
+            if(confirm('确认删除么?')){
+                $("#del_memo_link").click();
+            }else{
+
+            }
+        }
+    </script>
+    <div class="postRightContainer mr10">
+      <div class="postThemeContainer">
+        <div class="postDetailPortrait">
+          <%= link_to image_tag(url_to_avatar(@memo.author),:width=>50,:height => 50,:alt=>'贴吧图像' ),user_path(@memo.author) %>
+        </div>
+        <div class="postThemeWrap">
+          <% if @memo.author.id == User.current.id || User.current.admin? || User.current == @forum.creator %>
+              <div class="homepagePostSetting">
+                <ul>
+                  <li class="homepagePostSettingIcon">
+                    <ul class="homepagePostSettiongText">
+                      <% if @memo.author.id == User.current.id || User.current.admin? %>
+                          <li><a href="<%= edit_forum_memo_path(@memo.forum,@memo)%>" class="postOptionLink">编辑</a></li>
+                      <% end %>
+                      <% if  User.current.admin? || User.current == @forum.creator %>
+                          <% if @memo.sticky %>
+                              <li><a href="<%= change_sticky_forum_memo_path(@memo.forum,@memo) %>" class="postOptionLink">取消置顶</a></li>
+                          <% else %>
+                              <li><a href="<%= change_sticky_forum_memo_path(@memo.forum,@memo) %>" class="postOptionLink">置顶</a></li>
+                          <% end %>
+                      <% end %>
+                      <li><a href="javascript:void(0);"  class="postOptionLink" onclick="del_confirm();">删除</a></li>
+                      <li style="display: none"><a href="<%= forum_memo_path(@memo.forum, @memo) %>" data-method="delete" id="del_memo_link" ></a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+          <% end %>
+          <div class="postDetailTitle fl">
+            <a href="javascript:void(0);" class="f14 linkGrey4 fb" style="overflow:hidden;">主题: <%= @memo.subject%></a>
+          </div>
+          <%= render :partial => "memos/praise_tread",:locals => {:obj => @memo,:show_flag => true,:user_id =>User.current.id,:horizontal => true}%>
+          <div class="cl"></div>
+
+          <div class="postDetailCreater">
+            <%= link_to @memo.author.show_name, user_path(@memo.author), :class => "linkBlue2", :target=> "_blank"%></div>
+          <div class="postDetailDate mb5"><%= format_date( @memo.created_at)%></div>
+          <div class="cl"></div>
+          <div class="homepagePostIntro memo-content ke-block" id="activity_description_<%= @memo.id %>" style="word-break: break-all; word-wrap:break-word;margin-bottom: 0px !important;" >
+            <%= @memo.content.html_safe%>
+          </div>
+          <div class="cl"></div>
+          <div class=" fl" style="width: 600px">
+            <% if @memo.attachments.any?%>
+                <% options = {:author => true, :deletable => @memo.deleted_attach_able_by?(User.current) } %>
+                <%= render :partial => 'attachments_links', :locals => {:attachments => @memo.attachments, :options => options, :is_float => true} %>
+            <% end %>
+          </div>
+          <div class="cl"></div>
+          <span class=" fr" style="color: #888888; font-size: 12px;">更新时间：<%= format_date(@memo.updated_at)%></span>
+        </div>
+        <div class="cl"></div>
+      </div>
+      <div class="cl"></div>
+      <div class="homepagePostReply">
+        <div class="homepagePostReplyBanner">
+          <div class="homepagePostReplyBannerCount">回复（<%= @reply_count %>）</div>
+          <div class="homepagePostReplyBannerTime"></div>
+        </div>
+        <div class="" id="reply_div_<%= @memo.id %>">
+          <%= render :partial => 'memos/memo_all_replies' %>
+        </div>
+        <div class="cl"></div>
+        <div class="homepagePostReplyContainer borderBottomNone minHeight48">
+          <div class="homepagePostReplyPortrait mr15 imageFuzzy" id="reply_image_<%= @memo.id%>"><%= link_to image_tag(url_to_avatar(User.current), :width => "33", :height => "33"), user_path(User.current), :alt => "用户头像" %></div>
+          <div class="homepagePostReplyInputContainer mb10">
+            <% if User.current.logged? %>
+                <div nhname='new_message_<%= @memo.id%>' style="display:none;">
+                  <%= form_for('memo',:url=>forum_memos_path,:method => "post") do |f|%>
+                      <%= f.hidden_field :subject, :required => true, value: @memo.subject %>
+                      <%= f.hidden_field :forum_id, :required => true, value: @memo.forum_id %>
+                      <%= f.hidden_field :parent_id, :required => true, value: @memo.id %>
+                      <%= hidden_field_tag :quote,"",:required => false,:style => 'display:none' %>
+                      <div nhname='toolbar_container_<%= @memo.id%>' class="kindeditor"></div>
+                      <textarea placeholder="有问题或有建议，请直接给我留言吧！" style="display: none" nhname='new_message_textarea_<%= @memo.id %>' name="memo[content]"></textarea>
+                      <a id="new_message_submit_btn_<%= @memo.id%>" href="javascript:void(0)" onclick="this.style.display='none'" class="blue_n_btn fr" style="display:none;margin-top:6px;">发送</a>
+                      <div class="cl"></div>
+                      <p nhname='contentmsg_<%= @memo.id%>'></p>
+                  <% end%>
+                </div>
+            <% else %>
+                <%= render :partial => "users/show_unlogged" %>
+            <% end %>
+            <div class="cl"></div>
+          </div>
+          <div class="cl"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fl">
+      <%= render :partial => "memos/my_show_count_message" %>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(function(){
+            $("#activity_description_<%= @memo.id %> p,#activity_description__<%= @memo.id %> span,#activity_description_<%= @memo.id %> em").each(function(){
+                var postContent = $(this).html();
+                postContent = postContent.replace(/&nbsp;/g," ");
+                postContent= postContent.replace(/ {2}/g,"&nbsp; ");
+                postContent=postContent.replace(/&nbsp; &nbsp;/g,"&nbsp;&nbsp;&nbsp;");
+                postContent=postContent.replace(/&nbsp;  /g,"&nbsp;&nbsp; ");
+                $(this).html(postContent);
+            });
+            autoUrl('activity_description_<%= @memo.id %>');
+            description_show_hide(<%= @memo.id %>);
+        });
+    </script>
+<% end %>

@@ -2,12 +2,34 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-
+  mount Mobile::API => '/api'
   # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
-
+  resources :forums do
+    member do 
+      get "detail"
+    end
+    collection do
+      match '/manage/:id/', :to => 'forums#manage', :via => :get
+      match '/theme/:id/', :to => 'forums#theme', :via => :get
+      resources :plates, only: [:show, :index] do
+        get 'all'
+        get 'is_fine'
+        get 'my_memos'
+        get 'my_topics'
+      end
+      resources :categories do
+        collection do
+          get 'all', :via =>  [:get, :post]
+          get 'guide', :via =>  [:get, :post]
+          get 'techShare'
+          get 'shixun_discuss'
+        end
+      end
+    end
+  end
   get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
@@ -384,7 +406,7 @@ Rails.application.routes.draw do
     end
     # Project Area END
   end
-
+  
   namespace :admins do
     mount Sidekiq::Web => '/sidekiq'
     get '/', to: 'dashboards#index'
@@ -397,6 +419,39 @@ Rails.application.routes.draw do
     resources :project_categories
     resources :project_licenses
     resources :project_ignores
+    resources :banned_users do
+      collection do
+        post :confirm_banned
+      end
+    end
+    resources :memos, only: :index do
+      collection do
+        get 'apply_destroy_memos'
+        post 'confirm_apply_destroy'
+        post 'memo_homepage_show'
+        post 'memo_hidden'
+        delete 'delete_memo'
+        get 'memo_reply_list'
+      end
+    end
+    resources :forum_applies do
+      member do
+        post :confirm_apply
+      end
+    end
+    resources :forum_sections do
+      member do
+        get "order_forums"
+        post "recommend_forums"
+        post 'move'
+      end
+
+      resources :forum_moderators do
+        collection do
+          post "search_user"
+        end
+      end
+    end
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do

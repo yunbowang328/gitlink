@@ -28,7 +28,16 @@
         <li><%= sidebar_item(admins_project_ignores_path, '忽略文件', icon: 'git', controller: 'admins-project_ignores') %></li>
       <% end %>
     </li>
-
+<li>
+      <%= sidebar_item_group('#memos-submenu', '交流论坛', icon: 'columns') do %>
+        <li><%= sidebar_item(admins_memos_path, '帖子', icon: 'columns', controller: 'admins-memos') %></li>
+        <li><%= sidebar_item(apply_destroy_memos_admins_memos_path, '申请删帖', icon: 'trash', controller: 'admins-memos') %></li>
+        <li><%= sidebar_item(memo_reply_list_admins_memos_path, '回复', icon: 'mail-reply-all', controller: 'admins-project_categories') %></li>
+        <li><%= sidebar_item(admins_project_licenses_path, '版块配置', icon: 'tags', controller: 'admins-forum_sections') %></li>
+        <li><%= sidebar_item(admins_banned_users_path, '禁言列表', icon: 'ban', controller: 'admins-banned_users') %></li>
+        <li><%= sidebar_item(admins_forum_applies_path, '版主审批', icon: 'check-square-o', controller: 'admins-forum_applies') %></li>
+      <% end %>
+    </li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
 
     <li>

@@ -1,0 +1,128 @@
+<div class="panel-mes-head clearfix">
+  <h4 class="fl">全部回复<span class="ml5">
+    <% unless count == 0 %>
+        (<%= count %>)
+    <% end %>
+  </span></h4>
+  <p class="fr mr15">
+    <% if User.current.admin? %>
+        <a href="javascript:void(0)" class="mr15 white-btn orange-btn" id="reward_btn_<%= memo.id %>" onclick="reward('<%= reward_credit_user_path(memo.author, :container_id => memo.id, :container_type => "Memo") %>')"><i class="fa fa-gift font-16 mr5"></i>奖励</a>
+    <% end %>
+    <a href="javascript:void(0);" class="mr15 white-btn orange-btn" onclick="editor_focus(<%= memo.id %>);"><i class="fa fa-comments-o mr5"></i>回复<!--<span class="ml5"><%#= count %></span>--></a>
+    <!--<span class="mr10 color-grey"><i class="fa fa-eye color-grey mr5"></i><%#= @topic.visits %></span>-->
+    <!--<span id="praise_count_<%#=activity.id %>">
+        <%#= render :partial => 'praise_tread/edu_praise', :locals => {:activity=>activity, :user_activity_id=>activity.id,:type=>"activity"} %>
+    </span>-->
+    <span id="praise_count_<%= memo.id %>" class="fr mr10">
+      <%= render :partial => 'praise_tread/activity_praise', :locals => {:activity => memo, :user_activity_id => memo.id, :type => "Memo"} %>
+    </span>
+  </p>
+</div>
+<div class="panel-comment_item">
+  <% no_children_comments.each do |comment| %>
+      <% unless comment.nil? %>
+          <script type="text/javascript">
+              $(function(){
+                  showNormalImage('reply_content_<%= comment.id %>');
+                  autoUrl('reply_content_<%= comment.id %>');
+              });
+          </script>
+          <div class="comment_item_cont clearfix">
+            <div class="J_Comment_Face fl">
+              <%= link_to image_tag(url_to_avatar(comment.creator_user), :width => 50, :height => 50, :alt => "用户头像"), user_url_in_org(comment.creator_user), :target => '_blank' %>
+            </div>
+            <div class="t_content fl">
+              <div class="J_Comment_Reply">
+                <div class="comment_orig_content" style="margin:0px">
+                  <% if !comment.parent.nil? && !comment.parent.parent.nil? %>
+                      <% parents_rely = [] %>
+                      <% parents_rely = get_reply_parents_no_root parents_rely, comment %>
+                      <% length = parents_rely.length %>
+                      <div id="comment_reply_<%= comment.id %>">
+                        <% if length <= 5 %>
+                            <%#=render :partial => 'users/journal_comment_reply', :locals => {:comment => comment.parent, :type => memo.class.to_s, :user_activity_id => memo.id, :parent_id => comment.id} %>
+                            <%=render :partial => 'messages/message_reply', :locals => {:comment => comment.parent, :parent_id => comment.id, :user_activity_id => memo.id, :type => memo.class.to_s} %>
+                        <% else %>
+                            <div class="orig_cont clearfix">
+                              <div class="orig_cont clearfix">
+                                <div class="orig_cont clearfix">
+                                  <div class="orig_cont clearfix">
+                                    <div class="orig_cont clearfix">
+                                      <%=render :partial => 'student_work/homework_reply_detail', :locals => {:comment => parents_rely[length - 1], :type => memo.class.to_s, :user_activity_id => memo.id, :parent_id => comment.id} %>
+                                    </div>
+                                    <div class="orig_cont_hide clearfix">
+                                      <i class="fa fa-long-arrow-down mr5"></i>
+                                      <%= link_to '点击展开隐藏楼层', show_all_replies_users_path(:comment => comment, :type => comment.class, :user_activity_id => memo.id, :parent_id => comment.id),:remote=>true, :class => '' %>
+                                    </div>
+                                    <%=render :partial => 'student_work/homework_reply_detail', :locals => {:comment => parents_rely[3], :type => memo.class.to_s, :user_activity_id => memo.id, :parent_id => comment.id} %>
+                                  </div>
+                                  <%=render :partial => 'student_work/homework_reply_detail', :locals => {:comment => parents_rely[2], :type => memo.class.to_s, :user_activity_id => memo.id, :parent_id => comment.id} %>
+                                </div>
+                                <%=render :partial => 'student_work/homework_reply_detail', :locals => {:comment => parents_rely[1], :type => memo.class.to_s, :user_activity_id => memo.id, :parent_id => comment.id} %>
+                              </div>
+                              <%=render :partial => 'student_work/homework_reply_detail', :locals => {:comment => parents_rely[0], :type => memo.class.to_s, :user_activity_id => memo.id, :parent_id => comment.id} %>
+                            </div>
+                        <% end %>
+                      </div>
+                  <% end %>
+                  <!--onmouseover="$('#delete_reply_<%#=activity.id %>_<%#=comment.id %>').show();" onmouseout="$('#delete_reply_<%#=activity.id %>_<%#=comment.id %>').hide();"-->
+                  <div class="comment_content clearfix" >
+                    <div class="color-grey3"><%= comment.content_detail.html_safe %></div>
+                    <div class="J_Comment_Info clearfix">
+                      <div class="t_info fl">
+                        <%= link_to comment.creator_user.show_real_name, user_url_in_org(comment.creator_user), :class => "content-username hide fl" %>
+                        <span class="t_area fl"><%= time_from_now(comment.created_at) %></span>
+                        <span id="reword_score_<%= comment.id %>">
+                        <% if comment.try(:reward).present? %>
+                            <span class="ml15 fl color-orange03" data-tip-down="获得平台奖励金币：<%= comment.try(:reward) %>"><i class="fa fa-gift font-16 ml5 mr3"></i><%= comment.try(:reward) %></span>
+                        <% end %>
+                        </span>
+                      </div>
+                      <p class="fr mr10 orig_reply">
+                        <% if User.current.admin? %>
+                            <a href="javascript:void(0)" class="ml15 color-grey" data-tip-down="给TA奖励金币" id="reward_btn_<%= comment.id %>" onclick="reward('<%= reward_credit_user_path(comment.author, :container_id => comment.id, :container_type => "Memo") %>')"><i class="fa fa-gift font-16 mr5"></i>奖励<span class="ml5 mr5">|</span></a>
+                        <% end %>
+                        <% if comment.creator_user == User.current %>
+                            <a href="javascript:void(0);" class="color-grey" id="delete_reply_<%= memo.id %>_<%=comment.id %>" onclick="delete_confirm_box_2('<%= forum_memo_path(comment.forum, comment, :user_activity_id => memo.id) %>', '确定要删除该条回复吗？')"><i class="fa fa-trash-o mr5"></i>删除</a>
+                            <span class="ml5 mr5 color-grey">|</span>
+                        <% end %>
+                        <%= link_to(
+                                    '<i class="fa fa-mail-reply mr5"></i>回复'.html_safe,
+                                    {:controller => 'users' ,:action => 'reply_to',:reply_id => comment.id, :type => memo.class.to_s, :user_activity_id => memo.id},
+                                    :remote => true,
+                                    :method => 'get',
+                                    :title => l(:button_reply),:class => "color-grey") %>
+                        <span class="ml5 mr5 color-grey">|</span>
+                        <span class="reply_praise_count_<%= comment.id %>">
+                            <%=render :partial=> "praise_tread/edu_praise", :locals => {:activity=>comment, :user_activity_id=>comment.id,:type=>"reply"}%>
+                        </span>
+                      </p>
+                    </div>
+                    <div class="">
+                      <div class="cl"></div>
+                      <div id="reply_message_<%= comment.id%>" class="reply_to_message"></div>
+                    </div>
+                  </div>
+
+                  <!--回复end-->
+                </div>
+              </div>
+            </div>
+            <div class="cl"></div>
+          </div>
+      <% end %>
+  <% end %>
+</div>
+<script>
+    function ThumbUp(item){
+        $(item).toggleClass("orange-btn");
+        $(item).toggleClass("orange-bg-btn");
+        if($(item).attr("attr-thumb")=="0"){
+            $(item).find("span").html(parseInt($(item).find("span").html())+1);
+            $(item).attr("attr-thumb","1");
+        }else{
+            $(item).find("span").html(parseInt($(item).find("span").html())-1);
+            $(item).attr("attr-thumb","0");
+        }
+    }
+</script>

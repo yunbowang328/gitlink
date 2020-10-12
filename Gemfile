@@ -14,6 +14,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'groupdate', '~> 4.1.0'
 gem 'chartkick'
+gem 'grape', '~> 0.9.0'
 gem 'grape-entity', '~> 0.7.1'
 gem 'kaminari', '~> 1.1', '>= 1.1.1'
 
@@ -47,7 +48,7 @@ gem 'redcarpet', '~> 3.4'
 
 gem 'rqrcode', '~> 0.10.1'
 gem 'rqrcode_png'
-
+gem 'acts_as_tree', '~> 2.9', '>= 2.9.1'
 gem 'acts-as-taggable-on', '~> 6.0'
 
 # a tree structure
@@ -128,3 +129,4 @@ gem 'request_store'
 gem 'harmonious_dictionary', '~> 0.0.1'
 
 gem 'parallel', '~> 1.19', '>= 1.19.1'
+

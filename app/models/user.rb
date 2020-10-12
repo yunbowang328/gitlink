@@ -81,6 +81,15 @@ class User < ApplicationRecord
   has_many :apply_actions, dependent: :destroy
   has_many :trail_auth_apply_actions, -> { where(container_type: 'TrialAuthorization') }, class_name: 'ApplyAction'
 
+  #用户是否禁言
+  has_many :banned_forums, :dependent => :destroy
+
+  has_many :apply_forums, :dependent => :destroy
+  has_many :memos , :foreign_key => 'author_id'
+
+  #论坛的板块内容，及版主
+  has_many :forum_moderators, :dependent => :destroy
+  has_many :forum_sections, :dependent => :destroy
   # has_many :attendances
 
   # 项目

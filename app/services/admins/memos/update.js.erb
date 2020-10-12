@@ -1,0 +1,5 @@
+<% if  @flag%>
+window.location.href='<%= forum_memo_path(:forum_id=>@memo.forum_id,:id=>@memo.id ) %>'
+<%else%>
+$("#error").html('内容填写存在错误');
+<% end %>

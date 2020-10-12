@@ -1,0 +1,9 @@
+<%# if @user_activity_id != @memo.id %>
+/*    $("#activity_post_reply_<%#= @user_activity_id %>").html("<%#= escape_javascript(render :partial => 'users/course_message_post_reply',
+                                                                                          :locals => { :activity => @memo,
+                                                                                                       :user_activity_id => @user_activity_id}) %>");
+    sd_create_editor_from_data(<%#= @user_activity_id%>,"","100%", "UserActivity");*/
+<%# else %>
+    $("#message_replies_box").html("<%= escape_javascript(render :partial =>  'memos/memo_all_replies') %>");
+    sd_create_editor_from_data(<%= @memo.id %>,"","100%", "<%= @memo.class.to_s %>");
+<%# end %>

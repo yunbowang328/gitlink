@@ -1,0 +1,20 @@
+<%= form_for(@memo_new, url: forum_memos_path, :html => {:multipart => true}) do |f| %>
+		<%= f.hidden_field :subject, :required => true, value: @memo.subject %>
+		<%= f.hidden_field :forum_id, :required => true, value: @memo.forum_id %>
+		<%= f.hidden_field :parent_id, :required => true, value: @memo.id %>
+    <div id="message_quote" class="wiki"></div>
+    <%= hidden_field_tag :asset_id,params[:asset_id],:required => false,:style => 'display:none' %>
+    <%= hidden_field_tag :quote,"",:required => false,:style => 'display:none' %>
+		<%= label_tag(l(:label_reply_plural)) %>:
+		<!-- <p> < %= f.text_area :content, :required => true, :size => "75%", :resize => "none", id: 'editor01' %> </p> -->
+		<%= f.kindeditor :content, :cols => 80, :rows => 15, :value => @content %>
+		<!--<script type="text/javascript">var ckeditor=CKEDITOR.replace('editor01');</script> -->
+    <div class="cl" style="padding-top: 10px;"></div>
+		<p style="float: left;margin-top: 6px;">
+          <%= l(:label_attachment_plural) %>
+          <br />
+		  <%= render :partial => 'attachments/form' %>
+		</p>
+    <div class="cl"></div>
+	<%= f.submit value: l(:label_reply_plural), class: "replies" %>
+<% end %> 
