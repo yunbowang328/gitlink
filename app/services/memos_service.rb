@@ -70,7 +70,6 @@ class MemosService
   #       attachment_id 是帖子的头像
   def create params, current_user
     return {status: -1, message: "请填写必填的内容"} if params[:memo][:subject].blank? || params[:memo][:content].blank? || params[:forum_id].blank? || params[:memo][:tag_id].blank? || params[:memo][:is_original].blank? 
-      {status: -1, message: "请填写必填的内容"}
     # elsif params[:memo][:content].length > 2000
     #   {status: -1, message: "不能超过2000个字符"}
     return {status: -1, message: "您的账户已被禁言，如有疑问请联系版主或论坛管理员"} if user_is_banned?(current_user)
@@ -97,7 +96,7 @@ class MemosService
       end
     rescue => e
       {status: -1, message: "出现错误"}
-      raise ActiveRecord::RollBack
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -424,7 +423,7 @@ class MemosService
       end
     rescue => e
       {status: -1, message: "出现错误"}
-      raise ActiveRecord::RollBack
+      raise ActiveRecord::Rollback
     end
   end
 
