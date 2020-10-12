@@ -1,0 +1,98 @@
+<div class="edu-back-white mt20 mb20 clearfix padding20">
+  <ul class="fl mt2 nav_blueline_status">
+    <li class="<%= @memo_hidden_type == "show" ? "active" : "" %>">
+      <%= link_to "已审核", memo_reply_list_managements_path(hidden: "show"), remote: true, class: "cancel-type-choose" %>
+    </li>
+    <li class="<%= @memo_hidden_type == "hidden" ? "active" : "" %>">
+      <%= link_to "未审核", memo_reply_list_managements_path(hidden: "hidden"), remote: true, class: "cancel-type-choose" %>
+    </li>
+  </ul>
+</div>
+<table class="edu-pop-table edu-txt-center" cellpadding="0" cellspacing="0" style="table-layout: fixed">
+  <thead>
+  <tr>
+    <th width="6%">序号</th>
+    <th width="20%" class="edu-txt-left">来源</th>
+    <th width="30%" class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">评论内容</th>
+    <th width="10%">评论者</th>
+    <th width="12%">评论时间<i class="fa fa-long-arrow-down %> color-light-green ml5" ></i></th>
+    <th width="10%">审核</th>
+    <th width="10%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @memos.each_with_index do |memo,index| %>
+      <tr>
+        <td><%= (@obj_pages.page - 1) * @obj_pages.per_page + index + 1 %></td>
+        <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;padding-right: 10px;">
+          <%= link_to(memo.root.subject, forum_path(memo.root)+"/detail", :target => "_blank") %>
+        </td>
+        <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+        <%= sanitize memo.content %>
+          <%
+=begin%>
+ <%= link_to(forum_path(memo.parent, reply_id: memo.id)+"/detail", :target => "_blank") do %>
+            <%= sanitize memo.content %>
+          <% end %> 
+<%
+=end%>
+        </td>
+        <td>
+          <%= link_to(memo.try(:author).try(:show_name), user_path(memo.author)) %>
+          <%# if memo.try(:author).try(:realname) == ' '%>
+            <%#= link_to(memo.try(:author), user_path(memo.author)) %>
+          <%# else %>
+            <%#= link_to(memo.try(:author).try(:realname), user_path(memo.author)) %>
+          <%# end %>
+        </td>
+        <td><%= format_time(memo.created_at) %></td>
+        <td>
+          <%= check_box_tag(:hidden, 1, !memo.hidden?, id: "hidden-check-box-#{memo.id}", class: 'magic-checkbox', data: { id: memo.id, url: memo_hidden_managements_path, type: 'hidden' }) %>
+          <label for="hidden-check-box-<%= memo.id %>" style="top:-1px;left: 30px;"></label>
+          <span style="margin-left: 5px;">通过</span>
+        </td>
+        <td>
+          <%= link_to '查看', forum_path(memo.root)+"/detail?reply_id=#{memo.id}", target: '_blank' %>
+          <%= link_to '删除', delete_memo_managements_path(id: memo.id), method: :delete, class: "delete-link-#{memo.id}", data: { confirm: '确认删除该回复吗？' }, style: memo.hidden? ? '' : 'display: none' %>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+<div style="text-align:center;" class="new_expand">
+  <div class="pages_user_show" style="width:auto; display:inline-block;margin: 18px 0;">
+    <ul id="homework_pository_ref_pages">
+      <%= pagination_links_full @obj_pages, @obj_count, :per_page_links => false, :remote => true, :flag => true, :is_new => true %>
+    </ul>
+    <div class="cl"></div>
+  </div>
+</div>
+<script>
+    $(".magic-checkbox").live("click", function () {
+      var $link = $(this);
+
+      var id = $link.data('id');
+      var url = $link.data('url');
+      var checked = $link.is(':checked');
+
+      $.ajax({
+        url: url,
+        type: 'post',
+        data: { id: id, checked: checked },
+        dataType: 'json',
+        success: function(data){
+          if($link.data('type') === 'hidden'){
+            if(checked){
+              $('.delete-link-' + id).hide();
+            } else {
+              $('.delete-link-' + id).show();
+            }
+          }
+        },
+        error: function(){
+          notice_box('操作失败');
+          $link.attr('checked', !checked);
+        }
+      })
+    });
+</script>

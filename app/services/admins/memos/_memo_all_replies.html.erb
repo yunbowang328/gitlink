@@ -1,0 +1,115 @@
+<%#= render :partial => "messages/common_reply_box", :locals => {:count => @reply_count, :activity => @topic, :no_children_comments => @replies, :is_teacher => is_teacher} %>
+<%= render :partial => "memos/common_reply_box", :locals => {:count => @reply_count, :memo => @memo, :no_children_comments => @replies} %>
+<div class="comment_item_cont clearfix">
+  <div class="comment_reply_box">
+    <div class="J_Comment_Face fl">
+      <%= link_to image_tag(url_to_avatar(User.current), :width => "50", :height => "50"), :target => "_blank", :alt => "用户头像" %>
+    </div>
+    <div nhname='new_message_<%= @memo.id%>' id="mao<%= @memo.id%>" class="fl ml15 mr20" style="display:none; width: 92.7%;">
+      <%= form_for('memo', :as => :reply, :url => reply_forum_memo_path(@memo.forum, @memo), :method => "post", :remote => true) do |f|%>
+      <%#= form_for @memo, :as => :reply, :url => {:action => 'reply', :id => @topic}, :remote => true, :html => {:multipart => true, :id => 'message_form'} do |f| %>
+          <%#= f.hidden_field :subject, :required => true, value: @memo.subject %>
+          <%#= f.hidden_field :forum_id, :required => true, value: @memo.forum_id %>
+          <%#= f.hidden_field :parent_id, :required => true, value: @memo.parent_id %>
+          <div nhname='toolbar_container_<%= @memo.id%>'></div>
+          <textarea placeholder="有问题或有建议，请直接给我留言吧！" style="display: none" nhname='new_message_textarea_<%= @memo.id %>' name="content"></textarea>
+          <a id="new_message_submit_btn_<%= @memo.id%>" href="javascript:void(0)" onclick="this.style.display='none'" class="mt10 task-btn edu-greenback-btn fr">发送</a>
+          <div class="cl"></div>
+          <p nhname='contentmsg_<%= @memo.id%>'></p>
+      <% end%>
+    </div>
+    <div class="cl"></div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<% if false %>
+    <% @replies.each  do |reply| %>
+        <script type="text/javascript">
+            $(function(){
+                $("#activity_description_<%= reply.id %> p,#activity_description_<%= reply.id %> span,#activity_description_<%= reply.id %> em").each(function(){
+                    var postContent = $(this).html();
+                    postContent = postContent.replace(/&nbsp;/g," ");
+                    postContent= postContent.replace(/ {2}/g,"&nbsp; ");
+                    postContent=postContent.replace(/&nbsp; &nbsp;/g,"&nbsp;&nbsp;&nbsp;");
+                    postContent=postContent.replace(/&nbsp;  /g,"&nbsp;&nbsp; ");
+                    postContent = postContent.replace(/<script>*/g, "<script>");
+                    postContent = postContent.replace(/<html>*/g, "<html>");
+                    $(this).html(postContent);
+                });
+                autoUrl('activity_description_<%= reply.id %>');
+                description_show_hide(<%= reply.id %>);
+            });
+
+            $(".homepagePostReplyDes").mouseover(function(){
+                $(this).find("a[id*='delete_memo_reply']").show();
+            }).mouseout(function(){
+                $(this).find("a[id*='delete_memo_reply']").hide();
+            });
+        </script>
+
+        <div class="homepagePostReplyContainer" >
+          <div class="homepagePostReplyPortrait">
+            <%= link_to image_tag(url_to_avatar(reply.author), :width => 33,:height => 33), user_path(reply.author) %>
+          </div>
+          <div class="homepagePostReplyDes" onmouseover="$('#delete_reply_<%=reply.id %>').show();" onmouseout="$('#delete_reply_<%=reply.id %>').hide();">
+            <div class="homepagePostReplyPublisher">
+              <%= render :partial => 'users/message_contents', :locals => {:comment => reply, :type => 'Memo', :user_activity_id => @memo.id}%>
+            </div>
+            <div class="homepagePostReplyContent break_word" style="margin-bottom:15px;"  id="activity_description_<%= reply.id %>">
+              <p><%= reply.content.gsub(/\/script/, "script").gsub(/script/, "&nbsp;script").html_safe %></p>
+            </div>
+            <div class="orig_reply mb10 mt-10">
+              <div class="reply">
+                <span class="reply-right">
+                <span class="reply_praise_count_<%= reply.id %>">
+                  <%= render :partial => "praise_tread/praise", :locals => {:activity => reply, :user_activity_id => reply.id, :type => "reply"} %>
+                </span>
+                <span style="position: relative" class="fr mr20">
+                  <%= link_to(
+                              l(:button_reply),
+                              {:action => 'quote', :id => reply},
+                              :remote => true,
+                              :method => 'get',
+                              :title => l(:button_reply)) %>
+                  <span id="reply_iconup_<%= reply.id %>" class="reply_iconup02" style="display: none"> ︿</span>
+                </span>
+                  <%= link_to(
+                              l(:button_delete),
+                              forum_memo_path(@memo.forum, reply),
+                              :method => :delete,
+                              :id => "delete_reply_#{reply.id}",
+                              :class => 'fr mr20 undis',
+                              :data => {:confirm => l(:text_are_you_sure)},
+                              :title => l(:button_delete)
+                      ) if @memo.author.id == User.current.id || User.current.admin? || User.current == @forum.creator %>
+                </span>
+                <div class="cl"></div>
+              </div>
+            </div>
+            <div id="reply_message_<%= comment.id%>" class="reply_to_message"></div>
+          </div>
+          <div class="cl"></div>
+        </div>
+    <% end %>
+    <% if @limit_count > @page * @limit + 10 %>
+        <div id="more_memo_replies">
+          <div class="detail_cont_hide clearfix">
+            <span class="orig_icon" >&darr; </span>
+            <span class="orig_icon" style="display:none;" > &uarr;</span>
+            <%= link_to '点击展开更多回复', forum_memo_path(@memo.forum_id, @memo, :page => @page),:remote=>true %>
+          </div>
+        </div>
+    <% end %>
+<% end %>

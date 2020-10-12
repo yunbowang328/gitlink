@@ -1,0 +1,6 @@
+<% if params[:user_activity_id] %>
+$("#message_replies_box").html("<%= escape_javascript(render :partial =>  'memos/memo_all_replies') %>");
+sd_create_editor_from_data(<%= @memo.id %>,"","100%", "<%= @memo.class.to_s %>");
+<% else %>
+$("#memo_detail_<%= params[:id] %>").remove();
+<% end %>

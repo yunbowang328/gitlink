@@ -1,0 +1,49 @@
+<div class="fl" style="width: 600px">
+  <% for attachment in attachments %>
+      <!--<p style="width: 100%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">-->
+          <!--<div style="max-width:55%;white-space: nowrap; overflow: hidden;  text-overflow: ellipsis;float: left;">-->
+      <!--<span title="<%#= attachment.filename%>" id = "attachment_">-->
+        <% if options[:length] %>
+            <span class="pic_files fl "></span>
+          <%= link_to_attachment attachment, :class => 'fl FilesName02', :download => true,:length => options[:length] -%>
+         <a class="fl FilesName02"> (<%= number_to_human_size attachment.filesize , :precision => 0 %>)</a>
+          <% if options[:deletable] %>
+              <%#= link_to image_tag('delete.png'), attachment_path(attachment),
+                          :data => {:confirm => l(:text_are_you_sure)},
+                          :method => :delete,
+                          :class => 'delete',
+                          #:remote => true,
+                          #:id => "attachments_" + attachment.id.to_s,
+                          :title => l(:button_delete) %>
+              <span class="pic_del fl ">  <a href="<%=attachment_path(attachment) %>" onclick="confirm(<%=l(:text_are_you_sure) %>)" data-method="delete">   </a></span>
+          <% end %>
+            <div class="cl"></div>
+        <% else %>
+            <span class="pic_files fl "></span>
+          <!--<i class="fa fa-folder mr5 color-orange03 mt8 fl" aria-hidden="true"></i>    文件icon-->
+          <%= link_to_short_attachment attachment, :class => 'fl FilesName02 color-orange03', :download => true, :length => 45 -%>
+
+          <!--<span class="fl FilesName02"> (<%#= number_to_human_size attachment.filesize , :precision => 0 %>)</span>    文件大小-->
+
+          <!--<a href="<%#= user_path(attachment.author) %>" class="fl color-orange05"><%#= attachment.author %></a>   上传者-->
+
+          <span class="fl color-grey ml15"><%= format_time attachment.created_on %></span>
+
+          <% if options[:deletable] %>
+              <a href="<%=attachment_path(attachment) %>" onclick="confirm(<%=l(:text_are_you_sure) %>)" data-method="delete">  <span class="pic_del fl "></span> </a>
+          <% end %>
+
+            <div class="cl"></div>
+        <% end %>
+  <% end %>
+  <% if defined?(thumbnails) && thumbnails %>
+      <% images = attachments.select(&:thumbnailable?) %>
+      <% if images.any? %>
+          <div class="pro_pic mb10" width="100" height="73">
+            <% images.each do |attachment| %>
+                <div><%= thumbnail_tag(attachment) %></div>
+            <% end %>
+          </div>
+      <% end %>
+  <% end %>
+</div>

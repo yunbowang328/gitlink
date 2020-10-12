@@ -1,0 +1,31 @@
+<div class="ReplyToMessageContainer borderBottomNone" id="reply_to_message_<%= reply.id%>">
+  <div class="homepagePostReplyPortrait mr15 imageFuzzy" id="reply_image_<%= reply.id%>">
+    <%= link_to image_tag(url_to_avatar(User.current), :width => "33", :height => "33"), user_path(User.current), :alt => "用户头像" %>
+  </div>
+  <div class="ReplyToMessageInputContainer mb10">
+    <% if User.current.logged? %>
+        <div nhname='new_message_<%= reply.id%>'>
+          <%= form_for('memo',:url=>forum_memos_path,:method => "post") do |f|%>
+              <%= f.hidden_field :subject, :required => true, value: reply.subject %>
+              <%= f.hidden_field :forum_id, :required => true, value: reply.forum_id %>
+              <%= f.hidden_field :parent_id, :required => true, value: reply.id %>
+              <%= hidden_field_tag :quote,"",:required => false,:style => 'display:none' %>
+              <div nhname='toolbar_container_<%= reply.id%>' class="kindeditor"></div>
+              <textarea placeholder="有问题或有建议，请直接给我留言吧！" style="display: none" nhname='new_message_textarea_<%= reply.id%>' name="memo[content]"></textarea>
+              <a id="new_message_submit_btn_<%= reply.id%>" href="javascript:void(0)" onclick="this.style.display='none'" class="blue_n_btn fr" style="display:none;margin-top:6px;">发送</a>
+              <div class="cl"></div>
+              <p nhname='contentmsg_<%= reply.id%>'></p>
+          <% end%>
+        </div>
+    <% else %>
+        <%= render :partial => "users/show_unlogged" %>
+    <% end %>
+    <div class="cl"></div>
+  </div>
+  <div class="cl"></div>
+</div>
+<script>
+    $(function(){
+        sd_create_editor_from_data(<%= reply.id%>,null,"100%", "<%=reply.class.to_s%>");
+    });
+</script>

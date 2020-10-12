@@ -1,0 +1,13 @@
+<% if @edit_forum_status[:status] == 0 %>
+$("#edit_forum_section_notice").removeClass("none").html("<%= @edit_forum_status[:msg] %>")
+$("#edit_forum_section_notice").siblings("input").addClass("error_tip");
+<% elsif @edit_forum_status[:status] > 0 %>
+  op_know("<%= @edit_forum_status[:msg] %>")
+  <% if params[:children_forum].present? %>
+   $("#children-forum-detail-<%= @forum_section.id %>").html("<%= j render partial: "admin/forum_sections/children_forum_detail", locals: {children_forum: @forum_section} %>")
+  <% else %>
+  $("#forum-section-detail-<%= @forum_section.id %>").html("<%= j render partial: "admin/forum_sections/td_forum_section", locals: {forum: @forum_section} %>")
+  <% end %>
+<% else %>
+op_know("<%= @edit_forum_status[:msg] %>")
+<% end %>

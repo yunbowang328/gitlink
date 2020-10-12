@@ -1,0 +1,19 @@
+<%= file_field_tag 'attachments[dummy][file]',
+                   :id => "_file_section_picture",
+                   :class => ie8? ? '':'file_selector',
+                   :onchange => "addInputFiles_board(this, '','"+"submit_resource"+"');",
+                   :style => ie8? ? '': 'display:none',
+                   accept: 'image/png,image/gif,image/jpeg,image/jpg,image/bmp',
+                   :data => {
+                       :max_file_size => 5120.kilobytes,
+                       :max_file_size_message => l(:error_attachment_too_big, :max_size => number_to_human_size(5120.kilobytes)),
+                       :max_concurrent_uploads => 1,
+                       :upload_path => upload_image_path(:format => 'js'),
+                       :description_placeholder => l(:label_optional_description),
+                       :field_is_public => l(:field_is_public),
+                       :are_you_sure => l(:text_are_you_sure),
+                       :file_count => l(:label_file_count),
+                       :delete_all_files => l(:text_are_you_sure_all),
+                       :label_file_uploding => l(:label_file_uploding),
+                       :containerid => ""
+                   } %>

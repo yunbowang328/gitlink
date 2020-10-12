@@ -4,22 +4,21 @@
 # is_fine 是否加精，默认为false
 # hidden 是否隐藏
 
-require 'elasticsearch/model'
+# require 'elasticsearch/model'
 class Memo < ApplicationRecord
-  
-	include Redmine::SafeAttributes
-  include UserScoreHelper
-  include ApplicationHelper
-  include Elasticsearch::Model
+	# include Redmine::SafeAttributes
+  # include UserScoreHelper
+  include ApplicationHelper, Watchable
+  # include Elasticsearch::Model
   #敏感词过滤
-  include DunCheckAble
+  # include DunCheckAble
   has_many :forums, :through => :memo_forums
   belongs_to :forum_section, counter_cache: true
   has_many :memo_forums, :dependent => :destroy
   has_many :visit_actions, as: :visitable, dependent: :destroy
   #用户是否禁言
   has_many :banned_forums
-  has_many_kindeditor_assets :assets, :dependent => :destroy
+  # has_many_kindeditor_assets :assets, :dependent => :destroy
   has_many :tidings, :as => :container , :dependent => :destroy
   belongs_to :author, :class_name => "User", :foreign_key => 'author_id'
 	validates_presence_of :author_id, :subject,:content
@@ -30,41 +29,42 @@ class Memo < ApplicationRecord
   validate :cannot_reply_to_locked_topic, :on => :create
   
   scope :total_replies, ->{where("hidden = false and root_id is not null")}
+  # scope :roots, -> {where()}
 
   # 创意征集方式 0-默认，1-申请， ps. 删除后，该帖子即删除， 拒绝后，该帖子状态将为初始状态
-  as_enum :memo_destroy_status, %i{common apply_destroy}, :column => 'destroy_status'
-  acts_as_watchable
+  enum destroy_status: { common: 0, apply_destroy: 1 }
+  # acts_as_watchable
   #elasticsearch kaminari init
-  Kaminari::Hooks.init
-  Elasticsearch::Model::Response::Response.__send__ :include, Elasticsearch::Model::Response::Pagination::Kaminari
-  settings index: {
-      number_of_shards: 5 ,
-      analysis: {
-          char_filter: {
-              and_filter: {
-                type: "mapping",
-                mappings: [ "&=> and "]
-             }
-          },
-          analyzer: {
-              my_analyzer: {
-                  type: 'custom',
-                  tokenizer: 'standard',
-                  filter: ['classic'],
-                  char_filter: ['html_strip']
-              }
-          }
-      }
-  } do
-    mappings dynamic: 'false' do
-      indexes :subject, analyzer: 'smartcn',index_options: 'offsets'#, char_filter: 'html_strip'
-      indexes :content, analyzer:'my_analyzer',index_options: 'offsets',search_analyzer: 'smartcn'
-      indexes :updated_at,index:"not_analyzed" ,type:'date'
-    end
-  end
+  # Kaminari::Hooks.init
+  # Elasticsearch::Model::Response::Response.__send__ :include, Elasticsearch::Model::Response::Pagination::Kaminari
+  # settings index: {
+  #     number_of_shards: 5 ,
+  #     analysis: {
+  #         char_filter: {
+  #             and_filter: {
+  #               type: "mapping",
+  #               mappings: [ "&=> and "]
+  #            }
+  #         },
+  #         analyzer: {
+  #             my_analyzer: {
+  #                 type: 'custom',
+  #                 tokenizer: 'standard',
+  #                 filter: ['classic'],
+  #                 char_filter: ['html_strip']
+  #             }
+  #         }
+  #     }
+  # } do
+  #   mappings dynamic: 'false' do
+  #     indexes :subject, analyzer: 'smartcn',index_options: 'offsets'#, char_filter: 'html_strip'
+  #     indexes :content, analyzer:'my_analyzer',index_options: 'offsets',search_analyzer: 'smartcn'
+  #     indexes :updated_at,index:"not_analyzed" ,type:'date'
+  #   end
+  # end
 
 	acts_as_tree :counter_cache => :replies_count, :order => "#{Memo.table_name}.created_at ASC", dependent: :destroy
-	acts_as_attachable
+	# acts_as_attachable
   has_many :user_score_details,  :class_name => 'UserScoreDetails',:as => :score_changeable_obj
   has_many :praise_tread, as: :praise_tread_object, dependent: :destroy
   has_one :praise_tread_cache, as: :object, dependent: :destroy
@@ -84,26 +84,26 @@ class Memo < ApplicationRecord
 				  #:author => :author,
 				  #:type => Proc.new {|o| o.parent_id.nil? ? 'Memo' : 'Reply'},
 				  #:url => Proc.new {|o| {:controller => 'memos', :action => 'show', :forum_id => o.forum_id}.merge(o.parent_id.nil? ? {:id => o.id} : {:id => o.parent_id, :r => o.id, :anchor => "reply-#{o.id}"})}
-	acts_as_activity_provider :author_key => :author_id,
-							  :func => 'memos',
-							  :timestamp => 'created_at'
+	# acts_as_activity_provider :author_key => :author_id,
+	# 						  :func => 'memos',
+	# 						  :timestamp => 'created_at'
 							  # :find_options => {:type => 'memos'}
 	# acts_as_watchable
 
-	safe_attributes "author_id",
-					"subject",
-					"content",
-					"last_memo_id",
-					"lock",
-					"sticky",
-					"parent_id",
-					"replies_count",
-          "root_id",
-          "language"
+	# safe_attributes "author_id",
+	# 				"subject",
+	# 				"content",
+	# 				"last_memo_id",
+	# 				"lock",
+	# 				"sticky",
+	# 				"parent_id",
+	# 				"replies_count",
+  #         "root_id",
+  #         "language"
 
 	# after_create :add_author_as_watcher, :reset_counters!, :send_tiding
   # after_create :add_author_as_watcher   #浏览记录
-	after_update
+	# after_update
 	# after_destroy :reset_counters!,:delete_kindeditor_assets #,:down_user_score  -- 公共区发帖暂不计入得分,
 	# after_create :send_notification
 	# after_save :plusParentAndForum
@@ -137,32 +137,32 @@ class Memo < ApplicationRecord
   end
 
 
-  def self.search(query)
-    __elasticsearch__.search(
-        {
-            query: {
-                multi_match: {
-                    query: query,
-                    type:"most_fields",
-                    operator: "or",
-                    fields: ['subject','content^0.5']
-                }
-            },
-            sort: {
-                _score:{order: "desc" },
-                updated_at:{order: "desc" }
-            },
-            highlight: {
-                pre_tags: ['<span class="c_red">'],
-                post_tags: ['</span>'],
-                fields: {
-                    subject: {},
-                    content: {}
-                }
-            }
-        }
-    )
-  end
+  # def self.search(query)
+  #   __elasticsearch__.search(
+  #       {
+  #           query: {
+  #               multi_match: {
+  #                   query: query,
+  #                   type:"most_fields",
+  #                   operator: "or",
+  #                   fields: ['subject','content^0.5']
+  #               }
+  #           },
+  #           sort: {
+  #               _score:{order: "desc" },
+  #               updated_at:{order: "desc" }
+  #           },
+  #           highlight: {
+  #               pre_tags: ['<span class="c_red">'],
+  #               post_tags: ['</span>'],
+  #               fields: {
+  #                   subject: {},
+  #                   content: {}
+  #               }
+  #           }
+  #       }
+  #   )
+  # end
 
   def memo_parent
     Memo.find(parent_id)

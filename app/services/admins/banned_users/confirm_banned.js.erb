@@ -1,0 +1,4 @@
+<% if @status > 0 %>
+$("#banned-users-item-<%= params[:user_id] %>").remove()
+<% end %>
+op_know('<%= @message %>')

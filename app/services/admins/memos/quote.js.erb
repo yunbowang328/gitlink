@@ -1,0 +1,6 @@
+if($("#reply_message_<%= @memo.id%>").html() == "") {
+    $(".reply_to_message").html("");
+    $("#reply_message_<%= @memo.id%>").replaceWith("<%= escape_javascript(render :partial => 'memos/reply_message', :locals => {:reply => @memo}) %>");
+}else {
+    $("#reply_message_<%= @memo.id%>").html("");
+}

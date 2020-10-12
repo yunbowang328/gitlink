@@ -1,0 +1,50 @@
+<%=javascript_include_tag '../javascripts/attachments.js' %>
+<div class="task-popup" style="width:500px;">
+  <div class="task-popup-title clearfix f14">
+    <%= @forum_section.parent_id.present? ? "重命名二级版块" : "重命名一级版块" %>
+  </div>
+  <%= form_tag(admin_forum_section_path(@forum_section, children_forum: @children_forum), method: :put, class: "", remote: true) do %>
+  <div class="task-popup-content ml55">
+    <div class="grid-item-top">
+      <span class="mr10 color-grey">名称：</span>
+      <div>
+        <%= text_field_tag :title, @forum_section.try(:title),class: "winput-300-35", placeholder: "请输入名称，最大限制20个字符", maxlength: 20 %>
+        <div id="edit_forum_section_notice" class="none color-red">不能重名</div>
+      </div>
+    </div>
+    <div class="grid-item-top mt20">
+      <span class="mr10 color-grey">描述：</span>
+      <div>
+        <%= text_area_tag :description, @forum_section.try(:description),class: "width300", placeholder: "请输入描述", maxlength: 200, rows: 4 %>
+        <div id="new_forum_section_notice" class="none color-red">不能超过200字</div>
+      </div>
+    </div>
+    <div class="grid-item-top mt20">
+      <span class="mr10 color-grey">封面：</span>
+      <div>
+        <div class="upload-image-100 pointer" onclick="$('#_file_section_picture').click();" id="admin-logo-upload">
+          <% if @attachment.present?  %>
+          <%= render partial: "admin/forum_sections/show_image_forum", locals: {logo_url: download_attachment_path(@attachment.id), attachment: @attachment, image_type: 'image'} %>
+          <% else %>
+          <div style="line-height: 100px;">上传封面</div>
+          <% end %>
+        </div>
+        <div class="none poa top-bottom-0">
+          <%=render partial: "admin/forum_sections/upload_logo" %>
+        </div>
+        <div class="font-12 color-grey">
+          尺寸 100*100，支持.jpg .jpeg .bmp .gif .png格式照片。
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="cl"></div>
+  <div class="edu-txt-center mbt10">
+    <li class="inline">
+      <a href="javascript:void(0)" class="task-btn fl mr50" onclick="hideModal();">取消</a>
+      <%= submit_tag "确定", class: "edu-default-btn edu-blueback-btn" %>
+    </li>
+  </div>
+  <% end %>
+</div>

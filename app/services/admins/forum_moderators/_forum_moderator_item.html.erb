@@ -1,0 +1,9 @@
+<% if users.present? && users.size > 0 %>
+  <% users.each do |u| %>
+    <% user = u.user %>
+    <span class="blue-user-btn" id="forum_section_moderator_user_<%= u.id %>">
+      <span class="mr5"><%= link_to user.try(:show_name), user_path(user) %></span>
+      <span><%= link_to "<i class='fa fa-close font16'></i>".html_safe,admin_forum_section_forum_moderator_path(forum, u), method: :delete, data:{confirm: "确认删除吗?"}, remote: true, class: "color-grey-9" %></span>
+    </span>
+    <% end %>
+<% end %>

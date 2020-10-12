@@ -1,0 +1,18 @@
+<p class="ml10">
+  <%= form_tag(recommend_forums_admin_forum_section_path(forum), method: :post, remote: true) do %>
+  <span class="fl mr15">
+    <%= radio_button_tag :is_recommend, 0, forum.is_recommend == 0, id: "forum_is_recommend_#{forum.id}_0", class: "magic-radio", onchange: "recommend_form_submit('forum_recommend_submit_#{forum.id}')" %>
+    <label for="forum_is_recommend_<%= forum.id %>_0">不推荐</label>
+  </span>
+    <span class="fl mr15">
+    <%= radio_button_tag :is_recommend, 1, forum.is_recommend == 1, id: "forum_is_recommend_#{forum.id}_1", class: "magic-radio", onchange: "recommend_form_submit('forum_recommend_submit_#{forum.id}')" %>
+      <label for="forum_is_recommend_<%= forum.id %>_1">左侧导航推荐</label>
+  </span>
+    <span class="fl mr15">
+    <%= radio_button_tag :is_recommend, 2, forum.is_recommend == 2, id: "forum_is_recommend_#{forum.id}_2", class: "magic-radio", onchange: "recommend_form_submit('forum_recommend_submit_#{forum.id}')" %>
+      <label for="forum_is_recommend_<%= forum.id %>_2">右侧展示推荐</label>
+  </span>
+    <%= submit_tag "确认", class: "none", id: "forum_recommend_submit_#{forum.id}" %>
+  <% end %>
+</p>
+

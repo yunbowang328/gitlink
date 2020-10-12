@@ -9,8 +9,8 @@ class ForumSection < ApplicationRecord
   has_many :memos, dependent: :destroy
   has_one :section_notice, dependent: :destroy
   # scope :group_today, -> {joins(:memos).where("memos.hidden = false and memos.created_at between ? and ?", Time.current.beginning_of_day, Time.current.end_of_day)}
-  acts_as_watchable
-  acts_as_attachable
+  # acts_as_watchable
+  # acts_as_attachable
 
   def group_today
     memos.where("memos.hidden = false and memos.created_at between ? and ?", Time.current.beginning_of_day, Time.current.end_of_day)

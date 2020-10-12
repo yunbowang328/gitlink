@@ -1,0 +1,15 @@
+<div class="edu-class-container edu-position">
+  <p class="mb10 font-14">
+    <i class="fa fa-map-marker mr5 color-grey"></i>
+    <a href="<%= user_path(@user) %>"><%= @user.show_name %></a>  &gt; <a href="<%= forums_path %>">讨论 </a> &gt; 编辑
+  </p>
+  <div class="edu-con-top user_bg_shadow bor-grey-e">
+    <p class="ml15 color-grey3">编辑话题</p>
+  </div>
+  <div class="edu-con-bg01 mt15 user_bg_shadow bor-grey-e pt30 pb30">
+    <%#= labelled_form_for(@memo, :url => forum_memos_path(@forum)) do |f|  %>
+    <%= form_for @memo, :url => forum_memo_path(@memo.forum_id, @memo), :html => {:multipart => true, :id => 'memo-form'} do |f| %>
+        <%= render :partial => "memos/form", :locals => {:f => f, :edit => true} %>
+    <% end %>
+  </div>
+</div>

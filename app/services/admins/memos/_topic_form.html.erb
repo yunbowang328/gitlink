@@ -1,0 +1,17 @@
+<%= labelled_form_for(@memo, :url => forum_memos_path) do |f|  %>
+
+  <div class="actions" style="max-width:680px;">
+    <%= hidden_field_tag :asset_id,params[:asset_id],:required => false,:style => 'display:none' %>
+    <p><%= f.text_field :subject, :required => true, :size => 95, :style => 'width:98%' %></p>
+    <p style="max-width:680px"><%= f.kindeditor :content,:width=>'99%', :required => true %></p>
+    <!--<script type="text/javascript">var ckeditor=CKEDITOR.replace('editor01');</script> -->
+    <div class="cl"></div>
+
+    <label class="fl" style="margin-left: -80px;margin-top: 5px;"><%= l(:label_attachment_plural) %></label>
+    <div style="margin-left: 10px;" class="fl">
+      <%= render :partial => 'attachments/form', :locals => {:container => @memo} %>
+    </div>
+    <div class="cl"></div>
+   <%= f.submit :value => l(:label_memo_create), :style => "margin-left: 100px;"%> <%= link_to l(:button_back), forum_path(@forum) %>
+  </div>
+<% end %>
