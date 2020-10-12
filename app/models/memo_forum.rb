@@ -1,0 +1,2 @@
+class MemoForum < ApplicationRecord
+end

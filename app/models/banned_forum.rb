@@ -1,0 +1,2 @@
+class BannedForum < ApplicationRecord
+end

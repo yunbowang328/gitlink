@@ -1,0 +1,2 @@
+class VisitAction < ApplicationRecord
+end
