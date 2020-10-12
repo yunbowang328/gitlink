@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 	DCODES = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z)
 	OPENKEY = "79e33abd4b6588941ab7622aed1e67e8"
 
-	helper_method :current_users
+	helper_method :current_user
 
 	# 所有请求必须合法签名
 	def check_sign
