@@ -1,7 +1,6 @@
 # encoding=utf-8
 class CategoriesController < ApplicationController
   before_action :require_login, :except => [:all]
-  skip_before_action :session_expiration, :only => [:all]
   include ApplicationHelper
 
   # 所有类型，通过参数过滤
