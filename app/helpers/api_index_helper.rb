@@ -8,7 +8,7 @@ module ApiIndexHelper
 
   def format_for_current_user(current_user)
     if current_user.present? && (current_user.id != 2)
-      {username: current_user.show_name, 
+      {username: current_user.show_real_name, 
       login: current_user.login,
        user_id: current_user.id, 
        image_url: "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}",
@@ -23,7 +23,7 @@ module ApiIndexHelper
   end
 
   def format_common_user(user)
-    {username: user.show_name, 
+    {username: user.show_real_name, 
       user_id: user.id,
       login: user.login,
       image_url: "/images/#{url_to_avatar(user)}?#{Time.now.to_i}",
@@ -92,7 +92,7 @@ module ApiIndexHelper
           moderator_id: moder.id,
           user_id: user.id,
           login: user.login,
-          username: user.try(:show_name),
+          username: user.try(:show_real_name),
           image_url: url_to_avatar(user),
           user_url: "/users/#{user.try(:login)}"
         }
@@ -167,8 +167,9 @@ module ApiIndexHelper
       memo_parent_id = memo.parent_id
       memo_parent_type = "Memo"
     end
-    admin_role_ids= AdminRole.includes(:admin_permissions).joins(:admin_permissions).where("admin_permissions.name = '#{type}'").pluck(:id)
-    user_ids = UserAdminRole.where(admin_role_id: admin_role_ids).pluck(:user_id).uniq
+    user_ids = User.select(:admin, :id).admin_users.pluck(:id)
+    # admin_role_ids= AdminRole.includes(:admin_permissions).joins(:admin_permissions).where("admin_permissions.name = '#{type}'").pluck(:id)
+    # user_ids = UserAdminRole.where(admin_role_id: admin_role_ids).pluck(:user_id).uniq
     if user_ids.size > 0
       user_ids.each do |id|
         Tiding.create(:user_id => id, :trigger_user_id => memo.author_id,
@@ -221,7 +222,7 @@ module ApiIndexHelper
         last_memo = memo&.last_reply_memo(show_hidden_memo)
         if last_memo
           new_reply = {
-            username: last_memo&.author.try(:show_name),
+            username: last_memo&.author.try(:show_real_name),
             user_login: last_memo&.author.try(:login),
             user_id: last_memo&.author.try(:id),
             content: last_memo&.content,
@@ -240,7 +241,7 @@ module ApiIndexHelper
         sticky: memo.sticky,
         is_fine: memo.is_fine,
         is_original: memo.is_original,
-        username: memo.author.show_name,
+        username: memo.author.show_real_name,
         image_url: "#{url_to_avatar(memo.author)}?#{Time.now.to_i}",
         user_login: memo.author.try(:login),
         user_id: memo.author.try(:id),

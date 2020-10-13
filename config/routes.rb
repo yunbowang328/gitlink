@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-  mount Mobile::API => '/api'
+  # mount Mobile::API => '/api'
   # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   # Serve websocket cable requests in-process
@@ -45,6 +45,51 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    get 'my_memos/:login/memos', to: 'my_memos#index'
+    get 'my_memos/:login/my_interested', to: 'my_memos#my_interested'
+    get 'my_memos/:login/replies_memos', to: 'my_memos#replies_memos'
+    get 'my_memos/:login/recommend_memos', to: 'my_memos#recommend_memos'
+    get 'forum_sections/:id/deal_applies/:apply_id', to: 'forum_sections#deal_applies'
+    get 'forum_sections/:id/destroy_moderator/:moderator_id', to: 'forum_sections#destroy_moderator'
+    resources :forum_sections, only: [:index, :create, :destroy] do 
+      collection do 
+        get :select_sections
+      end
+      member do 
+        post :user_apply
+        post :edit_notice
+        get :forum_section_header
+        post :rename
+        get :order_forums
+        get :search_users
+        post :add_users
+        get :managements
+        get :applied_forums
+        get :unchecked_memos
+        get :unchecked_replies
+        get :checked_memos
+      end
+    end
+    get 'memos/forum_memos/:id', to: 'memos#forum_memos'
+    get 'memos/forum_memos_head/:id', to: 'memos#forum_memos_head'
+    get 'memos/forum_memos_right/:id', to: 'memos#forum_memos_right'
+    post 'forum_memos/:id/is_watch', to: 'memos#is_watch'
+    resources :memos, only: [:index, :create, :edit, :update, :show, :destroy] do 
+      member do 
+        get :related_memos
+        post :watch_memo
+        get :hidden
+        post :watch_memo
+        post :memo_hidden
+        post :reply
+        get :set_top_or_down
+        post :is_fine
+        post :banned_user
+        get :more_reply
+        post :confirm_delete
+        post :plus
+      end
+    end
     resources :sync_forge, only: [:create] do
       collection do
         post :sync_users

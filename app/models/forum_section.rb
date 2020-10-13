@@ -1,4 +1,5 @@
 class ForumSection < ApplicationRecord
+  include Watchable
   has_ancestry
   #论坛板块的表
   # attr_accessible :title, :body

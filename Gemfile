@@ -14,7 +14,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'groupdate', '~> 4.1.0'
 gem 'chartkick'
-gem 'grape', '~> 0.9.0'
+# gem 'grape', '~> 0.9.0'
 gem 'grape-entity', '~> 0.7.1'
 gem 'kaminari', '~> 1.1', '>= 1.1.1'
 

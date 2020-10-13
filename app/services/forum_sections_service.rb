@@ -103,7 +103,7 @@ class ForumSectionsService
       user_item = {
         id: u.id,
         login: u.try(:login),
-        username: u.try(:show_name),
+        username: u.try(:show_real_name),
         nickname: u.try(:nickname)
       }
       search_users.push(user_item)
@@ -133,7 +133,7 @@ class ForumSectionsService
             user_list = {
               forum_moderator_id: new_forum_moder.id,
               login: user.try(:login),
-              username: user.try(:show_name),
+              username: user.try(:show_real_name),
               user_url: "/users/#{user.try(:login)}"
             }
             forum_users.push(user_list)
@@ -230,7 +230,7 @@ class ForumSectionsService
           end
           apply_user = {
             apply_id: apply.id,
-            username: user.try(:show_name),
+            username: user.try(:show_real_name),
             login: user.try(:login),
             image_url: "#{url_to_avatar(user)}?#{Time.now.to_i}",
             user_url: "/users/#{user.try(:login)}",
@@ -335,8 +335,9 @@ class ForumSectionsService
           extra = "2"
         else
           parent_section_id = ""
-          admin_role_ids= AdminRole.includes(:admin_permissions).joins(:admin_permissions).where("admin_permissions.name = 'forum_post'").pluck(:id)
-          manager_ids = UserAdminRole.where(admin_role_id: admin_role_ids).pluck(:user_id).uniq
+          manager_ids = User.select(:admin, :id).admin_users.pluck(:id)
+          # admin_role_ids= AdminRole.includes(:admin_permissions).joins(:admin_permissions).where("admin_permissions.name = 'forum_post'").pluck(:id)
+          # manager_ids = UserAdminRole.where(admin_role_id: admin_role_ids).pluck(:user_id).uniq
           extra = "1"
         end
         if manager_ids.size == 0
@@ -394,7 +395,7 @@ class ForumSectionsService
         memo_id: memo.id,
         is_banned: is_banned,
         memo_title: memo.subject,
-        username: user.try(:show_name),
+        username: user.try(:show_real_name),
         login: user.try(:login),
         image_url: "#{url_to_avatar(user)}?#{Time.now.to_i}",
         user_url: "/users/#{user.try(:login)}",
@@ -441,7 +442,7 @@ class ForumSectionsService
         is_banned: is_banned,
         reply_id: memo.id,
         reply_content: memo.content,
-        username: user.try(:show_name),
+        username: user.try(:show_real_name),
         login: user.try(:login),
         image_url: "#{url_to_avatar(user)}?#{Time.now.to_i}",
         user_url: "/users/#{user.try(:login)}",
@@ -504,7 +505,7 @@ class ForumSectionsService
         memo_id: memo.id,
         is_banned: is_banned,
         memo_title: memo.subject,
-        username: user.try(:show_name),
+        username: user.try(:show_real_name),
         login: user.try(:login),
         image_url: "#{url_to_avatar(user)}?#{Time.now.to_i}",
         user_url: "/users/#{user.try(:login)}",

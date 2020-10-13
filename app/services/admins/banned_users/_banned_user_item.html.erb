@@ -13,15 +13,15 @@
         <%= image_tag(url_to_avatar(user),width:"50px",height:"50px",class:"radius mr15") %>
         <div class="flex1">
           <li class="clearfix mb20">
-            <%= link_to user.try(:show_name),user,class: "fl mr15 color-grey-3 font-16" %>
+            <%= link_to user.try(:show_real_name),user,class: "fl mr15 color-grey-3 font-16" %>
             <span class="fl color-grey-9 mt3 mr15"><%= time_from_now(ban.updated_at) %></span>
             <span class="fl color-grey-9 mt3">第<span class="color-orange"><%= ban.banned_count %></span>次 被禁言</span>
             <span class="fr">
               <% if @banned_type == "banned" %>
-                <% remove_ban_message = "是否确认解除"+"\"#{user.try(:show_name)}\""+"的禁言?" %>
+                <% remove_ban_message = "是否确认解除"+"\"#{user.try(:show_real_name)}\""+"的禁言?" %>
                 <%= link_to "取消禁言", "javascript:void(0)", class: "color-blue_4C", onclick: "custom_confirm_remote_box('#{confirm_banned_admin_banned_users_path(user_id: user.id, id: memo.id)}','#{remove_ban_message}','post');"%>
               <% else %>
-                <%= link_to author.try(:show_name), user_path(author), class: "" %>
+                <%= link_to author.try(:show_real_name), user_path(author), class: "" %>
                 <span class="color-grey-9 ml20">
                   <%= time_from_now(ban.updated_at) %>
                 </span>
@@ -29,7 +29,7 @@
             </span>
           </li>
           <div class="color-grey-9">
-            在【<span class="max-width-300"><%= link_to memo.subject.truncate(50), "forums/#{memo.id}", class: "color-blue_4C" %></span>】被<%= author_type %>：<%= link_to author.try(:show_name), user_path(author), class: "" %> 禁言
+            在【<span class="max-width-300"><%= link_to memo.subject.truncate(50), "forums/#{memo.id}", class: "color-blue_4C" %></span>】被<%= author_type %>：<%= link_to author.try(:show_real_name), user_path(author), class: "" %> 禁言
           </div>
         </div>
       </div>

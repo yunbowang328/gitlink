@@ -27,7 +27,7 @@
     <tr>
       <td><%= (@obj_pages.page - 1) * @obj_pages.per_page + index + 1 %></td>
       <td>
-        <%= link_to(memo.try(:author).try(:show_name), user_path(memo.author)) %>
+        <%= link_to(memo.try(:author).try(:show_real_name), user_path(memo.author)) %>
       </td>
       <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
         <% if memo.parent_id.nil? || memo.subject.starts_with?('RE:')%>

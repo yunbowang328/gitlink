@@ -38,12 +38,12 @@ module ApiHelper
   end
 
 
-  def stars_to_json_like starts,show_jour,homework,show_name
+  def stars_to_json_like starts,show_jour,homework,show_real_name
     result = []
     starts.each do |s|
       comment = get_homework_review homework,show_jour,s.rater
-      rater_name = show_name ? s.rater.login : l(:label_anonymous)
-      rater_id = show_name ? s.rater.id : ''
+      rater_name = show_real_name ? s.rater.login : l(:label_anonymous)
+      rater_id = show_real_name ? s.rater.id : ''
       result << {:rater_id =>rater_id ,:rater_name => rater_name,:created_at => format_time(s.created_at),:stars => s.stars,:comment => comment}
     end
     result

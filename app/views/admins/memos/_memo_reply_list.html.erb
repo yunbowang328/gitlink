@@ -38,7 +38,7 @@
 =end%>
         </td>
         <td>
-          <%= link_to(memo.try(:author).try(:show_name), user_path(memo.author)) %>
+          <%= link_to(memo.try(:author).try(:show_real_name), user_path(memo.author)) %>
           <%# if memo.try(:author).try(:realname) == ' '%>
             <%#= link_to(memo.try(:author), user_path(memo.author)) %>
           <%# else %>

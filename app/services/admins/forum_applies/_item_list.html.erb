@@ -1,7 +1,7 @@
 <%= image_tag(url_to_avatar(user),width:"50px",height:"50px",class:"radius mr15") %>
 <div class="flex1">
   <li class="clearfix mb20">
-    <%= link_to user.try(:show_name),user_path(user),class: "fl mr15 color-grey-3 font-16" %>
+    <%= link_to user.try(:show_real_name),user_path(user),class: "fl mr15 color-grey-3 font-16" %>
     <span class="fl color-grey-9 mt3"><%= time_from_now(apply.updated_at) %></span>
     <span class="fl color-grey-9 mt3 ml50">IP：<%= user_ip_addr apply.user_ip %></span>
     <span class="fr">
@@ -9,7 +9,7 @@
         <% apply_user = apply&.reviews&.acted_forum&.last&.user %>
         <% if apply_user.present? %>
           <span class="fl mr20">
-            <%= link_to apply_user.try(:show_name), user_path(apply_user) %>
+            <%= link_to apply_user.try(:show_real_name), user_path(apply_user) %>
           </span>
           <% end %>
         <% if apply.is_confirm == 2 %>
