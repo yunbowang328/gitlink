@@ -63,7 +63,7 @@ http://localhost:3000/projects
 ![](docs/figs/code.png)
 
 - 任务管理
-![](docs/figs/issue_mange.png)
+![](docs/figs/issue_manage.png)
 
 - 任务查看
 
