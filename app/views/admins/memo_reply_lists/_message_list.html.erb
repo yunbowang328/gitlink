@@ -2,61 +2,47 @@
 <div class="box search-form-container user-list-form">
   <ul class="fl mt2 nav_blueline_status">
     <li class="<%= @memo_hidden_type == "show" ? "active" : "" %>">
-      <%= link_to "已审核", admins_memos_path(hidden: "show"), remote: true, class: "cancel-type-choose" %>
+      <%= link_to "已审核", admins_memo_reply_lists_path(hidden: "show"), remote: true, class: "cancel-type-choose" %>
     </li>
     <li class="<%= @memo_hidden_type == "hidden" ? "active" : "" %>">
-      <%= link_to "未审核", admins_memos_path(hidden: "hidden"), remote: true, class: "cancel-type-choose" %>
+      <%= link_to "未审核", admins_memo_reply_lists_path(hidden: "hidden"), remote: true, class: "cancel-type-choose" %>
     </li>
   </ul>
 </div>
 <div class="box admin-list-container users-list-container">
   <table class="table table-hover users-list-table">
   <thead class="thead-light">
-    <tr>
-      <th width="9%">序号</th>
-      <th width="15%">作者</th>
-      <th width="30%" class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">标题</th>
-      <th width="18%">发布时间<i class="fa fa-long-arrow-down %> color-light-green ml5"></i></th>
-      <th>回复数</th>
-      <th width="8%">审核</th>
-      <th width="5%">首页</th>
-      <th width="8%">操作</th>
-    </tr>
+     <tr>
+    <th width="6%">序号</th>
+    <th width="20%" class="edu-txt-left">来源</th>
+    <th width="30%" class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">评论内容</th>
+    <th width="10%">评论者</th>
+    <th width="12%">评论时间<i class="fa fa-long-arrow-down %> color-light-green ml5" ></i></th>
+    <th width="10%">审核</th>
+    <th width="10%">操作</th>
+  </tr>
   </thead>
   <tbody>
     <% @memos.each_with_index do |memo,index| %>
     <tr>
       <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
-      <td>
+      <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;padding-right: 10px;">
+          <%= link_to(memo.root.subject, forum_path(memo.root)+"/detail", :target => "_blank") %>
+        </td>
+      <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+        <%= sanitize memo.content %>
+        </td>
+        <td>
         <%= link_to(memo.try(:author).try(:show_real_name), "/users/#{memo.author.login}", target: "_blank") %>
       </td>
-      <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-        <% if memo.parent_id.nil? || memo.subject.starts_with?('RE:')%>
-        <%= link_to(memo.subject, forum_path(memo)+"/detail",target: "_blank") %>
-        <% else %>
-        <%= link_to("RE:"+memo.subject, forum_path(memo)+"/detail", :target => "_blank") %>
-        <% end %>
-      </td>
       <td><%= format_time(memo.created_at) %></td>
-      <td>
-        <%= link_to(memo.replies_count, forum_path(memo)+"/detail", target: "_blank") %>
-      </td>
       <td>
         <%= check_box_tag(:hidden, 1, !memo.hidden?, id: "hidden-check-box-#{memo.id}", class: 'magic-checkbox', data: { id: memo.id, url: memo_hidden_admins_memos_path, type: 'hidden' }) %>
         <label for="hidden-check-box-<%= memo.id %>" style="top:-1px;left: 15px;"></label>
         <span style="margin-left: 5px;">通过</span>
       </td>
       <td>
-        <p class="inline">
-          <span class="fl">
-            <%= check_box_tag(:home_show, 1, memo.homepage_show, id: "home_show_#{memo.id}", class: 'magic-checkbox', disabled: memo.hidden?,
-                                data: { id: memo.id, url: memo_homepage_show_admins_memos_path, type: 'home_show' }) %>
-            <label for="home_show_<%= memo.id %>">&nbsp;</label>
-          </span>
-        </p>
-      </td>
-      <td>
-        <%= link_to '查看', forum_path(memo)+"/detail", target: '_blank' %>
+        <%= link_to '查看', forum_path(memo.root)+"/detail?reply_id=#{memo.id}", target: '_blank' %>
         <%= link_to '删除', delete_memo_admins_memos_path(id: memo.id), method: :delete, class: "delete-link-#{memo.id}", data: { confirm: '确认删除该帖子吗？' }, style: memo.hidden? ? '' : 'display: none' %>
       </td>
     </tr>

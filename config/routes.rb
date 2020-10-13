@@ -462,19 +462,22 @@ Rails.application.routes.draw do
     resources :project_categories
     resources :project_licenses
     resources :project_ignores
-    resources :banned_users do
+    resources :banned_users, only: [:index] do
       collection do
         post :confirm_banned
       end
     end
+    resources :apply_destroy, only: :index do 
+      collection do 
+        post :confirm_apply_destroy
+      end
+    end
+    resources :memo_reply_lists, only: :index
     resources :memos, only: :index do
       collection do
-        get 'apply_destroy_memos'
-        post 'confirm_apply_destroy'
         post 'memo_homepage_show'
         post 'memo_hidden'
         delete 'delete_memo'
-        get 'memo_reply_list'
       end
     end
     resources :forum_applies do
@@ -482,6 +485,12 @@ Rails.application.routes.draw do
         post :confirm_apply
       end
     end
+    # resources :banned_users, only: :index do
+    #   member do
+    #     post :confirm_banned
+    #   end
+    # end
+    resources :upload_images, only: :create
     resources :forum_sections do
       member do
         get "order_forums"

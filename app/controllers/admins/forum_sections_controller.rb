@@ -9,11 +9,16 @@ class Admins::ForumSectionsController < Admins::BaseController
     forum_sections = ForumSection.roots.includes(:forum_moderators).order("position desc")
     @max_position = forum_sections&.maximum(:position).to_i
     @min_position = forum_sections&.minimum(:position).to_i
-    @forum_sections_count = forum_sections.count
-    page = (params[:page] || 1).to_i
-    per_page = 15
-    @forum_sections_pages = Paginator.new @forum_sections_count, per_page, page
-    @forum_sections = forum_sections.limit(@forum_sections_pages.per_page).offset(@forum_sections_pages.offset).to_a
+    @forum_sections_count = forum_sections.size
+    # page = (params[:page] || 1).to_i
+    # per_page = 15
+    # @forum_sections_pages = Paginator.new @forum_sections_count, per_page, page
+    # @forum_sections = forum_sections.limit(@forum_sections_pages.per_page).offset(@forum_sections_pages.offset).to_a
+    @forum_sections = paginate forum_sections
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def new

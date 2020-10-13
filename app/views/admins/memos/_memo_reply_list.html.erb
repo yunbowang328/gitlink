@@ -29,13 +29,6 @@
         </td>
         <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
         <%= sanitize memo.content %>
-          <%
-=begin%>
- <%= link_to(forum_path(memo.parent, reply_id: memo.id)+"/detail", :target => "_blank") do %>
-            <%= sanitize memo.content %>
-          <% end %> 
-<%
-=end%>
         </td>
         <td>
           <%= link_to(memo.try(:author).try(:show_real_name), user_path(memo.author)) %>
@@ -59,14 +52,8 @@
   <% end %>
   </tbody>
 </table>
-<div style="text-align:center;" class="new_expand">
-  <div class="pages_user_show" style="width:auto; display:inline-block;margin: 18px 0;">
-    <ul id="homework_pository_ref_pages">
-      <%= pagination_links_full @obj_pages, @obj_count, :per_page_links => false, :remote => true, :flag => true, :is_new => true %>
-    </ul>
-    <div class="cl"></div>
-  </div>
-</div>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: @memos } %>
 <script>
     $(".magic-checkbox").live("click", function () {
       var $link = $(this);

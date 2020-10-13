@@ -1,0 +1,2 @@
+class CheckedAction < ApplicationRecord
+end

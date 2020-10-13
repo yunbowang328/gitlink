@@ -1,0 +1,10 @@
+<% if children_forums.size > 0 %>
+  <ul class="set_l_submenu">
+    <% children_forums.each do |children_forum| %>
+      <li class="clearfix" id="children-forum-detail-<%= children_forum.id %>">
+        <%= render partial: "admins/forum_sections/children_forum_detail", locals: {children_forum: children_forum} %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+

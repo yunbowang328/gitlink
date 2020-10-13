@@ -2,8 +2,6 @@ class Admins::MemosController < Admins::BaseController
   # include Admins::BaseHelper
   # 帖子
   def index
-    @menu_type = 8
-    @sub_type = 3
     @memo_hidden_type = params[:hidden] || ""
 
     memos = Memo.where(parent_id: nil).includes(:author)
@@ -16,38 +14,6 @@ class Admins::MemosController < Admins::BaseController
       format.html
       format.js
     end
-  end
-
-  def apply_destroy_memos
-    @menu_type = 8
-    @sub_type = 2
-    memos = Memo.where(destroy_status: 1).includes(:author).order("created_at desc")
-    @memos = paginate memos
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
-  def confirm_apply_destroy
-    memo = Memo.find(params[:id])
-    apply_status = params[:confirm]
-    if apply_status == "delete"
-      memo.destroy
-      extra = "d_2"
-      Tiding.create!(:user_id => memo.author_id, :trigger_user_id => 0,
-        container_id: memo.id, container_type: 'Memo',
-        :viewed => 0, :tiding_type => "System", :extra => "d_2")
-    else
-      memo.common!
-      memo.save
-      extra = "d_3"
-      Tiding.create!(:user_id => memo.author_id, :trigger_user_id => 0,
-        container_id: memo.id, container_type: 'Memo',
-        :viewed => 0, :tiding_type => "System", :extra => "d_3")
-    end
-    @status = 1
-    @message = "操作成功"
   end
 
   def memo_homepage_show
@@ -89,25 +55,25 @@ class Admins::MemosController < Admins::BaseController
   def delete_memo
     memo = Memo.find params[:id]
     memo.destroy if memo.hidden?
-    redirect_to memo.parent_id.present? ? memo_reply_list_managements_path : messages_list_managements_path
+    redirect_to memo.parent_id.present? ? admins_memo_reply_lists_path : admins_memos_path
   end
 
-  def memo_reply_list
-    @menu_type = 8
-    @sub_type = 4
-    @memo_hidden_type = params[:hidden] || ""
-    Rails.logger.info("======================sub_type==================#@sub_type")
+  # def memo_reply_list
+  #   @menu_type = 8
+  #   @sub_type = 4
+  #   @memo_hidden_type = params[:hidden] || ""
+  #   Rails.logger.info("======================sub_type==================#@sub_type")
 
-    memos = Memo.where("parent_id is not null").includes(:author, :parent)
-    if @memo_hidden_type.present?
-      memos = memos.where(hidden: @memo_hidden_type.to_s == "hidden")
-    end
-    memos = memos.order("created_at desc")
-    @memos = paginate memos
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
+  #   memos = Memo.where("parent_id is not null").includes(:author, :parent)
+  #   if @memo_hidden_type.present?
+  #     memos = memos.where(hidden: @memo_hidden_type.to_s == "hidden")
+  #   end
+  #   memos = memos.order("created_at desc")
+  #   @memos = paginate memos
+  #   respond_to do |format|
+  #     format.html
+  #     format.js
+  #   end
+  # end
 
 end

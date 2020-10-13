@@ -1,6 +1,0 @@
-<% if @forum_status > 0 %>
-$("#forum_sections_moderators_<%= @forum_section.id %>").html("<%= j render partial: "admin/forum_moderators/forum_moderator_item", locals: {users: @forum_moderators, forum: @forum_section} %>")
-op_know("添加成功")
-<% else %>
-op_know("没有选择版主")
-<% end %>

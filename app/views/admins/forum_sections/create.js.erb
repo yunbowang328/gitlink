@@ -1,0 +1,14 @@
+<% if @forum_status[:status] == 0 %>
+  $("#new_forum_section_notice").removeClass("none").html("<%= @forum_status[:msg] %>")
+  $("#new_forum_section_notice").siblings("input").addClass("error_tip");
+<% elsif @forum_status[:status] > 0 %>
+  op_know("<%= @forum_status[:msg] %>")
+  <% if params[:parent_id].present? %>
+    $("#forum-section-detail-<%= params[:parent_id] %>").html("<%= j render partial: "admins/forum_sections/td_forum_section", locals: {forum: @parent_forum} %>")
+  <% else %>
+    $("#forum-section-contents").prepend("<%= j render partial: "admins/forum_sections/forum_section_detail", locals: {forum: @forum_section} %>")
+  <% end %>
+
+<% else %>
+ op_know("<%= @forum_status[:msg] %>")
+<% end %>
