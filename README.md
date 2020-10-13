@@ -2633,6 +2633,36 @@ https://localhost:3000/api/jasder/forgeplus/cloud_accounts.json  | jq
 ```
 ---
 
+#### devops用户认证授权
+```
+GET /api/users/ci/oauth_grant
+```
+*示例*
+```
+curl -X GET \
+-d "password=123456"
+http://localhost:3000/api/users/ci/oauth_grant.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|password          |是|string |用户密码  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status           |int|0:成功， -1: 失败|
+
+```
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
 #### 激活项目
 ```
 POST /api/:owner/:repo/activate

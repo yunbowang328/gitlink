@@ -173,6 +173,12 @@ Rails.application.routes.draw do
               to: 'cloud_accounts#unbind',
               as: :unbind_cloud_acclount
             )
+
+            get(
+              'oauth_grant',
+              to: 'cloud_accounts#oauth_grant',
+              as: :ci_oauth_grant
+            )
           end
         end
       end

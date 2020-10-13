@@ -50,10 +50,7 @@ module Ci::CloudAccountManageable
     logger.info "######### redirect_url: #{redirect_url}"
 
     return nil unless result.present?
-
-    gitea_oauth_grant!(current_user.gitea_uid, oauth.gitea_oauth_id)
-    return cloud_account
-    # result && !result.blank? ? cloud_account : nil
+    result && !result.blank? ? cloud_account : nil
   end
 
   def unbind_account!
@@ -92,15 +89,39 @@ module Ci::CloudAccountManageable
     Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
   end
 
-  def gitea_oauth_grant!(gitea_uid, application_id)
-    connection = Gitea::Database.set_connection.connection
+  def gitea_oauth_grant!(username, password, drone_url, client_id)
+    state = SecureRandom.hex(8)
 
-    unix_time = Time.now.to_i
-    # TODO
-    # 目前直接操作db，可以建立对应的model进行操作
-    sql = "INSERT INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{gitea_uid}, #{application_id}, 0, #{unix_time}, #{unix_time} );"
+    # redirect_uri eg:
+    #  https://localhost:3000/login/oauth/authorize?client_id=94976481-ad0e-4ed4-9247-7eef106007a2&redirect_uri=http%3A%2F%2F121.69.81.11%3A80%2Flogin&response_type=code&state=9cab990b9cfb1805
+    redirect_uri = CGI.escape("#{drone_url}/login&response_type=code&state=#{state}")
+    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{client_id}&redirect_uri=#{redirect_uri}"
+    logger.info "[gitea] grant_url: #{grant_url}"
 
-    connection.execute(sql)
+    conn = Faraday.new(url: grant_url) do |req|
+      req.request :url_encoded
+      req.adapter Faraday.default_adapter
+      req.basic_auth(username, password)
+    end
+
+    response = conn.get
+    logger.info "[gitea] response headers: #{response.headers}"
+
+    drone_oauth_user!(response.headers.to_h['location'], state)
+  end
+
+  def drone_oauth_user!(url, state)
+    logger.info "[drone] drone_oauth_user url: #{url}"
+    conn = Faraday.new(url: url) do |req|
+      req.request :url_encoded
+      req.adapter Faraday.default_adapter
+      req.headers["cookie"] = "_session_=#{SecureRandom.hex(32)}; _oauth_state_=#{state}"
+    end
+
+    response = conn.get
+    logger.info "[drone] response headers: #{response.headers}"
+
+    response.headers['location'].include?('error') ? false : true
   end
 
   private

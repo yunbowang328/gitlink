@@ -5,7 +5,7 @@ class Ci::CloudAccountsController < Ci::BaseController
   before_action :load_project, only: %i[create activate]
   before_action :authorize_owner_project!, only: %i[create activate]
   before_action :load_repo, only: %i[activate]
-  before_action :find_cloud_account, only: %i[show]
+  before_action :find_cloud_account, only: %i[show oauth_grant]
   before_action :validate_params!, only: %i[create bind]
   before_action only: %i[create bind] do
     connect_to_ci_database(master_db: true)
@@ -83,6 +83,12 @@ class Ci::CloudAccountsController < Ci::BaseController
     render_error(ex.message)
   end
 
+  def oauth_grant
+    return render_error('你输入的密码不正确.') unless current_user.check_password?(params[:password].to_s)
+
+    result = gitea_oauth_grant!(current_user.login, password, @cloud_account.drone_url, current_user.oauths.last&.client_id)
+    result === true ? render_ok : render_error('授权失败.')
+  end
 
   private
     def validate_params!
