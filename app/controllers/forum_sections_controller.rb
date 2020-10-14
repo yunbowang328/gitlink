@@ -35,7 +35,7 @@ class ForumSectionsController < ApplicationController
     render json: targets
   end
 
-  def destroy 
+  def destroy_forum 
     targets = ForumSectionsService.new.destroy params, current_user
     render json: targets
   end

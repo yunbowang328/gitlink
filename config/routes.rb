@@ -18,27 +18,30 @@ Rails.application.routes.draw do
   get 'auth/cas/callback', to: 'oauth/cas#create'
 
   get 'oauth/bind', to: 'oauth/educoder#bind'
-  get 'oauth/register', to: 'oauth#register'
+  get 'oauth/register', to: 'oauth#register'  
   post 'oauth/auto_register', to: 'oauth#auto_register'
 
   resources :edu_settings
 
   scope '/api' do
+    get 'users/:login/user_info', to: 'customers#show'
     get 'my_memos/:login/memos', to: 'my_memos#index'
     get 'my_memos/:login/my_interested', to: 'my_memos#my_interested'
     get 'my_memos/:login/replies_memos', to: 'my_memos#replies_memos'
     get 'my_memos/:login/recommend_memos', to: 'my_memos#recommend_memos'
     get 'forum_sections/:id/deal_applies/:apply_id', to: 'forum_sections#deal_applies'
     get 'forum_sections/:id/destroy_moderator/:moderator_id', to: 'forum_sections#destroy_moderator'
-    resources :forum_sections, only: [:index, :create, :destroy] do 
+    post "/forum_sections/:id/destroy_moderator/:moderator_id", to: "forum_sections#destroy_moderator"
+    resources :forum_sections, only: [:index, :create] do 
       collection do 
         get :select_sections
+        post :rename
+        post :destroy_forum
       end
       member do 
         post :user_apply
         post :edit_notice
         get :forum_section_header
-        post :rename
         get :order_forums
         get :search_users
         post :add_users
@@ -140,6 +143,7 @@ Rails.application.routes.draw do
     end
 
     resources :accounts do
+
       collection do
         post :login
         post :register
