@@ -62,6 +62,7 @@ http://localhost:3000/projects
 
 ![](docs/figs/code.png)
 
+
 - 任务管理
 ![](docs/figs/issue_manage.png)
 
@@ -71,7 +72,7 @@ http://localhost:3000/projects
 
 - 任务指派 
 
-![](docs/figs/issue_assign.png)
+![](docs/figs/issue_assign2.png)
 
 - 里程碑
 
