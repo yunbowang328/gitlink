@@ -32,10 +32,13 @@ class Project < ApplicationRecord
   has_many :versions, -> { order("versions.created_on DESC, versions.name DESC") }, dependent: :destroy
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
+  has_one :project_detail, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
+  scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
+
 
 
   def self.search_project(search)

@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
-  
+
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get 'oauth/bind', to: 'oauth/educoder#bind'
   get 'oauth/register', to: 'oauth#register'
   post 'oauth/auto_register', to: 'oauth#auto_register'
-  
+
   resources :edu_settings
 
   scope '/api' do
@@ -100,7 +100,7 @@ Rails.application.routes.draw do
       resources :compose_projects, only: [:create, :destroy]
     end
     resources :attachments do
-      member do 
+      member do
         post :preview_attachment
       end
       collection do
@@ -156,6 +156,7 @@ Rails.application.routes.draw do
       collection do
         post :migrate
         get :group_type_list
+        get :recommend
       end
     end
 
@@ -321,6 +322,7 @@ Rails.application.routes.draw do
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
           get :members, to: 'projects#fork_users'
+          match :about, :via => [:get, :put, :post]
         end
       end
 

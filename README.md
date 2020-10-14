@@ -1364,6 +1364,150 @@ http://localhost:3000/api/projects  | jq
 ```
 ---
 
+#### 推荐项目
+```
+GET api/projects/recommend
+```
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/projects/recommend  | jq
+```
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|total_count     |int   |项目总条数 |
+|id              |string   |项目id |
+|name            |string|项目名称|
+|description     |string|项目简介|
+|visits          |int|流量数|
+|forked_count    |int|被fork的数量|
+|praises_count   |int|star数量|
+|is_public       |boolean|是否公开， true:公开，false:未公开|
+|mirror_url      |string|镜像url|
+|last_update_time|int|最后更新时间，为UNIX格式的时间戳|
+|author          |object|项目创建者|
+|-- name         |string|用户名，也是用户标识|
+|category        |object|项目类别|
+|-- id           |int|项目类型id|
+|-- name         |string|项目类型名称|
+|language        |object|项目语言|
+|-- id           |int|项目语言id|
+|-- name         |string|项目语言名称|
+
+
+返回值
+```
+[
+  {
+    "id": 20,
+    "repo_id": null,
+    "identifier": "PNAekinmH",
+    "name": "FNILL",
+    "visits": 13567,
+    "author": {
+      "name": "王一达",
+      "login": "wangyida",
+      "image_url": "avatars/User/b"
+    },
+    "category": {
+      "id": 8,
+      "name": "其他"
+    }
+  },
+  ...
+]
+
+```
+---
+
+#### 项目主页
+```
+GET api/:namespace_id/:id/about
+```
+
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/:jason/forgeplus/about  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|namespace_id             |是|string |用户登录名  |
+|id             |是|string |项目标识identifier  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|identifier     |string|project's identifier|
+|content     |string|主页内容|
+|attachments     |array|附件|
+|-- name         |string|用户名，也是用户标识|
+
+
+返回值
+```
+{
+  "content": "",
+  "identifier": "forgeplus",
+  attachments: [
+
+  ]
+}
+
+```
+---
+
+#### 修改项目主页内容
+```
+POST api/:namespace_id/:id/about
+```
+
+*示例*
+```
+curl -X POST \
+-d "content=内容" \
+-d "attachment_ids=[1, 2, 2]" \
+http://localhost:3000/api/:jasder/forgeplus/about  | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|namespace_id             |是|string |用户登录名  |
+|id             |是|string |项目标识identifier  |
+|content        |是|string |内容信息  |
+|attachment_ids |是|array |附件id  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|identifier     |string|project's identifier|
+|content     |string|主页内容|
+|attachments     |array|附件|
+|-- name         |string|用户名，也是用户标识|
+
+返回值
+```
+{
+  "content": "",
+  "identifier": "forgeplus",
+  attachments: [
+
+  ]
+}
+
+```
+---
+
 ### 获取分支列表
 ```
 GET /api/:namespace_id/:id/branches
