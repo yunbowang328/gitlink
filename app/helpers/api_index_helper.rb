@@ -192,7 +192,7 @@ module ApiIndexHelper
       else
         user_forum_moder = false
       end
-      permission_user = (current_user.admin? || current_user.admin_permission?('forum_post') || user_forum_moder)
+      permission_user = (current_user.admin? || user_forum_moder)
     else
       permission_user = false
     end

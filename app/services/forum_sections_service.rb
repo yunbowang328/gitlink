@@ -561,7 +561,7 @@ class ForumSectionsService
       else
         parent_section_id = forum_id
       end
-      check_user_permission = (current_user.admin? || ForumModerator.where(forum_section_id: parent_section_id, user_id: current_user.id) || current_user.admin_permission?('forum_post'))
+      check_user_permission = (current_user.admin? || ForumModerator.where(forum_section_id: parent_section_id, user_id: current_user.id))
 
     end
     check_user_permission
