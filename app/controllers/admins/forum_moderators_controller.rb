@@ -43,7 +43,7 @@ class Admins::ForumModeratorsController < Admins::BaseController
       users = User.where("( LOWER(login) LIKE ? or LOWER(concat(lastname, firstname)) LIKE ? or LOWER(mail) LIKE ? )",
                          "%#{user_name}%","%#{user_name}%","%#{user_name}%")
       users.each do |u|
-        check_html = "<input id='check_user_#{u.login}' class='magic-checkbox' type='checkbox' name='member_ids[]' value=""#{u.id}"" checked='false'><label for='check_user_#{u.login}'>#{u.try(:show_real_name)}</label>"
+        check_html = "<div class='search-user-check'><input id='check_user_#{u.login}' class='magic-checkbox mr4' type='checkbox' name='member_ids[]' value=""#{u.id}"" checked='false'><label for='check_user_#{u.login}'>#{u.try(:show_real_name)}</label></div>"
         return_html << check_html
       end
     end

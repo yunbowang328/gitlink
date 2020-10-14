@@ -1,11 +1,13 @@
-var htmlvalue = "<%= j render :partial => 'admins/forum_moderators/new_forum_moderators' %>";
-pop_box_new(htmlvalue, 520, 400);
+
+var htmlvalue = "<%= j render :partial => 'admins/forum_moderators/shared/form'%>";
+$("#admin-forum-managers-content").html(htmlvalue)
+$('#admin-managers-modal').modal('show')
 
 function search_forum_users(target) {
   var t_value = $("#"+ target).val()
   $.ajax({
     type: "POST",
-    url:'/admin/forum_sections/<%= @forum_section.id %>/forum_moderators/search_user?user_name='+t_value,
+    url:'/admins/forum_sections/<%= @forum_section.id %>/forum_moderators/search_user?user_name='+t_value,
     dataType:'JSON',
     success: function (data) {
       if(data.html.length > 0){

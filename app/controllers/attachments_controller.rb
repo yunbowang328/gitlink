@@ -92,6 +92,44 @@ class AttachmentsController < ApplicationController
     end
   end
 
+  #后台上传图片
+  def upload_images
+    upload_file = params["file"] || params["#{params[:file_param_name]}"]# 这里的file_param_name是为了方便其他插件名称
+    raise "未上传文件" unless upload_file
+
+    folder = edu_setting('attachment_folder')
+    raise "存储目录未定义" unless folder.present?
+    month_folder = current_month_folder
+    save_path = File.join(folder, month_folder)
+
+    ext = SecureRandom.urlsafe_base64
+
+    local_path, digest = file_save_to_local(save_path, upload_file.tempfile, ext)
+
+    content_type = upload_file.content_type.presence || 'application/octet-stream'
+
+    disk_filename = local_path[save_path.size + 1, local_path.size]
+
+    @attachment = Attachment.where(disk_filename: disk_filename,author_id: current_user.id).first
+    if @attachment.blank?
+      @attachment = Attachment.new
+      @attachment.filename = upload_file.original_filename
+      @attachment.disk_filename = disk_filename
+      @attachment.filesize = upload_file.tempfile.size
+      @attachment.content_type = content_type
+      @attachment.digest = digest
+      @attachment.author_id = current_user.id
+      @attachment.disk_directory = month_folder
+      @attachment.save!
+      @status = 1
+    else
+      @status = -1
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def destroy
     begin
       @file_path = absolute_path(local_path(@file))

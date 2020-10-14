@@ -1,3 +1,0 @@
-<% if @status > 0 %>
-$("#admin-logo-upload").html("<%= j render partial: "admins/forum_sections/show_image_forum", locals: {logo_url: download_named_attachment_path(@attachment, @attachment.filename), attachment: @attachment, image_type: params[:image_type] || 'image' } %>")
-<% end %>

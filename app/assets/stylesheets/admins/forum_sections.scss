@@ -21,4 +21,108 @@
   .pointer {
     cursor: pointer;
   }
+  .avatar100{
+    height: 100px;
+    width: 100px;
+    border-radius: 8px;
+}
+.upload-image-100:hover .admin-show-again-upload{display: block;}
+.admin-show-again-upload {
+  bottom: 0;
+  width: 100px;
+  height: 100%;
+  line-height: 100px;
+  /* top: 0; */
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  position: absolute;
+  border-radius: 8px;
+}
+.menu_operate {
+  position: relative;
+  cursor: pointer;
+  .operateList {
+    position: absolute;
+    right: -110px;
+    top: 9px;
+    background: #fff;
+    width: 100px;
+    color: #999;
+    box-shadow: 0px 0px 9px rgba(0,0,0,0.2);
+    z-index: 100;
+    display: none;
+    a {
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      padding: 0px 10px;
+  }
+
+}
+.operateList.active {
+  display: block !important;
+}
+}
+.color-grey-6 {
+  color: #666!important;
+}
+.set_l_submenu {
+  padding-left: 50px;
+  display: none;
+  width: 180px;
+  list-style-type: none;
+  li{
+    padding: 4px 0;
+  }
+}
+.set_l_submenu.active {
+  display: block;
+}
+.set_l_premenu {
+  position: relative;
+  display: flex;
+  height: 30px;
+  line-height: 30px;
+  cursor: pointer;
+}
+.df{
+  display: flex;
+}
+.flex1 {
+  flex: 1;
+}
+.text-center {
+text-align: center;
+}
+.grid-item-left {
+  display: grid;
+  grid-template-columns:1fr max-content;
+  align-self: start;
+}
+.ml20{margin-left: 20px;}
+
+.forum-moderators-items {
+  padding: 10px 30px;
+  max-height: 175px;
+  overflow-y: auto;
+  background: #F4FAFF;
+  margin-top: 20px;
+}
+.mr4 {margin-right: 4px;}
+.blue-user-btn {
+  margin: 0 5px;
+  padding: 2px 8px;
+  background: #F4F8FA!important;
+  color: #fff!important;
+  border: 1px solid #4CACFF;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+.mr5 {
+  margin-right: 5px;
+}
+.moderator-list-content{
+  display: inline-block;
+  margin: 5px 0;
+}
 }

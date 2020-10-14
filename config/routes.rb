@@ -33,7 +33,8 @@ Rails.application.routes.draw do
   get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
-
+  post 'attachments/upload_images', to: 'attachments#upload_images'
+  # get 'attachments/download/:id/:filename', :to => 'attachments#download', :id => /\d+/, :filename => /.*/, :as => 'download_named_attachment'
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
@@ -492,7 +493,6 @@ Rails.application.routes.draw do
     #     post :confirm_banned
     #   end
     # end
-    resources :upload_images, only: :create
     resources :forum_sections do
       member do
         get "order_forums"
