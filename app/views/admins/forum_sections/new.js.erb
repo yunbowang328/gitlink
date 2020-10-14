@@ -1,2 +1,2 @@
-var htmlvalue = "<%= j render :partial => 'admins/forum_sections/new_forum', locals: {parent_id: @parent_id} %>";
-pop_box_new(htmlvalue, 520, 400);
+var htmlvalue = "<%= j render :partial => 'admins/forum_sections/new_forum', locals: {parent_id: @parent_id, is_create: "1", forum_section: @forum_section} %>";
+$('#identifier').modal('show')

@@ -23,6 +23,7 @@ class Admins::ForumSectionsController < Admins::BaseController
 
   def new
     @parent_id = params[:parent_id]
+    @forum_section = ForumSection.new
   end
 
   def create

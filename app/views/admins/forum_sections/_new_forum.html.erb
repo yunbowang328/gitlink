@@ -1,6 +1,7 @@
 <div class="task-popup" style="width:500px;">
   <div class="task-popup-title clearfix f14">
-    <%= parent_id.present? ? "新建二级版块" : "新建一级版块" %>
+    <%= is_create == "1" ? "新建" : "编辑"%>
+    <%= parent_id.present? ? "二级版块" : "一级版块" %>
   </div>
   <%= form_tag(admins_forum_sections_path, method: :post, class: "", remote: true) do %>
     <%= hidden_field_tag :parent_id,parent_id %>
