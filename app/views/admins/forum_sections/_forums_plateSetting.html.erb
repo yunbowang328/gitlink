@@ -1,16 +1,16 @@
 <div class="box admin-list-container users-list-container">
- <table class="table table-hover users-list-table">
-      <thead class="thead-light">
+  <table class="table table-hover users-list-table">
+    <thead class="thead-light">
       <tr>
         <th width="30%" class="edu-txt-left">
           <span class="pl15">版块</span>
-            <%= javascript_void_link "<i class='fa fa-plus-circle'></i>".html_safe, class: 'btn btn-primary btn-sm', data: { toggle: 'modal', target: '.admins-add-forum-section-modal'}, parent_id: "" %>
+          <%= link_to "<i class='fa fa-plus-circle'></i>".html_safe,new_admins_forum_section_path, remote: true,  class: "btn btn-primary btn-sm" %>
         </th>
         <th width="30%">主页推荐</th>
         <th width="40%" class="edu-txt-left"><span class="pl15">一级版主任命/解除</span></th>
       </tr>
-      </thead>
-      <tbody id="forum-section-contents">
+    </thead>
+    <tbody id="forum-section-contents">
       <% if @forum_sections_count > 0 %>
         <% @forum_sections.each do |forum| %>
           <%= render partial: "admins/forum_sections/forum_section_detail", locals: {forum: forum} %>
@@ -22,13 +22,11 @@
           </td>
         </tr>
       <% end %>
-      </tbody>
-    </table>
+    </tbody>
+  </table>
 </div>
 <div class="edu-back-white mt10">
-
-   
-    <%= render partial: 'admins/shared/paginate', locals: { objects: @forum_sections } %>
+  <%= render partial: 'admins/shared/paginate', locals: { objects: @forum_sections } %>
 </div>
 <script>
   function first_menu_click(that) {
@@ -43,7 +41,7 @@
       children_tags.removeClass("active")
     }
   }
-
+  
   function first_menu_action(that) {
     var target = $(that);
     var target_action = target.find(".operateList");
@@ -55,19 +53,15 @@
       target_action.addClass("active");
     }
   }
-
+  
   function recommend_form_submit(id) {
     $("#"+id).trigger("click")
   }
-
+  
   $(document).mouseup(function(e){
   var _con = $('.menu_operate');   // 设置目标区域
   if(!_con.is(e.target) && _con.has(e.target).length === 0){
     _con.find(".operateList").removeClass("active")
   }
-});
-
-
-
-
+  });
 </script>

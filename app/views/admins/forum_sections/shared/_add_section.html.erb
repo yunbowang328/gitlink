@@ -1,54 +1,7 @@
-<% parent_id = params[:parent_id] %>
-<div class="modal fade admins-add-forum-section-modal" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="modal fade admins-add-forum-section-modal" tabindex="-1" role="dialog" aria-hidden="true" id="admin-forum-section-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"> <%= parent_id.present? ? "新建二级版块" : "新建一级版块" %></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <%= form_tag(admins_forum_sections_path, method: :post, class: "", remote: true) do %>
-        <div class="modal-body">
-          <%= hidden_field_tag :parent_id,parent_id %>
-          <div>
-            <div class="grid-item-top">
-              <span class="mr10 color-grey">名称：</span>
-              <div>
-                <%= text_field_tag :title, nil,class: "form-control input-lg", placeholder: "请输入名称，最大限制20个字符", maxlength: 20 %>
-              </div>
-            </div>
-            <div class="grid-item-top mt20">
-              <span class="mr10 color-grey">描述：</span>
-              <div>
-                <%= text_area_tag :description,nil,class: "form-control input-lg", placeholder: "请输入描述", maxlength: 200, rows: 4 %>
-              </div>
-            </div>
-            <div class="grid-item-top mt20">
-              <span class="mr10 color-grey">封面：</span>
-              <div>
-                <div class="upload-image-100 pointer" onclick="$('#_file_section_picture').click();" id="admin-logo-upload">
-                  <div style="line-height: 100px;">上传封面</div>
-                </div>
-                <div class="none poa top-bottom-0">
-                <input type="file" name="attachments[dummy][file]" id="_file_section_picture">
-                  <%# <%=render partial: "admins/forum_sections/upload_logo"> %>
-                </div>
-                <div class="font-12 color-grey">
-                  尺寸 100*100，支持.jpg .jpeg .bmp .gif .png格式照片。
-                </div>
-              </div>
-            </div>
-            <div class="grid-item-top mt20 none" id="add-section-forum">
-               <%=render partial: "admins/forum_sections/shared/error_section", locals: {error_messages: ""} %>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-          <%= submit_tag "确定", class: "btn btn-primary submit-btn" %>
-        </div>
-      <% end %>
+    <div class="modal-content" id="admin-forum-section-content">
     </div>
   </div>
 </div>

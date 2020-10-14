@@ -24,6 +24,9 @@ class Admins::ForumSectionsController < Admins::BaseController
   def new
     @parent_id = params[:parent_id]
     @forum_section = ForumSection.new
+    respond_to do |format|
+      format.js
+    end
   end
 
   def create
