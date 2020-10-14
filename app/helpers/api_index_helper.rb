@@ -132,7 +132,7 @@ module ApiIndexHelper
   def set_children_sections(objects,is_detail)
     children_sections_array = []
     objects.find_each do |sec|
-      image = sec.attachments&.last
+      image = sec.image_attachment
       s_section = {
         id: sec.id,
         title: sec.title

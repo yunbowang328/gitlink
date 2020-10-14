@@ -13,7 +13,8 @@ module Watchable
   end
 
   def watched_by?(user)
-    !!(user && self.watcher_user_ids && self.watcher_user_ids.detect {|uid| uid == user.id })
+    watcher_users.exists?(id: user.id)
+    # !!(user && self.watcher_user_ids && self.watcher_user_ids.detect {|uid| uid == user.id })
   end
 
   def watch!(watchable)

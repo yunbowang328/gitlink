@@ -477,9 +477,9 @@ class MemosService
       set_msg = "您没有权限"
     end
 
-    memos = Memo.field_for_list.includes(:praise_tread, :author).where(:root_id => nil).order("sticky=1 desc, #{s_order} desc").limit(15)
-    memo_list = memo_data memos
-    {status: set_status, message: set_msg, memo_list: memo_list}
+    # memos = Memo.field_for_list.includes(:praise_tread, :author, :forums).where(:root_id => nil).order("sticky=1 desc, #{s_order} desc").limit(15)
+    # memo_list = memo_data memos
+    {status: set_status, message: set_msg}
 
   end
 
