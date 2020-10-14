@@ -7,29 +7,7 @@ Rails.application.routes.draw do
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
-  resources :forums do
-    member do 
-      get "detail"
-    end
-    collection do
-      match '/manage/:id/', :to => 'forums#manage', :via => :get
-      match '/theme/:id/', :to => 'forums#theme', :via => :get
-      resources :plates, only: [:show, :index] do
-        get 'all'
-        get 'is_fine'
-        get 'my_memos'
-        get 'my_topics'
-      end
-      resources :categories do
-        collection do
-          get 'all', :via =>  [:get, :post]
-          get 'guide', :via =>  [:get, :post]
-          get 'techShare'
-          get 'shixun_discuss'
-        end
-      end
-    end
-  end
+  
   get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
@@ -753,6 +731,30 @@ Rails.application.routes.draw do
     end
     resources :salesman_customers, only: [:index, :create, :edit, :update, :destroy] do
       post :batch_add, on: :collection
+    end
+  end
+
+  resources :forums, only: [:index, :new, :edit, :show] do
+    member do 
+      get "detail"
+    end
+    collection do
+      match '/manage/:id/', :to => 'forums#manage', :via => :get
+      match '/theme/:id/', :to => 'forums#theme', :via => :get
+      resources :plates, only: [:show, :index] do
+        get 'all'
+        get 'is_fine'
+        get 'my_memos'
+        get 'my_topics'
+      end
+      resources :categories do
+        collection do
+          get 'all', :via =>  [:get, :post]
+          get 'guide', :via =>  [:get, :post]
+          get 'techShare'
+          get 'shixun_discuss'
+        end
+      end
     end
   end
 
