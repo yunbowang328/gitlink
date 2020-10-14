@@ -2,38 +2,17 @@ Rails.application.routes.draw do
 
   require 'sidekiq/web'
   require 'admin_constraint'
-  mount Mobile::API => '/api'
+  # mount Mobile::API => '/api'
   # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
 
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
-  resources :forums do
-    member do 
-      get "detail"
-    end
-    collection do
-      match '/manage/:id/', :to => 'forums#manage', :via => :get
-      match '/theme/:id/', :to => 'forums#theme', :via => :get
-      resources :plates, only: [:show, :index] do
-        get 'all'
-        get 'is_fine'
-        get 'my_memos'
-        get 'my_topics'
-      end
-      resources :categories do
-        collection do
-          get 'all', :via =>  [:get, :post]
-          get 'guide', :via =>  [:get, :post]
-          get 'techShare'
-          get 'shixun_discuss'
-        end
-      end
-    end
-  end
+  
   get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
-
+  post 'attachments/upload_images', to: 'attachments#upload_images'
+  # get 'attachments/download/:id/:filename', :to => 'attachments#download', :id => /\d+/, :filename => /.*/, :as => 'download_named_attachment'
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
@@ -45,6 +24,51 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    get 'my_memos/:login/memos', to: 'my_memos#index'
+    get 'my_memos/:login/my_interested', to: 'my_memos#my_interested'
+    get 'my_memos/:login/replies_memos', to: 'my_memos#replies_memos'
+    get 'my_memos/:login/recommend_memos', to: 'my_memos#recommend_memos'
+    get 'forum_sections/:id/deal_applies/:apply_id', to: 'forum_sections#deal_applies'
+    get 'forum_sections/:id/destroy_moderator/:moderator_id', to: 'forum_sections#destroy_moderator'
+    resources :forum_sections, only: [:index, :create, :destroy] do 
+      collection do 
+        get :select_sections
+      end
+      member do 
+        post :user_apply
+        post :edit_notice
+        get :forum_section_header
+        post :rename
+        get :order_forums
+        get :search_users
+        post :add_users
+        get :managements
+        get :applied_forums
+        get :unchecked_memos
+        get :unchecked_replies
+        get :checked_memos
+      end
+    end
+    get 'memos/forum_memos/:id', to: 'memos#forum_memos'
+    get 'memos/forum_memos_head/:id', to: 'memos#forum_memos_head'
+    get 'memos/forum_memos_right/:id', to: 'memos#forum_memos_right'
+    post 'forum_memos/:id/is_watch', to: 'memos#is_watch'
+    resources :memos, only: [:index, :create, :edit, :update, :show, :destroy] do 
+      member do 
+        get :related_memos
+        post :watch_memo
+        get :hidden
+        post :watch_memo
+        post :memo_hidden
+        post :reply
+        get :set_top_or_down
+        post :is_fine
+        post :banned_user
+        get :more_reply
+        post :confirm_delete
+        post :plus
+      end
+    end
     resources :sync_forge, only: [:create] do
       collection do
         post :sync_users
@@ -419,19 +443,22 @@ Rails.application.routes.draw do
     resources :project_categories
     resources :project_licenses
     resources :project_ignores
-    resources :banned_users do
+    resources :banned_users, only: [:index] do
       collection do
         post :confirm_banned
       end
     end
+    resources :apply_destroy, only: :index do 
+      collection do 
+        post :confirm_apply_destroy
+      end
+    end
+    resources :memo_reply_lists, only: :index
     resources :memos, only: :index do
       collection do
-        get 'apply_destroy_memos'
-        post 'confirm_apply_destroy'
         post 'memo_homepage_show'
         post 'memo_hidden'
         delete 'delete_memo'
-        get 'memo_reply_list'
       end
     end
     resources :forum_applies do
@@ -439,6 +466,11 @@ Rails.application.routes.draw do
         post :confirm_apply
       end
     end
+    # resources :banned_users, only: :index do
+    #   member do
+    #     post :confirm_banned
+    #   end
+    # end
     resources :forum_sections do
       member do
         get "order_forums"
@@ -699,6 +731,30 @@ Rails.application.routes.draw do
     end
     resources :salesman_customers, only: [:index, :create, :edit, :update, :destroy] do
       post :batch_add, on: :collection
+    end
+  end
+
+  resources :forums, only: [:index, :new, :edit, :show] do
+    member do 
+      get "detail"
+    end
+    collection do
+      match '/manage/:id/', :to => 'forums#manage', :via => :get
+      match '/theme/:id/', :to => 'forums#theme', :via => :get
+      resources :plates, only: [:show, :index] do
+        get 'all'
+        get 'is_fine'
+        get 'my_memos'
+        get 'my_topics'
+      end
+      resources :categories do
+        collection do
+          get 'all', :via =>  [:get, :post]
+          get 'guide', :via =>  [:get, :post]
+          get 'techShare'
+          get 'shixun_discuss'
+        end
+      end
     end
   end
 

@@ -1,0 +1,27 @@
+<%= file_field_tag 'attachments[dummy][file]',
+                   :id => "_file_section_picture",
+                   :class => 'file_selector',
+                   :onchange => "addInputFiles_board()",
+                   :style =>'display:none',
+                   accept: 'image/png,image/gif,image/jpeg,image/jpg,image/bmp',
+                   :data => {
+                       :max_file_size => 5120.kilobytes,
+                       :max_concurrent_uploads => 1,
+                       :upload_path => attachments_upload_images_path(:format => 'js'),
+                   } %>
+
+
+<script>
+function addInputFiles_board() {
+    var formData = new FormData();
+    formData.append('file', $('input[name="attachments[dummy][file]"]')[0].files[0]);
+    $.ajax({
+    url: "<%= attachments_upload_images_path %>",
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    })
+}
+
+</script>

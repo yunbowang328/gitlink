@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    <%= is_create === "1" ? "新建" : "编辑" %>
+    <%= parent_id.present? ? "二级版块" : "一级版块" %>
+  </h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<%= simple_form_for(forum_section, url: forum_section.id.present? ? admins_forum_section_path(forum_section.id) : admins_forum_sections_path,method: forum_section.id.present? ? "put" : "post", html: { remote: true}) do |f|%>
+  <%= f.hidden_field :parent_id, value: parent_id %>
+  <div class="modal-body">
+    <div>
+      <div class="grid-item-top">
+        <span class="mr10 color-grey">名称：</span>
+        <div>
+          <%= f.text_field :title,class: "form-control input-lg", placeholder: "请输入名称，最大限制20个字符", maxlength: 20 %>
+        </div>
+      </div>
+      <div class="grid-item-top mt20">
+        <span class="mr10 color-grey">描述：</span>
+        <div>
+          <%= f.text_area :description,class: "form-control input-lg", placeholder: "请输入描述", maxlength: 200, rows: 4 %>
+        </div>
+      </div>
+      <div class="grid-item-top mt20">
+        <span class="mr10 color-grey">封面：</span>
+        <div>
+          <div class="upload-image-100 pointer" onclick="$('#_file_section_picture').click();" id="admin-logo-upload">
+            <% if forum_section&.id && forum_section.attachment_id.present?  %>
+            <% attachment = forum_section.image_attachment %>
+              <%= render partial: "admins/forum_sections/show_image_forum", locals: {logo_url: download_url(attachment), attachment: attachment, image_type: 'image' } %>
+            <% else %>
+              <div style="line-height: 100px;">上传封面</div>
+            <% end %>
+          </div>
+          <div class="font-12 color-grey">
+            尺寸 100*100，支持.jpg .jpeg .bmp .gif .png格式照片。
+          </div>
+        </div>
+      </div>
+      <div class="grid-item-top mt20 none" id="add-section-forum">
+        <%=render partial: "admins/forum_sections/shared/error_section", locals: {error_messages: ""} %>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+    <%= f.submit "确定", disable_with: '提交中...', class: "btn btn-primary submit-btn" %>
+  </div>
+<% end %>
+<div class="none poa top-bottom-0">
+  <%= render partial: "admins/forum_sections/upload_logo" %>
+</div>

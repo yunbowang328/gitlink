@@ -1,0 +1,4 @@
+
+var htmlvalue = "<%= j render :partial => 'admins/forum_sections/shared/new_forum', locals: {parent_id: @forum_section.parent_id, is_create: "2", forum_section: @forum_section} %>";
+$("#admin-forum-section-content").html(htmlvalue)
+$('#admin-forum-section-modal').modal('show')

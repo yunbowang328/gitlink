@@ -1,0 +1,29 @@
+<div class="task-popup" style="width:500px;"><div class="task-popup-title clearfix">提示</div>
+  <div class="task-popup-content">
+    <div class="df padding10-20">
+      <span class="fl mt3">名称：</span>
+      <div class="flex1">
+        <input type="text" class="input-100-35" name="itemName" placeholder="请输入名称，最大限制20个字符"/>
+        <p class="mt5" style="height: 18px;line-height: 18px"><span class="color-red none" id="name_notice">请输入名称</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix mb20 edu-txt-center">
+    <a href="javascript:void(0);" class="task-btn mr25" onclick="hideModal();">取消</a>
+    <a href="javascript:void(0);" class="task-btn task-btn-orange" onclick="sureFun();">确定</a>
+  </div>
+</div>
+<script>
+  function sureFun() {
+      var name=$("input[name='itemName']").val();
+      if(name == ""){
+          $("#name_notice").removeClass("none").html("请输入名称");
+          return;
+      }else if(name.length > 20){
+          $("#name_notice").removeClass("none").html("名称内容不能超过20个字符");
+          return;
+      }else{
+          $("#name_notice").addClass("none").html("");
+      }
+  }
+</script>

@@ -22,13 +22,14 @@ class Admins::BannedUsersController < Admins::BaseController
     end
 
     banned_users = banned_users.order("updated_at desc")
-
-    page = (params[:page] || 1).to_i
-    per_page = 15
-
     @banned_users_count = banned_users.size
-    @banned_users_pages = Paginator.new @banned_users_count, per_page, page
-    @banned_users = banned_users.limit(@banned_users_pages.per_page).offset(@banned_users_pages.offset).to_a
+    @banned_users = paginate banned_users
+    # page = (params[:page] || 1).to_i
+    # per_page = 15
+
+    
+    # @banned_users_pages = Paginator.new @banned_users_count, per_page, page
+    # @banned_users = banned_users.limit(@banned_users_pages.per_page).offset(@banned_users_pages.offset).to_a
 
   end
 

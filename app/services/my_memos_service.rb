@@ -61,7 +61,7 @@ class MyMemosService
   def recommend_memos current_user
     return {status: -1, message: "请登录"} unless current_user
 
-    all_memos = Memo.includes(memo_forums: :forum_section,author: :user_extensions)
+    all_memos = Memo.includes(memo_forums: :forum_section,author: :user_extension)
 
     all_hottest_memos = all_memos.visible.hottest_five_memos
     hottest_memos = object_to_hash(all_hottest_memos)

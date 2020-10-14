@@ -1,0 +1,9 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('帖子管理', admins_memos_path) %>
+<% end %>
+
+<div class="edu-class-container">
+  <div class="ex_container" id="leave_message">
+    <%= render :partial => "admins/memo_reply_lists/message_list" %>
+  </div>
+</div>

@@ -43,4 +43,30 @@ class Admins::BaseController < ApplicationController
   def setup_laboratory
     Laboratory.current = Laboratory.find_by_subdomain(request.subdomain) || Laboratory.find(1)
   end
+
+  def up_and_down(opr,current_target,position,model_name)
+    modal_target = model_name.capitalize.classify.constantize
+    if model_name == "forum_section"  #只有root才能移动
+      modal_target = modal_target.roots
+    end
+    if opr.to_s == "up"
+      last_target = modal_target.where("position > ?",position)&.first
+      if last_target.present?
+        current_target.update_attribute(:position, last_target.position)
+        last_target.update_attribute(:position, position) # 重新获取当前问题的位置
+        return 0
+      else
+        return -1
+      end
+    elsif opr.to_s == "down"
+      next_target = modal_target.where("position < ?",position)&.last
+      if next_target.present?
+        current_target.update_attribute(:position, next_target.position)
+        next_target.update_attribute(:position, position)
+        return 0
+      else
+        return -1
+      end
+    end
+  end
 end

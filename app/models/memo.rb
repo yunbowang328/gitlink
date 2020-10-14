@@ -4,16 +4,12 @@
 # is_fine 是否加精，默认为false
 # hidden 是否隐藏
 
-# require 'elasticsearch/model'
 class Memo < ApplicationRecord
-	# include Redmine::SafeAttributes
-  # include UserScoreHelper
   include ApplicationHelper, Watchable
-  # include Elasticsearch::Model
   #敏感词过滤
   # include DunCheckAble
   has_many :forums, :through => :memo_forums
-  belongs_to :forum_section, counter_cache: true
+  belongs_to :forum_section, counter_cache: true, optional: true
   has_many :memo_forums, :dependent => :destroy
   has_many :visit_actions, as: :visitable, dependent: :destroy
   #用户是否禁言
@@ -30,39 +26,9 @@ class Memo < ApplicationRecord
   
   scope :total_replies, ->{where("hidden = false and root_id is not null")}
   # scope :roots, -> {where()}
-
+  has_many :attachments, as: :container, dependent: :destroy
   # 创意征集方式 0-默认，1-申请， ps. 删除后，该帖子即删除， 拒绝后，该帖子状态将为初始状态
   enum destroy_status: { common: 0, apply_destroy: 1 }
-  # acts_as_watchable
-  #elasticsearch kaminari init
-  # Kaminari::Hooks.init
-  # Elasticsearch::Model::Response::Response.__send__ :include, Elasticsearch::Model::Response::Pagination::Kaminari
-  # settings index: {
-  #     number_of_shards: 5 ,
-  #     analysis: {
-  #         char_filter: {
-  #             and_filter: {
-  #               type: "mapping",
-  #               mappings: [ "&=> and "]
-  #            }
-  #         },
-  #         analyzer: {
-  #             my_analyzer: {
-  #                 type: 'custom',
-  #                 tokenizer: 'standard',
-  #                 filter: ['classic'],
-  #                 char_filter: ['html_strip']
-  #             }
-  #         }
-  #     }
-  # } do
-  #   mappings dynamic: 'false' do
-  #     indexes :subject, analyzer: 'smartcn',index_options: 'offsets'#, char_filter: 'html_strip'
-  #     indexes :content, analyzer:'my_analyzer',index_options: 'offsets',search_analyzer: 'smartcn'
-  #     indexes :updated_at,index:"not_analyzed" ,type:'date'
-  #   end
-  # end
-
 	acts_as_tree :counter_cache => :replies_count, :order => "#{Memo.table_name}.created_at ASC", dependent: :destroy
 	# acts_as_attachable
   has_many :user_score_details,  :class_name => 'UserScoreDetails',:as => :score_changeable_obj
@@ -72,46 +38,7 @@ class Memo < ApplicationRecord
   # 消息
   has_many :memo_messages, :class_name =>'MemoMessage', :dependent => :destroy
   # end
-	belongs_to :last_reply, :class_name => 'Memo', :foreign_key => 'last_reply_id'
-	# acts_as_searchable :column => ['subject', 'content'],
-	# 					#:include => { :forum => :p}
-	# 					#:project_key => "#{Forum.table_name}.project_id"
-	# 					:date_column => "#{table_name}.created_at"
-	#acts_as_event :title => Proc.new {|o| "#{o.forum.name}: #{o.subject}"},
-				  #:datetime => :updated_at,
-				  # :datetime => :created_at,
-				  #:description => :content,
-				  #:author => :author,
-				  #:type => Proc.new {|o| o.parent_id.nil? ? 'Memo' : 'Reply'},
-				  #:url => Proc.new {|o| {:controller => 'memos', :action => 'show', :forum_id => o.forum_id}.merge(o.parent_id.nil? ? {:id => o.id} : {:id => o.parent_id, :r => o.id, :anchor => "reply-#{o.id}"})}
-	# acts_as_activity_provider :author_key => :author_id,
-	# 						  :func => 'memos',
-	# 						  :timestamp => 'created_at'
-							  # :find_options => {:type => 'memos'}
-	# acts_as_watchable
-
-	# safe_attributes "author_id",
-	# 				"subject",
-	# 				"content",
-	# 				"last_memo_id",
-	# 				"lock",
-	# 				"sticky",
-	# 				"parent_id",
-	# 				"replies_count",
-  #         "root_id",
-  #         "language"
-
-	# after_create :add_author_as_watcher, :reset_counters!, :send_tiding
-  # after_create :add_author_as_watcher   #浏览记录
-	# after_update
-	# after_destroy :reset_counters!,:delete_kindeditor_assets #,:down_user_score  -- 公共区发帖暂不计入得分,
-	# after_create :send_notification
-	# after_save :plusParentAndForum
-	# after_destroy :minusParentAndForum
-  #before_save :be_user_score
-	# scope :visible, lambda { |*args|
-	# 	includes(:forum => ).where()
-	# }
+	belongs_to :last_reply, :class_name => 'Memo', :foreign_key => 'last_reply_id', optional: true
   scope :indexable,lambda {
     where('parent_id is null')
   }
@@ -135,35 +62,7 @@ class Memo < ApplicationRecord
   def self.search_by_time(time_type, start_time, end_time)
     where("#{time_type} between ? and ?",start_time.present? ? start_time.to_time : Time.now, end_time.present? ? end_time.to_time.end_of_day : Time.now)
   end
-
-
-  # def self.search(query)
-  #   __elasticsearch__.search(
-  #       {
-  #           query: {
-  #               multi_match: {
-  #                   query: query,
-  #                   type:"most_fields",
-  #                   operator: "or",
-  #                   fields: ['subject','content^0.5']
-  #               }
-  #           },
-  #           sort: {
-  #               _score:{order: "desc" },
-  #               updated_at:{order: "desc" }
-  #           },
-  #           highlight: {
-  #               pre_tags: ['<span class="c_red">'],
-  #               post_tags: ['</span>'],
-  #               fields: {
-  #                   subject: {},
-  #                   content: {}
-  #               }
-  #           }
-  #       }
-  #   )
-  # end
-
+  
   def memo_parent
     Memo.find(parent_id)
   end
@@ -201,11 +100,11 @@ class Memo < ApplicationRecord
   end
 
   def self.hottest_five_memos
-    order("replies_count desc, praises_count desc, viewed_count desc").limit(8).select([:id,:subject])
+    order("replies_count desc, praises_count desc, viewed_count desc").limit(8).select(:id,:subject)
   end
 
   def self.recommend_five_memos
-    recommend_memos.order("updated_at desc").limit(8).select([:id,:subject])
+    recommend_memos.order("updated_at desc").limit(8).select(:id,:subject)
   end
 
 

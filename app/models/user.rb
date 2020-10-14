@@ -54,6 +54,7 @@ class User < ApplicationRecord
   has_one :qq_open_user, class_name: 'OpenUsers::QQ'
   accepts_nested_attributes_for :user_extension, update_only: true
   has_many :fork_users, dependent: :destroy
+  has_many :block_users, :dependent => :destroy
 
   has_many :versions
   has_many :issue_times, :dependent => :destroy
@@ -72,7 +73,7 @@ class User < ApplicationRecord
   has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
   has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
 
-  has_many :watchers, as: :watchable, dependent: :destroy
+  # has_many :watchers, as: :watchable, dependent: :destroy
 
   # 认证
   has_many :apply_user_authentication
@@ -318,6 +319,10 @@ class User < ApplicationRecord
 
   def locked?
     status == STATUS_LOCKED
+  end
+
+  def self.admin_users 
+    where(admin: true)
   end
 
   def activate
@@ -577,6 +582,10 @@ class User < ApplicationRecord
     if password
       salt_password(password)
     end
+  end
+
+  def blocked_for(user_id)
+    block_users.where(block_user_id: user_id).exists?
   end
 
   def salt_password(clear_password)

@@ -1,0 +1,6 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('禁言列表', admins_banned_users_path) %>
+<% end %>
+<div class="edu-class-container" id="banned-users-container">
+  <%= render partial: "admins/banned_users/banned_users_items" %>
+</div>

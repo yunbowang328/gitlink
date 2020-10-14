@@ -5,7 +5,7 @@
   <div class="edu-class-container edu-position">
     <p class="mb10 font-14">
       <i class="fa fa-map-marker mr5 color-grey"></i>
-      <a href="<%= user_path(@user)%>"><%= @user.show_name %></a>  &gt; <a href="<%= forums_path %>">讨论区 </a>
+      <a href="<%= user_path(@user)%>"><%= @user.show_real_name %></a>  &gt; <a href="<%= forums_path %>">讨论区 </a>
     </p>
     <div class="edu-con-top user_bg_shadow bor-grey-e clearfix mb20">
       <p class="ml15 color-grey3 fl">
@@ -32,7 +32,7 @@
               <!-- <p class="color-grey fr font-12 mr15 mt5"><a href="javascript:void(0)">返回</a></p>-->
             </div>
             <p class="mb10">
-              <a href="<%= user_path(@memo.author) %>" class="font-14 mr15 color-grey" target="_blank"><%= @memo.author.show_name %></a><span class="font-14 color-grey">更新于<%= time_from_now @memo.updated_at %></span>
+              <a href="<%= user_path(@memo.author) %>" class="font-14 mr15 color-grey" target="_blank"><%= @memo.author.show_real_name %></a><span class="font-14 color-grey">更新于<%= time_from_now @memo.updated_at %></span>
               <span id="reword_score_<%= @memo.id %>">
                 <% if @memo.try(:reward).present? %>
                   <span class="ml15 color-orange03" style="cursor: default;" data-tip-down="获得平台奖励金币：<%= @memo.try(:reward) %>"><i class="fa fa-gift mr5 font-16"></i><%= @memo.try(:reward) %></span>
@@ -156,7 +156,7 @@
           <div class="cl"></div>
 
           <div class="postDetailCreater">
-            <%= link_to @memo.author.show_name, user_path(@memo.author), :class => "linkBlue2", :target=> "_blank"%></div>
+            <%= link_to @memo.author.show_real_name, user_path(@memo.author), :class => "linkBlue2", :target=> "_blank"%></div>
           <div class="postDetailDate mb5"><%= format_date( @memo.created_at)%></div>
           <div class="cl"></div>
           <div class="homepagePostIntro memo-content ke-block" id="activity_description_<%= @memo.id %>" style="word-break: break-all; word-wrap:break-word;margin-bottom: 0px !important;" >

@@ -1,0 +1,12 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('版块管理', admins_forum_sections_path) %>
+<% end %>
+
+<div class="edu-class-container">
+  <div class="ex_container" id="leave_message">
+    <%= render partial: "admins/forum_sections/forums_plateSetting" %>
+  </div>
+</div>
+
+<%= render partial: 'admins/forum_sections/shared/add_section' %>
+<%= render partial: 'admins/forum_sections/shared/add_managers' %>

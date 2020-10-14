@@ -22,13 +22,14 @@ class Admins::ForumAppliesController < Admins::BaseController
       forum_applies = forum_applies.joins(:user).where("LOWER(users.login) LIKE ? or LOWER(concat(users.lastname, users.firstname)) LIKE ?", "%#{@search_name}%", "%#{@search_name}%")
     end
     forum_applies = forum_applies.order("apply_forums.updated_at desc")
-
-    page = (params[:page] || 1).to_i
-    per_page = 15
-
     @forum_applies_count = forum_applies.size
-    @forum_applies_pages = Paginator.new @forum_applies_count, per_page, page
-    @forum_applies = forum_applies.limit(@forum_applies_pages.per_page).offset(@forum_applies_pages.offset).to_a
+    @forum_applies = paginate forum_applies
+    # page = (params[:page] || 1).to_i
+    # per_page = 15
+
+   
+    # @forum_applies_pages = Paginator.new @forum_applies_count, per_page, page
+    # @forum_applies = forum_applies.limit(@forum_applies_pages.per_page).offset(@forum_applies_pages.offset).to_a
 
   end
 

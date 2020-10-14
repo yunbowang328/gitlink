@@ -9,41 +9,50 @@ class Admins::ForumSectionsController < Admins::BaseController
     forum_sections = ForumSection.roots.includes(:forum_moderators).order("position desc")
     @max_position = forum_sections&.maximum(:position).to_i
     @min_position = forum_sections&.minimum(:position).to_i
-    @forum_sections_count = forum_sections.count
-    page = (params[:page] || 1).to_i
-    per_page = 15
-    @forum_sections_pages = Paginator.new @forum_sections_count, per_page, page
-    @forum_sections = forum_sections.limit(@forum_sections_pages.per_page).offset(@forum_sections_pages.offset).to_a
+    @forum_sections_count = forum_sections.size
+    # page = (params[:page] || 1).to_i
+    # per_page = 15
+    # @forum_sections_pages = Paginator.new @forum_sections_count, per_page, page
+    # @forum_sections = forum_sections.limit(@forum_sections_pages.per_page).offset(@forum_sections_pages.offset).to_a
+    @forum_sections = paginate forum_sections
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def new
     @parent_id = params[:parent_id]
+    @forum_section = ForumSection.new
+    respond_to do |format|
+      format.js
+    end
   end
 
   def create
     attachment_id = params[:attachments]&.first
     positions = ForumSection.pluck(:position).select { |a| a.is_a? Integer }
     positions = positions.max.to_i
-    if params[:parent_id].present?
-      @parent_forum = ForumSection.find_by_id(params[:parent_id])
+    if params[:forum_section][:parent_id].present?
+      @parent_forum = ForumSection.find_by_id(params[:forum_section][:parent_id])
     end
-    if params[:title].blank?
+    if params[:forum_section][:title].blank?
       forum_status = 0
-      forum_msg = "不能为空"
-    elsif params[:title].strip.length > 20
+      forum_msg = "标题不能为空"
+    elsif params[:forum_section][:title].strip.length > 20
       forum_status = 0
       forum_msg = "不能超过最大限制：20个字符"
-    elsif ForumSection.exists?(title: params[:title].strip)
+    elsif ForumSection.exists?(title: params[:forum_section][:title].strip)
       forum_status = 0
       forum_msg = "不能重名"
     else
       forum_section_params = {
         user_id: current_user.id,
-        title: params[:title].strip,
+        title: params[:forum_section][:title].strip,
         position: positions + 1,
-        parent_id: params[:parent_id],
+        parent_id: params[:forum_section][:parent_id],
         is_recommend: false,
-        description: params[:description].to_s.truncate(200)
+        description: params[:forum_section][:description].to_s.truncate(200)
       }
       @forum_section = ForumSection.new(forum_section_params)
       if @forum_section.save
@@ -71,18 +80,18 @@ class Admins::ForumSectionsController < Admins::BaseController
 
   def update
     attachment_id = params[:attachments]&.first
-    if params[:title].blank?
+    if params[:forum_section][:title].blank?
       forum_status = 0
-      forum_msg = "不能为空"
-    elsif params[:title].strip.length > 20
+      forum_msg = "名称不能为空"
+    elsif params[:forum_section][:title].strip.length > 20
       forum_status = 0
       forum_msg = "不能超过最大限制：20个字符"
-    elsif params[:title].strip != @forum_section.title && ForumSection.exists?(title: params[:title].strip)
+    elsif params[:forum_section][:title].strip != @forum_section.title && ForumSection.exists?(title: params[:forum_section][:title].strip)
       forum_status = 0
       forum_msg = "不能重名"
     else
       
-      if @forum_section.update_attributes(title: params[:title].strip, description: params[:description].to_s.truncate(200))
+      if @forum_section.update_attributes(title: params[:forum_section][:title].strip, description: params[:forum_section][:description].to_s.truncate(200))
 
         unless attachment_id.blank? ||  @forum_section.attachment_id.to_i == attachment_id.to_i
           Attachment.where(id: @forum_section.attachment_id.to_i).destroy_all if @forum_section.attachment_id.present?
@@ -92,18 +101,6 @@ class Admins::ForumSectionsController < Admins::BaseController
           @forum_section.attachment_id = attachment_id
           @forum_section.save
         end
-        # if attachment_id.present?
-        #   unless  @forum_section.attachment_id.to_i == attachment_id.to_i
-        #     if @forum_section.attachment_id.to_i != attachment_id.to_i
-        #       Attachment.where(id: @forum_section.attachment_id.to_i).destroy_all
-        #     end
-        #     attachment = Attachment.find(attachment_id)
-        #     attachment.container = @forum_section
-        #     attachment.save
-        #     @forum_section.attachment_id = attachment_id
-        #     @forum_section.save
-        #   end
-        # end
         forum_status = 1
         forum_msg = "更新成功"
       else
@@ -142,6 +139,7 @@ class Admins::ForumSectionsController < Admins::BaseController
     else
       @c_msg = "移动失败"
     end
+    redirect_to admins_forum_sections_path
   end
 
   private
@@ -149,5 +147,7 @@ class Admins::ForumSectionsController < Admins::BaseController
   def set_forum
     @forum_section = ForumSection.find_by_id(params[:id])
   end
+
+
 
 end

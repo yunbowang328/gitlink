@@ -1,0 +1,12 @@
+<% if @forum_status[:status] == 0 %>
+  $("#add-section-forum").removeClass("none").html("<%= j render partial: "admins/forum_sections/shared/error_section", locals: {error_messages: @forum_status[:msg] } %>")
+<% else %>
+  $("#add-section-forum").addClass("none")
+  <% if @forum_section.parent_id.present? %>
+    $("#forum-section-detail-<%= @forum_section.parent_id %>").html("<%= j render partial: "admins/forum_sections/td_forum_section", locals: {forum: @parent_forum} %>")
+  <% else %>
+    $("#forum-section-contents").prepend("<%= j render partial: "admins/forum_sections/forum_section_detail", locals: {forum: @forum_section} %>")
+  <% end %>
+  $('#admin-forum-section-modal').modal("hide")
+<% end %>
+

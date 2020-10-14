@@ -1,0 +1,7 @@
+<% if @delete_status[:status] > 0 %>
+  <% if params[:children_forum] %>
+  $("#children-forum-detail-<%= @forum_section.id %>").remove()
+  <% else %>
+  $("#forum-section-detail-<%= @forum_section.id %>").remove()
+  <% end %>
+<% end %>

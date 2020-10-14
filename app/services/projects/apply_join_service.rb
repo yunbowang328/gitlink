@@ -66,7 +66,7 @@ class Projects::ApplyJoinService < ApplicationService
     return if owner.phone.blank?
 
     Educoder::Sms.send(mobile: owner.phone, send_type:'applied_project_info',
-                       user_name: owner.show_name, name: project.name)
+                       user_name: owner.show_real_name, name: project.name)
   rescue Exception => ex
     Rails.logger.error("发送短信失败 => #{ex.message}")
   end

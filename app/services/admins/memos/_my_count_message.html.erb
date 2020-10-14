@@ -4,7 +4,7 @@
       <!--<div class="homepageEditProfile"><a href="javascript:void(0);" class="homepageEditProfileIcon"></a></div>-->
     </div>
     <div class="fl" style="width: 135px;">
-      <% user_name =  @forum.creator.show_name.empty? ? @forum.creator.name : @forum.creator.show_name %>
+      <% user_name =  @forum.creator.show_real_name.empty? ? @forum.creator.name : @forum.creator.show_real_name %>
       <div class="fl mb8 mt10">吧主：</div>
       <a href="<%= user_path(@forum.creator)%>" target="_blank" class="linkBlue w80 fl mb8 mt10" style="overflow: hidden;white-space: nowrap;text-overflow:ellipsis; "><%= user_name %></a>
       <div class="fontGrey3 fl">回答：<a href="javascript:void(0);" class="linkOrange mr5" style="cursor: default"><%= @my_replies_count %></a>

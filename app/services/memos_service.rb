@@ -12,7 +12,7 @@ class MemosService
     search = params[:search].to_s.strip
     sort_name = params[:sort] || "published_at"
     
-    all_memos = Memo&.visible&.roots&.includes(:forum_section,author: :user_extensions)
+    all_memos = Memo&.visible&.roots
 
     all_hottest_memos = all_memos.hottest_five_memos
     hottest_memos = object_to_hash(all_hottest_memos)
@@ -25,7 +25,7 @@ class MemosService
     end
 
     memos_count = all_memos.size # 帖子的总数
-    all_memos = all_memos.order_index(sort_name).limit(index_limit).offset(offset)
+    all_memos = all_memos.order_index(sort_name)&.includes(:forum_section,author: :user_extension).limit(index_limit).offset(offset)
 
     memo_lists = get_memo_lists(all_memos, false, current_user, false)
 
@@ -34,10 +34,10 @@ class MemosService
   end
 
 
-  def related_memos params
+  def related_memos params, current_user
     memo = Memo.find(params[:id])
     return { status: 404 } if memo.hidden? && (!current_user || !(current_user.admin? || current_user.id == memo.author_id))
-    all_memos = Memo.visible.roots.where("id != ?", params[:id].to_i).includes(memo_forums: :forum_section,author: :user_extensions).related_search_name(memo.try(:subject).to_s).order_index("published_at").limit(5).offset(0)
+    all_memos = Memo.visible.roots.where("id != ?", params[:id].to_i).includes(memo_forums: :forum_section,author: :user_extension).related_search_name(memo.try(:subject).to_s).order_index("published_at").limit(5).offset(0)
     memo_lists = get_memo_lists(all_memos, false, current_user, false)
     {status: 0, memos: memo_lists}
   end
@@ -81,7 +81,7 @@ class MemosService
       # memo.published_at = Time.now if params[:memo][:published_at].blank?
       memo.hidden = true
       # memo.save!
-      if memo.save
+      if memo.save!
         memo.update_attachments(params[:attachments]) if params[:attachments].present?
         # 为了区分帖子头像，改变其类型为MemoIcon
         create_user_tidings(memo, "forum_post")
@@ -95,8 +95,7 @@ class MemosService
         {status: -1, message: memo.errors.messages.values[0][0]}
       end
     rescue => e
-      {status: -1, message: "出现错误"}
-      raise ActiveRecord::Rollback
+      {status: -1, message: e}
     end
   end
 
@@ -147,7 +146,7 @@ class MemosService
 
     is_md = memo.is_md
    
-    author_info = {username: memo_author.show_name,
+    author_info = {username: memo_author.show_real_name,
                    watched: watched,
                    is_blocked: current_user&.blocked_for(memo_author.id),
                    is_blocked_by: memo_author&.blocked_for(current_user.id),
@@ -156,10 +155,10 @@ class MemosService
                    identity: memo_author.identity,
                    login: memo_author.login,
                    user_id: memo_author.id,
-                   description: memo_author&.user_extensions&.brief_introduction,
+                   description: memo_author&.user_extension&.brief_introduction,
                    memos_count: memo_author_memos.posts.size,
                    replies_count: memo_author_memos.total_replies.size,
-                   watchers_count: memo_author.watcher_users.size,
+                   watchers_count: memo_author.fan_count,
                    current_login: current_user.try(:login),
                    is_current_user: memo.author_id  == current_user.try(:id)
                   }
@@ -189,20 +188,21 @@ class MemosService
             
           }
     if current_user
-      unless memo.children.blank?
-        memo.children.includes(:memo_messages).each do |child|
-          child.memo_messages.each do |memo_message|
-            memo_message.update_attributes(:viewed => true) if current_user.id == memo_message.user_id
-          end
-        end
-      end
+      #TODO 通知消息暂时隐藏
+      # unless memo.children.blank?
+      #   memo.children.includes(:memo_messages).each do |child|
+      #     child.memo_messages.each do |memo_message|
+      #       memo_message.update_attributes(:viewed => true) if current_user.id == memo_message.user_id
+      #     end
+      #   end
+      # end
 
-      query_memo_messages = memo.memo_messages
-      unless query_memo_messages
-        query_memo_messages.each do |query_memo_message|
-          query_memo_message.update_attributes(:viewed => true) if current_user.id == query_memo_message.user_id
-        end
-      end
+      # query_memo_messages = memo.memo_messages
+      # unless query_memo_messages
+      #   query_memo_messages.each do |query_memo_message|
+      #     query_memo_message.update_attributes(:viewed => true) if current_user.id == query_memo_message.user_id
+      #   end
+      # end
 
       if memo.author_id != current_user.id
         if memo.visit_actions.exists?(watcher_params)
@@ -268,7 +268,7 @@ class MemosService
 
   def destroy params, current_user
     user_permission = check_banned_permission current_user, params[:id]
-    memo = Memo.select([:id,:parent_id]).find(params[:id])
+    memo = Memo.select(:id,:parent_id, :forum_section_id).find(params[:id])
     return {status: -1, message: "帖子不存在！"} unless memo.present?
     return {status: -1, message: "您没有权限操作！"} unless user_permission
     if memo.destroy
@@ -412,7 +412,7 @@ class MemosService
         memo.children << reply
         create_user_tidings(reply, "forum_comment")
         replies = {:id => reply.id, :content => reply.content, :time => time_from_now(reply.created_at), :user_id => reply.author_id,
-          :image_url => "/images/#{url_to_avatar(reply.author)}?#{Time.now.to_i}", :username => reply.author.show_name, :reward => memo.reward, :hidden => reply.hidden,
+          :image_url => "/images/#{url_to_avatar(reply.author)}?#{Time.now.to_i}", :username => reply.author.show_real_name, :reward => memo.reward, :hidden => reply.hidden,
                    :praise_count => reply.praises_count,:user_login => reply.author.try(:login), replies_count: reply.can_see_reply_count(current_user)}
         {
           status: 0,
@@ -483,6 +483,30 @@ class MemosService
 
   end
 
+  def plus params, current_user
+    plus_type = params[:container_type].to_s
+    plus_id = params[:id]
+
+    pt = PraiseTread.where(:praise_tread_object_id => params[:id], :praise_tread_object_type => params[:container_type],
+                           :user_id => current_user, :praise_or_tread => 1).first
+    # 如果当前用户已赞过，则不能重复赞
+    if params[:type] == 1 && pt.blank?
+      if pt.blank?
+        PraiseTread.create!(:praise_tread_object_id => plus_id, :praise_tread_object_type => plus_type,
+                            :user_id => current_user.id, :praise_or_tread => 1)  if pt.blank?
+
+        plus_name = plus_type.constantize.find(params[:id])
+        Tiding.create(:user_id => plus_name.try(:author_id), :trigger_user_id => current_user.id,
+                      container_id: plus_id, container_type: plus_type,
+                      :parent_container_id => plus_id, :parent_container_type => plus_type,
+                      :viewed => 0, :tiding_type => "PraiseTread")
+      end
+    else
+      pt.destroy if pt.present? # 如果已赞过，则删掉这条赞（取消）；如果没赞过，则为非法请求不处理
+    end
+    {:praise_count => PraiseTread.where(:praise_tread_object_id => params[:id], :praise_tread_object_type => params[:container_type],
+                                               :praise_or_tread => 1).count} 
+  end
 
   def banned_user params, current_user
     user_permission = check_banned_permission current_user, params[:id]
@@ -533,14 +557,14 @@ class MemosService
     forum_section = ForumSection.find_by_id(params[:id])
     return {status: -1, message: "版块不存在"} if forum_section.blank?
     section_author = forum_section.user
-    forum_section_user = {username: section_author.try(:show_name), user_login: section_author.try(:login)}
+    forum_section_user = {username: section_author.try(:show_real_name), user_login: section_author.try(:login)}
     forum_moders = []
     if ForumModerator.exists?(forum_section_id: forum_section.id)
-      all_forum_moderators = forum_section.forum_moderators.includes(user: :user_extensions).select([:id, :user_id])
+      all_forum_moderators = forum_section.forum_moderators.includes(user: :user_extension).select([:id, :user_id])
       all_forum_moderators.each do |moder|
         moder_user = moder.user
         forum_moder = {
-          username: moder_user.show_name,
+          username: moder_user.show_real_name,
           user_login: moder_user.try(:login)
         }
         forum_moders << forum_moder
@@ -616,13 +640,13 @@ class MemosService
     active_user_array = []
     active_users.each do |user|
       active_user_array.push({
-        username: user.show_name, 
+        username: user.show_real_name, 
         login: user.login,
          image_url: "#{url_to_avatar(user)}?#{Time.now.to_i}"
       })
     end
     {
-      username: forum_section.user.show_name,
+      username: forum_section.user.show_real_name,
       user_login: forum_section.user.login,
       notice: notice.try(:content),
       recommend_forum_sections: new_childre_section,
@@ -685,7 +709,7 @@ class MemosService
     memo_list = []
     memos.each do |m|
       forum_name = m.forums.map(&:name)
-      user_info = {username: m.author.show_name, login: m.author.login, image_url: "#{url_to_avatar(m.author)}?#{Time.now.to_i}", forum_name:forum_name, praise_count: m.praises_count}
+      user_info = {username: m.author.show_real_name, login: m.author.login, image_url: "#{url_to_avatar(m.author)}?#{Time.now.to_i}", forum_name:forum_name, praise_count: m.praises_count}
       memo_list << m.attributes.dup.merge(user_info)
     end
     memo_list
@@ -702,7 +726,7 @@ class MemosService
     end
   end
 
-
+  
   def check_banned_permission current_user, memo_id
     forum_id = MemoForum&.where(is_children: false, memo_id: memo_id)&.first.try(:forum_id).to_s
     user_banned_permission current_user, forum_id
@@ -731,7 +755,7 @@ class MemosService
       permission = current_user ? current_user.manager_of_memo?(memo) : false
       # 实训（TPM）的管理员可以看到隐藏的评论
       replies = {:id => memo.id, :content => memo.content, :time => time_from_now(memo.created_at), :user_id => memo.author_id,
-                 :image_url => "/images/#{url_to_avatar(memo.author)}?#{Time.now.to_i}", :username => memo.author.show_name, :reward => memo.reward, :hidden => memo.hidden,
+                 :image_url => "/images/#{url_to_avatar(memo.author)}?#{Time.now.to_i}", :username => memo.author.show_real_name, :reward => memo.reward, :hidden => memo.hidden,
                  :permission => permission, :praise_count => memo.praises_count, :user_praise => user_praise,
                  :user_login => memo.author.try(:login), :admin => current_user&.admin, is_banned: is_banned, replies_count: memo.can_see_reply_count(current_user)}
       childrens =  Memo.where(:parent_id => memo.id).includes(:author).reorder("created_at desc").limit(5)
@@ -743,7 +767,7 @@ class MemosService
         children_praise = child.praise_tread.exists?(user_id: current_user.try(:id).to_i)
         children_is_banned = user_is_banned?(child.author)  #帖子的用户是否被禁言
         children_list << {:id => child.id, :content => child.content, :time => time_from_now(child.created_at),:praise_count => memo.praises_count, :user_praise => children_praise,
-                          :image_url => "/images/#{url_to_avatar(child.author)}?#{Time.now.to_i}", :username => child.author.show_name, :hidden => child.hidden, replies_count: child.can_see_reply_count(current_user),
+                          :image_url => "/images/#{url_to_avatar(child.author)}?#{Time.now.to_i}", :username => child.author.show_real_name, :hidden => child.hidden, replies_count: child.can_see_reply_count(current_user),
                           :permission => permission, :user_login => child.author.try(:login), :user_id => child.author.try(:id), :parent_id => child.parent_id, is_banned: children_is_banned}
       end
       list << replies.merge({children: children_list})

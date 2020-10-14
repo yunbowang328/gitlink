@@ -1,0 +1,7 @@
+
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('版主审批', admins_forum_applies_path) %>
+<% end %>
+<div class="edu-class-container" id="forum-applies-container">
+  <%= render partial: "admins/forum_applies/forum_applies_items" %>
+</div>

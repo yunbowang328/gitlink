@@ -1,0 +1,32 @@
+<div class="box admin-list-container users-list-container">
+<ul class="fl mt2 nav_blueline_status">
+    <li class="<%= @banned_type == "banned" ? "active" : "" %>" >
+      <%= link_to "禁言用户 #{@banned_users_size > 0 ? "(#{@banned_users_size})" : ""}", admins_banned_users_path(banned_type: "banned"),remote: true %>
+    </li>
+    <li class="<%= @banned_type == "unbanned" ? "active" : "" %>">
+      <%= link_to "解除禁言记录", admins_banned_users_path(banned_type: "unbanned"),remote: true %>
+    </li>
+  </ul>
+  <ul class="fr">
+    <input type="text" name="search_banned_user" value="<%= @search_params %>" class="form-control mr15 fl width240" placeholder="请输入用户名称进行搜索">
+    <a href="javascript:void(0)" class="btn btn-primary fl mr15 btn-sm" id="searchBanned">搜索</a>
+    <%= link_to "清除", admins_banned_users_path(search: nil, banned_type: @banned_type),remote: true, class: "btn btn-secondary fl btn-sm" %>
+  </ul>
+</div>
+
+<div id="banned-user-item">
+  <%= render partial: "admins/banned_users/banned_user_item" %>
+</div>
+
+<script>
+  $("#searchBanned").on("click",function () {
+    let task_status  = "<%= @banned_type %>";
+    let search_name =$("input[name='search_banned_user']").val();
+    $.ajax({
+      url: "<%= admins_banned_users_path %>",
+      type: "get",
+      dataType: "script",
+      data: {banned_type:task_status,search: search_name }
+    });
+  });
+</script>

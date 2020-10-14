@@ -1,0 +1,9 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('申请删帖', admins_apply_destroy_index_path) %>
+<% end %>
+
+<div class="edu-class-container">
+  <div class="ex_container" id="apply_destory_memos">
+    <%= render :partial => "admins/apply_destroy/apply_destroy_memos_list" %>
+  </div>
+</div>
