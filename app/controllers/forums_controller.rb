@@ -39,7 +39,7 @@ class ForumsController < ApplicationController
 
   private
   def render_react
-    render "/common/index", :layout => false
+    render file: 'public/react/build/index.html', :layout => false
   end
 
 end
