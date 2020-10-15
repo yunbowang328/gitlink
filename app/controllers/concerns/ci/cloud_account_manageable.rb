@@ -94,8 +94,8 @@ module Ci::CloudAccountManageable
 
     # redirect_uri eg:
     #  https://localhost:3000/login/oauth/authorize?client_id=94976481-ad0e-4ed4-9247-7eef106007a2&redirect_uri=http%3A%2F%2F121.69.81.11%3A80%2Flogin&response_type=code&state=9cab990b9cfb1805
-    redirect_uri = CGI.escape("#{drone_url}/") + "login&response_type=code&state=#{state}"
-    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{client_id}&redirect_uri=#{redirect_uri}"
+    redirect_uri = CGI.escape("#{drone_url}/login")
+    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{client_id}&redirect_uri=#{redirect_uri}&response_type=code&state=#{state}"
     logger.info "[gitea] grant_url: #{grant_url}"
 
     conn = Faraday.new(url: grant_url) do |req|
@@ -115,7 +115,7 @@ module Ci::CloudAccountManageable
     conn = Faraday.new(url: url) do |req|
       req.request :url_encoded
       req.adapter Faraday.default_adapter
-      req.headers["cookie"] = "_session_=#{SecureRandom.hex(32)}; _oauth_state_=#{state}"
+      req.headers["cookie"] = "_session_=#{SecureRandom.hex(28)}; _oauth_state_=#{state}"
     end
 
     response = conn.get
