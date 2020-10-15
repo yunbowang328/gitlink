@@ -24,7 +24,10 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    # match 'upload_avatar', :to => 'avatars#upload', :via => :post
+    # match 'delete_avatar', :to => 'avatars#delete_image',:via => :post
     get 'users/:login/user_info', to: 'customers#show'
+    post 'users/:login/edit_brief', to: 'customers#edit_brief'
     get 'my_memos/:login/memos', to: 'my_memos#index'
     get 'my_memos/:login/my_interested', to: 'my_memos#my_interested'
     get 'my_memos/:login/replies_memos', to: 'my_memos#replies_memos'
