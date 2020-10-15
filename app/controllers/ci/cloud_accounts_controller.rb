@@ -84,7 +84,8 @@ class Ci::CloudAccountsController < Ci::BaseController
   end
 
   def oauth_grant
-    return render_error('你输入的密码不正确.') unless current_user.check_password?(params[:password].to_s)
+    password = params[:password].to_s
+    return render_error('你输入的密码不正确.') unless current_user.check_password?(password)
 
     result = gitea_oauth_grant!(current_user.login, password, @cloud_account.drone_url, current_user.oauths.last&.client_id)
     result === true ? render_ok : render_error('授权失败.')

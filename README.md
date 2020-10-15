@@ -2640,7 +2640,7 @@ GET /api/users/ci/oauth_grant
 *示例*
 ```
 curl -X GET \
--d "password=123456"
+-d "password=123456" \
 http://localhost:3000/api/users/ci/oauth_grant.json | jq
 ```
 *请求参数说明:*
