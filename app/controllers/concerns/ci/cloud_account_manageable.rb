@@ -112,7 +112,7 @@ module Ci::CloudAccountManageable
     conn = Faraday.new(url: grant_url) do |req|
       req.request :url_encoded
       req.adapter Faraday.default_adapter
-      req.basic_auth(username, password)
+      req.basic_auth(current_user.login, password)
     end
 
     response = conn.get
