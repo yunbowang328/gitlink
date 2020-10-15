@@ -162,7 +162,7 @@ class MemosService
                    current_login: current_user.try(:login),
                    is_current_user: memo.author_id  == current_user.try(:id)
                   }
-    recent_memos = memo_author_memos.posts.where("id != ?", params[:id].to_i).order_index("published_at").select([:id,:subject]).limit(3).as_json.map{|k| k["memo"]}
+    recent_memos = memo_author_memos.posts.where("id != ?", params[:id].to_i).order_index("published_at").select([:id,:subject]).limit(3).as_json
 
     memo_info = {id: memo.id,
             subject: memo.subject,

@@ -51,7 +51,7 @@ class MyMemosService
     end
     forum_sections_count = forum_sections.size # 帖子的总数
     forum_sections = forum_sections.limit(index_limit).offset(offset)
-    all_forum_sections = forum_sections.as_json.map{|k,v| k["forum_section"]}
+    all_forum_sections = forum_sections.as_json
     {
       count: forum_sections_count,
       forum_details: all_forum_sections,

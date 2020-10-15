@@ -264,7 +264,7 @@ module ApiIndexHelper
   def get_all_sections(sections)
     section_item = []
     sections.each do |tag|
-      children_tags = tag.children.as_json(only: [:id, :title]).map{|k| k["forum_section"]}
+      children_tags = tag.children.as_json(only: [:id, :title])
       section_item.push({
         id: tag.id,
         title: tag.title,
