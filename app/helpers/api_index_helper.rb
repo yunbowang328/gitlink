@@ -241,7 +241,7 @@ module ApiIndexHelper
         sticky: memo.sticky,
         is_fine: memo.is_fine,
         is_original: memo.is_original,
-        username: memo.author.show_real_name,
+        username: memo.author.try(:show_real_name),
         image_url: "#{url_to_avatar(memo.author)}?#{Time.now.to_i}",
         user_login: memo.author.try(:login),
         user_id: memo.author.try(:id),
