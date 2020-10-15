@@ -84,7 +84,7 @@ class Ci::CloudAccountsController < Ci::BaseController
   end
 
   def oauth_grant
-    password = params[:password].strip.to_s
+    password = params[:password].to_s
     return render_error('你输入的密码不正确.') unless current_user.check_password?(password)
 
     oauth = current_user.oauths.last
