@@ -58,7 +58,7 @@ module Ci::CloudAccountManageable
 
     if current_user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
       return render_error('你未绑定CI服务器')
-    elsif current_user.devops_step == User::DEVOPS_UNVERIFIED || current_user.ci_certification?
+    elsif current_user.devops_step != User::DEVOPS_UNINIT || current_user.ci_certification?
       cloud_account.destroy!
       # TOTO drop drone database
       @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone")
