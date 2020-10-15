@@ -89,13 +89,24 @@ module Ci::CloudAccountManageable
     Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
   end
 
-  def gitea_oauth_grant!(username, password, drone_url, client_id)
+  def gitea_auto_create_auth_grant!(gitea_oauth_id)
+    connection = Gitea::Database.set_connection.connection
+    unix_time = Time.now.to_i
+
+    # 目前直接操作db，可以建立对应的model进行操作
+    sql = "INSERT INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{current_user.gitea_uid}, #{gitea_oauth_id}, 0, #{unix_time}, #{unix_time} );"
+    connection.execute(sql)
+  end
+
+  def gitea_oauth_grant!(password, oauth)
+    gitea_auto_create_auth_grant!(oauth&.gitea_oauth_id)
+
     state = SecureRandom.hex(8)
 
     # redirect_uri eg:
     #  https://localhost:3000/login/oauth/authorize?client_id=94976481-ad0e-4ed4-9247-7eef106007a2&redirect_uri=http%3A%2F%2F121.69.81.11%3A80%2Flogin&response_type=code&state=9cab990b9cfb1805
-    redirect_uri = CGI.escape("#{drone_url}/login")
-    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{client_id}&redirect_uri=#{redirect_uri}&response_type=code&state=#{state}"
+    redirect_uri = CGI.escape("#{@cloud_account.drone_url}/login")
+    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{oauth&.client_id}&redirect_uri=#{redirect_uri}&response_type=code&state=#{state}"
     logger.info "[gitea] grant_url: #{grant_url}"
 
     conn = Faraday.new(url: grant_url) do |req|
