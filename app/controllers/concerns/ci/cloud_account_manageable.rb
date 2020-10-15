@@ -55,14 +55,13 @@ module Ci::CloudAccountManageable
 
   def unbind_account!
     cloud_account = current_user.ci_cloud_account
-    ci_user = cloud_account.ci_user || Ci::User.find_by(user_login: current_user.login)
 
     if current_user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
       return render_error('你未绑定CI服务器')
     elsif current_user.devops_step == User::DEVOPS_UNVERIFIED || current_user.ci_certification?
-      ci_user.destroy! if ci_user
-      Ci::Repo.where(repo_namespace: current_user.login).delete_all
       cloud_account.destroy!
+      # TOTO drop drone database
+      @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone")
     end
 
     current_user.unbind_account!
