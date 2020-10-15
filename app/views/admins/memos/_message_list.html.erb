@@ -28,7 +28,7 @@
     <tr>
       <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
       <td>
-        <%= link_to(memo.try(:author).try(:show_real_name), "/users/#{memo.author.login}", target: "_blank") %>
+        <%= link_to(memo.try(:author).try(:show_real_name), "/users/#{memo.author.try(:login)}", target: "_blank") %>
       </td>
       <td class="edu-txt-left" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
         <% if memo.parent_id.nil? || memo.subject.starts_with?('RE:')%>
