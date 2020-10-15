@@ -159,7 +159,7 @@ class MemosService
                    replies_count: memo_author_memos.total_replies.size,
                    watchers_count: memo_author.fan_count,
                    current_login: current_user.try(:login),
-                   current_image_url: current_user.try(:login).present? ? "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}" : nil,
+                   current_image_url: current_user.try(:login).present? ? "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}" : "/images/avatars/User/b",
                    is_current_user: memo.author_id  == current_user.try(:id)
                   }
     recent_memos = memo_author_memos.posts.where("id != ?", params[:id].to_i).order_index("published_at").select([:id,:subject]).limit(3).as_json
