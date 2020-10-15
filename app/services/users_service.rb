@@ -20,7 +20,7 @@ class UsersService
   end
 
   def edit_brief params, current_user 
-    target_user = User.find(params[:login])
+    target_user = User.find_by(login: params[:login])
     return {status: -1, message: "请输入内容"} if params[:content].blank?
     return {status: -1, message: "请登录"} unless current_user.present?
     return {status: -1, message: "您没有权限操作"} unless current_user.login == params[:login]
@@ -85,7 +85,7 @@ class UsersService
   end
 
   def block_user params, current_user
-    target_user = User.find(params[:login])
+    target_user = User.find_by(login:params[:login])
     return {status: -1, message: "请选择屏蔽类型"} unless params[:block].present?
     return {status: -1, message: "请登录"} unless current_user.present?
     return {status: -1, message: "用户不存在"} unless target_user.present?
@@ -104,7 +104,7 @@ class UsersService
   end
 
   def watch_user params, current_user
-    target_user = User.find(params[:login])
+    target_user = User.find_by(login:params[:login])
     return {status: -1, message: "请选择关注类型"} unless params[:watch].present?
     return {status: -1, message: "请登录"} unless current_user.try(:login).present?
     return {status: -1, message: "用户不存在"} unless target_user.present?
@@ -126,7 +126,7 @@ class UsersService
 
   def user_projects params, current_user
     return {status: -1, message: "请登录"} unless current_user.present?
-    target_user = User.find(params[:login])
+    target_user = User.find_by(login:params[:login])
     show_all = params[:login] == current_user&.login || current_user&.admin?
     select_type = params[:type] || "p_project"  
     order = params[:order] || "desc"
