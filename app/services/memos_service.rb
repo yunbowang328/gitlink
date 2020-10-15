@@ -150,7 +150,7 @@ class MemosService
                    watched: watched,
                    is_blocked: current_user&.blocked_for(memo_author.id),
                    is_blocked_by: memo_author&.blocked_for(current_user.id),
-                   current_image_url: "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}",
+                   current_image_url: current_user ? "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}" : nil,
                    image_url: "/images/#{url_to_avatar(memo_author)}?#{Time.now.to_i}",
                    identity: memo_author.identity,
                    login: memo_author.login,
