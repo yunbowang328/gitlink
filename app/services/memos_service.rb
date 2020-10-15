@@ -150,7 +150,6 @@ class MemosService
                    watched: watched,
                    is_blocked: current_user&.blocked_for(memo_author.id),
                    is_blocked_by: memo_author&.blocked_for(current_user.id),
-                   current_image_url: current_user ? "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}" : nil,
                    image_url: "/images/#{url_to_avatar(memo_author)}?#{Time.now.to_i}",
                    identity: memo_author.identity,
                    login: memo_author.login,
@@ -160,6 +159,7 @@ class MemosService
                    replies_count: memo_author_memos.total_replies.size,
                    watchers_count: memo_author.fan_count,
                    current_login: current_user.try(:login),
+                   current_image_url: current_user.try(:login).present? ? "/images/#{url_to_avatar(current_user)}?#{Time.now.to_i}" : nil,
                    is_current_user: memo.author_id  == current_user.try(:id)
                   }
     recent_memos = memo_author_memos.posts.where("id != ?", params[:id].to_i).order_index("published_at").select([:id,:subject]).limit(3).as_json
