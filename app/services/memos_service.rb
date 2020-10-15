@@ -363,7 +363,8 @@ class MemosService
   end
 
   def update params, current_user
-    if params[:memo][:subject].blank? || params[:memo][:content].blank? || params[:forum_id].blank? || params[:children_forum_id].blank?
+    params.permit!
+    if params[:memo][:subject].blank? || params[:memo][:content].blank? || params[:forum_id].blank?
       {status: -1, message: "帖子内容不能为空"}
     elsif user_is_banned?(current_user)
       {status: -1, message: "您的账户已被禁言，如有疑问请联系版主或论坛管理员"}
