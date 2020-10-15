@@ -141,6 +141,7 @@ module ApplicationHelper
 
   # 用户图像url，如果不存在的话，source为匿名用户，即默认使用匿名用户图像
   def url_to_avatar(source)
+    return "" if source&.id.blank?
     if File.exist?(disk_filename(source&.class, source&.id))
       ctime = File.ctime(disk_filename(source.class, source.id)).to_i
       if source.class.to_s == 'User'
