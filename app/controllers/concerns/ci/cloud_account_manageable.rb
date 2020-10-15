@@ -60,7 +60,7 @@ module Ci::CloudAccountManageable
     if current_user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
       return render_error('你未绑定CI服务器')
     elsif current_user.devops_step == User::DEVOPS_UNVERIFIED || current_user.ci_certification?
-      ci_user.destroy!
+      ci_user.destroy! if ci_user
       Ci::Repo.where(repo_namespace: current_user.login).delete_all
       cloud_account.destroy!
     end
