@@ -75,15 +75,15 @@ Rails.application.routes.draw do
         post :plus
       end
     end
-    resources :sync_forge, only: [:create] do
-      collection do
-        post :sync_users
-        post :sync_range_projects
-      end
-    end
-    resources :composes do
-      resources :compose_projects, only: [:create, :destroy]
-    end
+    # resources :sync_forge, only: [:create] do
+    #   collection do
+    #     post :sync_users
+    #     post :sync_range_projects
+    #   end
+    # end
+    # resources :composes do
+    #   resources :compose_projects, only: [:create, :destroy]
+    # end
     resources :attachments do
       member do
         post :preview_attachment
@@ -96,31 +96,31 @@ Rails.application.routes.draw do
     get 'home/search'
     get 'main/first_stamp'
 
-    get 'search', to: 'searchs#index'
-    put    'commons/hidden',      to: 'commons#hidden'
-    put    'commons/unhidden',    to: 'commons#unhidden'
-    delete 'commons/delete',      to: 'commons#delete'
+    # get 'search', to: 'searchs#index'
+    # put    'commons/hidden',      to: 'commons#hidden'
+    # put    'commons/unhidden',    to: 'commons#unhidden'
+    # delete 'commons/delete',      to: 'commons#delete'
 
-    resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
-      resources :journals, only: [:index, :create, :destroy, :edit, :update] do
-        member do
-          get :get_children_journals
-        end
-      end
-      resources :issue_times, only: [:create] do
-        collection do
-          post :end_work
-        end
-      end
-      resources :issue_depends, only: [:create, :destroy]
-    end
+    # resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
+    #   resources :journals, only: [:index, :create, :destroy, :edit, :update] do
+    #     member do
+    #       get :get_children_journals
+    #     end
+    #   end
+    #   resources :issue_times, only: [:create] do
+    #     collection do
+    #       post :end_work
+    #     end
+    #   end
+    #   resources :issue_depends, only: [:create, :destroy]
+    # end
 
-    resources :project_categories, only: [:index, :show] do
-      get :group_list, on: :collection
-    end
-    resources :project_languages, only: [:index, :show]
-    resources :ignores, only: [:index, :show]
-    resources :licenses, only: [:index, :show]
+    # resources :project_categories, only: [:index, :show] do
+    #   get :group_list, on: :collection
+    # end
+    # resources :project_languages, only: [:index, :show]
+    # resources :ignores, only: [:index, :show]
+    # resources :licenses, only: [:index, :show]
 
     resources :watchers, only: [:index] do
       collection do
@@ -129,21 +129,21 @@ Rails.application.routes.draw do
         get :check_watch
       end
     end
-    resources :projects do
-      resources :praise_tread, only: [:index] do
-        collection do
-          post :like
-          delete :unlike
-          get :check_like
-        end
-      end
+    # resources :projects do
+    #   resources :praise_tread, only: [:index] do
+    #     collection do
+    #       post :like
+    #       delete :unlike
+    #       get :check_like
+    #     end
+    #   end
 
-      collection do
-        post :migrate
-        get :group_type_list
-        get :recommend
-      end
-    end
+    #   collection do
+    #     post :migrate
+    #     get :group_type_list
+    #     get :recommend
+    #   end
+    # end
 
     resources :accounts do
 
@@ -219,7 +219,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :users_for_private_messages, only: [:index]
+    # resources :users_for_private_messages, only: [:index]
 
     resources :files, only: [:index, :show, :update] do
       collection do
@@ -238,9 +238,9 @@ Rails.application.routes.draw do
       end
     end
 
-    namespace :wechats do
-      resource :js_sdk_signature, only: [:create]
-    end
+    # namespace :wechats do
+    #   resource :js_sdk_signature, only: [:create]
+    # end
 
     resource :template, only: [:show]
     resource :setting, only: [:show]
@@ -251,190 +251,190 @@ Rails.application.routes.draw do
 
     resources :hot_keywords, only: [:index]
 
-    namespace :weapps do
-      resource :home, only: [:show]
-      resource :session, only: [:create]
-      resource :register, only: [:create]
-      resource :verification_code, only: [:create]
-      resource :code_session, only: [:create]
-      resource :verify, only: [:create]
-      resource :check_account, only: [:create]
-      resource :unbind_accounts, only: [:show, :destroy]
+    # namespace :weapps do
+    #   resource :home, only: [:show]
+    #   resource :session, only: [:create]
+    #   resource :register, only: [:create]
+    #   resource :verification_code, only: [:create]
+    #   resource :code_session, only: [:create]
+    #   resource :verify, only: [:create]
+    #   resource :check_account, only: [:create]
+    #   resource :unbind_accounts, only: [:show, :destroy]
 
-      resources :searchs, only: [:index]
-      resources :course_stickies, only: [:create] do
-        post :cancel_sticky, on: :collection
-      end
+    #   resources :searchs, only: [:index]
+    #   resources :course_stickies, only: [:create] do
+    #     post :cancel_sticky, on: :collection
+    #   end
 
-      resources :shixun_lists, only: [:index]
-      resources :subjects, path: :paths, only: [:index, :create, :update, :edit, :show]
-      resources :challenges do
-        get :is_play, on: :member
-      end
+    #   resources :shixun_lists, only: [:index]
+    #   resources :subjects, path: :paths, only: [:index, :create, :update, :edit, :show]
+    #   resources :challenges do
+    #     get :is_play, on: :member
+    #   end
 
-      resources :courses, only: [:create, :update, :edit, :show] do
-        member do
-          get :shixun_homework_category
-          get :teachers
-          get :students
-          get :course_groups
-          get :basic_info
-          get :course_activities
-          post :change_member_roles
-          delete :delete_course_teachers
-          delete :delete_course_students
-        end
+    #   resources :courses, only: [:create, :update, :edit, :show] do
+    #     member do
+    #       get :shixun_homework_category
+    #       get :teachers
+    #       get :students
+    #       get :course_groups
+    #       get :basic_info
+    #       get :course_activities
+    #       post :change_member_roles
+    #       delete :delete_course_teachers
+    #       delete :delete_course_students
+    #     end
 
-        collection do
-          get :check_invite_code
-        end
-      end
-    end
+    #     collection do
+    #       get :check_invite_code
+    #     end
+    #   end
+    # end
 
     # Project Area START
-    scope "/:owner/:repo" do
-      scope do
-        get(
-          '/activity',
-          to: 'project_trends#index',
-          as: :project_activity
-        )
-      end
+    # scope "/:owner/:repo" do
+    #   scope do
+    #     get(
+    #       '/activity',
+    #       to: 'project_trends#index',
+    #       as: :project_activity
+    #     )
+    #   end
 
-      resource :projects, path: '/', except: [:show, :edit] do
-        member do
-          get :branches
-          get :simple
-          get :watchers, to: 'projects#watch_users'
-          get :stargazers, to: 'projects#praise_users'
-          get :members, to: 'projects#fork_users'
-          match :about, :via => [:get, :put, :post]
-        end
-      end
+    #   resource :projects, path: '/', except: [:show, :edit] do
+    #     member do
+    #       get :branches
+    #       get :simple
+    #       get :watchers, to: 'projects#watch_users'
+    #       get :stargazers, to: 'projects#praise_users'
+    #       get :members, to: 'projects#fork_users'
+    #       match :about, :via => [:get, :put, :post]
+    #     end
+    #   end
 
-      resource :repositories, path: '/', only: [:show, :create, :edit] do
-        member do
-          get :archive
-          get :top_counts
-          get :entries
-          match :sub_entries, :via => [:get, :put]
-          get :commits
-          get :tags
-          post :create_file
-          put :update_file
-          delete :delete_file
-          post :repo_hook
-          post :sync_mirror
-          get :top_counts
-          get 'commits/:sha', to: 'repositories#commit', as: 'commit'
-        end
-      end
+    #   resource :repositories, path: '/', only: [:show, :create, :edit] do
+    #     member do
+    #       get :archive
+    #       get :top_counts
+    #       get :entries
+    #       match :sub_entries, :via => [:get, :put]
+    #       get :commits
+    #       get :tags
+    #       post :create_file
+    #       put :update_file
+    #       delete :delete_file
+    #       post :repo_hook
+    #       post :sync_mirror
+    #       get :top_counts
+    #       get 'commits/:sha', to: 'repositories#commit', as: 'commit'
+    #     end
+    #   end
 
-      resources :issues do
-        collection do
-          get :commit_issues
-          get :index_chosen
-          post :clean
-          post :series_update
-        end
-        member do
-         post :copy
-         post :close_issue
-         post :lock_issue
-        end
-      end
+    #   resources :issues do
+    #     collection do
+    #       get :commit_issues
+    #       get :index_chosen
+    #       post :clean
+    #       post :series_update
+    #     end
+    #     member do
+    #      post :copy
+    #      post :close_issue
+    #      post :lock_issue
+    #     end
+    #   end
 
-      resources :pull_requests, :path => :pulls, except: [:destroy] do
-        member do
-          post :pr_merge
-          # post :check_merge
-          post :refuse_merge
-        end
-        collection do
-          post :check_can_merge
-          get :create_merge_infos
-          get :get_branches
-        end
-      end
+    #   resources :pull_requests, :path => :pulls, except: [:destroy] do
+    #     member do
+    #       post :pr_merge
+    #       # post :check_merge
+    #       post :refuse_merge
+    #     end
+    #     collection do
+    #       post :check_can_merge
+    #       get :create_merge_infos
+    #       get :get_branches
+    #     end
+    #   end
 
-      resources :versions, :path => :milestones do
-        member do
-          post :update_status
-        end
-      end
+    #   resources :versions, :path => :milestones do
+    #     member do
+    #       post :update_status
+    #     end
+    #   end
 
-      resources :members, :path => :collaborators, only: [:index, :create] do
-        collection do
-          delete :remove
-          put :change_role
-        end
-      end
+    #   resources :members, :path => :collaborators, only: [:index, :create] do
+    #     collection do
+    #       delete :remove
+    #       put :change_role
+    #     end
+    #   end
 
-      resources :hooks
-      resources :forks, only: [:create]
-      resources :project_trends, :path => :activity, only: [:index, :create]
-      resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
-      resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+    #   resources :hooks
+    #   resources :forks, only: [:create]
+    #   resources :project_trends, :path => :activity, only: [:index, :create]
+    #   resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
+    #   resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
 
-      scope module: :projects do
-        scope do
-          get(
-            '/blob/*id/diff',
-            to: 'blob#diff',
-            constraints: { id: /.+/, format: false },
-            as: :blob_diff
-          )
-          get(
-            '/blob/*id',
-            to: 'blob#show',
-            constraints: { id: /.+/, format: false },
-            as: :blob
-          )
-          delete(
-            '/blob/*id',
-            to: 'blob#destroy',
-            constraints: { id: /.+/, format: false }
-          )
-          put(
-            '/blob/*id',
-            to: 'blob#update',
-            constraints: { id: /.+/, format: false }
-          )
-          post(
-            '/blob/*id',
-            to: 'blob#create',
-            constraints: { id: /.+/, format: false }
-          )
-        end
+    #   scope module: :projects do
+    #     scope do
+    #       get(
+    #         '/blob/*id/diff',
+    #         to: 'blob#diff',
+    #         constraints: { id: /.+/, format: false },
+    #         as: :blob_diff
+    #       )
+    #       get(
+    #         '/blob/*id',
+    #         to: 'blob#show',
+    #         constraints: { id: /.+/, format: false },
+    #         as: :blob
+    #       )
+    #       delete(
+    #         '/blob/*id',
+    #         to: 'blob#destroy',
+    #         constraints: { id: /.+/, format: false }
+    #       )
+    #       put(
+    #         '/blob/*id',
+    #         to: 'blob#update',
+    #         constraints: { id: /.+/, format: false }
+    #       )
+    #       post(
+    #         '/blob/*id',
+    #         to: 'blob#create',
+    #         constraints: { id: /.+/, format: false }
+    #       )
+    #     end
 
-        scope do
-          get(
-            '/raw/*id',
-            to: 'raw#show',
-            constraints: { id: /.+/, format: /(html|js)/ },
-            as: :raw
-          )
-        end
+    #     scope do
+    #       get(
+    #         '/raw/*id',
+    #         to: 'raw#show',
+    #         constraints: { id: /.+/, format: /(html|js)/ },
+    #         as: :raw
+    #       )
+    #     end
 
-        scope do
-          get(
-            '/blame/*id',
-            to: 'blame#show',
-            constraints: { id: /.+/, format: /(html|js)/ },
-            as: :blame
-          )
-        end
+    #     scope do
+    #       get(
+    #         '/blame/*id',
+    #         to: 'blame#show',
+    #         constraints: { id: /.+/, format: /(html|js)/ },
+    #         as: :blame
+    #       )
+    #     end
 
-        scope do
-          get(
-            '/tree/*id',
-            to: 'tree#show',
-            constraints: { id: /.+/, format: /(html|js)/ },
-            as: :tree
-          )
-        end
-      end
-    end
+    #     scope do
+    #       get(
+    #         '/tree/*id',
+    #         to: 'tree#show',
+    #         constraints: { id: /.+/, format: /(html|js)/ },
+    #         as: :tree
+    #       )
+    #     end
+    #   end
+    # end
     # Project Area END
   end
   
