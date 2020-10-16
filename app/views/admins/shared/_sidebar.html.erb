@@ -19,15 +19,6 @@
         <li><%= sidebar_item(admins_users_path, '用户列表', icon: 'user', controller: 'admins-users') %></li>
       <% end %>
     </li>
-    <li>
-      <%= sidebar_item_group('#projects-submenu', '开源项目', icon: 'database') do %>
-        <li><%= sidebar_item(admins_projects_path, '项目列表', icon: 'database', controller: 'admins-projects') %></li>
-        <li><%= sidebar_item(admins_project_languages_path, '项目语言', icon: 'language', controller: 'admins-project_languages') %></li>
-        <li><%= sidebar_item(admins_project_categories_path, '分类列表', icon: 'sitemap', controller: 'admins-project_categories') %></li>
-        <li><%= sidebar_item(admins_project_licenses_path, '开源许可证', icon: 'file-text-o', controller: 'admins-project_licenses') %></li>
-        <li><%= sidebar_item(admins_project_ignores_path, '忽略文件', icon: 'git', controller: 'admins-project_ignores') %></li>
-      <% end %>
-    </li>
 <li>
       <%= sidebar_item_group('#memos-submenu', '交流论坛', icon: 'columns') do %>
         <li><%= sidebar_item(admins_memos_path, '帖子', icon: 'columns', controller: 'admins-memos') %></li>
@@ -39,18 +30,8 @@
       <% end %>
     </li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
-
     <li>
-      <%= sidebar_item_group('#setting-submenu', '网站建设', icon: 'cogs') do %>
-        <li><%= sidebar_item(edit_admins_about_path, '关于我们', icon: 'smile-o', controller: 'admins-abouts') %></li>
-        <li><%= sidebar_item(edit_admins_contact_us_path, '联系我们', icon: 'commenting-o', controller: 'admins-contact_us') %></li>
-        <li><%= sidebar_item(admins_cooperatives_path, '合作伙伴', icon: 'handshake-o', controller: 'admins-cooperatives') %></li>
-        <li><%= sidebar_item(edit_admins_agreement_path, '服务协议', icon: 'file-text-o', controller: 'admins-agreements') %></li>
-        <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
-      <% end %>
-    </li>
-    <li>
-    <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
+      <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>
     <li><%= sidebar_item('/', '返回主站', icon: 'sign-out', controller: 'root') %></li>
   </ul>
