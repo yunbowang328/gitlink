@@ -1,4 +1,11 @@
 class Admins::LaboratorySettingsController < Admins::BaseController
+
+  def new 
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   def show
     @laboratory = current_laboratory
   end
