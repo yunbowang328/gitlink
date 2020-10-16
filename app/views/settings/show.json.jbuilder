@@ -20,13 +20,13 @@ json.setting do
   # end
 
   nav_bar = default_setting.navbar
-  if User.current.logged?
-    nav_bar[2]["link"] = "https://forgeplus.trustie.net/users/#{current_user.login}/projects"
-    nav_bar[2]["hidden"] = false
-  else
-    nav_bar[2]["link"] = ""
-    nav_bar[2]["hidden"] = true
-  end
+  # if User.current.logged?
+  #   nav_bar[2]["link"] = "https://forgeplus.trustie.net/users/#{current_user.login}/projects"
+  #   nav_bar[2]["hidden"] = false
+  # else
+  #   nav_bar[2]["link"] = ""
+  #   nav_bar[2]["hidden"] = true
+  # end
 
   json.name default_setting.name
   json.nav_logo_url default_setting.nav_logo_url&.[](1..-1)
