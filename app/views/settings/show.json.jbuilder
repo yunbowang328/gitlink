@@ -21,7 +21,7 @@ json.setting do
 
   nav_bar = default_setting.navbar
   if User.current.logged?
-    nav_bar[2]["link"] = "/users/#{current_user.login}/projects"
+    nav_bar[2]["link"] = "https://forgeplus.trustie.net/users/#{current_user.login}/projects"
     nav_bar[2]["hidden"] = false
   else
     nav_bar[2]["link"] = ""
