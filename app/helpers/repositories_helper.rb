@@ -1,4 +1,10 @@
 module RepositoriesHelper
+  def render_permission(user, project)
+    return "Admin" if user&.admin?
+    return "Owner" if user === project.owner
+    project.get_premission(user)
+  end
+
   def render_decode64_content(str)
     return nil if str.blank?
     Base64.decode64(str).force_encoding("UTF-8")
@@ -44,7 +50,7 @@ module RepositoriesHelper
         end
         if r_content.include?("?")
           new_r_content = r_content + "&raw=true"
-        else 
+        else
           new_r_content = r_content + "?raw=true"
         end
         unless r_content.include?("http://") || r_content.include?("https://") || r_content.include?("mailto:")
