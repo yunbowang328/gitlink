@@ -55,14 +55,10 @@ module Ci::CloudAccountManageable
 
   def unbind_account!
     cloud_account = current_user.ci_cloud_account
+    return render_error('你未绑定CI服务器') if current_user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
 
-    if current_user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
-      return render_error('你未绑定CI服务器')
-    elsif current_user.ci_certification?
-      cloud_account.destroy!
-      # TOTO drop drone database
-      @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone")
-    end
+    cloud_account.destroy! unless cloud_account.blank?
+    @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone") # TOTO drop drone database
 
     current_user.unbind_account!
   end
