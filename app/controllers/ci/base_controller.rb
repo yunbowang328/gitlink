@@ -18,8 +18,8 @@ class Ci::BaseController < ApplicationController
       end
     end
 
-    def authorize_manage_builds!
-      unless @project.owner?(current_user)
+    def authenticate_manager!
+      unless @project.manager?(current_user)
         return render_forbidden
       end
     end
@@ -28,7 +28,7 @@ class Ci::BaseController < ApplicationController
       return render_forbidden unless current_user.admin?
     end
 
-    def authorize_owner_project!
+    def authorize_owner!
       unless @project.owner?(current_user)
         return render_forbidden
       end

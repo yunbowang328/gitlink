@@ -4,7 +4,7 @@ class Ci::ProjectsController < Ci::BaseController
 
   before_action :load_project
   before_action :load_repo, only: [:update_trustie_pipeline, :activate, :deactivate]
-  before_action :authorize_owner_project!, only: [:authorize]
+  before_action :authorize_owner!, only: [:authorize]
   before_action :find_cloud_account, only: [:authorize, :activate, :deactivate]
 
   def authorize

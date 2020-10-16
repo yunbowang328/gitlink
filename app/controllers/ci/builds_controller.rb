@@ -2,7 +2,7 @@ class Ci::BuildsController < Ci::BaseController
   include RepositoriesHelper
 
   before_action :load_project
-  before_action :authorize_owner_project!
+  before_action :authorize_owner!, only: [:restart, :stop]
   before_action :load_repo
   before_action :find_cloud_account, except: [:index, :show]
 
