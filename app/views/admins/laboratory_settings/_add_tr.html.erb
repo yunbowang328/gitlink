@@ -1,0 +1,12 @@
+<tr>
+  <td><%= text_field_tag('navbar[][name]', "", id: nil, class: 'form-control', placeholder: "导航名称") %></td>
+  <td><%= text_field_tag('navbar[][link]', "", id: nil, class: 'form-control', placeholder: "导航链接") %></td>
+  <td class="text-center">
+    <%= check_box_tag('navbar[][hidden]', 0, false, id: nil, class: 'font-16') %>
+  </td>
+  <td class="text-center">
+    <div class="btn btn-primary btn-sm" onclick="destroy_tr(this)">
+      <i class='fa fa-trash'></i>
+    </div>
+  </td>
+</tr>
