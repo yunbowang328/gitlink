@@ -1,7 +1,7 @@
 class Ci::CloudAccountsController < Ci::BaseController
   include Ci::CloudAccountManageable
 
-  skip_before_action :connect_to_ci_database, only: %i[create bind unbind]
+  skip_before_action :connect_to_ci_database, only: %i[create bind]
   before_action :load_project, only: %i[create activate]
   before_action :authorize_owner!, only: %i[create activate]
   before_action :load_repo, only: %i[activate]
