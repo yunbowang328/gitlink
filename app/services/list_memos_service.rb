@@ -32,7 +32,7 @@ class ListMemosService
       all_memos = all_memos.where(id: watch_section_ids).roots
 
     when "replies"
-      reply_root_ids = all_memos.user_replies(current_user_id).pluck(:root_id)
+      reply_root_ids = all_memos.user_replies(target_user_id).pluck(:root_id)
       all_memos = all_memos.where(id: reply_root_ids)
       all_memos = all_memos.search_by_time("published_at", start_time, end_time) if start_time.present? || end_time.present?
     else
