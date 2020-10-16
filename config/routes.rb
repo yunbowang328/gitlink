@@ -661,7 +661,7 @@ Rails.application.routes.draw do
         post :update_sync_course
       end
 
-      resource :laboratory_setting, only: [:show, :update]
+      resource :laboratory_setting, only: [:show, :update, :new]
       resource :laboratory_user, only: [:create, :destroy]
 
       resources :carousels, only: [:index, :create, :update, :destroy] do
