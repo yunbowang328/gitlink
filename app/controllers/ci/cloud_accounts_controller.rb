@@ -30,9 +30,8 @@ class Ci::CloudAccountsController < Ci::BaseController
   end
 
   def activate
-    return render_error('请先在指定地址做用户认证') unless current_user.ci_certification?
+    return render_error('请先认证') unless current_user.ci_certification?
 
-    return render_error('该项目已经激活') if @repo && @repo.repo_active?
     begin
       @cloud_account = Ci::CloudAccount.find params[:id]
       ActiveRecord::Base.transaction do
