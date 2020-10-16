@@ -12,6 +12,10 @@ module Droneable
     self.devops_step === User::DEVOPS_UNVERIFIED
   end
 
+  def devops_certification?
+    self.devops_step === User::DEVOPS_CERTIFICATION
+  end
+
   def set_drone_step!(step)
     self.update_column(:devops_step, step)
   end

@@ -2,7 +2,7 @@ class Ci::BaseController < ApplicationController
   include Ci::DbConnectable
 
   before_action :require_login
-  before_action :connect_to_ci_database, if: -> { current_user && !current_user.is_a?(AnonymousUser) && current_user.devops_unverified? }
+  before_action :connect_to_ci_database, if: -> { current_user && !current_user.is_a?(AnonymousUser) && current_user.devops_certification? }
 
   def load_repo
     namespace = params[:owner]
