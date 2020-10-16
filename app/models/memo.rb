@@ -29,7 +29,7 @@ class Memo < ApplicationRecord
   has_many :attachments, as: :container, dependent: :destroy
   # 创意征集方式 0-默认，1-申请， ps. 删除后，该帖子即删除， 拒绝后，该帖子状态将为初始状态
   enum destroy_status: { common: 0, apply_destroy: 1 }
-	acts_as_tree :counter_cache => :replies_count, :order => "#{Memo.table_name}.created_at ASC", dependent: :destroy
+	# acts_as_tree :counter_cache => :replies_count, :order => "#{Memo.table_name}.created_at ASC", dependent: :destroy
 	# acts_as_attachable
   has_many :user_score_details,  :class_name => 'UserScoreDetails',:as => :score_changeable_obj
   has_many :praise_tread, as: :praise_tread_object, dependent: :destroy
