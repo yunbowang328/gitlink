@@ -12,7 +12,7 @@ class SyncEducoderShixunJob < ApplicationJob
     result = JSON.parse(response.body)
 
     if result['status'] != 0
-      puts.info "======= 接口请求失败！"
+      puts "======= 接口请求失败！"
       return
     end
 
@@ -60,9 +60,9 @@ class SyncEducoderShixunJob < ApplicationJob
           repo = Repository.new(repo_params)
           repo.save!
 
-          puts.info "项目: #{re['name']} 同步成功"
+          puts "项目: #{re['name']} 同步成功"
         else
-          puts.info "项目: #{re['name']} 同步失败"
+          puts "项目: #{re['name']} 同步失败"
         end
       end
     end
