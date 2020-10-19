@@ -202,6 +202,6 @@ class Project < ApplicationRecord
   end
 
   def self.sync_educoder_shixun(url, private_token, page, per_page)
-    SyncEducoderShixunJob.perform_later(uri, private_token, page, per_page)
+    SyncEducoderShixunJob.perform_later(url, private_token, page, per_page)
   end
 end
