@@ -10,16 +10,19 @@ class Project < ApplicationRecord
   #
   enum project_type: { sync_mirror: 2, mirror: 1, common: 0 }
 
+  # forge: trustie平台项目， educoder: educoder平台项目， 默认为forge平台
+  enum platform: { forge: 0, educoder: 1 }
+
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id
+  belongs_to :owner, class_name: 'User', foreign_key: :user_id, optional: true
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
   has_many :forked_users, class_name: 'ForkUser', foreign_key: :fork_project_id, dependent: :destroy
-  # has_many :commits, dependent: :destroy
+  has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy
@@ -175,12 +178,16 @@ class Project < ApplicationRecord
   def self.find_with_namespace(namespace_path, identifier)
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
-    user = User.find_by_login namespace_path
-    return nil if user.blank?
-
-    project = user.projects.find_by(identifier: identifier)
-
+    project = Project.find_by(identifier: identifier)
     return nil if project.blank?
+
+    if project.forge?
+      user = User.find_by_login namespace_path
+      return nil if user.blank?
+
+      project = user.projects.find_by(identifier: identifier)
+      return nil if project.blank?
+    end
     project
   end
 
@@ -192,5 +199,66 @@ class Project < ApplicationRecord
     ci_repo.update_column(:repo_active, 1)
     update_column(:open_devops, true)
     increment!(:open_devops_count)
+  end
+
+  def self.sync_educoder_shixun(url, private_token, page, per_page)
+    uri = URI("#{url}?page=#{page}&per_page=#{per_page}&private_token=#{private_token}")
+    puts "-------url: #{uri}"
+    response = Net::HTTP.get_response(uri)
+
+    result = JSON.parse(response.body)
+
+    if result['status'] != 0
+      logger.info "======= 接口请求失败！"
+      return
+    end
+
+    result['data']['repositories'].each do |re|
+      language = ProjectLanguage.find_by_name re['language']
+      language = ProjectLanguage.create!(name: re['language']) if language.blank?
+
+      category = ProjectCategory.find_by_name re['category']
+      category = ProjectCategory.create!(name: re['category']) if category.blank?
+
+      project_params =
+        {
+          name: re['name'],
+          # user_id: params[:user_id],
+          description: re['description'],
+          project_category_id: category.id,
+          project_language_id: language.id,
+          is_public: true,
+          # ignore_id: params[:ignore_id],
+          # license_id: params[:license_id],
+          identifier: re['repo_name'],
+          platform: Project.platforms[:educoder]
+        }
+
+      project = Project.new(project_params)
+
+      ActiveRecord::Base.transaction do
+        if project.save!
+          repo_params =
+            {
+              hidden: false,
+              project_id: project.id,
+              identifier: re['repo_name']
+            }
+
+          ProjectEducoder.create!(
+            project_id: project.id,
+            owner: re['username'],
+            repo_name: re['repo_name'],
+            image_url: re['image_url'])
+
+          repo = Repository.new(repo_params)
+          repo.save!
+
+          logger.info "项目: #{re['name']} 同步成功"
+        else
+          logger.info "项目: #{re['name']} 同步失败"
+        end
+      end
+    end
   end
 end

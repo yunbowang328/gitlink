@@ -39,6 +39,20 @@ module ProjectsHelper
         first_sync: repo.first_sync?
       })
     end
+    author =
+      if project.educoder?
+        {
+          login: project.project_educoder.owner,
+          name: project.project_educoder.owner,
+          image_url: project.project_educoder.image_url
+        }
+      else
+        {
+          login: project.owner.login,
+          name: project.owner.real_name,
+          image_url: url_to_avatar(project.owner)
+        }
+      end
 
     tmp_json = tmp_json.merge({
       identifier: project.identifier,
@@ -47,12 +61,13 @@ module ProjectsHelper
       repo_id: repo.id,
       open_devops: (user.blank? || user.is_a?(AnonymousUser)) ? false : project.open_devops?,
       type: project.numerical_for_project_type,
-      author: {
-        login: project.owner.login,
-        name: project.owner.real_name,
-        image_url: url_to_avatar(project.owner)
-      }
+      author: author
     }).compact
+
     render json: tmp_json
+  end
+
+  def render_author(project)
+
   end
 end
