@@ -1,3 +1,6 @@
+require 'uri'
+require 'net/http'
+
 class SyncEducoderShixunJob < ApplicationJob
   queue_as :default
 
@@ -9,7 +12,7 @@ class SyncEducoderShixunJob < ApplicationJob
     result = JSON.parse(response.body)
 
     if result['status'] != 0
-      logger.info "======= 接口请求失败！"
+      puts.info "======= 接口请求失败！"
       return
     end
 
@@ -57,9 +60,9 @@ class SyncEducoderShixunJob < ApplicationJob
           repo = Repository.new(repo_params)
           repo.save!
 
-          logger.info "项目: #{re['name']} 同步成功"
+          puts.info "项目: #{re['name']} 同步成功"
         else
-          logger.info "项目: #{re['name']} 同步失败"
+          puts.info "项目: #{re['name']} 同步失败"
         end
       end
     end
