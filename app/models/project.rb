@@ -214,6 +214,7 @@ class Project < ApplicationRecord
     end
 
     result['data']['repositories'].each do |re|
+      next if re['repo_name'].blank?
       language = ProjectLanguage.find_by_name re['language']
       language = ProjectLanguage.create!(name: re['language']) if language.blank?
 
