@@ -197,10 +197,7 @@ class IssuesController < ApplicationController
       #   end
       # end
 
-    if params[:status_id].to_i == 5
-      @issue.issue_times.update_all(end_time: Time.now)
-      # @issue.update_closed_issues_count_in_project!   #已经有after_update方法了，这里就不需要了
-    elsif @issue.issue_type.to_s == "2" &&  params[:status_id].to_i == 5 && @issue.author_id != current_user.try(:id)
+    if @issue.issue_type.to_s == "2" &&  params[:status_id].to_i == 5 && @issue.author_id != current_user.try(:id)
       normal_status(-1, "不允许修改为关闭状态")
     else
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
