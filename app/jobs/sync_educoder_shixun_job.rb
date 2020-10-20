@@ -55,6 +55,8 @@ class SyncEducoderShixunJob < ApplicationJob
             project_id: project.id,
             owner: re['username'],
             repo_name: re['repo_name'],
+            forked_count: re['forked_count'],
+            commit_count: re['commit_count'],
             image_url: re['image_url'])
 
           repo = Repository.new(repo_params)
