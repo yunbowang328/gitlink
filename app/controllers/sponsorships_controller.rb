@@ -7,6 +7,50 @@ class SponsorshipsController < ApplicationController
     @sponsorships = Sponsorship.all
   end
 
+  def stopped
+    @stopped_sponsorships = StoppedSponsorship.all
+  end
+
+  def sponsored
+    if User.current.id == Integer(params[:id])
+      @sponsorships = Sponsorship.where("developer_id=?", params[:id])
+    else
+      @sponsorships = Sponsorship.where("developer_id=? AND visible=1", params[:id])
+    end
+    @total = @sponsorships.length
+    @sponsorships = kaminari_paginate(@sponsorships)
+  end
+
+  def sponsoring
+    if User.current.id == Integer(params[:id])
+      @sponsorships = Sponsorship.where("sponsor_id=?", params[:id])
+    else
+      @sponsorships = Sponsorship.where("sponsor_id=? AND visible=1", params[:id])
+    end
+    @total = @sponsorships.length
+    @sponsorships = kaminari_paginate(@sponsorships)
+  end
+
+  def stopped_sponsored
+    if User.current.id == Integer(params[:id])
+      @stopped_sponsorships = StoppedSponsorship.where("developer_id=?", params[:id])
+    else
+      @stopped_sponsorships = StoppedSponsorship.where("developer_id=? AND visible=1", params[:id])
+    end
+    @total = @stopped_sponsorships.length
+    @stopped_sponsorships = kaminari_paginate(@stopped_sponsorships)
+  end
+
+  def stopped_sponsoring
+    if User.current.id == Integer(params[:id])
+      @stopped_sponsorships = StoppedSponsorship.where("sponsor_id=?", params[:id])
+    else
+      @stopped_sponsorships = StoppedSponsorship.where("sponsor_id=? AND visible=1", params[:id])
+    end
+    @total = @stopped_sponsorships.length
+    @stopped_sponsorships = kaminari_paginate(@stopped_sponsorships)
+  end
+
   # GET /sponsorships/1
   # GET /sponsorships/1.json
   def show
@@ -24,40 +68,65 @@ class SponsorshipsController < ApplicationController
   # POST /sponsorships
   # POST /sponsorships.json
   def create
-    @sponsorship = Sponsorship.new(sponsorship_params)
+    sponsor_id = User.current.id
+    check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", sponsor_id, params[:developer_id])
 
-    respond_to do |format|
-      if @sponsorship.save
-        format.html { redirect_to @sponsorship, notice: 'Sponsorship was successfully created.' }
-        format.json { render :show, status: :created, location: @sponsorship }
+    @sponsorship = Sponsorship.new(sponsorship_params.merge({sponsor_id: sponsor_id}))
+    # print('#######################', params[:single].class)
+    unless check_sponsorship.length.zero? || params[:single]
+      return render json: {status: -1, message: '您已赞助了TA' }
+    end
+
+    if @sponsorship.pay && @sponsorship.save
+      if params[:single] && @sponsorship.stop
+        return render json: { status: 1, message: '赞助成功' }
+      elsif !params[:single]
+        User.current.update(sponsor_num: User.current.sponsor_num+1)
+        @sponsorship.developer.update(sponsored_num: @sponsorship.developer.sponsored_num + 1)
+        return render json: { status: 1, message: '赞助成功' }
       else
-        format.html { render :new }
-        format.json { render json: @sponsorship.errors, status: :unprocessable_entity }
+        return render json: { status: -1, message: '赞助失败' }
       end
     end
+    # return render_result message: '赞助成功' if @sponsorship.save
+    # respond_to do |format|
+    #   if check_sponsorship.length.zero? && @sponsorship.save
+    #     format.html { redirect_to @sponsorship, notice: 'Sponsorship was successfully created.' }
+    #     format.json { render :show, status: :created, location: @sponsorship }
+    #     # render_result status=0, message="赞助成功"
+    #   else
+    #     format.html { render :new }
+    #     format.json { render json: @sponsorship.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /sponsorships/1
   # PATCH/PUT /sponsorships/1.json
   def update
-    respond_to do |format|
-      if @sponsorship.update(sponsorship_params)
-        format.html { redirect_to @sponsorship, notice: 'Sponsorship was successfully updated.' }
-        format.json { render :show, status: :ok, location: @sponsorship }
-      else
-        format.html { render :edit }
-        format.json { render json: @sponsorship.errors, status: :unprocessable_entity }
-      end
-    end
+    # respond_to do |format|
+    #   if @sponsorship.update(sponsorship_params)
+    #     format.html { redirect_to @sponsorship, notice: 'Sponsorship was successfully updated.' }
+    #     format.json { render :show, status: :ok, location: @sponsorship }
+    #   else
+    #     format.html { render :edit }
+    #     format.json { render json: @sponsorship.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # DELETE /sponsorships/1
   # DELETE /sponsorships/1.json
   def destroy
-    @sponsorship.destroy
-    respond_to do |format|
-      format.html { redirect_to sponsorships_url, notice: 'Sponsorship was successfully destroyed.' }
-      format.json { head :no_content }
+    # @sponsorship.destroy
+    # respond_to do |format|
+    #   format.html { redirect_to sponsorships_url, notice: 'Sponsorship was successfully destroyed.' }
+    #   format.json { head :no_content }
+    # end
+    if (User.current.id == @sponsorship.developer.id || User.current.id == @sponsorship.sponsor.id) && @sponsorship.stop
+      render json: {status: 1, message: "终止成功"}
+    else
+      render json: {status: -1, message: "失败"}
     end
   end
 
@@ -69,6 +138,6 @@ class SponsorshipsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def sponsorship_params
-      params.require(:sponsorship).permit(:amount, :visible, :sponsor_id, :developer_id)
+      params.require(:sponsorship).permit(:amount, :visible, :sponsor_id, :developer_id, :single, :page, :limit, :sort_by, :search)
     end
 end

@@ -1,0 +1,1 @@
+json.balance @wallet.balance

@@ -103,6 +103,7 @@ gem 'rails-i18n', '~> 5.1'
 # job
 gem 'sidekiq'
 gem 'sinatra'
+gem 'whenever'
 
 # batch insert
 gem 'bulk_insert'
@@ -128,3 +129,7 @@ gem 'request_store'
 gem 'harmonious_dictionary', '~> 0.0.1'
 
 gem 'parallel', '~> 1.19', '>= 1.19.1'
+
+# log
+gem 'multi_logger'
+

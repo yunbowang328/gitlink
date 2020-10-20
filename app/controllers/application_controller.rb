@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
   before_action :check_sign
   before_action :user_setup
   #before_action :check_account
+  after_action :user_trace_log
 
   # TODO
   # check sql query time
@@ -342,7 +343,7 @@ class ApplicationController < ActionController::Base
       elsif params[:debug] == 'student'
         User.current = User.find 8686
       elsif params[:debug] == 'admin'
-        user = User.find 1
+        user = User.find 4
         User.current = user
         cookies.signed[:user_id] = user.id
       end
@@ -367,6 +368,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def user_trace_log
+    user = current_user
+    # print("*********************url:", request.url, "****routes", request.request_method)
+    Rails.logger.user_trace.info("{id: #{user.id}, login: #{user.login}, url: #{request.url}, params: #{params}, response_code: #{response.code}, time: #{Time.now}}")
+  end
+
   def try_to_autologin
     if cookies[autologin_cookie_name]
       # auto-login feature starts a new session
@@ -384,7 +391,7 @@ class ApplicationController < ActionController::Base
 
   def current_user
     if Rails.env.development?
-      User.current = User.find 1
+      User.current = User.find 4
     else
       User.current
     end

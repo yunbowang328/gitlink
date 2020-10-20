@@ -16,9 +16,22 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    get 'wallets/balance'
+    get 'wallets/coin_changes'
+
+    get 'log/file_list'
+    post 'log/download'
 
     resources :sponsor_tiers
-    resources :sponsorships
+    resources :sponsorships do
+      collection do
+        get :sponsored
+        get :sponsoring
+        get :stopped_sponsored
+        get :stopped_sponsoring
+        get :stopped
+      end
+    end
 
     resources :sync_forge, only: [:create] do 
       collection do 
