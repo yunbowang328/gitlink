@@ -38,13 +38,23 @@ class ProjectsController < ApplicationController
   end
 
   def group_type_list
-    # if current_user&.logged?
-    #   projects = Project.list_user_projects(current_user.id)
-    # else
-    #   projects = Project.visible
-    # end
-    projects = Project.no_anomory_projects.visible
-    @project_group_list = projects.group(:project_type).size
+    project_statics = ProjectStatistic.first
+
+    @project_statics_list = [
+      {
+        project_type: 'common',
+        name: '开源托管项目',
+        projects_count: project_statics&.common_projects_count || 0
+      },
+      {
+        project_type: 'mirror',
+        name: '开源镜像项目',
+        projects_count: project_statics&.mirror_projects_count || 0
+      }
+    ]
+
+    # projects = Project.no_anomory_projects.visible
+    # @project_group_list = projects.group(:project_type).size
   end
 
   def update

@@ -1,5 +1,5 @@
-json.array! @category_group_list do |category,v|
-  json.id category[0]
-  json.name category[1]
-  json.projects_count v
+json.array! @project_categories do |category|
+  json.id category.id
+  json.name category.name
+  json.projects_count category.projects_count
 end

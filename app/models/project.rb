@@ -205,4 +205,14 @@ class Project < ApplicationRecord
   def self.sync_educoder_shixun(url, private_token, page, per_page)
     SyncEducoderShixunJob.perform_later(url, private_token, page, per_page)
   end
+
+  def self.update_common_projects_count!
+    ps = ProjectStatistic.first
+    ps.increment!(:common_projects_count) unless ps.blank?
+  end
+
+  def self.update_mirror_projects_count!
+    ps = ProjectStatistic.first
+    ps.increment!(:mirror_projects_count) unless ps.blank?
+  end
 end

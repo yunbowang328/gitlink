@@ -1,5 +1,5 @@
-json.array! @project_group_list do |type,v|
-  json.project_type type
-  json.name render_zh_project_type(type)
-  json.projects_count v
+json.array! @project_statics_list do |static|
+  json.project_type static[:project_type]
+  json.name static[:name]
+  json.projects_count static[:projects_count]
 end
