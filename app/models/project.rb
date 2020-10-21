@@ -193,4 +193,15 @@ class Project < ApplicationRecord
     update_column(:open_devops, true)
     increment!(:open_devops_count)
   end
+
+  def self.update_common_projects_count!
+    ps = ProjectStatistic.first
+    ps.increment!(:common_projects_count) unless ps.blank?
+  end
+
+  def self.update_mirror_projects_count!
+    ps = ProjectStatistic.first
+    ps.increment!(:mirror_projects_count) unless ps.blank?
+  end
+
 end

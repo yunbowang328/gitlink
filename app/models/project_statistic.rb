@@ -1,0 +1,2 @@
+class ProjectStatistic < ApplicationRecord
+end
