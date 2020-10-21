@@ -10,7 +10,7 @@ namespace :dev_ops_languages do
 
     languages.each do |l|
       content = Base64.encode64 l[:content]
-      DevOps::Language.create!(name: l[:name], content: content)
+      Ci::Language.create!(name: l[:name], content: content)
     end
   end
 
