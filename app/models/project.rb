@@ -178,7 +178,8 @@ class Project < ApplicationRecord
   def self.find_with_namespace(namespace_path, identifier)
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
-    project = Project.find_by(identifier: identifier)
+    project = Project.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
+
     return nil if project.blank?
 
     if project.forge?
@@ -203,5 +204,6 @@ class Project < ApplicationRecord
 
   def self.sync_educoder_shixun(url, private_token, page, per_page)
     SyncEducoderShixunJob.perform_later(url, private_token, page, per_page)
+
   end
 end
