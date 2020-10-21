@@ -95,7 +95,7 @@ steps:
       },
       {
         name: "R",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -107,12 +107,12 @@ steps:
 - name: test
   image: r-base
   commands:
-  - R -e 'install.packages(c("package1","package2"))'
-  - R CMD build .`
+  - R -e 'install.packages(c('package1','package2'))'
+  - R CMD build ."
       },
       {
         name: "Ruby",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -125,11 +125,11 @@ steps:
   image: ruby
   commands:
   - bundle install --jobs=3 --retry=3
-  - rake`
+  - rake"
       },
       {
         name: "PHP",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -146,11 +146,11 @@ steps:
 - name: test
   image: php:7
   commands:
-  - vendor/bin/phpunit --configuration config.xml`
+  - vendor/bin/phpunit --configuration config.xml"
       },
       {
         name: "Python",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -163,11 +163,11 @@ steps:
   image: python
   commands:
   - pip install -r requirements.txt
-  - pytest`
+  - pytest"
       },
       {
         name: "MySQL",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -180,18 +180,18 @@ steps:
   image: mysql
   commands:
   - sleep 15
-  - mysql -u root -h database --execute="SELECT VERSION();"
+  - mysql -u root -h database --execute='SELECT VERSION();'
 
 services:
 - name: database
   image: mysql
   environment:
     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    MYSQL_DATABASE: test`
+    MYSQL_DATABASE: test"
       },
       {
         name: "MongoDB",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -204,16 +204,16 @@ steps:
   image: mongo:4
   commands:
   - sleep 5
-  - mongo --host mongo --eval "db.version()"
+  - mongo --host mongo --eval 'db.version()'
 
 services:
 - name: mongo
   image: mongo:4
-  command: [ --smallfiles ]`
+  command: [ --smallfiles ]"
       },
       {
         name: "Clojure",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -225,11 +225,11 @@ steps:
 - name: test
   image: clojure
   commands:
-  - lein test`
+  - lein test"
       },
       {
         name: "CouchDB",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -246,11 +246,11 @@ steps:
 
 services:
 - name: database
-  image: couchdb:2.2`
+  image: couchdb:2.2"
       },
       {
         name: "Crystal",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -263,11 +263,11 @@ steps:
   image: crystallang/crystal
   commands:
   - shards install
-  - crystal spec.2`
+  - crystal spec.2"
       },
       {
         name: "D",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -279,11 +279,11 @@ steps:
 - name: test
   image: dlanguage/dmd
   commands:
-  - dub test`
+  - dub test"
       },
       {
         name: "Dart",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -296,11 +296,11 @@ steps:
   image: google/dart
   commands:
   - pub get
-  - pub run test`
+  - pub run test"
       },
       {
         name: "Docker (dind)",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -328,11 +328,11 @@ services:
 
 volumes:
 - name: dockersock
-  temp: {}`
+  temp: {}"
       },
       {
         name: "Elasticsearch",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -350,11 +350,11 @@ steps:
 
 services:
 - name: database
-  image: elasticsearch:5-alpine`
+  image: elasticsearch:5-alpine"
       },
       {
         name: "Elixir",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -369,11 +369,11 @@ steps:
   - mix local.rebar --force
   - mix local.hex --force
   - mix deps.get
-  - mix test`
+  - mix test"
       },
       {
         name: "Erlang",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -387,11 +387,11 @@ steps:
   commands:
   - rebar get-deps
   - rebar compile
-  - rebar skip_deps=true eunit`
+  - rebar skip_deps=true eunit"
       },
       {
         name: "20.Go (with Gopath)",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -408,11 +408,11 @@ steps:
   image: golang
   commands:
   - go get
-  - go test`
+  - go test"
       },
       {
         name: "21.Go (with Modules)",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -425,11 +425,11 @@ steps:
   image: golang
   commands:
   - go test
-  - go build`
+  - go build"
       },
       {
         name: "Gradle",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -442,11 +442,11 @@ steps:
   image: gradle:jdk10
   commands:
   - gradle assemble
-  - gradle check`
+  - gradle check"
       },
       {
         name: "Groovy",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -459,11 +459,11 @@ steps:
   image: gradle:2.5-jdk8
   commands:
   - ./gradlew assemble
-  - ./gradlew check`
+  - ./gradlew check"
       },
       {
         name: "Haskell",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -478,11 +478,11 @@ steps:
   - cabal install --only-dependencies --enable-tests
   - cabal configure --enable-tests
   - cabal build
-  - cabal test`
+  - cabal test"
       },
       {
         name: "Haxe",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -495,11 +495,11 @@ steps:
   image: haxe
   commands:
   - haxelib install build.hxml
-  - haxe build.hxml`
+  - haxe build.hxml"
       },
       {
         name: "MariaDB",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -512,18 +512,18 @@ steps:
   image: mariadb
   commands:
   - sleep 15
-  - mysql -u root -h database --execute="SELECT VERSION();"
+  - mysql -u root -h database --execute='SELECT VERSION();'
 
 services:
 - name: database
   image: mariadb
   environment:
     MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
-    MYSQL_DATABASE: test`
+    MYSQL_DATABASE: test"
       },
       {
         name: "Maven",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -536,11 +536,11 @@ steps:
   image: maven:3-jdk-10
   commands:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  - mvn test -B`
+  - mvn test -B"
       },
       {
         name: "Memcached",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -554,16 +554,16 @@ steps:
   commands:
   - apt-get update -qq
   - apt-get install -y -qq telnet > /dev/null
-  - (sleep 1; echo "stats"; sleep 2; echo "quit";) | telnet cache 11211 || true
+  - (sleep 1; echo 'stats'; sleep 2; echo 'quit';) | telnet cache 11211 || true
 
 services:
 - name: cache
   image: memcached:alpine
-  command: [ -vv ]`
+  command: [ -vv ]"
       },
       {
         name: "Nats",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -581,11 +581,11 @@ steps:
 
 services:
 - name: nats
-  image: nats:1.3.0`
+  image: nats:1.3.0"
       },
       {
         name: "Node",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -598,11 +598,11 @@ steps:
   image: node
   commands:
   - npm install
-  - npm test`
+  - npm test"
       },
       {
         name: "Perl",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -616,11 +616,11 @@ steps:
   commands:
   - cpanm --quiet --installdeps --notest .
   - perl Build.PL
-  - ./Build test`
+  - ./Build test"
       },
       {
         name: "Postgres",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -639,11 +639,11 @@ services:
   image: postgres:9-alpine
   environment:
     POSTGRES_USER: postgres
-    POSTGRES_DB: test`
+    POSTGRES_DB: test"
       },
       {
         name: "Redis",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -662,11 +662,11 @@ steps:
 
 services:
 - name: redis
-  image: redis`
+  image: redis"
       },
       {
         name: "RethinkDB",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -679,16 +679,16 @@ steps:
   image: node:9
   commands:
   - npm install -s -g recli
-  - recli -h database -j 'r.db("rethinkdb").table("stats")'
+  - recli -h database -j 'r.db('rethinkdb').table('stats')'
 
 services:
 - name: database
   image: rethinkdb:2
-  command: [ rethinkdb, --bind, all ]`
+  command: [ rethinkdb, --bind, all ]"
       },
       {
         name: "Rust",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -701,11 +701,11 @@ steps:
   image: rust:1.30
   commands:
   - cargo build --verbose --all
-  - cargo test --verbose --all`
+  - cargo test --verbose --all"
       },
       {
         name: "Swift",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -718,11 +718,11 @@ steps:
   image: swift:4
   commands:
   - swift build
-  - swift test`
+  - swift test"
       },
       {
         name: "Vault",
-        content: `
+        content: "
 kind: pipeline
 name: default
 
@@ -745,7 +745,7 @@ services:
 - name: vault
   image: vault:1.0.0-beta2
   environment:
-    VAULT_DEV_ROOT_TOKEN_ID: dummy`
+    VAULT_DEV_ROOT_TOKEN_ID: dummy"
       }
     ]
   end
