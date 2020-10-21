@@ -34,7 +34,7 @@ class ProjectsController < ApplicationController
   end
 
   def branches
-    @branches = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call
+    @branches = @project.forge? ? Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call : []
   end
 
   def group_type_list
