@@ -1,6 +1,6 @@
 json.id project.id
 json.repo_id project&.repository&.id
-json.identifier project.identifier
+json.identifier render_identifier(project)
 json.name project.name
 json.description Nokogiri::HTML(project.description).text
 json.visits project.visits
@@ -17,13 +17,13 @@ json.author do
   if project.educoder?
     project_educoder = project.project_educoder
     json.name project_educoder&.owner
-    json.login project_educoder#.owner
-    json.image_url project_educoder.image_url
+    json.login project_educoder&.repo_name.split('/')[0]
+    json.image_url render_educoder_avatar_url(project.project_educoder)
   else
     user = project.owner
     json.name user.try(:show_real_name)
     json.login user.login
-    json.image_url url_to_avatar(project.owner)
+    json.image_url render_avatar_url(user)
   end
 end
 

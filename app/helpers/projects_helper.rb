@@ -29,7 +29,9 @@ module ProjectsHelper
   end
 
   def json_response(project, user)
-    repo = project.repository
+    # repo = project.repository
+    repo = Repository.select(:id).find_by(project: project)
+
     tmp_json = {}
     unless project.common?
       tmp_json = tmp_json.merge({
@@ -55,8 +57,9 @@ module ProjectsHelper
       end
 
     tmp_json = tmp_json.merge({
-      identifier: project.identifier,
+      identifier: render_identifier(project),
       name: project.name,
+      platform: project.platform,
       id: project.id,
       repo_id: repo.id,
       open_devops: (user.blank? || user.is_a?(AnonymousUser)) ? false : project.open_devops?,
@@ -67,7 +70,19 @@ module ProjectsHelper
     render json: tmp_json
   end
 
-  def render_author(project)
+  def render_identifier(project)
+    project.educoder? ? project.project_educoder&.repo_name&.split('/')[1] : project.identifier
+  end
 
+  def render_author(project)
+    project.educoder? ? project.project_educoder&.repo_name&.split('/')[0] : project.owner.login
+  end
+
+  def render_educoder_avatar_url(project_educoder)
+    [Rails.application.config_for(:configuration)['educoder']['main_site'], project_educoder&.image_url].join('/')
+  end
+
+  def render_avatar_url(owner)
+    [Rails.application.config_for(:configuration)['platform_url'], 'images', url_to_avatar(owner)].join('/')
   end
 end

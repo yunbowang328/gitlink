@@ -13,7 +13,7 @@ class RepositoriesController < ApplicationController
   def show
     @user = current_user
     @repo = @project.repository
-    @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
+    @result = @project.forge? ? Gitea::Repository::GetService.new(@project.owner, @project.identifier).call : nil
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
       @fork_project = Project.find_by(id: @project_fork_id)
@@ -27,26 +27,40 @@ class RepositoriesController < ApplicationController
   def entries
     @project.increment!(:visits)
     @project_owner = @project.owner
-    @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
-    @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
-    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+
+    if @project.educoder?
+      @entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder.repo_name)
+    else
+      @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
+      @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
+      @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+    end
   end
 
   def top_counts
-    @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
+    @result = @project.educoder? ? nil : Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
   end
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
-    if interactor.success?
-      result = interactor.result
-      return @sub_entries = [] if result.is_a?(Hash) && result[:status] == -1
 
-      @sub_entries = result.is_a?(Array) ? result : [result]
-      @sub_entries = @sub_entries.sort_by{ |hash| hash['type'] }
+    if @project.educoder?
+      if params[:type] === 'file'
+        @sub_entries = Educoder::Repository::Entries::GetService.call(@project&.project_educoder&.repo_name, file_path_uri)
+        return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
+      end
+      @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
     else
-      render_error(interactor.error)
+      interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
+      if interactor.success?
+        result = interactor.result
+        return @sub_entries = [] if result.is_a?(Hash) && result[:status] == -1
+
+        @sub_entries = result.is_a?(Array) ? result : [result]
+        @sub_entries = @sub_entries.sort_by{ |hash| hash['type'] }
+      else
+        render_error(interactor.error)
+      end
     end
   end
 
@@ -135,8 +149,8 @@ class RepositoriesController < ApplicationController
   end
 
   def get_statistics
-    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
-    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
+    @branches_count = @project.educoder? ? 0 : Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
+    @tags_count = @project.educoder? ? 0 : Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
   end
 
   def get_ref
@@ -144,9 +158,9 @@ class RepositoriesController < ApplicationController
   end
 
   def get_latest_commit
-    latest_commit = project_commits
-    @latest_commit = latest_commit[:body][0] if latest_commit.present?
-    @commits_count = latest_commit[:total_count] if latest_commit.present?
+    latest_commit = @project.educoder? ? nil : project_commits
+    @latest_commit = latest_commit.present? ? latest_commit[:body][0] : nil
+    @commits_count = latest_commit.present? ? latest_commit[:total_count] : 0
   end
 
   def content_params

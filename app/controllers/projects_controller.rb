@@ -10,8 +10,9 @@ class ProjectsController < ApplicationController
   def index
     scope = Projects::ListQuery.call(params)
 
-    @projects = kaminari_paginate(scope)
-    @total_count = @projects.total_count
+    # @projects = kaminari_paginate(scope)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, owner: :user_extension)
+    @total_count = scope.size
   end
 
   def create

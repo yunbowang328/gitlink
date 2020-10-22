@@ -1,10 +1,10 @@
-json.identifier @project.identifier
+json.identifier render_identifier(@project)
 json.name @project.name
 json.project_id @project.id
 json.repo_id @repo.id
 json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
 json.pull_requests_count @project.pull_requests_count
-json.project_identifier @project.identifier
+json.project_identifier render_identifier(@project)
 json.praises_count @project.praises_count.to_i
 json.forked_count @project.forked_count.to_i
 json.watchers_count @project.watchers_count.to_i
@@ -47,4 +47,4 @@ if @result
   json.private @result['private']
 end
 
-json.partial! 'author', locals: { user: @project.owner }
+json.partial! 'author'
