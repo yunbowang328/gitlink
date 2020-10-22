@@ -79,7 +79,7 @@ module ProjectsHelper
   end
 
   def render_educoder_avatar_url(project_educoder)
-    [Rails.application.config_for(:configuration)['educoder']['main_site'], project_educoder&.image_url].join('/')
+    [Rails.application.config_for(:configuration)['educoder']['cdn_url'], project_educoder&.image_url].join('/')
   end
 
   def render_avatar_url(owner)
