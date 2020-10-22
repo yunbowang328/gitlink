@@ -12,7 +12,16 @@ class ProjectsController < ApplicationController
 
     # @projects = kaminari_paginate(scope)
     @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, owner: :user_extension)
-    @total_count = scope.size
+
+    category_id = params[:category_id]
+    @total_count =
+      if category_id.blank?
+        ps = ProjectStatistic.first
+        ps.common_projects_count + ps.mirror_projects_count
+      else
+        cate = ProjectCategory.find_by(id: category_id)
+        cate&.projects_count || 0
+      end
   end
 
   def create
