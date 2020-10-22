@@ -47,9 +47,20 @@ class RepositoriesController < ApplicationController
     if @project.educoder?
       if params[:type] === 'file'
         @sub_entries = Educoder::Repository::Entries::GetService.call(@project&.project_educoder&.repo_name, file_path_uri)
+        logger.info "######### sub_entries: #{@sub_entries}"
         return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
+
+        tmp_entries = [{
+            "content" =>  @sub_entries['data']['content'],
+            "type"    => "blob"
+          }]
+        @sub_entries = {
+          "trees"=>tmp_entries,
+          "commits" => [{}]
+        }
+      else
+        @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
       end
-      @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
     else
       interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
       if interactor.success?

@@ -27,7 +27,7 @@ if @project.educoder?
   json.path file_path
   json.type entry['type'] === 'blob'? 'file' : 'dir'
   json.size 0
-  json.content nil
+  json.content entry['content']
   json.target nil
   json.download_url nil
   json.direct_download false

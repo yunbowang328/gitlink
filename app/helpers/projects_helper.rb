@@ -30,7 +30,7 @@ module ProjectsHelper
 
   def json_response(project, user)
     # repo = project.repository
-    repo = Repository.select(:id).find_by(project: project)
+    repo = Repository.select(:id, :mirror_url).find_by(project: project)
 
     tmp_json = {}
     unless project.common?
@@ -83,6 +83,6 @@ module ProjectsHelper
   end
 
   def render_avatar_url(owner)
-    [Rails.application.config_for(:configuration)['platform_url'], 'images', url_to_avatar(owner)].join('/')
+    ['images', url_to_avatar(owner)].join('/')
   end
 end

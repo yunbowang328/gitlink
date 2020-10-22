@@ -47,4 +47,4 @@ if @result
   json.private @result['private']
 end
 
-json.partial! 'author'
+json.partial! 'author', locals: { user: @project.owner }
