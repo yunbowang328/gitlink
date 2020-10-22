@@ -6,7 +6,7 @@ class ProjectCategoriesController < ApplicationController
   end
 
   def group_list
-    @project_categories = ProjectCategory.where('projects_count > 0')
+    @project_categories = ProjectCategory.where('projects_count > 0').order(projects_count: :desc)
     # projects = Project.no_anomory_projects.visible
     # @category_group_list = projects.joins(:project_category).group("project_categories.id", "project_categories.name").size
   end
