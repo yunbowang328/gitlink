@@ -2,7 +2,7 @@ class MainController < ApplicationController
   protect_from_forgery except: :index
   skip_before_action :check_sign
   skip_before_action :user_setup
-  # skip_before_action :setup_laboratory
+  skip_before_action :setup_laboratory
 
   def first_stamp
     render :json => { status: 0, message: Time.now.to_i }
