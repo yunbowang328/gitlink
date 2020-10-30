@@ -6,7 +6,6 @@ class IssuesController < ApplicationController
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
-  before_action :get_branches, only: [:new, :edit]
   before_action :check_token_enough, only: [:create, :update]
 
   include ApplicationHelper
@@ -97,8 +96,7 @@ class IssuesController < ApplicationController
   end
 
   def new
-    @all_branches = get_branches
-    @issue_chosen = issue_left_chosen(@project, nil)
+    @issue_chosen = get_associated_data(@project)
   end
 
   def create
@@ -150,7 +148,6 @@ class IssuesController < ApplicationController
   end
 
   def edit
-    # @all_branches = get_branches
     # @issue_chosen = issue_left_chosen(@project, @issue.id)
     @cannot_edit_tags = @issue.issue_type=="2" && @issue.status_id == 5  #悬赏任务已解决且关闭的状态下，不能修改
     @issue_attachments = @issue.attachments
@@ -437,17 +434,6 @@ class IssuesController < ApplicationController
       tracker_array.push(tracker_info)
     end
     tracker_array
-  end
-
-  def get_branches
-    all_branches = []
-    get_all_branches = Gitea::Repository::Branches::ListService.new(@user, @project&.repository.try(:identifier)).call
-    if get_all_branches && get_all_branches.size > 0
-      get_all_branches.each do |b|
-        all_branches.push(b["name"])
-      end
-    end
-    all_branches
   end
 
   def issue_send_params(params)

@@ -385,11 +385,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def current_user
-		if Rails.env.development?
-			User.current = User.find 1
-		else
-			User.current
-		end
+		User.current
 	end
 
 	## 默认输出json
@@ -745,7 +741,7 @@ class ApplicationController < ActionController::Base
     namespace = params[:owner]
     id = params[:repo] || params[:id]
 
-    @project = Project.find_with_namespace(namespace, id)
+    @project, @owner = Project.find_with_namespace(namespace, id)
 
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"

@@ -30,7 +30,7 @@ module ProjectsHelper
 
   def json_response(project, user)
     # repo = project.repository
-    repo = Repository.select(:id, :mirror_url).find_by(project: project)
+    repo = Repository.includes(:mirror).select(:id, :mirror_url).find_by(project: project)
 
     tmp_json = {}
     unless project.common?
@@ -41,20 +41,6 @@ module ProjectsHelper
         first_sync: repo.first_sync?
       })
     end
-    author =
-      if project.educoder?
-        {
-          login: project.project_educoder.owner,
-          name: project.project_educoder.owner,
-          image_url: project.project_educoder.image_url
-        }
-      else
-        {
-          login: project.owner.login,
-          name: project.owner.real_name,
-          image_url: url_to_avatar(project.owner)
-        }
-      end
 
     tmp_json = tmp_json.merge({
       identifier: render_identifier(project),
@@ -64,10 +50,26 @@ module ProjectsHelper
       repo_id: repo.id,
       open_devops: (user.blank? || user.is_a?(AnonymousUser)) ? false : project.open_devops?,
       type: project.numerical_for_project_type,
-      author: author
+      author: render_owner(project)
     }).compact
 
     render json: tmp_json
+  end
+
+  def render_owner(project)
+    if project.educoder?
+      {
+        login: project.project_educoder.owner,
+        name: project.project_educoder.owner,
+        image_url: project.project_educoder.image_url
+      }
+    else
+      {
+        login: @owner.login,
+        name: @owner.real_name,
+        image_url: url_to_avatar(@owner)
+      }
+    end
   end
 
   def render_identifier(project)
