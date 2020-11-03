@@ -1,9 +1,8 @@
 class PullRequestsController < ApplicationController
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [:index, :show, :files, :commits]
   before_action :load_repository
-  before_action :set_user, only: [:new, :get_branches]
-  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos]
-  # before_action :get_relatived, only: [:edit]
+  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
+  before_action :load_pull_request, only: [:files, :commits]
   include TagChosenHelper
   include ApplicationHelper
 
@@ -24,11 +23,11 @@ class PullRequestsController < ApplicationController
   end
 
   def new
-    @all_branches = PullRequests::BranchesService.new(@user, @project).call
+    @all_branches = PullRequests::BranchesService.new(@owner, @project).call
     @is_fork = @project.forked_from_project_id.present?
     @projects_names = [{
-      project_user_login: @user.try(:login),
-      project_name: "#{@user.try(:show_real_name)}/#{@repository.try(:identifier)}",
+      project_user_login: @owner.try(:login),
+      project_name: "#{@owner.try(:show_real_name)}/#{@repository.try(:identifier)}",
       project_id: @project.identifier,
       id: @project.id
     }]
@@ -45,7 +44,7 @@ class PullRequestsController < ApplicationController
   end
 
   def get_branches
-    branch_result = PullRequests::BranchesService.new(@user, @project).call
+    branch_result = PullRequests::BranchesService.new(@owner, @project).call
     render json: branch_result
     # return json: branch_result
   end
@@ -235,16 +234,19 @@ class PullRequestsController < ApplicationController
   end
 
 
-  private
-  def set_user
-    @user = @project.owner
+  def files
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    # render json: @files_result
   end
 
-  def set_repository
-    @repository = @project.repository
-    @user = @project.owner
-    normal_status(-1, "仓库不存在") unless @repository.present?
-    normal_status(-1, "用户不存在") unless @user.present?
+  def commits
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    # render json: @commits_result
+  end
+
+  private
+  def load_pull_request
+    @pull_request = PullRequest.find params[:id]
   end
 
   def find_pull_request

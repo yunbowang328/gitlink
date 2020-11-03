@@ -759,7 +759,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def load_repository
-		@repository ||= load_project.repository
+		@repository ||= load_project&.repository
 	end
 
   private

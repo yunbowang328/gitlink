@@ -337,11 +337,18 @@ Rails.application.routes.draw do
         end
       end
 
+      # compare
+      resources :compare, only: [:index, :create]
+      get '/compare/:base...:head' => 'compare#show', :as => 'compare',
+            :constraints => { base: /.+/, head: /.+/ }
+
       resources :pull_requests, :path => :pulls, except: [:destroy] do
         member do
           post :pr_merge
           # post :check_merge
           post :refuse_merge
+          get :files
+          get :commits
         end
         collection do
           post :check_can_merge
