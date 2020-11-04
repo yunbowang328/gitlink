@@ -1,6 +1,9 @@
 json.partial! "commons/success"
 json.project_name @project.name
 json.pr_time time_from_now(@pull_request.updated_at)
+json.commits_count @pull_request.commits_count
+json.files_count @pull_request.files_count
+json.comments_count @pull_request.comments_count
 
 json.pull_request do
   json.extract! @pull_request, :id,:base, :head, :status,:fork_project_id, :is_original
@@ -24,8 +27,3 @@ json.issue do
   json.version @issue.version.try(:name)
   json.issue_tags @issue.get_issue_tags
 end
-
-
-
-
-

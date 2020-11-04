@@ -65,7 +65,9 @@ class PullRequestsController < ApplicationController
               project_id: @project.id,
               issue_id: pull_issue.id,
               fork_project_id: params[:fork_project_id],
-              is_original: params[:is_original]
+              is_original: params[:is_original],
+              files_count: params[:files_count] || 0,
+              commits_count: params[:commits_count] || 0
             }
             local_requests = PullRequest.new(@local_params.merge(pr_params))
             if local_requests.save

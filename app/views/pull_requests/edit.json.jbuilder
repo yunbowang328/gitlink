@@ -9,3 +9,6 @@ json.project_login  @project.owner.try(:login)
 json.extract! @pull_request, :id, :title, :body, :milestone,:head,:base,:is_original
 json.extract! @issue, :assigned_to_id, :fixed_version_id, :priority_id
 json.issue_tag_ids @issue&.issue_tags_value&.split(",")
+json.commits_count @pull_request.commits_count
+json.files_count @pull_request.files_count
+json.comments_count @pull_request.comments_count
