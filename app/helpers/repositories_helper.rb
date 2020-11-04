@@ -62,4 +62,14 @@ module RepositoriesHelper
 
     return content
   end
+
+  # unix_time values for example: 1604382982
+  def render_format_time_with_unix(unix_time)
+    Time.at(unix_time).strftime("%Y-%m-%d %H:%M")
+  end
+
+  # date for example: 2020-11-01T19:57:27+08:00
+  def render_format_time_with_date(date)
+    date.to_time.strftime("%Y-%m-%d %H:%M")
+  end
 end
