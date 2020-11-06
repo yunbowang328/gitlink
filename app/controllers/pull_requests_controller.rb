@@ -223,11 +223,11 @@ class PullRequestsController < ApplicationController
     elsif target_head === target_base && !is_original
       normal_status(-2, "分支内容相同，无需创建合并请求")
     else
-      can_merge = @project&.pull_requests.where(user_id: current_user&.id, head: target_head, base: target_base, status: 0, is_original: is_original, fork_project_id: params[:fork_project_id])
+      can_merge = @project&.pull_requests.where(head: target_head, base: target_base, status: 0, is_original: is_original, fork_project_id: params[:fork_project_id])
       if can_merge.present?
         render json: {
           status: -2,
-          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@project.id}/merge/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
+          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
         }
       else
         normal_status(0, "可以合并")
