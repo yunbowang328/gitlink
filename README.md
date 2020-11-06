@@ -1841,70 +1841,7 @@ http://localhost:3000/api/jasder/repo/commits/b0c4a4a1487d53acebf2addc544b29938c
 |sha               |否|string |git的ref或者是提交记录commit的sha标识  |
 
 
-*返回参数说明:*
-
-|参数名|类型|说明|
-|-|-|-|
-|additions  |int|该commit下所有文件增加的总行数|
-|deletions    |int|该commit下所有文件删除的总行数|
-|sha     |string|提交记录sha标识|
-|url     |string|该commit的api访问地址|
-|commit      |object| |
-|-- author    |object| commit的作者用户|
-|---- login        |string|提交commit的用户名称|
-|---- email    |string|提交commit的用户邮箱|
-|---- date    |string|提交commit的时间|
-|-- committer    |object|提交者用户信息|
-|---- login        |string|committer的用户名称|
-|---- email    |string|committer的用户邮箱|
-|---- date    |string|committer的时间|
-|-- message    |string|提交信息|
-|-- tree    |object| |
-|---- sha    |string| tree结构的sha标识|
-|author      |object|forge平台的提交用户信息|
-|-- id           |int|用户id|
-|-- login        |string|用户登录名|
-|-- name        |string|用户名称|
-|-- image_url    |string|用户头像|
-|committer      |object|forge平台的committer用户信息|
-|-- id           |int|用户id|
-|-- login        |string|用户登录名|
-|-- name        |string|用户名称|
-|-- image_url    |string|用户头像|
-|parents      |array|父节点|
-|-- sha    |int|commit父节点的sha标识|
-|-- url    |string|commit父节点api访问地址|
-|author          |object|提交用户|
-|-- login        |string|用户名称|
-|-- image_url    |string|用户头像|
-|files          |array|文件数组|
-|-- Name    |string|文件名称|
-|-- OldName    |string|旧文件名称|
-|-- Addition    |string|增加的行数|
-|-- Deletion    |string|删除的行数|
-|-- Type    |string|1: 表示是新增加的文件，2:表示是修改的文件， 3: 表示该文件已经被删除|
-|-- IsCreated    |boolean|是否为新添加的文件，true：是； false：否|
-|-- IsDeleted    |boolean|是否为删除的文件，true：是；false：否|
-|-- IsRenamed    |boolean|是否为重命名的文件，true：是，false：否|
-|-- IsBin    |boolean|是否为二进制文件，true：是，false：否|
-|-- IsLFSFile    |boolean|是否git lfs操作的大文件，true：是，false：否|
-|-- IsSubmodule    |boolean|收否为子模块，true：是；false：否|
-|-- Sections    |array| |
-|---- Name    |string|文件名称|
-|------ Lines    |array|行数|
-|-------- LeftIdx    |int|分列视图时用，左侧开始行号， 0:表示没有行号|
-|-------- RightIdx    |int|分列视图时用，右侧开始行号|
-|-------- Type    |int|1: 表示未做修改的源代码，2: 表示增加的代码，3: 表示删除的代码，4: 统计说明，如：@@ -0,0 +1,11 @@|
-|-------- Content    |string|一行的文件内容|
-|-------- Comments    |string|评论信息|
-|-------- SectionInfo    |string|用户头像|
-|---------- Path    |string|文件路径|
-|---------- LastLeftIdx    |string| |
-|---------- LastRightIdx    |string| |
-|---------- LeftIdx    |string| |
-|---------- RightIdx    |string| |
-|---------- LeftHunkSize    |string| |
-|---------- RightHunkSize   |string| |
+*返回参数说明: 请参考compare接口*
 
 
 返回值
