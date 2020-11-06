@@ -1,3 +1,4 @@
+json.sha sha
 json.name file['Name']
 json.old_name file['OldName']
 json.index file['Index']

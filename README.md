@@ -2403,7 +2403,7 @@ GET /api/:owner/:repo/pulls/:id/files.json
 *示例*
 ```
 curl -X GET \
-http://localhost:3000/api/Jason/repo/pulls/1/files.json | jq
+http://localhost:3000/api/Jason/test-txt/pulls/1/files.json | jq
 ```
 *请求参数说明:*
 
@@ -2422,6 +2422,7 @@ http://localhost:3000/api/Jason/repo/pulls/1/files.json | jq
 |total_addition         |int|添加代码总行数|
 |total_deletion        |int|删除代码总行数|
 |files      |array||
+|-- sha  |string|commit's sha value|
 |-- name  |string|当前文件名|
 |-- old_name |string| 修改之前的文件名称,与name相同的话，说明文件名未更改|
 |-- addition  |int|文件添加的行数|
@@ -2457,6 +2458,7 @@ http://localhost:3000/api/Jason/repo/pulls/1/files.json | jq
   "total_deletion": 0,
   "files": [
     {
+      "sha": "xefenisnii",
       "name": "文件.txt",
       "old_name": "文件.txt",
       "index": 6,
@@ -2617,10 +2619,12 @@ http://localhost:3000/api/ysfns/test-txt/compare/master...Jason/test-txt:develop
 |-- time_from_now|string|commit’s 提交时间距当前时间的时间值|
 |-- message      |string|commit说明信息|
 |-- sha          |string|commit’s sha值|
-|diff      |array||
+|diff      |object||
 |-- files_count        |int|文件更改的总数量|
 |-- total_addition         |int|添加代码总行数|
 |-- total_deletion        |int|删除代码总行数|
+|-- files      |Array||
+|-- sha  |string|commit's sha |
 |-- name  |string|当前文件名|
 |-- old_name |string| 修改之前的文件名称,与name相同的话，说明文件名未更改|
 |-- addition  |int|文件添加的行数|
