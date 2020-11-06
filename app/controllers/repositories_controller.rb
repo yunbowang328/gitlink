@@ -82,11 +82,12 @@ class RepositoriesController < ApplicationController
   end
 
   def commit
-    @commit = Gitea::Repository::Commits::GetService.new(@repository.user.login, @repository.identifier, params[:sha], current_user.gitea_token).call
+    @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, params[:sha], current_user.gitea_token)
+    @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, params[:sha], current_user.gitea_token, {diff: true})
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier, {page: params[:page], limit: params[:limit]}).call
+    @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @project.owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
   end
 
   def edit

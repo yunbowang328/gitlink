@@ -1825,18 +1825,19 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 
 ## 获取某个提交记录(包含diff)
 ```
-GET  /api/repositories/:id/commits/:sha
+GET  /api/:owner/:repo/commits/:sha
 ```
 *示例*
 ```
 curl -X GET \
-http://localhost:3000/api/repositories/5845/commits/b0c4a4a1487d53acebf2addc544b29938cad12df.json | jq
+http://localhost:3000/api/jasder/repo/commits/b0c4a4a1487d53acebf2addc544b29938cad12df.json | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id                |是|int |仓库repository的id  |
+|owner                |是|string |仓库拥有者  |
+|repo                |是|string |仓库的identifier值  |
 |sha               |否|string |git的ref或者是提交记录commit的sha标识  |
 
 
@@ -1909,161 +1910,77 @@ http://localhost:3000/api/repositories/5845/commits/b0c4a4a1487d53acebf2addc544b
 返回值
 ```
 {
-  "additions": 243,
-  "deletions": 32,
-  "sha": "c6c17ad47d6dbe4369d559847197b37b4090a46e",
-  "url": "http://localhost:3000/api/repositories/5845/commits/c6c17ad47d6dbe4369d559847197b37b4090a46e.json",
+  "files_count": 6,
+  "total_addition": 447,
+  "total_deletion": 0,
   "commit": {
+    "sha": "8f5faee0d3b3be1b8063e84da0c79dd75327b968",
+    "message": "add some file\n* Add the tag list page to the release page\n* Apply suggestions from code review\n* Add the tags list view\n* Add the delete tag way on ui\n* Not delete tag and clear message when delete a release\n",
     "author": {
-      "name": "GitHub",
-      "email": "noreply@github.com",
-      "date": "2020-05-20T20:15:27+08:00"
+      "name": "Jasder",
+      "email": "2053003901@@qq.com",
+      "date": "2020-11-03T13:56:22+08:00"
     },
     "committer": {
-      "name": "GitHub",
-      "email": "noreply@github.com",
-      "date": "2020-05-20T20:15:27+08:00"
-    }
+      "name": "Jasder",
+      "email": "2053003901@@qq.com",
+      "date": "2020-11-03T13:56:22+08:00"
+    },
+    "timestamp": 1604382982,
+    "time_from_now": "3天前"
   },
   "author": null,
   "committer": null,
   "parents": [
     {
-      "sha": "c8b8cfd85e375ad376833d04b9ca499bf9da355b",
-      "url": "http://localhost:3003//api/repositories/intelligent-test-platform/commits/c8b8cfd85e375ad376833d04b9ca499bf9da355b"
+      "sha": "c7f5b90725f30d8ad840a026773f9df92debc3af"
     },
-    {
-      "sha": "b0c4a4a1487d53acebf2addc544b29938cad12df",
-      "url": "http://localhost:3003//api/repositories/intelligent-test-platform/commits/b0c4a4a1487d53acebf2addc544b29938cad12df"
-    }
-  ],
   "files": [
     {
-      "Name": "Dockerfile",
-      "OldName": "Dockerfile",
-      "Index": 1,
-      "Addition": 11,
-      "Deletion": 0,
-      "Type": 1,
-      "IsCreated": true,
-      "IsDeleted": false,
-      "IsBin": false,
-      "IsLFSFile": false,
-      "IsRenamed": false,
-      "IsSubmodule": false,
-      "Sections": [
+      "name": "build.go",
+      "old_name": "build.go",
+      "index": 1,
+      "addition": 33,
+      "deletion": 0,
+      "type": 1,
+      "isCreated": true,
+      "isDeleted": false,
+      "isBin": false,
+      "isLFSFile": false,
+      "isRenamed": false,
+      "isSubmodule": false,
+      "sections": [
         {
-          "Name": "",
-          "Lines": [
+          "fileName": "build.go",
+          "name": "",
+          "lines": [
             {
-              "LeftIdx": 0,
-              "RightIdx": 0,
-              "Type": 4,
-              "Content": "@@ -0,0 +1,11 @@",
-              "Comments": null,
-              "SectionInfo": {
-                "Path": "Dockerfile",
-                "LastLeftIdx": 0,
-                "LastRightIdx": 0,
-                "LeftIdx": 0,
-                "RightIdx": 1,
-                "LeftHunkSize": 0,
-                "RightHunkSize": 11
+              "leftIdx": 0,
+              "rightIdx": 0,
+              "type": 4,
+              "content": "@@ -0,0 +1,33 @@",
+              "sectionInfo": {
+                "path": "build.go",
+                "lastLeftIdx": 0,
+                "lastRightIdx": 0,
+                "leftIdx": 0,
+                "rightIdx": 1,
+                "leftHunkSize": 0,
+                "rightHunkSize": 33
               }
             },
             {
-              "LeftIdx": 0,
-              "RightIdx": 1,
-              "Type": 2,
-              "Content": "+FROM adoptopenjdk/maven-openjdk8:latest",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 2,
-              "Type": 2,
-              "Content": "+",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 3,
-              "Type": 2,
-              "Content": "+ADD ./target/markov-demo-0.0.1-SNAPSHOT.jar /usr/local/markov-demo-0.0.1-SNAPSHOT.jar",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 4,
-              "Type": 2,
-              "Content": "+",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 5,
-              "Type": 2,
-              "Content": "+# Add docker-compose-wait tool -------------------",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 6,
-              "Type": 2,
-              "Content": "+ENV WAIT_VERSION 2.7.2",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 7,
-              "Type": 2,
-              "Content": "+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 8,
-              "Type": 2,
-              "Content": "+RUN chmod +x /wait",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 9,
-              "Type": 2,
-              "Content": "+",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 10,
-              "Type": 2,
-              "Content": "+EXPOSE 8080",
-              "Comments": null,
-              "SectionInfo": null
-            },
-            {
-              "LeftIdx": 0,
-              "RightIdx": 11,
-              "Type": 2,
-              "Content": "+ENTRYPOINT [ \"java\", \"-jar\", \"/usr/local/markov-demo-0.0.1-SNAPSHOT.jar\" ]",
-              "Comments": null,
-              "SectionInfo": null
+              "leftIdx": 0,
+              "rightIdx": 1,
+              "type": 2,
+              "content": "+// Copyright 2020 The Gitea Authors. All rights reserved.",
+              "sectionInfo": null
             }
           ]
         }
-      ],
-      "IsIncomplete": false
+      ]
     }
+  ]
 }
 ```
 ---
@@ -2549,7 +2466,7 @@ GET /api/:owner/:repo/pulls/:id/files.json
 *示例*
 ```
 curl -X GET \
-http://localhost:3000/api/Jason/repo/1/files.json | jq
+http://localhost:3000/api/Jason/repo/pulls/1/files.json | jq
 ```
 *请求参数说明:*
 
@@ -2730,10 +2647,10 @@ GET /api/:owner/:repo/compare/{base}...{head}.json
 *示例*
 ```
 curl -X GET \
-http://localhost:3003/api/v1/repos/Jason/test-txt/compare/master...develop | jq
+http://localhost:3000/api/Jason/test-txt/compare/master...develop | jq
 
 curl -X GET \
-http://localhost:3003/api/v1/repos/jasder/test-txt/compare/master...Jason/test-txt:develop
+http://localhost:3000/api/ysfns/test-txt/compare/master...Jason/test-txt:develop
 ```
 *请求参数说明:*
 
@@ -2782,7 +2699,7 @@ http://localhost:3003/api/v1/repos/jasder/test-txt/compare/master...Jason/test-t
 |---- lines  |array||
 |------ leftIdx   |string|文件变动之前所在行数|
 |------ rightIdx   |string|文件更改后所在行数|
-|------ type   |string|文件变更类型，1: 新增，2: 修改， 3: 删除， 4: diff统计信息|
+|------ type   |string|文件变更类型，1: 内容未改动，2: 添加， 3: 删除， 4: diff统计信息|
 |------ content   |string|文件变更的内容|
 |------ sectionInfo   |object||
 |-------- path   |string|文件相对仓库的路径|
@@ -2791,7 +2708,7 @@ http://localhost:3003/api/v1/repos/jasder/test-txt/compare/master...Jason/test-t
 |-------- leftHunkSize   |int|文件变更之前的行数|
 |-------- rightHunkSize   |int|文件变更之后的行数(及当前页面编辑器显示的总行数)|
 |-------- leftIdx   |int|文件变更之前所在行数|
-|-------- rightIdx   |int|文件变更之后所在行数(即：页面编辑器开始显示的行数)|
+|-------- rightIdx   |int|文件变更之后所在行数|
 
 返回值
 ```json
