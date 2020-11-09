@@ -1,5 +1,5 @@
 class LogController < ApplicationController
-  def file_list
+  def list
     path = "#{Rails.root}/log"
     @file_list = []
     Dir.foreach(path) do |file|

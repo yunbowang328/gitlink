@@ -73,8 +73,8 @@ class SponsorshipsController < ApplicationController
 
     @sponsorship = Sponsorship.new(sponsorship_params.merge({sponsor_id: sponsor_id}))
     # print('#######################', params[:single].class)
-    unless check_sponsorship.length.zero? || params[:single]
-      return render json: {status: -1, message: '您已赞助了TA' }
+    unless check_sponsorship.length.zero?
+      return render json: {status: -1, message: '您已经赞助了TA' }
     end
 
     if @sponsorship.pay && @sponsorship.save
@@ -113,6 +113,14 @@ class SponsorshipsController < ApplicationController
     #     format.json { render json: @sponsorship.errors, status: :unprocessable_entity }
     #   end
     # end
+    if @sponsorship.sponsor.id != current_user.id
+      return render json: {status: -1, message: '没有权限' }
+    end
+    if @sponsorship.update(sponsorship_params)
+      render json: {status: 1, message: '修改成功' }
+    else
+      render json: {status: -1, message: '修改失败' }
+    end
   end
 
   # DELETE /sponsorships/1

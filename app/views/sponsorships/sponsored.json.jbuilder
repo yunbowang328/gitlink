@@ -16,5 +16,6 @@ json.sponsorships do
     json.user_id sponsor.id
     json.login sponsor.login
     json.accumulate sponsorship.accumulate
+    json.sponsor_id sponsorship.sponsor.id
   end
 end

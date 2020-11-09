@@ -19,8 +19,9 @@ Rails.application.routes.draw do
     get 'wallets/balance'
     get 'wallets/coin_changes'
 
-    get 'log/file_list'
-    post 'log/download'
+    get 'log/list', to: 'log#list'
+    # post 'log/download', to: 'log#download'
+    match 'log/download/:filename' => 'log#download', :constraints => { filename: /[0-z\.]+/ }, via:[:get]
 
     resources :sponsor_tiers
     resources :sponsorships do
@@ -230,7 +231,7 @@ Rails.application.routes.draw do
     resources :repositories, only: [:index, :show, :edit] do
       member do
         get :entries
-        match :sub_entries, :via => [:get, :put]
+        match :sub_entries, via: [:get, :put]
         get :commits
         post :files
         get :tags
@@ -265,7 +266,7 @@ Rails.application.routes.draw do
 
     resources :courses do
       member do
-        get 'settings', :action => 'settings', :as => 'settings'
+        get 'settings', action: 'settings', as: 'settings'
         post 'set_invite_code_halt'
         post 'set_public_or_private'
         post 'search_teacher_candidate'

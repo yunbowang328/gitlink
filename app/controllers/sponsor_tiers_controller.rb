@@ -12,6 +12,7 @@ class SponsorTiersController < ApplicationController
   # GET /sponsor_tiers/1
   # GET /sponsor_tiers/1.json
   def show
+    @check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", current_user.id, @sponsor_tier.user)
   end
 
   # GET /sponsor_tiers/new
