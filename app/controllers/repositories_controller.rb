@@ -82,8 +82,9 @@ class RepositoriesController < ApplicationController
   end
 
   def commit
-    @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, params[:sha], current_user.gitea_token)
-    @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, params[:sha], current_user.gitea_token, {diff: true})
+    @sha         = params[:sha]
+    @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user.gitea_token)
+    @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user.gitea_token, {diff: true})
   end
 
   def tags
