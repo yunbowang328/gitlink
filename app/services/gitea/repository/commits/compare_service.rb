@@ -15,7 +15,7 @@ class Gitea::Repository::Commits::CompareService < Gitea::ClientService
 
   def call
     response = get(url, params)
-    render_result(response)
+    render_status(response)
   end
 
   private
@@ -25,14 +25,5 @@ class Gitea::Repository::Commits::CompareService < Gitea::ClientService
 
   def url
     "/repos/#{owner}/#{repo}/compare/#{base}...#{head}".freeze
-  end
-
-  def render_result(response)
-    case response.status
-    when 200
-      JSON.parse(response.body)
-    else
-      {status: -1, message: "#{body['message']}"}
-    end
   end
 end

@@ -131,7 +131,6 @@ class Gitea::ClientService < ApplicationService
         {status: 200}
       end
     when 401
-      ""
       raise Error, mark + "401"
     when 422
       result = JSON.parse(response&.body)
@@ -147,6 +146,8 @@ class Gitea::ClientService < ApplicationService
       raise Error, mark + message
     when 403
       {status: 403, message: '你没有权限操作!'}
+    when 404
+      {status: 404, message: '你访问的链接不存在!'}
     else
       if response&.body.blank?
         message = "请求失败"

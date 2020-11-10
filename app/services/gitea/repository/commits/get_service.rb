@@ -15,7 +15,7 @@ class Gitea::Repository::Commits::GetService < Gitea::ClientService
 
   def call
     response = get(url, params)
-    render_result(response)
+    render_status(response)
   end
 
   private
@@ -30,16 +30,6 @@ class Gitea::Repository::Commits::GetService < Gitea::ClientService
       "/repos/#{owner}/#{repo}/commits/#{sha}/diff".freeze
     else
       "/repos/#{owner}/#{repo}/git/commits/#{sha}".freeze
-    end
-  end
-
-  def render_result(response)
-    body = JSON.parse(response.body)
-    case response.status
-    when 200
-      JSON.parse(response.body)
-    else
-      {status: -1, message: "#{body['message']}"}
     end
   end
 end
