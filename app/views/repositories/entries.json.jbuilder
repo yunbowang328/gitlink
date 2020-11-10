@@ -54,7 +54,7 @@ if @project.forge?
       content =
         if is_readme_type?(entry['name'])
           is_readme_file = true
-          content = Gitea::Repository::Entries::GetService.call(@project_owner, @project.identifier, entry['name'], ref: @ref)['content']
+          content = Gitea::Repository::Entries::GetService.call(@owner, @project.identifier, entry['name'], ref: @ref)['content']
           readme_render_decode64_content(content, @path)
         else
           is_readme_file = false

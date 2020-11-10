@@ -13,7 +13,7 @@ class RepositoriesController < ApplicationController
   def show
     @user = current_user
     @repo = @project.repository
-    @result = @project.forge? ? Gitea::Repository::GetService.new(@project.owner, @project.identifier).call : nil
+    @result = @project.forge? ? Gitea::Repository::GetService.new(@owner, @project.identifier).call : nil
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
       @fork_project = Project.find_by(id: @project_fork_id)
@@ -26,12 +26,11 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
-    @project_owner = @project.owner
 
     if @project.educoder?
       @entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder.repo_name)
     else
-      @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
+      @entries = Gitea::Repository::Entries::ListService.new(@owner, @project.identifier, ref: @ref).call
       @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
       @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
     end
@@ -76,8 +75,7 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    @project_owner = @project.owner
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@project_owner.login, @project.identifier,
+    @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
   end
 
@@ -88,14 +86,14 @@ class RepositoriesController < ApplicationController
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @project.owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
+    @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
   end
 
   def edit
   end
 
   def create_file
-    interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @project.owner.login, content_params)
+    interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
     if interactor.success?
       @file = interactor.result
       create_new_pr(params)
@@ -105,7 +103,7 @@ class RepositoriesController < ApplicationController
   end
 
   def update_file
-    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, @project.owner.login, params.merge(identifier: @project.identifier))
+    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, @owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       create_new_pr(params)
@@ -116,7 +114,7 @@ class RepositoriesController < ApplicationController
   end
 
   def delete_file
-    interactor = Gitea::DeleteFileInteractor.call(current_user.gitea_token, @project.owner.login, params.merge(identifier: @project.identifier))
+    interactor = Gitea::DeleteFileInteractor.call(current_user.gitea_token, @owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       render_result(1, "文件删除成功")
