@@ -179,9 +179,7 @@ class Project < ApplicationRecord
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
     user = User.find_by_login namespace_path
-    return nil if user.blank?
-
-    project = user.projects.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
+    project = user&.projects&.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
     return nil if project.blank?
 
     [project, user]
