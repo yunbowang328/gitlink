@@ -15,7 +15,11 @@ if @project.forge?
   json.image_type image_type
   json.is_readme_file is_readme_type?(file_name)
   if entry['latest_commit']
-    json.partial! 'last_commit', entry: entry
+    if entry['type'] != 'file'
+      json.partial! 'last_commit', entry: entry
+    else
+      json.commit nil
+    end
   end
 end
 
