@@ -6,12 +6,11 @@ if @project.forge?
       json.nil!
     end
   end
-  #json.tags_count @tags_count
-  #json.branches_count @branches_count
-  #json.commits_count @commits_count
   json.entries do
-    json.array! @sub_entries do |entry|
-      json.partial! 'repositories/simple_entry', locals: { entry: entry }
+    if @sub_entries.is_a?(Array)
+      json.partial! 'repositories/simple_entry', collection: @sub_entries, as: :entry
+    elsif @sub_entries.is_a?(Hash)
+      json.partial! 'repositories/simple_entry', locals: { entry: @sub_entries }
     end
   end
 end

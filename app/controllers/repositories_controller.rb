@@ -61,13 +61,10 @@ class RepositoriesController < ApplicationController
         @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
       end
     else
-      interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
+      interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: @ref)
       if interactor.success?
         result = interactor.result
-        return @sub_entries = [] if result.is_a?(Hash) && result[:status] == -1
-
-        @sub_entries = result.is_a?(Array) ? result : [result]
-        @sub_entries = @sub_entries.sort_by{ |hash| hash['type'] }
+        @sub_entries = result.is_a?(Array) ? result.sort_by{ |hash| hash['type'] } : result
       else
         render_error(interactor.error)
       end

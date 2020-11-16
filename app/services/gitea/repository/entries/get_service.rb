@@ -31,8 +31,10 @@ class Gitea::Repository::Entries::GetService < Gitea::ClientService
     case response.status
     when 200
       body
+    when 404
+      raise '你访问的文件不存在'
     else
-      {status: -1, message: "#{body['message']}"}
+      raise body['message']
     end
   end
 end
