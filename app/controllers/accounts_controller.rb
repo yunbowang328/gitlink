@@ -121,7 +121,9 @@ class AccountsController < ApplicationController
         pre = 'p'
         email = nil
         phone = params[:login]
-        verifi_code = VerificationCode.where(phone: phone, code: code, code_type: 1).last
+        # verifi_code = VerificationCode.where(phone: phone, code: code, code_type: 1).last
+        # TODO: 暂时限定邮箱注册
+        return normal_status(-1, '只支持邮箱注册')
       else
         uid_logger("start register by email:  type is #{type}")
         pre = 'm'
@@ -132,11 +134,8 @@ class AccountsController < ApplicationController
       uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
       # check_code = (verifi_code.try(:code) == code.strip && (Time.now.to_i - verifi_code.created_at.to_i) <= 10*60)
       # todo 上线前请删除万能验证码"513231"
-      unless code == "513231" && request.subdomain == "test-newweb"
-        return normal_status(-2, "验证码不正确") if verifi_code.try(:code) != code.strip
-        return normal_status(-2, "验证码已失效") if !verifi_code&.effective?
-      end
 
+      return normal_status(-1, "邮箱格式错误") unless params[:login] =~ CustomRegexp::EMAIL
       return normal_status(-1, "8~16位密码，支持字母数字和符号") unless params[:password] =~ CustomRegexp::PASSWORD
 
       code = generate_identifier User, 8, pre
