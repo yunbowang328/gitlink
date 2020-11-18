@@ -114,7 +114,7 @@ class AccountsController < ApplicationController
     begin
       # 查询验证码是否正确;type只可能是1或者8
       type = phone_mail_type(params[:login].strip)
-      code = params[:code].strip
+      # code = params[:code].strip
 
       if type == 1
         uid_logger("start register by phone:  type is #{type}")
@@ -129,9 +129,9 @@ class AccountsController < ApplicationController
         pre = 'm'
         email = params[:login]
         phone = nil
-        verifi_code = VerificationCode.where(email: email, code: code, code_type: 8).last
+        # verifi_code = VerificationCode.where(email: email, code: code, code_type: 8).last
       end
-      uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
+      # uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
       # check_code = (verifi_code.try(:code) == code.strip && (Time.now.to_i - verifi_code.created_at.to_i) <= 10*60)
       # todo 上线前请删除万能验证码"513231"
       return normal_status(-1, "该邮箱已注册") if User.exists?(mail: params[:login])
