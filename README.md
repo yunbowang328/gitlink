@@ -676,6 +676,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 |description        |否|string |项目描述  |
 |project_category_id|否|int    |项目类别id  |
 |project_language_id|否|int    |项目语言id  |
+|default_branch     |否|string    |默认分支名称  |
 |private            |否|boolean|项目是否私有, true：为私有，false: 公开，默认为公开  |
 
 

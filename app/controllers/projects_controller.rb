@@ -71,9 +71,13 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       # Projects::CreateForm.new(project_params).validate!
       private = params[:private]
+      gitea_params = {
+        private: private,
+        default_branch: params[:default_branch]
+      }
       if [true, false].include? private
         new_project_params = project_params.merge(is_public: !private)
-        Gitea::Repository::UpdateService.new(@project.owner, @project.repository.identifier, {private: private}).call
+        Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
         @project.repository.update_column(:hidden, private)
       end
       @project.update_attributes!(new_project_params)
