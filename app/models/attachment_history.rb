@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: attachment_histories
+#
+#  id             :integer          not null, primary key
+#  container_id   :integer
+#  container_type :string(255)
+#  filename       :string(255)      default("")
+#  disk_filename  :string(255)      default("")
+#  filesize       :integer          default("0")
+#  content_type   :string(255)      default("")
+#  digest         :string(60)       default("")
+#  downloads      :integer          default("0")
+#  author_id      :integer
+#  created_on     :datetime
+#  description    :text(65535)
+#  disk_directory :string(255)
+#  attachtype     :integer
+#  is_public      :integer
+#  copy_from      :integer
+#  quotes         :integer
+#  version        :integer
+#  attachment_id  :integer
+#  is_publish     :integer          default("1")
+#  publish_time   :date
+#  cloud_url      :string(255)      default("")
+#
+
 class AttachmentHistory < ApplicationRecord
   include Publishable
   include Publicable

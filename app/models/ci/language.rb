@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: ci_languages
+#
+#  id           :integer          not null, primary key
+#  name         :string(255)      not null
+#  content      :text(65535)      not null
+#  usage_amount :integer          default("0")
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  cover_id     :integer
+#
+
 class Ci::Language < Ci::LocalBase
   # before_save :encode_content
 
