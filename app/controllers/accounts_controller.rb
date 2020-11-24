@@ -153,8 +153,8 @@ class AccountsController < ApplicationController
         result = Gitea::User::GenerateTokenService.new(login, params[:password]).call
         @user.gitea_token = result['sha1']
         @user.gitea_uid = gitea_user['id']
-        if user.save!
-          UserExtension.create!(user_id: user.id)
+        if @user.save!
+          UserExtension.create!(user_id: @user.id)
           successful_authentication(@user)
           normal_status("注册成功")
         end
