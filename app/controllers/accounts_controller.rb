@@ -150,7 +150,7 @@ class AccountsController < ApplicationController
       interactor = Gitea::RegisterInteractor.call({username: login, email: email, password: params[:password]})
       if interactor.success?
         gitea_user = interactor.result
-        result = Gitea::User::GenerateTokenService.new(username, params[:password]).call
+        result = Gitea::User::GenerateTokenService.new(login, params[:password]).call
         @user.gitea_token = result['sha1']
         @user.gitea_uid = gitea_user['id']
         if user.save!
