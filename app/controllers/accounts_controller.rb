@@ -130,13 +130,13 @@ class AccountsController < ApplicationController
         pre = 'm'
         email = params[:login]
         phone = nil
+        return normal_status(-1, "该邮箱已注册") if User.exists?(mail: params[:login])
+        return normal_status(-1, "邮箱格式错误") unless params[:login] =~ CustomRegexp::EMAIL
         # verifi_code = VerificationCode.where(email: email, code: code, code_type: 8).last
       end
       # uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
       # check_code = (verifi_code.try(:code) == code.strip && (Time.now.to_i - verifi_code.created_at.to_i) <= 10*60)
       # todo 上线前请删除万能验证码"513231"
-      return normal_status(-1, "该邮箱已注册") if User.exists?(mail: params[:login])
-      return normal_status(-1, "邮箱格式错误") unless params[:login] =~ CustomRegexp::EMAIL
       return normal_status(-1, "8~16位密码，支持字母数字和符号") unless params[:password] =~ CustomRegexp::PASSWORD
 
       code = generate_identifier User, 8, pre
