@@ -17,7 +17,7 @@ class ProjectsController < ApplicationController
     @total_count =
       if category_id.blank?
         ps = ProjectStatistic.first
-        ps.common_projects_count + ps.mirror_projects_count
+        ps.common_projects_count + ps.mirror_projects_count unless ps.blank?
       else
         cate = ProjectCategory.find_by(id: category_id)
         cate&.projects_count || 0
