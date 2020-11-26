@@ -127,6 +127,8 @@ module LoginHelper
     token = config[:sync_token]
     api_host = config[:sync_url]
 
+    return if api_host.blank?
+
     url = "#{api_host}/api/v1/users/sync_user_token"
     sync_json = {
       "token": token,
