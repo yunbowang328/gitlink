@@ -1,7 +1,7 @@
 module RegisterHelper
   extend ActiveSupport::Concern
 
-  def autologin_register(username, email, password, platform= '')
+  def autologin_register(username, email, password, platform= 'forge')
     result = {message: nil, user: nil}
 
     user = User.new(admin: false, login: username, mail: email, type: "User")
