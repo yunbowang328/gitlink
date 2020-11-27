@@ -12,7 +12,8 @@ steps:
   commands:
   - gem install bundler --default -v "2.1.4"
   - gem list bunder
-  - bundle install --jobs=3 --retry=3
+  - bundle -v
+  - bundle _2.1.4_ install --jobs=1 --retry=1
   - rake
 
 - name: test
