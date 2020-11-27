@@ -7,8 +7,18 @@ platform:
   arch: arm64
 
 steps:
-- name: test
-  image: ruby
+- name: install
+  image: ruby:2.3.7
   commands:
+  - gem install bundler --default -v "2.1.4"
+  - gem list bunder
   - bundle install --jobs=3 --retry=3
+  - rake
+
+- name: test
+  image: ruby:2.3.7
+  volumes:
+  - name: bundle
+    path: /usr/local/bundle
+  commands:
   - rake
