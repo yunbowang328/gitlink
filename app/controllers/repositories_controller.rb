@@ -93,7 +93,7 @@ class RepositoriesController < ApplicationController
     interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
     if interactor.success?
       @file = interactor.result
-      create_new_pr(params)
+      # create_new_pr(params)
     else
       render_error(interactor.error)
     end
@@ -103,7 +103,8 @@ class RepositoriesController < ApplicationController
     interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, @owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
-      create_new_pr(params)
+      # TODO: 是否创建pr
+      # create_new_pr(params)
       render_result(1, "更新成功")
     else
       render_error(interactor.error)
