@@ -6,7 +6,7 @@ module Ci::CloudAccountManageable
 
   def bind_account!
     # 1. 保存华为云服务器帐号
-    create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num]).to_i, secret: Ci::CloudAccount.encrypted_secret(devops_params[:secret]))
+    create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num].strip).to_i, secret: Ci::CloudAccount.encrypted_secret(devops_params[:secret]))
 
     cloud_account = Ci::CloudAccount.new(create_params)
     cloud_account.user = current_user
