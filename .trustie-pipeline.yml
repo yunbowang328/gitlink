@@ -1,6 +1,6 @@
 
 kind: pipeline
-name: ruby-2-3-7
+name: default
 
 platform:
   os: linux
