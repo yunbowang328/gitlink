@@ -11,7 +11,7 @@ steps:
   image: ruby:2.3.7
   commands:
   - gem install bundler --default -v "2.1.4"
-  - bundle -v
+  - gem list bunder
   - bundle install --jobs=3 --retry=3
   - rake
 
