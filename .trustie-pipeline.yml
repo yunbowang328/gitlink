@@ -10,6 +10,7 @@ steps:
 - name: install
   image: ruby:2.3.7
   commands:
+  - gem install bundler --default -v "2.1.4"
   - bundle -v
   - bundle install --jobs=3 --retry=3
   - rake
