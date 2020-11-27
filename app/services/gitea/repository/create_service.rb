@@ -24,7 +24,8 @@ class Gitea::Repository::CreateService < Gitea::ClientService
   private
 
   def request_params
-    Hash.new.merge(token: token, data: params)
+    create_params = params.merge(readme: "readme")
+    Hash.new.merge(token: token, data: create_params)
   end
 
   def url

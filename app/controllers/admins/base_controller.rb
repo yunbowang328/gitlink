@@ -14,6 +14,7 @@ class Admins::BaseController < ApplicationController
   private
 
   def require_login
+    # User.current = User.find 1
     return if User.current.logged?
 
     redirect_to "/login?back_url=#{CGI::escape(request.fullpath)}"

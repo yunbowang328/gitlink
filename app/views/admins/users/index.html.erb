@@ -23,12 +23,20 @@
     </div>
 
     <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-sm-2 ml-3', placeholder: 'ID/姓名/邮箱/手机号检索') %>
-    <%= text_field_tag(:school_name, params[:school_name], class: 'form-control  col-sm-2', placeholder: '学校/单位检索') %>
+    <%
+=begin%>
+ <%= text_field_tag(:school_name, params[:school_name], class: 'form-control  col-sm-2', placeholder: '学校/单位检索') %> 
+<%
+=end%>
     <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
   <% end %>
 
   <%= javascript_void_link '导入用户', class: 'btn btn-secondary btn-sm', data: { toggle: 'modal', target: '.admin-import-user-modal'} %>
-  <%= javascript_void_link '导入课堂成员', class: 'btn btn-secondary btn-sm ml-2', data: { toggle: 'modal', target: '.admin-import-course-member-modal'} %>
+  <%
+=begin%>
+ <%= javascript_void_link '导入课堂成员', class: 'btn btn-secondary btn-sm ml-2', data: { toggle: 'modal', target: '.admin-import-course-member-modal'} %> 
+<%
+=end%>
 </div>
 
 <div class="box admin-list-container users-list-container">

@@ -1,13 +1,13 @@
 class MembersController < ApplicationController
   before_action :require_login
-  before_action :find_project_with_id
+  before_action :load_project
   before_action :find_user_with_id, only: %i[create remove change_role]
   before_action :operate!, except: %i[index]
   before_action :check_member_exists!, only: %i[create]
   before_action :check_member_not_exists!, only: %i[remove change_role]
 
   def create
-    interactor = Projects::AddMemberInteractor.call(current_user, @project, @user)
+    interactor = Projects::AddMemberInteractor.call(@project.owner, @project, @user)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -16,12 +16,17 @@ class MembersController < ApplicationController
 
   def index
     scope = @project.members.includes(:roles, user: :user_extension)
+    search = params[:search].to_s.downcase
+    role = params[:role].to_s
+    scope = scope.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login, users.mail)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    scope = scope.joins(:roles).where("roles.name LIKE ?", "%#{role}%") if role.present?
+
     @total_count = scope.size
     @members = paginate(scope)
   end
 
   def remove
-    interactor = Projects::DeleteMemberInteractor.call(current_user, @project, @user)
+    interactor = Projects::DeleteMemberInteractor.call(@project.owner, @project, @user)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -29,7 +34,7 @@ class MembersController < ApplicationController
   end
 
   def change_role
-    interactor = Projects::ChangeMemberRoleInteractor.call(current_user, @project, @user, params[:role])
+    interactor = Projects::ChangeMemberRoleInteractor.call(@project.owner, @project, @user, params[:role])
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)

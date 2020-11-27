@@ -14,6 +14,20 @@ class Repositories::CreateService < ApplicationService
         gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
         sync_project(@repository, gitea_repository)
         sync_repository(@repository, gitea_repository)
+        # if project.project_type == "common"
+        #   chain_params = {
+        #     type: "create",
+        #     chain_params:{
+        #       username: user.try(:login),
+        #       reponame: @repository.try(:identifier),
+        #       token_name: @repository.try(:identifier),
+        #       total_supply: 1000000
+        #     }
+        #   }
+        #   PostChainJob.perform_later(chain_params)  #创建上链操作
+        # end
+      else
+        Rails.logger.info("#############___________create_repository_erros______###########{@repository.errors.messages}")
       end
       @repository
     end
@@ -48,8 +62,9 @@ class Repositories::CreateService < ApplicationService
   def gitea_repository_params
     hash = {
       name: params[:identifier],
-      private: !params[:hidden]
-      # "auto_init": true,
+      private: params[:hidden],
+      # readme: "ReadMe",
+      "auto_init": true,
       # "description": "string",
       # "gitignores": "string",
       # "issue_labels": "string",

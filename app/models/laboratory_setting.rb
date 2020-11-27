@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: laboratory_settings
+#
+#  id            :integer          not null, primary key
+#  laboratory_id :integer
+#  config        :text(65535)
+#
+# Indexes
+#
+#  index_laboratory_settings_on_laboratory_id  (laboratory_id)
+#
+
 class LaboratorySetting < ApplicationRecord
   belongs_to :laboratory
 
@@ -61,13 +74,13 @@ class LaboratorySetting < ApplicationRecord
     {
       name: nil,
       navbar: [
-        { 'name' => '实践课程', 'link' => '/paths',        'hidden' => false },
-        { 'name' => '翻转课堂', 'link' => '/courses',      'hidden' => false },
-        { 'name' => '实训项目', 'link' => '/shixuns',      'hidden' => false },
-        { 'name' => '在线竞赛', 'link' => '/competitions', 'hidden' => false },
-        { 'name' => '教学案例', 'link' => '/moop_cases',   'hidden' => false },
-        { 'name' => '交流问答', 'link' => '/forums',       'hidden' => false },
-        { 'name' => '开发者社区', 'link' => '/problems',       'hidden' => false },
+        { 'name' => '首页', 'link' => '/projects',        'hidden' => false },
+        { 'name' => '课程', 'link' => '/courses',      'hidden' => false },
+        { 'name' => '项目', 'link' => '',      'hidden' => true },
+        { 'name' => '数据', 'link' => '/datas', 'hidden' => false },
+        { 'name' => '竞赛', 'link' => '/competitions',   'hidden' => false },
+        { 'name' => '问吧', 'link' => '/forums',       'hidden' => false },
+        { 'name' => '开源社区', 'link' => '/projects',       'hidden' => false },
       ],
       footer: nil
     }

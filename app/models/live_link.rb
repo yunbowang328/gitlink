@@ -1,5 +1,5 @@
 class LiveLink < ApplicationRecord
-  belongs_to :course
+  # belongs_to :course
   belongs_to :user
 
   has_many :tidings, as: :container, dependent: :destroy

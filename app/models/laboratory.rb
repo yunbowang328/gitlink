@@ -1,3 +1,22 @@
+# == Schema Information
+#
+# Table name: laboratories
+#
+#  id           :integer          not null, primary key
+#  school_id    :integer
+#  identifier   :string(255)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  sync_course  :boolean          default("0")
+#  sync_subject :boolean          default("0")
+#  sync_shixun  :boolean          default("0")
+#
+# Indexes
+#
+#  index_laboratories_on_identifier  (identifier) UNIQUE
+#  index_laboratories_on_school_id   (school_id)
+#
+
 class Laboratory < ApplicationRecord
   belongs_to :school, optional: true
 
@@ -24,7 +43,7 @@ class Laboratory < ApplicationRecord
 
   def site
     rails_env = EduSetting.get('rails_env')
-    suffix = rails_env && rails_env != 'production' ? ".#{rails_env}.educoder.net" : '.educoder.net'
+    suffix = rails_env && rails_env != 'production' ? ".#{rails_env}.trustie.net" : '.trustie.net'
 
     identifier ? "#{identifier}#{suffix}" : ''
   end

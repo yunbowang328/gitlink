@@ -1,15 +1,16 @@
 class Gitea::UserForm
   include ActiveModel::Model
-  EMAIL_REGEX = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+  EMAIL_REGEX = /^[a-zA-Z0-9_\-.]+@[a-zA-Z0-9_\-.]+(\.[a-zA-Z0-9_-]+)+$/
 
   include ActiveModel::Model
   attr_accessor :username, :email, :password
 
   validates :username, presence: true
   validates :email, presence: true, format: { with: EMAIL_REGEX, multiline: true }
+
   validates :password, presence: true
 
-  validate :check_username, :check_email
+  # validate :check_username, :check_email
 
   attr_reader :record
 
@@ -27,6 +28,7 @@ class Gitea::UserForm
 
   private
   def check_username
+    Rails.logger.info("#######_______username________#################{username}")
     # errors.add(:login, :exist)
     raise "#{username} 已使用." if User.exists?(login: username.strip)
   end

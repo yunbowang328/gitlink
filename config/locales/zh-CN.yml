@@ -28,6 +28,8 @@ zh-CN:
     draft: 草稿
 
   journal_detail:
+    branch_name: 分支
+    close_pr: 合并
     merge: 合并
     issue_tags_value: 标签
     lock_issue: 锁定工单
@@ -220,3 +222,7 @@ zh-CN:
         live_time: '开播时间'
         duration: '直播时长'
     close_pr: 合并请求
+  roles: 
+    Developer: 开发者 
+    Reporter: 报告者
+    Manager: 管理员

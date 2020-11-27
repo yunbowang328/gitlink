@@ -11,7 +11,7 @@ class IssueDependsController < ApplicationController
     }
     save_issue_depend = IssueDepend.new(issue_depend)
     if save_issue_depend.save
-      @issue.custom_journal_detail("issue_depend","", @issue.id)
+      @issue.custom_journal_detail("issue_depend","", @issue.id, current_user&.id)
       normal_status(0, "添加依赖成功")
     else
       normal_status(0, "添加依赖失败")
@@ -23,7 +23,7 @@ class IssueDependsController < ApplicationController
     depend_issue_params = params[:id]
     depend_issue = IssueDepend.find(depend_issue_params)
     if depend_issue&.destroy
-      @issue.custom_journal_detail("destroy_issue_depend","", @issue.id)
+      @issue.custom_journal_detail("destroy_issue_depend","", @issue.id, current_user&.id)
       normal_status(0, "删除依赖成功")
     else
       normal_status(-1, "删除依赖失败")

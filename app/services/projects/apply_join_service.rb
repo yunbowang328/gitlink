@@ -13,7 +13,7 @@ class Projects::ApplyJoinService < ApplicationService
 
     # 项目报告人员直接加入项目
     if params[:role] == 'reporter'
-      Projects::JoinService.call(project, user, role: 'reporter')
+      # Projects::JoinService.call(project, user, role: 'reporter')
       return project
     end
 
@@ -55,7 +55,7 @@ class Projects::ApplyJoinService < ApplicationService
         applied_user_id: user.id, role: role_value, project_id: project.id
       }
 
-      project.manager_members.each do |manager|
+      project.managers.each do |manager|
         worker.add(base_attr.merge(user_id: manager.user_id))
       end
     end

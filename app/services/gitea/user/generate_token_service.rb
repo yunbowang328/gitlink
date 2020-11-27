@@ -7,11 +7,13 @@ class Gitea::User::GenerateTokenService < Gitea::ClientService
     @password  = password
   end
 
+
   def call
     params = {}
     url = "/users/#{username}/tokens".freeze
     params = params.merge(token: token_params, data: request_params)
     post(url, params)
+
   end
 
   private

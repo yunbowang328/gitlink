@@ -1,6 +1,7 @@
 class IssueTagsController < ApplicationController
-  before_action :require_login
-  before_action :set_project
+  before_action :require_login, except: [:index]
+  before_action :load_repository
+  before_action :set_user
   before_action :check_issue_permission, except: :index
   before_action :set_issue_tag, only: [:edit, :update, :destroy]
 
@@ -37,12 +38,12 @@ class IssueTagsController < ApplicationController
           begin
             issue_tag = IssueTag.new(tag_params.merge(project_id: @project.id, user_id: current_user.id))
             if issue_tag.save
-              gitea_tag = Gitea::Labels::CreateService.new(current_user, @repository.try(:identifier), tag_params).call
-              if gitea_tag && issue_tag.update_attributes(gid: gitea_tag["id"], gitea_url: gitea_tag["url"])
-                normal_status(0, "标签创建成功")
-              else
-                normal_status(-1, "标签创建失败")
-              end
+              # gitea_tag = Gitea::Labels::CreateService.new(current_user, @repository.try(:identifier), tag_params).call
+              # if gitea_tag && issue_tag.update_attributes(gid: gitea_tag["id"], gitea_url: gitea_tag["url"])
+              #   normal_status(0, "标签创建成功")
+              # else
+              #   normal_status(-1, "标签创建失败")
+              # end
             else
               normal_status(-1, "标签创建失败")
             end
@@ -78,12 +79,12 @@ class IssueTagsController < ApplicationController
         ActiveRecord::Base.transaction do
           begin
             if @issue_tag.update_attributes(tag_params)
-              gitea_tag = Gitea::Labels::UpdateService.new(current_user, @repository.try(:identifier),@issue_tag.try(:gid), tag_params).call
-              if gitea_tag
-                normal_status(0, "标签更新成功")
-              else
-                normal_status(-1, "标签更新失败")
-              end
+              # gitea_tag = Gitea::Labels::UpdateService.new(current_user, @repository.try(:identifier),@issue_tag.try(:gid), tag_params).call
+              # if gitea_tag
+              #   normal_status(0, "标签更新成功")
+              # else
+              #   normal_status(-1, "标签更新失败")
+              # end
             else
               normal_status(-1, "标签更新失败")
             end
@@ -102,12 +103,12 @@ class IssueTagsController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         if @issue_tag.destroy
-          issue_tag = Gitea::Labels::DeleteService.new(@user, @repository.try(:identifier), @issue_tag.try(:gid)).call
-          if issue_tag
-            normal_status(0, "标签删除成功")
-          else
-            normal_status(-1, "标签删除失败")
-          end
+          # issue_tag = Gitea::Labels::DeleteService.new(@user, @repository.try(:identifier), @issue_tag.try(:gid)).call
+          # if issue_tag
+          #   normal_status(0, "标签删除成功")
+          # else
+          #   normal_status(-1, "标签删除失败")
+          # end
         else
           normal_status(-1, "标签删除失败")
         end
@@ -120,13 +121,8 @@ class IssueTagsController < ApplicationController
 
   private
 
-  def set_project
-    @project = Project.find_by_identifier! params[:project_id]
-    @repository = @project.repository
+  def set_user
     @user = @project.owner
-    normal_status(-1, "项目不存在") unless @project.present?
-    normal_status(-1, "仓库不存在") unless @repository.present?
-    normal_status(-1, "用户不存在") unless @user.present?
   end
 
   def check_issue_permission

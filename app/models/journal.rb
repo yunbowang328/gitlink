@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: journals
+#
+#  id               :integer          not null, primary key
+#  journalized_id   :integer          default("0"), not null
+#  journalized_type :string(30)       default(""), not null
+#  user_id          :integer          default("0"), not null
+#  notes            :text(65535)
+#  created_on       :datetime         not null
+#  private_notes    :boolean          default("0"), not null
+#  parent_id        :integer
+#  comments_count   :integer          default("0")
+#  reply_id         :integer
+#
+# Indexes
+#
+#  index_journals_on_created_on      (created_on)
+#  index_journals_on_journalized_id  (journalized_id)
+#  index_journals_on_user_id         (user_id)
+#  journals_journalized_id           (journalized_id,journalized_type)
+#
+
 class Journal < ApplicationRecord
   belongs_to :user
   belongs_to :issue, foreign_key: :journalized_id, :touch => true
@@ -31,6 +54,9 @@ class Journal < ApplicationRecord
           else
             prop_name = I18n.t("journal_detail.#{de[1]}")
             case de[1]
+            when "description"
+              old_value = "描述已更新"
+              value = "修改了描述"
             when "is_private"
               old_value = I18n.t("journal_detail.#{de[2]}")
               value = I18n.t("journal_detail.#{de[3]}")

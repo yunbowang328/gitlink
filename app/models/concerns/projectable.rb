@@ -2,12 +2,10 @@ module Projectable
   extend ActiveSupport::Concern
 
   included do
-    has_many :projects, -> { order(position: :asc) }
-
+    has_many :projects
+    
+    scope :order_position, ->{order(position: :asc)}
     scope :without_content, -> { select(column_names - ['content'])}
-    scope :search, lambda { |keywords|
-      where("name LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
-    }
   end
 
   module ClassMethods

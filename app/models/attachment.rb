@@ -1,3 +1,36 @@
+# == Schema Information
+#
+# Table name: attachments
+#
+#  id             :integer          not null, primary key
+#  container_id   :integer
+#  container_type :string(30)
+#  filename       :string(255)      default(""), not null
+#  disk_filename  :string(255)      default(""), not null
+#  filesize       :integer          default("0"), not null
+#  content_type   :string(255)      default("")
+#  digest         :string(40)       default(""), not null
+#  downloads      :integer          default("0"), not null
+#  author_id      :integer          default("0"), not null
+#  created_on     :datetime
+#  description    :text(65535)
+#  disk_directory :string(255)
+#  attachtype     :integer          default("1")
+#  is_public      :integer          default("1")
+#  copy_from      :integer
+#  quotes         :integer
+#  is_publish     :integer          default("1")
+#  publish_time   :datetime
+#  memo_image     :boolean          default("0")
+#  extra_type     :integer          default("0")
+#
+# Indexes
+#
+#  index_attachments_on_author_id                        (author_id)
+#  index_attachments_on_container_id_and_container_type  (container_id,container_type)
+#  index_attachments_on_created_on                       (created_on)
+#
+
 class Attachment < ApplicationRecord
   include BaseModel
   include Publicable
@@ -6,11 +39,11 @@ class Attachment < ApplicationRecord
 
   belongs_to :container, polymorphic: true, optional: true
   belongs_to :author, class_name: "User", foreign_key: :author_id
-  belongs_to :course, foreign_key: :container_id, optional: true
-  has_many :attachment_group_settings, :dependent => :destroy
-  has_many :attachment_histories, -> { order(version: :desc) }, :dependent => :destroy
+  # belongs_to :course, foreign_key: :container_id, optional: true
+  # has_many :attachment_group_settings, :dependent => :destroy
+  # has_many :attachment_histories, -> { order(version: :desc) }, :dependent => :destroy
   # 二级目录
-  belongs_to :course_second_category, optional: true
+  # belongs_to :course_second_category, optional: true
 
   scope :by_filename_or_user_name,      -> (keywords) { joins(:author).where("filename like :search or LOWER(concat(users.lastname, users.firstname)) LIKE :search",
                                                         :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank? }
@@ -38,14 +71,15 @@ class Attachment < ApplicationRecord
   end
 
   def title
-    title = filename
-    if container && container.is_a?(StudentWork) && author_id != User.current.id
-      course = container&.homework_common&.course
-      unless User.current.teacher_of_course?(course)
-        title = "#{Time.now.strftime('%Y%m%d%H%M%S')}_#{DCODES.sample(8).join}" + File.extname(filename)
-      end
-    end
-    title
+    filename
+    # title = filename
+    # if container && container.is_a?(StudentWork) && author_id != User.current.id
+    #   course = container&.homework_common&.course
+    #   unless User.current.teacher_of_course?(course)
+    #     title = "#{Time.now.strftime('%Y%m%d%H%M%S')}_#{DCODES.sample(8).join}" + File.extname(filename)
+    #   end
+    # end
+    # title
   end
 
   def downloads_count

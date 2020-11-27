@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: apply_user_authentications
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer
+#  status     :integer
+#  auth_type  :integer
+#  remarks    :string(255)
+#  dealer     :integer
+#  deal_time  :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  is_delete  :boolean          default("0")
+#
+# Indexes
+#
+#  index_apply_user_authentications_on_user_id  (user_id)
+#
+
 # status：0 审核中 1 同意  2 拒绝  3 撤销
 # auth_type：1 实名认证， 2 职业认证
 class ApplyUserAuthentication < ApplicationRecord

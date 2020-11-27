@@ -1,25 +1,35 @@
 class Gitea::Repository::Tags::ListService < Gitea::ClientService
-  attr_reader :user, :repo_name
+  attr_reader :token, :owner, :repo, :params
 
   # ref: The name of the commit/branch/tag. Default the repository’s default branch (usually master)
-  # repo_name: the name of repository
-  def initialize(user, repo_name)
-    @user      = user
-    @repo_name = repo_name
+  # repo: the name of repository
+  def initialize(token, owner, repo, params={})
+    @token  = token
+    @owner  = owner
+    @repo   = repo
+    @params = params
   end
 
   def call
-    response = get(url, params)
+    response = get(url, request_params)
     render_result(response)
   end
 
   private
-  def params
-    Hash.new.merge(token: user.gitea_token)
+  def request_params
+    Hash.new.merge(token: token, page: set_page, limit: set_limit)
+  end
+
+  def set_page
+    (params[:page] || PAGINATE_DEFAULT_PAGE).to_i
+  end
+
+  def set_limit
+    (params[:limit] || PAGINATE_DEFAULT_LIMIT).to_i
   end
 
   def url
-    "/repos/#{user.login}/#{repo_name}/tags".freeze
+    "/repos/#{owner}/#{repo}/tags".freeze
   end
 
   def render_result(response)

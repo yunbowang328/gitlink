@@ -52,6 +52,10 @@ module ApplicationHelper
     "avatars"
   end
 
+  def replace_bytes_to_b(size_string)
+    return size_string.gsub("Bytes", "B").gsub("bytes", "B").gsub("字节", "B")
+  end
+
   def storage_path
     File.join(Rails.root, "public", "images", relative_path)
   end
@@ -427,5 +431,14 @@ module ApplicationHelper
 
   def render_unix_time(date)
     date.to_time.to_i
+  end
+
+  def find_user_by_login(login)
+    User.find_by_login login
+  end
+
+  def render_base64_decoded(str)
+    return nil if str.blank?
+    Base64.decode64 str
   end
 end

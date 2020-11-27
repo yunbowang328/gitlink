@@ -1,49 +1,49 @@
 <table class="table table-hover text-center subject-list-table">
   <thead class="thead-light">
-  <tr>
-    <th width="4%">序号</th>
-    <th width="4%">ID</th>
-    <th width="15%" class="text-left">项目名称</th>
-    <th width="6%">公开</th>
-    <th width="5%">issue</th>
-    <th width="5%">资源</th>
-    <th width="6%">版本库</th>
-    <th width="8%">PullRequest</th>
-    <th width="6%">里程碑</th>
-    <th width="10%">成员</th>
-    <th width="10%">管理员</th>
-    <th width="11%"><%= sort_tag('创建时间', name: 'created_at', path: admins_projects_path) %></th>
-    <th width="10%">操作</th>
-  </tr>
+    <tr>
+      <th width="4%">序号</th>
+      <th width="4%">ID</th>
+      <th width="15%" class="text-left">项目名称</th>
+      <th width="6%">公开</th>
+      <th width="5%">issue</th>
+      <th width="5%">资源</th>
+      <th width="6%">版本库</th>
+      <th width="8%">PullRequest</th>
+      <th width="6%">里程碑</th>
+      <th width="10%">成员</th>
+      <th width="10%">管理员</th>
+      <th width="11%"><%= sort_tag('创建时间', name: 'created_on', path: admins_projects_path) %></th>
+      <th width="10%">操作</th>
+    </tr>
   </thead>
   <tbody>
-  <% if projects.present? %>
+    <% if projects.present? %>
     <% projects.each_with_index do |project, index| %>
-      <tr class="project-item-<%= project.id %>">
-        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
-        <td><%= project.id %></td>
-        <td class="text-left">
-          <%= link_to(project.name, "/projects/#{project.id}", target: '_blank') %>
-        </td>
-        <td><%= project.is_public ? '√' : '' %></td>
-        <td><%= project.issues.size %></td>
-        <td><%= project.attachments.size %></td>
-        <td><%= project.project_score.try(:changeset_num).to_i %></td>
-        <td><%= project.project_score.try(:pull_request_num).to_i %></td>
-        <td><%= project.versions.size %></td>
-        <td><%= project.members.size %></td>
-        <td>
-          <%= project.owner ? link_to(project.owner&.real_name, "/users/#{project.owner&.login}", target: '_blank') : "" %>
-        </td>
-        <td><%= project.created_on&.strftime('%Y-%m-%d %H:%M') %></td>
-        <td class="action-container">
-          <%= delete_link '删除', admins_project_path(project, element: ".project-item-#{project.id}"), class: 'delete-project-action' %>
-        </td>
-      </tr>
+    <tr class="project-item-<%= project.id %>">
+      <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+      <td><%= project.id %></td>
+      <td class="text-left">
+        <%= link_to(project.name, "/projects/#{project.id}", target: '_blank') %>
+      </td>
+      <td><%= project.is_public ? '√' : '' %></td>
+      <td><%= project.issues.size %></td>
+      <td><%= project.attachments.size %></td>
+      <td><%= project&.project_score.try(:changeset_num).to_i %></td>
+      <td><%= project&.project_score.try(:pull_request_num).to_i %></td>
+      <td><%= project.versions.size %></td>
+      <td><%= project.members.size %></td>
+      <td>
+        <%= project.owner ? link_to(project.owner&.real_name, "/users/#{project.owner&.login}", target: '_blank') : "" %>
+      </td>
+      <td><%= project.created_on&.strftime('%Y-%m-%d %H:%M') %></td>
+      <td class="action-container">
+          <%= link_to "删除", admins_project_path(project.id), method: :delete, data:{confirm: "确认删除的吗？"}, class: "delete-project-action" %>
+      </td>
+    </tr>
     <% end %>
-  <% else %>
+    <% else %>
     <%= render 'admins/shared/no_data_for_table' %>
-  <% end %>
+    <% end %>
   </tbody>
 </table>
 

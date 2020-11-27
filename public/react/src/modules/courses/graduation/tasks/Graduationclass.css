@@ -1,7 +1,0 @@
-.classroomclass{
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 110px;
-    display: inline-block;
-}

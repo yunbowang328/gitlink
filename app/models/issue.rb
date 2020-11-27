@@ -1,3 +1,53 @@
+# == Schema Information
+#
+# Table name: issues
+#
+#  id                   :integer          not null, primary key
+#  tracker_id           :integer          not null
+#  project_id           :integer          not null
+#  subject              :string(255)      default(""), not null
+#  description          :text(4294967295)
+#  due_date             :date
+#  category_id          :integer
+#  status_id            :integer          not null
+#  assigned_to_id       :integer
+#  priority_id          :integer          not null
+#  fixed_version_id     :integer
+#  author_id            :integer          not null
+#  created_on           :datetime
+#  updated_on           :datetime
+#  start_date           :date
+#  done_ratio           :integer          default("0"), not null
+#  estimated_hours      :float(24)
+#  parent_id            :integer
+#  root_id              :integer
+#  lft                  :integer
+#  rgt                  :integer
+#  is_private           :boolean          default("0"), not null
+#  closed_on            :datetime
+#  project_issues_index :integer
+#  issue_type           :string(255)
+#  token                :integer          default("0")
+#  issue_tags_value     :string(255)
+#  is_lock              :boolean          default("0")
+#  issue_classify       :string(255)
+#  ref_name             :string(255)
+#  branch_name          :string(255)
+#
+# Indexes
+#
+#  index_issues_on_assigned_to_id           (assigned_to_id)
+#  index_issues_on_author_id                (author_id)
+#  index_issues_on_category_id              (category_id)
+#  index_issues_on_created_on               (created_on)
+#  index_issues_on_fixed_version_id         (fixed_version_id)
+#  index_issues_on_priority_id              (priority_id)
+#  index_issues_on_root_id_and_lft_and_rgt  (root_id,lft,rgt)
+#  index_issues_on_status_id                (status_id)
+#  index_issues_on_tracker_id               (tracker_id)
+#  issues_project_id                        (project_id)
+#
+
 class Issue < ApplicationRecord
   #issue_type 1为普通，2为悬赏
   belongs_to :project, :counter_cache => true
@@ -11,7 +61,7 @@ class Issue < ApplicationRecord
   belongs_to :issue_status, foreign_key: :status_id,optional: true
   has_many :commit_issues
   has_many :attachments, as: :container, dependent: :destroy
-  has_many :memos
+  # has_many :memos
   has_many :journals, :as => :journalized, :dependent => :destroy
   has_many :journal_details, through: :journals
   has_many :issue_tags_relates, dependent: :destroy
@@ -22,17 +72,19 @@ class Issue < ApplicationRecord
   scope :issue_many_includes, ->{includes(journals: :user)}
   scope :issue_issue, ->{where(issue_classify: [nil,"issue"])}
   scope :issue_pull_request, ->{where(issue_classify: "pull_request")}
+  scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
 
   after_update :change_versions_count
+  after_destroy :update_closed_issues_count_in_project!
 
 
   def get_assign_user
-    User.select(:login, :lastname,:firstname, :nickname)&.find_by_id(self.assigned_to_id)
+    User&.find_by_id(self.assigned_to_id) if self.assigned_to_id.present?
   end
 
-  def create_journal_detail(change_files, issue_files, issue_file_ids)
+  def create_journal_detail(change_files, issue_files, issue_file_ids, user_id)
     journal_params = {
-      journalized_id: self.id, journalized_type: "Issue", user_id: self.author_id
+      journalized_id: self.id, journalized_type: "Issue", user_id: user_id
     }
     journal = Journal.new journal_params
 
@@ -42,7 +94,7 @@ class Issue < ApplicationRecord
         new_attachment_name = self.attachments.select(:filename,:id).where(id: issue_files).pluck(:filename).join(",")
         journal.journal_details.create(property: "attachment", prop_key: "#{issue_files.size}", old_value: old_attachment_names, value: new_attachment_name)
       end
-      change_values = %w(subject description is_private assigned_to_id tracker_id status_id priority_id fixed_version_id start_date due_date estimated_hours done_ratio issue_tags_value issue_type token)
+      change_values = %w(subject description is_private assigned_to_id tracker_id status_id priority_id fixed_version_id start_date due_date estimated_hours done_ratio issue_tags_value issue_type token branch_name)
       change_values.each do |at|
         if self.send("saved_change_to_#{at}?")
           journal.journal_details.create(property: "attr", prop_key: "#{at}", old_value: self.send("#{at}_before_last_save"), value: self.send(at))
@@ -51,9 +103,9 @@ class Issue < ApplicationRecord
     end
   end
 
-  def custom_journal_detail(prop_key, old_value, value)
+  def custom_journal_detail(prop_key, old_value, value, user_id)
     journal_params = {
-      journalized_id: self.id, journalized_type: "Issue", user_id: self.author_id
+      journalized_id: self.id, journalized_type: "Issue", user_id: user_id
     }
     journal = Journal.new journal_params
     if journal.save
@@ -90,15 +142,19 @@ class Issue < ApplicationRecord
   end
 
   def change_versions_count
-    if self.version.present?
+    if self.version.present? && self.saved_change_to_status_id?
       if self.status_id == 5
         percent = self.version.issues_count == 0 ? 0.0 : ((self.version.closed_issues_count + 1).to_f / self.version.issues_count)
         self.version.update_attributes(closed_issues_count: (self.version.closed_issues_count + 1), percent: percent)
-      else
+      elsif self.status_id_before_last_save == 5
         percent = self.version.issues_count == 0 ? 0.0 : ((self.version.closed_issues_count - 1).to_f / self.version.issues_count)
         self.version.update_attributes(closed_issues_count: (self.version.closed_issues_count - 1), percent: percent)
       end
     end
+  end
+
+  def update_closed_issues_count_in_project!
+    self.project.decrement!(:closed_issues_count)
   end
 
 end

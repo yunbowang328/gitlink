@@ -19,8 +19,6 @@ gem 'kaminari', '~> 1.1', '>= 1.1.1'
 
 gem 'bootsnap', '>= 1.1.0', require: false
 
-gem 'gitlab', path: 'lib/gitlab-cli'
-
 gem 'chinese_pinyin'
 
 gem 'rack-cors'
@@ -40,7 +38,7 @@ gem 'oauth2'
 #导出为pdf
 gem 'pdfkit'
 gem 'wkhtmltopdf-binary'
-gem 'request_store'
+# gem 'request_store'
 #gem 'iconv'
 # markdown 转html
 gem 'redcarpet', '~> 3.4'
@@ -55,16 +53,26 @@ gem 'ancestry'
 gem 'acts_as_list'
 gem 'omniauth-cas'
 
+# profiler Middleware
+gem 'rack-mini-profiler'
+
+# object-based searching
+gem 'ransack'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.8'
 end
 
 group :development do
+  gem 'prettier'
+  gem 'rubocop', '~> 0.52.0'
+  gem 'solargraph', '~> 0.38.0'
   gem 'awesome_print'
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem "annotate", "~> 2.6.0"
 end
 
 group :test do

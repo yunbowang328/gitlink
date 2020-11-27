@@ -1,6 +1,6 @@
 class VersionReleasesController < ApplicationController
-  before_action :find_project
-  before_action :set_user_and_project
+  before_action :load_repository
+  before_action :set_user
   before_action :require_login, except: [:index]
   before_action :find_version , only: [:edit, :update, :destroy]
 
@@ -8,13 +8,13 @@ class VersionReleasesController < ApplicationController
     version_releases = Gitea::Versions::ListService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier)).call
     @version_releases = version_releases
     @user_permission = current_user.present? && (current_user == @user || current_user.admin?)
-
+    @forge_releases = @repository.version_releases.select(:id,:version_gid).includes(:attachments)
   end
 
   def new
     #获取所有的分支
     @all_branches = []
-    get_all_branches = Gitea::Repository::BranchesService.new(@user, @repository.try(:identifier)).call
+    get_all_branches = Gitea::Repository::Branches::ListService.new(@user, @repository.try(:identifier)).call
     if get_all_branches && get_all_branches.size > 0
       get_all_branches.each do |b|
         @all_branches.push(b["name"])
@@ -34,14 +34,7 @@ class VersionReleasesController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          version_params = {
-            body:	params[:body],
-            draft: params[:draft] || false,
-            name: params[:name],
-            prerelease: params[:prerelease] || false,
-            tag_name: params[:tag_name],
-            target_commitish: params[:target_commitish] || "master"  #分支
-          }
+          version_params = releases_params
           version_release = VersionRelease.new(version_params.merge(user_id: current_user.id, repository_id: @repository.id))
           if version_release.save!
             git_version_release = Gitea::Versions::CreateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params).call
@@ -54,6 +47,9 @@ class VersionReleasesController < ApplicationController
               }
               version_release.update_attributes!(update_params)
               version_release.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
+              if params[:attachment_ids].present?
+                create_attachments(params[:attachment_ids], version_release)
+              end
               normal_status(0, "发布成功")
             else
               normal_status(-1, "发布失败")
@@ -70,7 +66,7 @@ class VersionReleasesController < ApplicationController
   end
 
   def edit
-
+    @version_attachments = @version.attachments
   end
 
   def update
@@ -81,19 +77,15 @@ class VersionReleasesController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          version_params = {
-            body:	params[:body],
-            draft: params[:draft] || false,
-            name: params[:name],
-            prerelease: params[:prerelease],
-            tag_name: params[:tag_name],
-            target_commitish: params[:target_commitish] || "master"  #分支
-          }
+          version_params = releases_params
+
           if @version.update_attributes!(version_params)
+            create_attachments(params[:attachment_ids], @version) if params[:attachment_ids].present?
             git_version_release = Gitea::Versions::UpdateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
             unless git_version_release
               raise Error, "更新失败"
             end
+
             normal_status(0, "更新成功")
           else
             normal_status(-1, "更新失败")
@@ -131,20 +123,37 @@ class VersionReleasesController < ApplicationController
 
 
   private
-
-  def set_user_and_project
-    # @project = Project.find_by_id(params[:project_id])
-    @repository = @project.repository  #项目的仓库
-    @user = @project.owner
-    unless @user.present? && @project.present? && @repository.present?
-      normal_status(-1, "仓库不存在")
-    end
+  def set_user
+    @user = @repository.user
   end
 
   def find_version
     @version = VersionRelease.find_by_id(params[:id])
     unless @version.present?
       normal_status(-1, "版本不存在")
+    end
+  end
+
+  def releases_params
+   {
+      body:	params[:body],
+      draft: params[:draft] || false,
+      name: params[:name],
+      prerelease: params[:prerelease] || false,
+      tag_name: params[:tag_name],
+      target_commitish: params[:target_commitish] || "master"  #分支
+    }
+  end
+
+  def create_attachments(attachment_ids, target)
+    attachment_ids.each do |id|
+      attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
+      unless attachment.blank?
+        attachment.container = target
+        attachment.author_id = current_user.id
+        attachment.description = ""
+        attachment.save
+      end
     end
   end
 

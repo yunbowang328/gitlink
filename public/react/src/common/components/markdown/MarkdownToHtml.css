@@ -1,6 +1,0 @@
-.markdownToHtml.editormd-html-preview, .markdownToHtml.editormd-preview-container {
-    overflow: hidden;
-}
-.markdownToHtml.editormd-html-preview p.editormd-tex, .markdownToHtml.editormd-preview-container p.editormd-tex {
-    text-align: left;
-}

@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: apply_actions
+#
+#  id                 :integer          not null, primary key
+#  user_id            :integer
+#  reason             :string(255)
+#  container_id       :integer
+#  container_type     :string(255)
+#  dealer_id          :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  status             :integer          default("0")
+#  apply_reason       :text(65535)
+#  noticed            :boolean          default("0")
+#  ip_addr            :string(255)
+#  reject_description :string(255)
+#
+# Indexes
+#
+#  index_apply_actions_on_user_id  (user_id)
+#
+
 # 申请消息
 class ApplyAction < ApplicationRecord
   belongs_to :user

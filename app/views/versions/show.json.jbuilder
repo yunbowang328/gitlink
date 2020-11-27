@@ -13,7 +13,7 @@ json.extract! @version, :id,:name,:project_id,:description, :effective_date, :st
 
 json.issues do
   json.array! @version_issues.each.to_a do |issue|
-    cost_time(issue)
+    # cost_time(issue)
     json.id issue.id
     json.name issue.subject
     json.format_time format_time(issue.created_on)
@@ -34,7 +34,7 @@ json.issues do
     json.token issue.issue_type == "2" ? issue.token : ""
     json.issue_classify issue.issue_classify
     json.branch_name issue.branch_name
-    json.cost_time @all_cost_time
+    # json.cost_time @all_cost_time
   end
 end
 

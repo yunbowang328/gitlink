@@ -13,7 +13,7 @@ class Projects::JoinService < ApplicationService
 
       member.member_roles.create!(role_id: role_value)
 
-      project.user_grades.find_or_create_by!(user: user)
+      # project.user_grades.find_or_create_by!(user: user)
     end
 
     ApplyJoinProjectNotifyJob.perform_later(user, project, role_value)

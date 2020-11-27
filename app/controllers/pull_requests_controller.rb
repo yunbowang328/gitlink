@@ -1,76 +1,55 @@
 class PullRequestsController < ApplicationController
-  before_action :require_login
-  before_action :find_project
-  before_action :set_repository
-  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge]
+  before_action :require_login, except: [:index, :show, :files, :commits]
+  before_action :load_repository
+  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
+  before_action :load_pull_request, only: [:files, :commits]
   include TagChosenHelper
   include ApplicationHelper
 
 
   def index
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
-    issues = @project.issues.issue_pull_request.includes(:user,:tracker, :priority, :version, :issue_status, :journals, :issue_times)
+    issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
     @all_issues_size = issues.size
-    @open_issues_size = issues.where.not(status_id: 5).size
-    @close_issues_size = issues.where(status_id: 5).size
-    @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
-    @my_published_size = issues.where(author_id: current_user&.id).size
+    @open_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 0}).size
+    @close_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 2}).size
+    @merged_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 1}).size
+    @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
-    status_type = params[:status_type] || "1"  #issue状态的选择
-    search_name = params[:search].to_s
-    start_time = params[:start_date]
-    end_time = params[:due_date]
-
-    if status_type.to_s == "1"  #表示开启中的
-      issues = issues.where.not(status_id: 5)
-    elsif status_type.to_s == "2"   #表示关闭中的
-      issues = issues.where(status_id: 5)
-    end
-
-    if search_name.present?
-      issues = issues.where("subject like ?", "%#{search_name}%")
-    end
-
-    if start_time&.present? || end_time&.present?
-      issues = issues.where("start_date between ? and ?",start_time&.present? ? start_time.to_date : Time.now.to_date, end_time&.present? ? end_time.to_date : Time.now.to_date)
-    end
-
-    issues = issues.where(author_id: params[:author_id]) if params[:author_id].present?
-    issues = issues.where(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present? && params[:assigned_to_id].to_s != "all"
-    issues = issues.where(tracker_id: params[:tracker_id]) if params[:tracker_id].present?
-    issues = issues.where(status_id: params[:status_id]) if params[:status_id].present?
-    issues = issues.where(priority_id: params[:priority_id]) if params[:priority_id].present?
-    issues = issues.where(fixed_version_id: params[:fixed_version_id]) if params[:fixed_version_id].present? && params[:fixed_version_id].to_s != "all"
-    issues = issues.where(done_ratio: params[:done_ratio].to_i) if params[:done_ratio].present?
-    issues = issues.where(issue_type: params[:issue_type]) if params[:issue_type].present?
-    issues = issues.joins(:issue_tags).where(issue_tags: {id: params[:issue_tag_id].to_i}) if params[:issue_tag_id].present?
-
-    order_type = params[:order_type] || "desc"   #或者"asc"
-    order_name = params[:order_name] || "created_on"   #或者"updated_on"
-
-    @page = params[:page]
-    @limit = params[:limit] || 15
-    @issues = issues.order("#{order_name} #{order_type}")
-    @issues_size = issues.size
-    @issues = issues.order("#{order_name} #{order_type}").page(@page).per(@limit)
+    scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "PullRequest")
+    @issues_size = scopes.size
+    @issues = paginate(scopes)
   end
 
   def new
-    @all_branches = []
-    get_all_branches = Gitea::Repository::BranchesService.new(@user, @repository.try(:identifier)).call
-    if get_all_branches && get_all_branches.size > 0
-      get_all_branches.each do |b|
-        @all_branches.push(b["name"])
-      end
+    @all_branches = PullRequests::BranchesService.new(@owner, @project).call
+    @is_fork = @project.forked_from_project_id.present?
+    @projects_names = [{
+      project_user_login: @owner.try(:login),
+      project_name: "#{@owner.try(:show_real_name)}/#{@repository.try(:identifier)}",
+      project_id: @project.identifier,
+      id: @project.id
+    }]
+    @merge_projects = @projects_names
+    fork_project = @project.fork_project if @is_fork
+    if fork_project.present?
+      @merge_projects.push({
+        project_user_login: fork_project.owner.try(:login),
+        project_name: "#{fork_project.owner.try(:show_real_name)}/#{fork_project.repository.try(:identifier)}",
+        project_id: fork_project.identifier,
+        id: fork_project.id
+      })
     end
-    @project_tags = @project.issue_tags&.select(:id,:name, :color).as_json
-    @project_versions = @project.versions&.select(:id,:name, :status).as_json
-    @project_members = @project.members_user_infos
+  end
+
+  def get_branches
+    branch_result = PullRequests::BranchesService.new(@owner, @project).call
+    render json: branch_result
+    # return json: branch_result
   end
 
   def create
-
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
@@ -78,53 +57,27 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          local_params = {
-            title: params[:title],  #标题
-            body:	params[:body],  #内容
-            head: params[:head],  #源分支
-            base: params[:base],  #目标分支
-            milestone: 0,  #里程碑,未与本地的里程碑关联
-          }
-          requests_params = local_params.merge({
-            assignee: current_user.try(:login),
-            assignees: ["#{params[:assigned_login].to_s}"],
-            labels: params[:issue_tag_ids],
-            due_date: Time.now
-          })
-          issue_params = {
-            author_id: current_user.id,
-            project_id: @project.id,
-            subject: params[:title],
-            description: params[:body],
-            assigned_to_id: params[:assigned_to_id],
-            fixed_version_id: params[:fixed_version_id],
-            issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
-            issue_classify: "pull_request",
-            issue_type: params[:issue_type] || "1",
-            tracker_id: 2,
-            status_id: 1,
-            priority_id: 1
-          }
-          pull_issue = Issue.new(issue_params)
+          merge_params
+          pull_issue = Issue.new(@issue_params)
           if pull_issue.save!
-            local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: pull_issue.id))
+            pr_params = {
+              user_id: current_user.try(:id),
+              project_id: @project.id,
+              issue_id: pull_issue.id,
+              fork_project_id: params[:fork_project_id],
+              is_original: params[:is_original],
+              files_count: params[:files_count] || 0,
+              commits_count: params[:commits_count] || 0
+            }
+            local_requests = PullRequest.new(@local_params.merge(pr_params))
             if local_requests.save
-              gitea_request = Gitea::PullRequest::CreateService.new(current_user, @repository.try(:identifier), requests_params).call
+              remote_pr_params = @local_params
+              remote_pr_params = remote_pr_params.merge(head: "#{params[:merge_user_login]}:#{params[:head]}").compact if local_requests.is_original && params[:merge_user_login]
+              gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
               if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
                     IssueTagsRelate.create!(issue_id: pull_issue.id, issue_tag_id: tag)
-                  end
-                end
-                if params[:attachment_ids].present?
-                  params[:attachment_ids].each do |id|
-                    attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
-                    unless attachment.blank?
-                      attachment.container = pull_issue
-                      attachment.author_id = current_user.id
-                      attachment.description = ""
-                      attachment.save
-                    end
                   end
                 end
 
@@ -136,8 +89,9 @@ class PullRequestsController < ApplicationController
                 end
                 local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
                 if params[:title].to_s.include?("WIP:")
-                  pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。")
+                  pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。", current_user&.id)
                 end
+                # render :json => { status: 0, message: "PullRequest创建成功", id:  pull_issue.id}
                 normal_status(0, "PullRequest创建成功")
               else
                 normal_status(-1, "PullRequest创建失败")
@@ -155,8 +109,9 @@ class PullRequestsController < ApplicationController
   end
 
   def edit
-    @issue_chosen = issue_left_chosen(@project, @issue.id)
-    @issue_attachments = @issue.attachments
+    @fork_project_user_name = @project&.fork_project&.owner.try(:show_real_name)
+    @fork_project_user = @project&.fork_project&.owner.try(:login)
+    @fork_project_identifier = @project&.fork_project&.repository.try(:identifier)
   end
 
   def update
@@ -167,25 +122,7 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          local_params = {
-            title: params[:title],  #标题
-            body:	params[:body],  #内容
-            head: params[:head],  #源分支
-            base: params[:base],  #目标分支
-            milestone: 0,  #里程碑，未与本地的里程碑关联
-          }
-          requests_params = local_params.merge({
-                                                 assignee: current_user.try(:login),
-                                                 assignees: ["#{params[:assigned_login].to_s}"],
-                                                 labels: params[:issue_tag_ids]
-                                               })
-          issue_params = {
-            subject: params[:title],
-            description: params[:body],
-            assigned_to_id: params[:assigned_to_id].to_s,
-            fixed_version_id: params[:fixed_version_id],
-            issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
-          }
+          merge_params
 
           if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
             @issue&.issue_tags_relates&.destroy_all
@@ -194,26 +131,10 @@ class PullRequestsController < ApplicationController
             end
           end
 
-          if @issue.update_attributes(issue_params)
-            if @pull_request.update_attributes(local_params)
-              gitea_request = Gitea::PullRequest::UpdateService.new(current_user, @repository.try(:identifier), requests_params, @pull_request.try(:gpid)).call
+          if @issue.update_attributes(@issue_params)
+            if @pull_request.update_attributes(@local_params.compact)
+              gitea_request = Gitea::PullRequest::UpdateService.new(@project.owner, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
               if gitea_request
-                issue_files = params[:attachment_ids]
-                change_files = false
-                issue_file_ids = []
-
-                if issue_files.present?
-                  change_files = true
-                  issue_files.each do |id|
-                    attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
-                    unless attachment.blank?
-                      attachment.container = @issue
-                      attachment.author_id = current_user.id
-                      attachment.description = ""
-                      attachment.save
-                    end
-                  end
-                end
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
                     IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
@@ -222,7 +143,6 @@ class PullRequestsController < ApplicationController
                 if params[:status_id].to_i == 5
                   @issue.issue_times.update_all(end_time: Time.now)
                 end
-                @issue.create_journal_detail(change_files, issue_files, issue_file_ids)
                 normal_status(0, "PullRequest更新成功")
               else
                 normal_status(-1, "PullRequest更新失败")
@@ -240,39 +160,47 @@ class PullRequestsController < ApplicationController
 
   end
 
+  def refuse_merge
+    ActiveRecord::Base.transaction do
+      begin
+        @pull_request.update(status: 2)
+        @pull_request.issue.update(status_id: 5)
+        normal_status(1, "已拒绝")
+      rescue => e
+        normal_status(-1, e.message)
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  def create_merge_infos
+    get_relatived
+  end
+
   def show
-    @user_permission = current_user.present? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
-    @issue_attachments = @issue.attachments
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
-    @join_users = join_users(@issue)
-    #总耗时
-    cost_time(@issue)
 
-    #被依赖
-    @be_depended_issues_array = be_depended_issues(@issue)
-
-    #依赖于
-    depended_issues(@issue)
   end
 
   def pr_merge
+    return render_forbidden("你没有权限操作.") if @project.reporter?(current_user)
+
     if params[:do].blank?
       normal_status(-1, "请选择合并方式")
     else
       ActiveRecord::Base.transaction do
         begin
           requests_params = {
-            do: params[:do],
+            Do: params[:do],
             MergeMessageField: params[:body],
             MergeTitleField: params[:title]
           }
-          merge_pr = Gitea::PullRequest::MergeService.new(current_user, @repository.try(:identifier), @pull_request.try(:gpid), requests_params).call
+          merge_pr = Gitea::PullRequest::MergeService.call(current_user.gitea_token, @project.owner.login,
+            @repository.try(:identifier), @pull_request.try(:gpid), requests_params)
           if @pull_request.update_attribute(:status, 1) && merge_pr[:status].to_i == 200
-            # @pull_request.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "merge")
             @pull_request&.project_trends&.update_all(action_type: "close")
-
-            @issue&.custom_journal_detail("merge", "", "该合并请求已被合并")
+            @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
             normal_status(-1, "合并失败")
@@ -285,73 +213,21 @@ class PullRequestsController < ApplicationController
     end
   end
 
-  #评审
-  def check_merge
-    notes = params[:content]
-    pull_request_status = params[:status]
-    if notes.blank?
-      normal_status(-1, "评论内容不能为空")
-    else
-      if @pull_request.status > 0
-        normal_status(-1, "已合并，不能评审")
-      else
-        if pull_request_status.to_i == 1
-          message = "评审通过："
-        elsif pull_request_status.to_i == 2
-          message = "评审请求变更："
-        else
-          message = ""
-        end
-        journal_params = {
-          journalized_id: @issue.id ,
-          journalized_type: "Issue",
-          user_id: current_user.id ,
-          notes: message + notes.to_s.strip
-        }
-        journal = Journal.new journal_params
-        if journal.save
-          if pull_request_status.present?
-            @pull_request.update_attribute(:status, pull_request_status.to_i)
-          end
-          if pull_request_status.to_i == 1
-            requests_params = {
-              do: "merge",
-              MergeMessageField: notes,
-              MergeTitleField: "Merge PullRequest ##{@pull_request.gpid}"
-            }
-            merge_pr = Gitea::PullRequest::MergeService.new(current_user, @repository.try(:identifier), @pull_request.try(:gpid), requests_params).call
-            if merge_pr
-              @pull_request&.project_trends&.update_all(action_type: "close")
-              # @pull_request.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "merge")
-              @issue.custom_journal_detail("merge", "", "该合并请求已被合并")
-              normal_status(1, "评审成功")
-            else
-              normal_status(-1, "评审失败")
-            end
-          end
-          normal_status(0, "评审成功")
-        else
-          normal_status(-1, "评审失败")
-        end
-      end
-    end
-  end
 
   def check_can_merge
     target_head = params[:head]  #源分支
     target_base = params[:base]  #目标分支
+    is_original = params[:is_original]
     if target_head.blank? || target_base.blank?
-      normal_status(-1, "请选择分支。")
-    elsif target_head === target_base
-      normal_status(-1, "分支内容相同，无需创建合并请求。")
+      normal_status(-2, "请选择分支")
+    elsif target_head === target_base && !is_original
+      normal_status(-2, "分支内容相同，无需创建合并请求")
     else
-      can_merge = @project&.pull_requests.where(user_id: current_user&.id, head: target_head, base: target_base, status: 0)
+      can_merge = @project&.pull_requests.where(head: target_head, base: target_base, status: 0, is_original: is_original, fork_project_id: params[:fork_project_id])
       if can_merge.present?
         render json: {
           status: -2,
-          message: "在这些分支之间的合并请求已存在",
-          pull_request_id: can_merge.first.id,
-          pull_request_name: can_merge.first.try(:title)
+          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
         }
       else
         normal_status(0, "可以合并")
@@ -360,15 +236,19 @@ class PullRequestsController < ApplicationController
   end
 
 
-  private
+  def files
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    # render json: @files_result
+  end
 
-  def set_repository
-    # @project = Project.find_by_identifier! params[:id]
-    @repository = @project.repository
-    @user = @project.owner
-    # normal_status(-1, "项目不存在") unless @project.present?
-    normal_status(-1, "仓库不存在") unless @repository.present?
-    normal_status(-1, "用户不存在") unless @user.present?
+  def commits
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    # render json: @commits_result
+  end
+
+  private
+  def load_pull_request
+    @pull_request = PullRequest.find params[:id]
   end
 
   def find_pull_request
@@ -379,5 +259,42 @@ class PullRequestsController < ApplicationController
     elsif @issue.present? && @issue.is_lock &&!(@project.member?(current_user) || current_user.admin?)
       normal_status(-1, "您没有权限")
     end
+  end
+
+  def get_relatived
+    @project_tags = @project.issue_tags&.select(:id,:name, :color).as_json
+    @project_versions = @project.versions&.select(:id,:name, :status).as_json
+    @project_members = @project.members_user_infos
+    @project_priories = IssuePriority&.select(:id,:name, :position).as_json
+  end
+
+  def merge_params
+    @local_params = {
+      title: params[:title],  #标题
+      body:	params[:body],  #内容
+      head: params[:head],  #源分支
+      base: params[:base],  #目标分支
+      milestone: 0,  #里程碑,未与本地的里程碑关联
+    }
+    @requests_params = @local_params.merge({
+      assignee: current_user.try(:login),
+      assignees: ["#{params[:assigned_login].to_s}"],
+      labels: params[:issue_tag_ids],
+      due_date: Time.now
+    })
+    @issue_params = {
+      author_id: current_user.id,
+      project_id: @project.id,
+      subject: params[:title],
+      description: params[:body],
+      assigned_to_id: params[:assigned_to_id],
+      fixed_version_id: params[:fixed_version_id],
+      issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
+      priority_id: params[:priority_id] || "2",
+      issue_classify: "pull_request",
+      issue_type: params[:issue_type] || "1",
+      tracker_id: 2,
+      status_id: 1,
+    }
   end
 end

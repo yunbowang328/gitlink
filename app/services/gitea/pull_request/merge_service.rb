@@ -1,6 +1,6 @@
 # Merge a pull request
 class Gitea::PullRequest::MergeService < Gitea::ClientService
-  attr_reader :user, :repo, :pull_request_id, :params
+  attr_reader :token, :owner, :repo, :pull_request_id, :params
 
   # parameters:
   #   repo: name of the repo
@@ -8,8 +8,10 @@ class Gitea::PullRequest::MergeService < Gitea::ClientService
   #   params:
   #      title: merge标题
   #      message: merge说明
-  def initialize(user, repo, pull_request_id, params={})
-    @user            = user
+  # eq: Gitea::PullRequest::MergeService.call(current_user.gitea_token, @repo.owner.lgoin, @repo.identifier, params)
+  def initialize(token, owner, repo, pull_request_id, params={})
+    @token           = token
+    @owner           = owner
     @repo            = repo
     @params          = params
     @pull_request_id = pull_request_id
@@ -21,11 +23,11 @@ class Gitea::PullRequest::MergeService < Gitea::ClientService
 
   private
   def url
-    "/repos/#{user.login}/#{repo}/pulls/#{pull_request_id}/merge"
+    "/repos/#{owner}/#{repo}/pulls/#{pull_request_id}/merge"
   end
 
   def request_params
-    Hash.new.merge(token: user.gitea_token, data: params)
+    Hash.new.merge(token: token, data: params)
   end
 
 end

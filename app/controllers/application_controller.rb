@@ -9,12 +9,21 @@ class ApplicationController < ActionController::Base
 	include GitHelper
 	include LoggerHelper
 	include LoginHelper
+	include RegisterHelper
 
 	protect_from_forgery prepend: true, unless: -> { request.format.json? }
 
 	before_action :check_sign
 	before_action :user_setup
 	#before_action :check_account
+
+	# TODO
+	# check sql query time
+	before_action do
+    if request.subdomain === 'testforgeplus' || request.subdomain === "profiler"
+      Rack::MiniProfiler.authorize_request
+    end
+  end
 
 	DCODES = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z)
 	OPENKEY = "79e33abd4b6588941ab7622aed1e67e8"
@@ -23,23 +32,23 @@ class ApplicationController < ActionController::Base
 
 	# 所有请求必须合法签名
 	def check_sign
-		if !Rails.env.development?
-			Rails.logger.info("66666  #{params}")
-			# suffix = request.url.split(".").last.split("?").first
-			# suffix_arr = ["xls", "xlsx", "pdf", "zip"] # excel文件先注释
-			# unless suffix_arr.include?(suffix)
-				if params[:client_key].present?
-					randomcode = params[:randomcode]
-					# tip_exception(501, "请求不合理") unless (Time.now.to_i - randomcode.to_i).between?(0,5)
-
-					sign = Digest::MD5.hexdigest("#{OPENKEY}#{randomcode}")
-					Rails.logger.info("2222  #{sign}")
-					tip_exception(501, "请求不合理") if sign != params[:client_key]
-				else
-					tip_exception(501, "请求不合理")
-				end
-			# end
-		end
+		# if !Rails.env.development?
+		# 	Rails.logger.info("66666  #{params}")
+		# 	# suffix = request.url.split(".").last.split("?").first
+		# 	# suffix_arr = ["xls", "xlsx", "pdf", "zip"] # excel文件先注释
+		# 	# unless suffix_arr.include?(suffix)
+		# 		if params[:client_key].present?
+		# 			randomcode = params[:randomcode]
+		# 			# tip_exception(501, "请求不合理") unless (Time.now.to_i - randomcode.to_i).between?(0,5)
+		#
+		# 			sign = Digest::MD5.hexdigest("#{OPENKEY}#{randomcode}")
+		# 			Rails.logger.info("2222  #{sign}")
+		# 			tip_exception(501, "请求不合理") if sign != params[:client_key]
+		# 		else
+		# 			tip_exception(501, "请求不合理")
+		# 		end
+		# 	# end
+		# end
 	end
 
 	# 全局配置参数
@@ -233,6 +242,7 @@ class ApplicationController < ActionController::Base
 	# 未授权的捕捉407，弹试用申请弹框
 	def require_login
 		#6.13 -hs
+
 		tip_exception(401, "请登录后再操作") unless User.current.logged?
 	end
 
@@ -333,7 +343,10 @@ class ApplicationController < ActionController::Base
 			elsif params[:debug] == 'student'
 				User.current = User.find 8686
 			elsif params[:debug] == 'admin'
-				User.current = User.find 1
+				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
+				user =  User.find 36480
+				User.current = user
+				cookies.signed[:user_id] = user.id
 			end
 		end
 		# User.current = User.find 81403
@@ -361,8 +374,8 @@ class ApplicationController < ActionController::Base
 			# auto-login feature starts a new session
 			user = nil
 			Rails.logger.info("111111111111111111#{default_yun_session}, session is #{session[:"#{default_yun_session}"]} ")
-			user = User.try_to_autologin(cookies[autologin_cookie_name]) if session[:"#{default_yun_session}"]
-			start_user_session(user) if user
+			user = User.try_to_autologin(cookies[autologin_cookie_name])
+			# start_user_session(user) if user # TODO 解决sso退出不同步的问题
 			user
 		end
 	end
@@ -659,7 +672,13 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
+	def kaminari_paginate(relation)
+		limit = params[:limit] || params[:per_page]
+		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
 
+		relation.page(page).per(limit)
+	end
 
 	def strf_time(time)
 		time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M:%S")
@@ -681,12 +700,17 @@ class ApplicationController < ActionController::Base
 
 	def find_user_with_id
 		@user = User.find_by_id params[:user_id]
-    render_not_found("未找到’#{params[:login]}’相关的用户") unless @user
+    # render_not_found("未找到’#{params[:login]}’相关的用户") unless @user
+		render_error("未找到相关的用户") unless @user
 	end
 
 	def find_repository
 		@repo = @user.repositories.find_by_identifier params[:repo_identifier]
     render_not_found("未找到’#{params[:repo_identifier]}’相关的项目") unless @repo
+	end
+
+	def find_repository_by_id
+		@repo = Repository.find params[:id]
 	end
 
 	def find_project
@@ -701,11 +725,6 @@ class ApplicationController < ActionController::Base
 		render_not_found("未找到’#{project}’相关的项目") unless @project
 	end
 
-	def find_project_with_identifier
-		@project = Project.find_by_identifier! params[:id]
-		render_not_found("未找到’#{params[:id]}’相关的项目") unless @project
-	end
-
 	def find_project_with_id
 		@project = Project.find(params[:project_id] || params[:id])
 	rescue Exception => e
@@ -715,6 +734,32 @@ class ApplicationController < ActionController::Base
 
 	def render_response(interactor)
 		interactor.success? ? render_ok : render_error(interactor.error)
+	end
+
+	# projects
+	def load_project
+    namespace = params[:owner]
+    id = params[:repo] || params[:id]
+
+    @project, @owner = Project.find_with_namespace(namespace, id)
+
+    if @project and current_user.can_read_project?(@project)
+			logger.info "###########： has project and can read project"
+			@project
+    elsif @project && current_user.is_a?(AnonymousUser)
+			logger.info "###########：This is AnonymousUser"
+			@project = nil if !@project.is_public?
+			render_forbidden and return
+    else
+			logger.info "###########：project not found"
+      @project = nil
+      render_not_found and return
+    end
+    @project
+	end
+
+	def load_repository
+		@repository ||= load_project&.repository
 	end
 
   private

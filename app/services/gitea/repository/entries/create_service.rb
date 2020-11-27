@@ -1,5 +1,5 @@
 class Gitea::Repository::Entries::CreateService < Gitea::ClientService
-  attr_reader :user, :repo_name, :filepath, :body
+  attr_reader :token, :owner, :repo_name, :filepath, :body
 
   # ref: The name of the commit/branch/tag. Default the repository’s default branch (usually master)
   # filepath: path of the dir, file, symlink or submodule in the repo
@@ -20,8 +20,9 @@ class Gitea::Repository::Entries::CreateService < Gitea::ClientService
   #   "new_branch": "string"
   # }
   #
-  def initialize(user, repo_name, filepath, body)
-    @user      = user
+  def initialize(token, owner, repo_name, filepath, body)
+    @token     = token
+    @owner      = owner
     @repo_name = repo_name
     @filepath  = filepath
     @body      = body
@@ -33,11 +34,11 @@ class Gitea::Repository::Entries::CreateService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: user.gitea_token, data: body)
+    Hash.new.merge(token: token, data: body)
   end
 
   def url
-    "/repos/#{user.login}/#{repo_name}/contents/#{filepath}".freeze
+    "/repos/#{owner}/#{repo_name}/contents/#{filepath}".freeze
   end
 
 end

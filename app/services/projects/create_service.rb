@@ -7,12 +7,15 @@ class Projects::CreateService < ApplicationService
   end
 
   def call
+    Rails.logger.info("#############__________project_params______###########{project_params}")
+
     @project = Project.new(project_params)
     ActiveRecord::Base.transaction do
       if @project.save!
+        Project.update_common_projects_count!
         Repositories::CreateService.new(user, @project, repository_params).call
       else
-        #
+        Rails.logger.info("#############___________create_project_erros______###########{@project.errors.messages}")
       end
     end
     @project
@@ -30,7 +33,7 @@ class Projects::CreateService < ApplicationService
       description: params[:description],
       project_category_id: params[:project_category_id],
       project_language_id: params[:project_language_id],
-      is_public: get_is_public,
+      is_public: repo_is_public,
       ignore_id: params[:ignore_id],
       license_id: params[:license_id],
       identifier: params[:repository_name]  #新增,hs
@@ -39,13 +42,17 @@ class Projects::CreateService < ApplicationService
 
   def repository_params
     {
-      hidden: get_is_public,
+      hidden: !repo_is_public,
       user_id: params[:user_id],
       identifier: params[:repository_name]
     }
   end
 
-  def get_is_public
-    params[:private] || true
+  # def get_is_public
+  #   params[:private] || false
+  # end
+
+  def repo_is_public
+    params[:private].blank? ? true : !params[:private]
   end
 end

@@ -1,9 +1,83 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                            :integer          not null, primary key
+#  login                         :string(255)      default(""), not null
+#  hashed_password               :string(40)       default(""), not null
+#  firstname                     :string(30)       default(""), not null
+#  lastname                      :string(255)      default(""), not null
+#  mail                          :string(60)
+#  admin                         :boolean          default("0"), not null
+#  status                        :integer          default("1"), not null
+#  last_login_on                 :datetime
+#  language                      :string(5)        default("")
+#  auth_source_id                :integer
+#  created_on                    :datetime
+#  updated_on                    :datetime
+#  type                          :string(255)
+#  identity_url                  :string(255)
+#  mail_notification             :string(255)      default(""), not null
+#  salt                          :string(64)
+#  gid                           :integer
+#  visits                        :integer          default("0")
+#  excellent_teacher             :integer          default("0")
+#  excellent_student             :integer          default("0")
+#  phone                         :string(255)
+#  authentication                :boolean          default("0")
+#  grade                         :integer          default("0")
+#  experience                    :integer          default("0")
+#  nickname                      :string(255)
+#  show_realname                 :boolean          default("1")
+#  professional_certification    :boolean          default("0")
+#  ID_number                     :string(255)
+#  certification                 :integer          default("0")
+#  homepage_teacher              :boolean          default("0")
+#  homepage_engineer             :boolean          default("0")
+#  is_test                       :integer          default("0")
+#  ecoder_user_id                :integer          default("0")
+#  business                      :boolean          default("0")
+#  profile_completed             :boolean          default("0")
+#  laboratory_id                 :integer
+#  platform                      :string(255)      default("0")
+#  gitea_token                   :string(255)
+#  gitea_uid                     :integer
+#  is_shixun_marker              :boolean          default("0")
+#  is_sync_pwd                   :boolean          default("1")
+#  watchers_count                :integer          default("0")
+#  visibility                    :string(255)      default("public")
+#  repo_admin_change_team_access :boolean          default("1")
+#  is_org                        :boolean          default("0")
+#  website                       :string(255)
+#  devops_step                   :integer          default("0")
+#
+# Indexes
+#
+#  index_users_on_ecoder_user_id     (ecoder_user_id)
+#  index_users_on_homepage_engineer  (homepage_engineer)
+#  index_users_on_homepage_teacher   (homepage_teacher)
+#  index_users_on_laboratory_id      (laboratory_id)
+#  index_users_on_login              (login)
+#  index_users_on_mail               (mail)
+#  index_users_on_type               (type)
+#
+
 class User < ApplicationRecord
+  extend Enumerize
+
   include Watchable
   include Likeable
   include BaseModel
   include ProjectOperable
-  include Searchable::Dependents::User
+  include ProjectAbility
+  include Droneable
+  # include Searchable::Dependents::User
+
+  # devops step
+  # devops_step column:  0: 未填写服务器信息；1: 已填写服务器信息(未认证)；2: 已认证
+  DEVOPS_UNINIT = 0
+  DEVOPS_UNVERIFIED = 1
+  DEVOPS_CERTIFICATION = 2
 
   # Account statuses
   STATUS_ANONYMOUS  = 0
@@ -22,7 +96,7 @@ class User < ApplicationRecord
   EDU_NORMAL = 8  # 普通用户
 
   VALID_EMAIL_REGEX = /^[a-zA-Z0-9]+([.\-_\\]*[a-zA-Z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/i
-  # VALID_PHONE_REGEX = /^1\d{10}$/
+  VALID_PHONE_REGEX = /^1\d{10}$/
   # 身份证
   VALID_NUMBER_REGEX = /(^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^([A-Z]\d{6,10}(\(\w{1}\))?)$)/
 
@@ -34,105 +108,43 @@ class User < ApplicationRecord
   LOGIN_CHARS = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z).freeze
 
   # FIX Invalid single-table inheritance type
-  self.inheritance_column = nil
+  # self.inheritance_column = nil
 
   # educoder: 来自Educoder平台
   # trustie: 来自Trustie平台
   # forge: 平台本身注册的用户
-  enum platform: [:forge, :educoder, :trustie]
+  # military: 军科的用户
+  enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
-
+  has_many :composes, dependent: :destroy
+  has_many :compose_users, dependent: :destroy
   has_one :user_extension, dependent: :destroy
   has_many :open_users, dependent: :destroy
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
   has_one :qq_open_user, class_name: 'OpenUsers::QQ'
   accepts_nested_attributes_for :user_extension, update_only: true
+  has_many :fork_users, dependent: :destroy
 
-  has_many :memos, foreign_key: 'author_id'
-  has_many :created_shixuns, class_name: 'Shixun'
-  has_many :shixun_members, :dependent => :destroy
-  has_many :shixuns, :through => :shixun_members
-  has_many :myshixuns, :dependent => :destroy
-  has_many :games, :dependent => :destroy
-  has_many :study_shixuns, through: :myshixuns, source: :shixun   # 已学习的实训
-  has_many :course_messages
-  has_many :courses, foreign_key: 'tea_id', dependent: :destroy
   has_many :versions
   has_many :issue_times, :dependent => :destroy
 
-  #试卷
-  has_many :exercise_banks, :dependent => :destroy
-  has_many :exercise_users, :dependent => :destroy
-  has_many :exercise_answers, :dependent => :destroy  #针对每个题目学生的答案
-  has_many :exercise_shixun_answers, :dependent => :destroy  #针对每个实训题目学生的答案
-  has_many :exercise_answer_comments, :dependent => :destroy
-  has_many :exercises, :dependent => :destroy  #创建的试卷
-
-  has_many :homework_banks, dependent: :destroy
-
-  has_many :graduation_works, dependent: :destroy
-
-  has_many :students_for_courses, foreign_key: :student_id, dependent: :destroy
   has_one :onclick_time, :dependent => :destroy
 
   # 新版私信
   has_many :private_messages, dependent: :destroy
   has_many :recent_contacts, through: :private_messages, source: :target
   has_many :tidings, :dependent => :destroy
-
-  has_many :games, :dependent => :destroy
-  has_many :created_subjects, foreign_key: :user_id, class_name: 'Subject'
-  has_many :subject_members, :dependent => :destroy
-  has_many :subjects, :through => :subject_members
-  has_many :grades, :dependent => :destroy
-  has_many :experiences, :dependent => :destroy
-  has_many :student_works, :dependent => :destroy
-  has_many :student_works_scores
-  has_many :student_works_evaluation_distributions
-
-  # 毕业设计
-  has_many :graduation_topics, :dependent => :destroy
-  has_many :student_graduation_topics, :dependent => :destroy
-
-  # 题库
-  has_many :question_banks, :dependent => :destroy
-  # 毕设任务题库
-  has_many :gtask_banks, dependent: :destroy
-  has_many :gtopic_banks, dependent: :destroy
-
-  #问卷
-  has_many :course_members, :dependent => :destroy
-  has_many :poll_votes, :dependent => :destroy
-  has_many :poll_users, :dependent => :destroy
-
-  has_many :messages,foreign_key: 'author_id',:dependent => :destroy
-
   has_many :journals_for_messages, :as => :jour, :dependent => :destroy
-  has_many :teacher_course_groups, :dependent => :destroy
 
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
-
-  # 工程认证
-  has_many :ec_school_users,:dependent => :destroy
-  has_many :schools, :through => :ec_school_users
-
-  has_many :ec_major_school_users, :dependent => :destroy
-  has_many :ec_major_schools, :through => :ec_major_school_users
-
-  has_many :ec_course_users
-
-  has_many :department_members, dependent: :destroy #部门管理员
-
-  # 课堂
-  has_many :student_course_members, -> { course_students }, class_name: 'CourseMember'
-  has_many :as_student_courses, through: :student_course_members, source: :course
-  has_many :manage_course_members, -> { teachers_and_admin }, class_name: 'CourseMember'
-  has_many :manage_courses, through: :manage_course_members, source: :course
 
   # 关注
   has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
   has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
+  has_many :watchers, as: :watchable, dependent: :destroy
+
+  has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
   has_many :apply_user_authentication
@@ -141,16 +153,7 @@ class User < ApplicationRecord
   has_many :apply_actions, dependent: :destroy
   has_many :trail_auth_apply_actions, -> { where(container_type: 'TrialAuthorization') }, class_name: 'ApplyAction'
 
-  has_many :attendances
-
-  # 兴趣
-  has_many :user_interests, dependent: :delete_all
-  has_many :interests, through: :user_interests, source: :repertoire
-
-  # 众包
-  has_many :project_packages, foreign_key: :creator_id, dependent: :destroy
-  has_many :bidding_users, dependent: :destroy
-  has_many :bidden_project_packages, through: :bidding_users, source: :project_package
+  # has_many :attendances
 
   # 项目
   has_many :applied_projects, dependent: :destroy
@@ -159,32 +162,17 @@ class User < ApplicationRecord
   has_many :repositories, dependent: :destroy
 
   # 教学案例
-  has_many :libraries, dependent: :destroy
-
-  # 视频
-  has_many :videos, dependent: :destroy
-
-  # 客户管理
-  has_many :partner_managers, dependent: :destroy
-  # OJ编程题
-  has_many :hacks, dependent: :destroy
-  has_many :hack_user_lastest_codes, dependent: :destroy
-
-  has_many :composes, dependent: :destroy
-  has_many :compose_users, dependent: :destroy
-
+  # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
-  # 题库
-  has_many :item_banks, dependent: :destroy
-  has_many :item_baskets,  -> { order("item_baskets.position ASC") }, dependent: :destroy
-  has_many :examination_banks, dependent: :destroy
-  has_many :examination_intelligent_settings, dependent: :destroy
+  has_many :oauths , dependent: :destroy
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
-    where("LOWER(concat(lastname, firstname, login)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
+    where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
+
+  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid)}
 
   attr_accessor :password, :password_confirmation
 
@@ -198,8 +186,7 @@ class User < ApplicationRecord
   #
   # validations
   #
-  validates :platform, inclusion: { in: %w(forge educoder trustie) }
-  validates_presence_of :login, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }, case_sensitive: false
+  # validates_presence_of :login, :if => Proc.new { |user| !user.is_a?(AnonymousUser) }, case_sensitive: false
   validates_uniqueness_of :login, :if => Proc.new { |user| user.login_changed? && user.login.present? }, case_sensitive: false
   validates_uniqueness_of :mail, :if => Proc.new { |user| user.mail_changed? && user.mail.present? }, case_sensitive: false
   # validates_uniqueness_of :phone, :if => Proc.new { |user| user.phone_changed? && user.phone.present? }, case_sensitive: false
@@ -222,7 +209,7 @@ class User < ApplicationRecord
   end
 
   def project_manager?(project)
-    project.manager_members.exists?(user: self) || self.admin?
+    project.managers.exists?(user: self) || self.admin?
   end
 
   # 学号
@@ -232,13 +219,13 @@ class User < ApplicationRecord
 
   # 关注数
   def follow_count
-    Watcher.where(user_id: id, watchable_type: %w(Principal User)).count
+    Watcher.where(user_id: self.id, watchable_type: %w(User)).count
     # User.watched_by(id).count
   end
 
   # 粉丝数
   def fan_count
-    Watcher.where(watchable_type: %w(Principal User), watchable_id: id).count
+    Watcher.where(watchable_type: %w(User), watchable_id: self.id).count
     # watchers.count
   end
 
@@ -303,9 +290,9 @@ class User < ApplicationRecord
   end
 
   # 用户的学校名称
-  def school_name
-    user_extension&.school&.name || ''
-  end
+  # def school_name
+  #   user_extension&.school&.name || ''
+  # end
 
   # 用户的学院名称
   def department_name
@@ -589,8 +576,7 @@ class User < ApplicationRecord
   def self.anonymous
     anonymous_user = AnonymousUser.unscoped.take
     if anonymous_user.nil?
-      anonymous_user = AnonymousUser.unscoped.create(lastname: 'Anonymous', firstname: '', login: '',
-                                                     mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platforms[:forge])
+      anonymous_user = AnonymousUser.unscoped.create(lastname: 'Anonymous', firstname: '', login: '', mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platform.forge)
       raise "Unable to create the anonymous user： error_info:#{anonymous_user.errors.messages}" if anonymous_user.new_record?
     end
     anonymous_user
@@ -687,9 +673,9 @@ class User < ApplicationRecord
   end
 
   # 学院的url标识
-  def college_identifier
-    Department.find_by_id(department_members.pluck(:department_id).first)&.identifier
-  end
+  # def college_identifier
+  #   Department.find_by_id(department_members.pluck(:department_id).first)&.identifier
+  # end
 
   # 是否能申请试用
   def can_apply_trial?
@@ -698,6 +684,10 @@ class User < ApplicationRecord
     apply = ApplyAction.order(created_at: :desc).find_by(user_id: id, container_type: 'TrialAuthorization')
 
     apply.present? && !apply.status.zero?
+  end
+
+  def projects_count
+    Project.includes(:members).joins(:members).where(members: { user_id: self.id }).select(:id).size
   end
 
   # 是否已经签到

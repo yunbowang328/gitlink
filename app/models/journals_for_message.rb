@@ -1,3 +1,32 @@
+# == Schema Information
+#
+# Table name: journals_for_messages
+#
+#  id                          :integer          not null, primary key
+#  jour_id                     :integer
+#  jour_type                   :string(255)
+#  user_id                     :integer
+#  notes                       :text(65535)
+#  status                      :integer
+#  reply_id                    :integer
+#  created_on                  :datetime         not null
+#  updated_on                  :datetime         not null
+#  m_parent_id                 :string(255)
+#  is_readed                   :boolean
+#  m_reply_count               :integer
+#  m_reply_id                  :integer
+#  is_comprehensive_evaluation :integer
+#  private                     :integer          default("0")
+#  root_id                     :integer
+#  hidden                      :boolean          default("0")
+#  praises_count               :integer          default("0")
+#
+# Indexes
+#
+#  index_journals_for_messages_on_jour_id  (jour_id)
+#  index_journals_for_messages_on_root_id  (root_id)
+#
+
 class JournalsForMessage < ApplicationRecord
   belongs_to :jour, :polymorphic => true
   belongs_to :user

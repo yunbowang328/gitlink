@@ -2,7 +2,7 @@
 #
 #  文件上传
 class AttachmentsController < ApplicationController
-  before_action :require_login, :check_auth, except: [:show]
+  before_action :require_login, :check_auth, except: [:show, :preview_attachment, :get_file]
   before_action :find_file, only: %i[show destroy]
   before_action :attachment_candown, only: [:show]
   skip_before_action :check_sign, only: [:show, :create]
@@ -28,11 +28,20 @@ class AttachmentsController < ApplicationController
     update_downloads(@file)
   end
 
+  
+  def get_file 
+    normal_status(-1, "参数缺失") if params[:download_url].blank?
+    url = URI.encode(params[:download_url].to_s.gsub("http:", "https:"))
+    response = Faraday.get(url)
+    filename = params[:download_url].to_s.split("/").pop()
+    send_data(response.body.force_encoding("UTF-8"),  filename: filename, type: "application/octet-stream", disposition: 'attachment')
+  end
+
   def create
     # 1. 本地存储
     # 2. 上传到云
     begin
-      upload_file = params["file"] || params["#{params[:file_param_name]}"] # 这里的file_param_name是为了方便其他插件名称
+      upload_file = params["file"] || params["#{params[:file_param_name]}"]# 这里的file_param_name是为了方便其他插件名称
       uid_logger("#########################file_params####{params["#{params[:file_param_name]}"]}")
       raise "未上传文件" unless upload_file
 
@@ -95,6 +104,26 @@ class AttachmentsController < ApplicationController
       uid_logger_error(e.message)
       tip_exception(e.message)
       raise ActiveRecord::Rollback
+    end
+  end
+
+  # 附件为视频时，点击播放
+  def preview_attachment 
+    attachment = Attachment.find_by(id: params[:id])
+    dir_path = "#{Rails.root}/public/preview"
+    Dir.mkdir(dir_path) unless Dir.exist?(dir_path)
+    if params[:status] == "preview"
+      if system("cp -r #{absolute_path(local_path(attachment))} #{dir_path}/")
+        render json: {status: 1, url: "/preview/#{attachment.disk_filename}"}
+      else
+        normal_status(-1, "出现错误，请稍后重试")
+      end
+    else 
+      if system("rm -rf #{dir_path}/#{attachment.disk_filename}")
+        normal_status(1, "操作成功")
+      else 
+        normal_status(-1, "出现错误，请稍后重试")
+      end
     end
   end
 
@@ -177,31 +206,14 @@ class AttachmentsController < ApplicationController
       candown = true
       unless params[:type] == 'history'
         if @file.container && current_user.logged?
-          # 课堂资源、作业、毕设相关资源的权限判断
-          if @file.container.is_a?(Course)
-            course = @file.container
-            candown = current_user.member_of_course?(course) || (course.is_public? && @file.publiced?)
-          elsif @file.container.is_a?(HomeworkCommon) || @file.container.is_a?(GraduationTask) || @file.container.is_a?(GraduationTopic)
-            course = @file.container&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(StudentWork)
-            course = @file.container&.homework_common&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(StudentWorksScore)
-            course = @file.container&.student_work&.homework_common&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(GraduationWork)
-            course = @file.container&.graduation_task&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(GraduationWorkScore)
-            course = @file.container&.graduation_work&.graduation_task&.course
-            candown = current_user.member_of_course?(course)
-          elsif @file.container.is_a?(Issue)
+          if @file.container.is_a?(Issue)
             course = @file.container.project
             candown = course.member?(current_user)
           elsif @file.container.is_a?(Journal)
             course = @file.container.issue.project
             candown = course.member?(current_user)
+          else
+            course = nil
           end
           tip_exception(403, "您没有权限进入") if course.present? && !candown
           tip_exception(403, "您没有权限进入") if @file.container.is_a?(ApplyUserAuthentication)

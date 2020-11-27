@@ -1,5 +1,7 @@
 class Projects::BaseController < ApplicationController
   include PaginateHelper
 
-  before_action :require_login, :check_auth
+  before_action :load_project
+  before_action :load_repository
+
 end

@@ -1,18 +1,14 @@
 json.partial! "commons/success"
-json.pull_request do
-  json.extract! @pull_request, :id,:base, :head, :status
-end
-
-json.issue do
-  json.extract! @issue, :id,:subject,:description,:is_private,:assigned_to_id,:tracker_id,:status_id,:priority_id,:fixed_version_id,
-                :start_date,:due_date,:estimated_hours, :issue_type, :token,:issue_classify, :branch_name
-  json.done_ratio @issue.done_ratio.to_s + "%"
-  json.issue_tags @issue.get_issue_tags
-  json.issue_chosen @issue_chosen
-end
-
-json.attachments do
-  json.array! @issue_attachments do |attachment|
-    json.partial! "attachments/attachment_simple", locals: {attachment: attachment}
-  end
-end
+# json.partial! "pull_requests/merge_item"
+json.fork_project_user_name @fork_project_user_name
+json.fork_project_user @fork_project_user
+json.fork_project_identifier @fork_project_identifier
+json.project_author @project.owner.try(:show_real_name)
+json.project_name @project.repository.try(:identifier)
+json.project_login  @project.owner.try(:login)
+json.extract! @pull_request, :id, :title, :body, :milestone,:head,:base,:is_original
+json.extract! @issue, :assigned_to_id, :fixed_version_id, :priority_id
+json.issue_tag_ids @issue&.issue_tags_value&.split(",")
+json.commits_count @pull_request.commits_count
+json.files_count @pull_request.files_count
+json.comments_count @pull_request.comments_count

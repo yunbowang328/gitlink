@@ -1,0 +1,18 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('git忽略文件') %>
+<% end %>
+<div id="admins-project-ignore-content">
+  <div class="box search-form-container project-list-form">
+    <%= form_tag(admins_project_ignores_path, method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+      <%= text_field_tag(:search, params[:search], class: 'form-control col-12 col-md-2 mr-3', placeholder: '名称检索') %>
+      <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+      <input type="reset" class="btn btn-secondary clear-btn" value="清空"/>
+    <% end %>
+  <%= link_to "新增", new_admins_project_ignore_path, remote: true, class: "btn btn-primary pull-right", "data-disabled-with":"...新增" %> 
+  </div>
+
+  <div class="box admin-list-container project-ignore-list-container">
+    <%= render partial: 'admins/project_ignores/list', locals: { project_ignores: @project_ignores } %>
+  </div>
+</div>
+

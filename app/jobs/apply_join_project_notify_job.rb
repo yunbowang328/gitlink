@@ -23,7 +23,7 @@ class ApplyJoinProjectNotifyJob < ApplicationJob
     end
 
     Tiding.bulk_insert(*attrs) do |worker|
-      project.manager_members.each do |manager|
+      project.managers.each do |manager|
         worker.add(same_attrs.merge(user_id: manager.user_id))
       end
     end
