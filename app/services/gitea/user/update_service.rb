@@ -17,7 +17,7 @@ class Gitea::User::UpdateService < Gitea::ClientService
   # source_id	integer($int64)
   # website	string
 
-  def initialize(edit_username, params={}, token=nil)
+  def initialize(edit_username, params={}, token={username: Gitea.gitea_config[:access_key_id], password: Gitea.gitea_config[:access_key_secret]})
     @token         = token
     @params        = params
     @edit_username = edit_username

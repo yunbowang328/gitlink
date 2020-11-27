@@ -69,9 +69,10 @@ class Gitea::ClientService < ApplicationService
 
   private
   def conn(auth={})
-    username = auth[:username] || access_key_id
-    secret = auth[:password] || access_key_secret
+    username = auth[:username]
+    secret = auth[:password]
     token = auth[:token]
+
     puts "[gitea] username: #{username}"
     puts "[gitea]   secret: #{secret}"
     puts "[gitea]    token: #{token}"
@@ -101,14 +102,6 @@ class Gitea::ClientService < ApplicationService
     Gitea.gitea_config[:domain]
   end
 
-  def access_key_id
-    Gitea.gitea_config[:access_key_id]
-  end
-
-  def access_key_secret
-    Gitea.gitea_config[:access_key_secret]
-  end
-
   def api_url
     [domain, base_url].join('')
   end
@@ -134,9 +127,9 @@ class Gitea::ClientService < ApplicationService
       raise Error, mark + "401"
     when 422
       result = JSON.parse(response&.body)
-      puts "[gitea] parse body: #{result}"
+      puts "[gitea] parse body: #{result['message']}"
       # return {status: -1, message: result[0]}
-      raise Error, result[0]
+      raise Error, result['message']
     when 204
 
       puts "[gitea] "
