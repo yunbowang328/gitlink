@@ -10,6 +10,7 @@ steps:
 - name: install
   image: ruby:2.4.5
   commands:
+  - gem install bundler
   - bundle -v
   - bundle  install --jobs=1 --retry=1
   - rake
