@@ -11,6 +11,7 @@ steps:
   commands:
   - gem install bundler
   - bundle -v
+  - bundle -v
   - bundle  install --jobs=1 --retry=1
 
 - name: test
