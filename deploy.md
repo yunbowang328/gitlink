@@ -1,4 +1,18 @@
+
 # 本地开发部署步骤
+
+## Depends Versions
+
+* Ruby 2.4.5
+
+* Rails ~> 5.2
+
+* MySql ~> 5.6
+
+* Redis 5+
+
+
+## Steps
 
 ### 1. 安装依赖包
 
