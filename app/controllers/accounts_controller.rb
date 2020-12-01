@@ -27,6 +27,7 @@ class AccountsController < ApplicationController
         @user.gitea_uid = gitea_user['id']
         if @user.save!
           UserExtension.create!(user_id: @user.id)
+          @user.create_wallet(balance: 0)
           render_ok({user: {id: @user.id, token: @user.gitea_token}})
         end
       else

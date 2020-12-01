@@ -1,6 +1,9 @@
 class SponsorshipsController < ApplicationController
   before_action :set_sponsorship, only: [:show, :edit, :update, :destroy]
-
+  # before_action :require_login, except: [:index, :stopped, :sponsored, :sponsoring, :stopped_sponsored, :stopped_sponsoring]
+  before_action :require_login, only: [:show, :new, :create, :edit, :update, :destroy]
+  skip_after_action :user_trace_log, only: [:update]
+  
   # GET /sponsorships
   # GET /sponsorships.json
   def index
@@ -17,6 +20,9 @@ class SponsorshipsController < ApplicationController
     else
       @sponsorships = Sponsorship.where("developer_id=? AND visible=1", params[:id])
     end
+    sort = params[:sort_by] || "created_at"
+    sort_direction = params[:sort_direction] || "desc"
+    @sponsorships = @sponsorships.reorder("#{sort} #{sort_direction}")
     @total = @sponsorships.length
     @sponsorships = kaminari_paginate(@sponsorships)
   end
@@ -27,6 +33,9 @@ class SponsorshipsController < ApplicationController
     else
       @sponsorships = Sponsorship.where("sponsor_id=? AND visible=1", params[:id])
     end
+    sort = params[:sort_by] || "created_at"
+    sort_direction = params[:sort_direction] || "desc"
+    @sponsorships = @sponsorships.reorder("#{sort} #{sort_direction}")
     @total = @sponsorships.length
     @sponsorships = kaminari_paginate(@sponsorships)
   end
@@ -37,6 +46,9 @@ class SponsorshipsController < ApplicationController
     else
       @stopped_sponsorships = StoppedSponsorship.where("developer_id=? AND visible=1", params[:id])
     end
+    sort = params[:sort_by] || "created_at"
+    sort_direction = params[:sort_direction] || "desc"
+    @stopped_sponsorships = @stopped_sponsorships.reorder("#{sort} #{sort_direction}")
     @total = @stopped_sponsorships.length
     @stopped_sponsorships = kaminari_paginate(@stopped_sponsorships)
   end
@@ -47,6 +59,9 @@ class SponsorshipsController < ApplicationController
     else
       @stopped_sponsorships = StoppedSponsorship.where("sponsor_id=? AND visible=1", params[:id])
     end
+    sort = params[:sort_by] || "created_at"
+    sort_direction = params[:sort_direction] || "desc"
+    @stopped_sponsorships = @stopped_sponsorships.reorder("#{sort} #{sort_direction}")
     @total = @stopped_sponsorships.length
     @stopped_sponsorships = kaminari_paginate(@stopped_sponsorships)
   end
@@ -116,7 +131,10 @@ class SponsorshipsController < ApplicationController
     if @sponsorship.sponsor.id != current_user.id
       return render json: {status: -1, message: '没有权限' }
     end
+    old_value = old_value_to_hash(@sponsorship, params)
+    # params.delete :sponsorship
     if @sponsorship.update(sponsorship_params)
+      user_trace_update_log(old_value)
       render json: {status: 1, message: '修改成功' }
     else
       render json: {status: -1, message: '修改失败' }

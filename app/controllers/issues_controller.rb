@@ -8,6 +8,8 @@ class IssuesController < ApplicationController
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
   before_action :get_branches, only: [:new, :edit]
 
+  skip_after_action :user_trace_log, only: [:update]
+
   include ApplicationHelper
   include TagChosenHelper
 
@@ -161,7 +163,11 @@ class IssuesController < ApplicationController
       end
     end
 
+    user = current_user
+    # issue_json = issue_send_params(@issue).except(:issue_classify, :author_id, :project_id).to_json
+    issue_hash = old_value_to_hash(@issue, params)
     if @issue.update_attributes(issue_params)
+      user_trace_update_log(issue_hash)
       issue_files = params[:attachment_ids]
       change_files = false
       issue_file_ids = []

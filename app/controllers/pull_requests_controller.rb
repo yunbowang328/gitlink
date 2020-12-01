@@ -4,6 +4,9 @@ class PullRequestsController < ApplicationController
   before_action :set_repository
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos]
   # before_action :get_relatived, only: [:edit]
+  #
+  skip_after_action :user_trace_log, only: [:update]
+
   include TagChosenHelper
   include ApplicationHelper
 
@@ -127,8 +130,18 @@ class PullRequestsController < ApplicationController
             end
           end
 
+          old_issue_value = old_value_to_hash(@issue, @issue_params)
+          old_pr_value = old_value_to_hash(@pull_request, @local_params.compact)
+          old_value = {issue: old_issue_value, pull_request: old_pr_value}
+          puts("------------------------------\nissue = #{@issue.attributes}\n")
+          puts("issue_params = #{@issue_params}\n")
+          puts("pr = #{@pull_request.attributes}\n")
+          puts("local_params = #{@local_params}\n")
+          puts("old_issue = #{old_issue_value}\nold_pr = #{old_pr_value}\nold_value = #{old_value}\n------------------------------\n")
+
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
+              user_trace_update_log(old_value)
               gitea_request = Gitea::PullRequest::UpdateService.new(@project.owner, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
               if gitea_request
                 if params[:issue_tag_ids].present?

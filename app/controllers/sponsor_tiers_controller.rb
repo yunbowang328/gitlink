@@ -1,5 +1,6 @@
 class SponsorTiersController < ApplicationController
   before_action :set_sponsor_tier, only: [:show, :edit, :update, :destroy]
+  before_action :check_sponsor, only: [:show]
 
   # GET /sponsor_tiers
   # GET /sponsor_tiers.json
@@ -12,7 +13,7 @@ class SponsorTiersController < ApplicationController
   # GET /sponsor_tiers/1
   # GET /sponsor_tiers/1.json
   def show
-    @check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", current_user.id, @sponsor_tier.user)
+
   end
 
   # GET /sponsor_tiers/new
@@ -29,12 +30,14 @@ class SponsorTiersController < ApplicationController
   # POST /sponsor_tiers.json
   def create
     # print("------------\n", sponsor_tier_params, "\n------------\n")
+    @check_sponsorship = nil
     @sponsor_tier = SponsorTier.new(sponsor_tier_params)
 
     respond_to do |format|
       if @sponsor_tier.save
         format.html { redirect_to @sponsor_tier, notice: 'Sponsor tier was successfully created.' }
         format.json { render :show, status: :created, location: @sponsor_tier }
+        # render json: {status: 1, message: '创建成功' }
       else
         format.html { render :new }
         format.json { render json: @sponsor_tier.errors, status: :unprocessable_entity }
@@ -45,14 +48,17 @@ class SponsorTiersController < ApplicationController
   # PATCH/PUT /sponsor_tiers/1
   # PATCH/PUT /sponsor_tiers/1.json
   def update
+    @check_sponsorship = nil
     respond_to do |format|
       if User.current.id == @sponsor_tier.user_id && @sponsor_tier.update(sponsor_tier_params)
         format.html { redirect_to @sponsor_tier, notice: 'Sponsor tier was successfully updated.' }
         format.json { render :show, status: :ok, location: @sponsor_tier }
+        # render json: {status: 1, message: '修改成功' }
       else
         format.html { render :edit }
         format.json { render json: @sponsor_tier.errors, status: :unprocessable_entity }
         # format.json { render status: :unprocessable_entity }
+        # render json: {status: -1, message: '修改失败' }
       end
     end
   end
@@ -73,6 +79,10 @@ class SponsorTiersController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def check_sponsor
+      @check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", current_user.id, @sponsor_tier.user)
+    end
+
     def set_sponsor_tier
       @sponsor_tier = SponsorTier.find(params[:id])
     end

@@ -1,9 +1,12 @@
 class ForksController < ApplicationController
   before_action :require_login, :find_project_with_id
   before_action :authenticate_project!, :authenticate_user!
+  skip_after_action :user_trace_log, only: [:create]
 
   def create
     @new_project = Projects::ForkService.new(current_user, @project, params[:organization]).call
+    user = current_user
+    Rails.logger.user_trace.info("{id: #{user.id}, login: #{user.login}, url: #{request.url}, method: #{request.method}, params: #{params.merge(forkee: @new_project.id)}, response_code: #{response.code}, time: #{Time.now}}")
   end
 
   private

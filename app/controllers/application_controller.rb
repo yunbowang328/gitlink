@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GitHelper
   include LoggerHelper
   include LoginHelper
+  include UpdateHelper
 
   protect_from_forgery prepend: true, unless: -> { request.format.json? }
 
@@ -371,7 +372,13 @@ class ApplicationController < ActionController::Base
   def user_trace_log
     user = current_user
     # print("*********************url:", request.url, "****routes", request.request_method)
-    Rails.logger.user_trace.info("{id: #{user.id}, login: #{user.login}, url: #{request.url}, params: #{params}, response_code: #{response.code}, time: #{Time.now}}")
+    Rails.logger.user_trace.info("{id: #{user.id}, login: #{user.login}, url: #{request.url}, method: #{request.method}, params: #{params}, response_code: #{response.code}, time: #{Time.now}}")
+  end
+
+  def user_trace_update_log(old_value_hash)
+    user = current_user
+    str = "{id: #{user.id}, login: #{user.login}, url: #{request.url}, method: #{request.method}, params: #{params.merge(old_value: old_value_hash)}, response_code: #{response.code}, time: #{Time.now}}"
+    Rails.logger.user_trace.info(str)
   end
 
   def try_to_autologin
