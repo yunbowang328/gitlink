@@ -1,11 +1,10 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
+
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
-  before_action :find_project_with_includes, only: :show
-  before_action :find_project, except: [:tags, :commit, :sync_mirror, :show]
+  before_action :load_repository
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
-  before_action :find_repository_by_id, only: %i[commit sync_mirror tags]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
   before_action :get_ref, only: %i[entries sub_entries top_counts]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
@@ -14,7 +13,7 @@ class RepositoriesController < ApplicationController
   def show
     @user = current_user
     @repo = @project.repository
-    @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
+    @result = @project.forge? ? Gitea::Repository::GetService.new(@owner, @project.identifier).call : nil
     @project_fork_id = @project.try(:forked_from_project_id)
     if @project_fork_id.present?
       @fork_project = Project.find_by(id: @project_fork_id)
@@ -27,62 +26,85 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
-    @project_owner = @project.owner
-    @entries = Gitea::Repository::Entries::ListService.new(@project_owner, @project.identifier, ref: @ref).call
-    @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
-    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+
+    if @project.educoder?
+      @entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder.repo_name)
+    else
+      @entries = Gitea::Repository::Entries::ListService.new(@owner, @project.identifier, ref: @ref).call
+      @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
+      @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+    end
   end
 
   def top_counts
-    @result = Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
+    @result = @project.educoder? ? nil : Gitea::Repository::GetService.new(@project.owner, @project.identifier).call
   end
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: @ref)
-    if interactor.success?
-      @sub_entries = interactor.result
-      @sub_entries = [] << @sub_entries unless @sub_entries.is_a? Array
-      @sub_entries = @sub_entries.sort_by{ |hash| hash['type'] }
+
+    if @project.educoder?
+      if params[:type] === 'file'
+        @sub_entries = Educoder::Repository::Entries::GetService.call(@project&.project_educoder&.repo_name, file_path_uri)
+        logger.info "######### sub_entries: #{@sub_entries}"
+        return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
+
+        tmp_entries = [{
+            "content" =>  @sub_entries['data']['content'],
+            "type"    => "blob"
+          }]
+        @sub_entries = {
+          "trees"=>tmp_entries,
+          "commits" => [{}]
+        }
+      else
+        @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
+      end
     else
-      render_error(interactor.error)
+      interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: @ref)
+      if interactor.success?
+        result = interactor.result
+        @sub_entries = result.is_a?(Array) ? result.sort_by{ |hash| hash['type'] } : result
+      else
+        render_error(interactor.error)
+      end
     end
   end
 
   def commits
-    @project_owner = @project.owner
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@project_owner.login, @project.identifier,
+    @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
-      Rails.logger.info("#####################_______hash_commit______############{@hash_commit}")
-      Rails.logger.info("#####################_______hash_commit_size______############{@hash_commit.size}")
   end
 
   def commit
-    @commit = Gitea::Repository::Commits::GetService.new(@repo.user.login, @repo.identifier, params[:sha], current_user.gitea_token).call
+    @sha         = params[:sha]
+    @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
+    @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @repo.user.login, @repo.identifier, {page: params[:page], limit: params[:limit]}).call
+    @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
   end
 
   def edit
   end
 
   def create_file
-    interactor = Gitea::CreateFileInteractor.call(current_user, content_params)
+    interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
     if interactor.success?
       @file = interactor.result
-      create_new_pr(params)
+      # create_new_pr(params)
     else
       render_error(interactor.error)
     end
   end
 
   def update_file
-    interactor = Gitea::UpdateFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
+    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, @owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
-      create_new_pr(params)
+      # TODO: 是否创建pr
+      # create_new_pr(params)
       render_result(1, "更新成功")
     else
       render_error(interactor.error)
@@ -90,7 +112,7 @@ class RepositoriesController < ApplicationController
   end
 
   def delete_file
-    interactor = Gitea::DeleteFileInteractor.call(current_user, params.merge(identifier: @project.identifier))
+    interactor = Gitea::DeleteFileInteractor.call(current_user.gitea_token, @owner.login, params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
       render_result(1, "文件删除成功")
@@ -104,10 +126,10 @@ class RepositoriesController < ApplicationController
   end
 
   def sync_mirror
-    return render_error("正在镜像中..") if  @repo.mirror.waiting?
+    return render_error("正在镜像中..") if  @repository.mirror.waiting?
 
-    @repo.sync_mirror!
-    SyncMirroredRepositoryJob.perform_later(@repo.id, current_user.id)
+    @repository.sync_mirror!
+    SyncMirroredRepositoryJob.perform_later(@repository.id, current_user.id)
     render_ok
   end
 
@@ -123,6 +145,7 @@ class RepositoriesController < ApplicationController
   end
 
   def authorizate!
+    return if current_user && current_user.admin?
     if @project.repository.hidden? && !@project.member?(current_user)
       render_forbidden
     end
@@ -135,18 +158,18 @@ class RepositoriesController < ApplicationController
   end
 
   def get_statistics
-    @branches_count = Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
-    @tags_count = Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
+    @branches_count = @project.educoder? ? 0 : Gitea::Repository::Branches::ListService.new(@project.owner, @project.identifier).call&.size
+    @tags_count = @project.educoder? ? 0 : Gitea::Repository::Tags::ListService.new(current_user&.gitea_token, @project.owner.login, @project.identifier).call&.size
   end
 
   def get_ref
     @ref = params[:ref] || "master"
   end
 
-  def get_latest_commit 
-    latest_commit = project_commits
-    @latest_commit = latest_commit[:body][0] if latest_commit.present?
-    @commits_count = latest_commit[:total_count] if latest_commit.present?
+  def get_latest_commit
+    latest_commit = @project.educoder? ? nil : project_commits
+    @latest_commit = latest_commit.present? ? latest_commit[:body][0] : nil
+    @commits_count = latest_commit.present? ? latest_commit[:total_count] : 0
   end
 
   def content_params
@@ -156,6 +179,10 @@ class RepositoriesController < ApplicationController
       new_branch: params[:new_branch],
       content: params[:content],
       message: params[:message],
+      committer: {
+        email: current_user.mail,
+        name: current_user.login
+      },
       identifier: @project.identifier
     }
   end
@@ -210,7 +237,7 @@ class RepositoriesController < ApplicationController
         issue_type: "1",
         tracker_id: 2,
         status_id: 1,
-        priority_id: 1
+        priority_id: params[:priority_id] || "2"
       }
       @pull_issue = Issue.new(issue_params)
       if @pull_issue.save!

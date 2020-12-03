@@ -1,23 +1,27 @@
 class Gitea::Hooks::ListService < Gitea::ClientService
-  attr_reader :user, :repo_name
+  attr_reader :token, :owner, :repo, :params
 
-  def initialize(user, repo_name)
-    @user = user 
-    @repo_name = repo_name 
-    @body = body 
+  def initialize(token, owner, repo_name, params={})
+    @token   = token
+    @owner   = owner
+    @repo    = repo
+    @params  = params
   end
 
-  def call 
-    response = get(url, params)
+  def call
+    get(url, params)
   end
 
   private
   def params
-    Hash.new.merge(token: user.gitea_token)
+    Hash.new.merge(token: token,
+      page: params[:page],
+      limit: params[:limit]
+    ).compact
   end
 
   def url
-    "/repos/#{user.login}/#{repo_name}/hooks".freeze
+    "/repos/#{owner}/#{repo}/hooks".freeze
   end
 
 end

@@ -1,5 +1,6 @@
 class ForksController < ApplicationController
-  before_action :require_login, :find_project_with_id
+  before_action :require_login
+  before_action :load_project
   before_action :authenticate_project!, :authenticate_user!
   skip_after_action :user_trace_log, only: [:create]
 

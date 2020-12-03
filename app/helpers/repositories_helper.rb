@@ -1,11 +1,17 @@
 module RepositoriesHelper
+  def render_permission(user, project)
+    return "Admin" if user&.admin?
+    return "Owner" if user === project.owner
+    project.get_premission(user)
+  end
+
   def render_decode64_content(str)
     return nil if str.blank?
-    Base64.decode64(str).force_encoding('UTF-8')
+    Base64.decode64(str).force_encoding("UTF-8")
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx)
     default_type.include?(str&.downcase)
   end
 
@@ -44,7 +50,7 @@ module RepositoriesHelper
         end
         if r_content.include?("?")
           new_r_content = r_content + "&raw=true"
-        else 
+        else
           new_r_content = r_content + "?raw=true"
         end
         unless r_content.include?("http://") || r_content.include?("https://") || r_content.include?("mailto:")
@@ -55,5 +61,15 @@ module RepositoriesHelper
     end
 
     return content
+  end
+
+  # unix_time values for example: 1604382982
+  def render_format_time_with_unix(unix_time)
+    Time.at(unix_time).strftime("%Y-%m-%d %H:%M")
+  end
+
+  # date for example: 2020-11-01T19:57:27+08:00
+  def render_format_time_with_date(date)
+    date.to_time.strftime("%Y-%m-%d %H:%M")
   end
 end

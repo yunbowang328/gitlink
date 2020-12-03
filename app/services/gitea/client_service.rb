@@ -20,13 +20,9 @@ class Gitea::ClientService < ApplicationService
   # }
   def post(url, params={})
     puts "[gitea] request params: #{params}"
-    request_url = [api_url, url].join('').freeze
-    Rails.logger.info("######_____api____request_url_______###############{request_url}")
-    Rails.logger.info("######_____api____request_params_______###############{params}")
-
     auth_token = authen_params(params[:token])
     response = conn(auth_token).post do |req|
-      req.url "#{request_url}"
+      req.url full_url(url)
       req.body = params[:data].to_json
     end
     render_status(response)
@@ -35,7 +31,7 @@ class Gitea::ClientService < ApplicationService
   def get(url, params={})
     auth_token = authen_params(params[:token])
     conn(auth_token).get do |req|
-      req.url full_url(url)
+      req.url full_url(url, 'get')
       params.except(:token).each_pair do |key, value|
         req.params["#{key}"] = value
       end
@@ -73,9 +69,10 @@ class Gitea::ClientService < ApplicationService
 
   private
   def conn(auth={})
-    username = auth[:username] || access_key_id
-    secret = auth[:password] || access_key_secret
+    username = auth[:username]
+    secret = auth[:password]
     token = auth[:token]
+
     puts "[gitea] username: #{username}"
     puts "[gitea]   secret: #{secret}"
     puts "[gitea]    token: #{token}"
@@ -105,26 +102,19 @@ class Gitea::ClientService < ApplicationService
     Gitea.gitea_config[:domain]
   end
 
-  def access_key_id
-    Gitea.gitea_config[:access_key_id]
-  end
-
-  def access_key_secret
-    Gitea.gitea_config[:access_key_secret]
-  end
-
   def api_url
     [domain, base_url].join('')
   end
 
-  def full_url(api_rest)
-    [api_url, api_rest].join('').freeze
+  def full_url(api_rest, action='post')
+    url = [api_url, api_rest].join('').freeze
+    url = action === 'get' ? url : URI.escape(url)
+    puts "[gitea] request url: #{url}"
+    return url
   end
 
   def render_status(response)
-    Rails.logger.info("###############____response__#{response}")
-    Rails.logger.info("###############____response_status_#{response.status}")
-    Rails.logger.info("###############____response_body_#{response.body}")
+    puts "[gitea] response status: #{response.status}"
     mark = "[gitea] "
     case response.status
     when 201, 200, 202
@@ -134,13 +124,12 @@ class Gitea::ClientService < ApplicationService
         {status: 200}
       end
     when 401
-      ""
       raise Error, mark + "401"
     when 422
       result = JSON.parse(response&.body)
-      puts "[gitea] parse body: #{result}"
+      puts "[gitea] parse body: #{result['message']}"
       # return {status: -1, message: result[0]}
-      raise Error, result[0]
+      raise Error, result['message']
     when 204
 
       puts "[gitea] "
@@ -150,6 +139,8 @@ class Gitea::ClientService < ApplicationService
       raise Error, mark + message
     when 403
       {status: 403, message: '你没有权限操作!'}
+    when 404
+      {status: 404, message: '你访问的链接不存在!'}
     else
       if response&.body.blank?
         message = "请求失败"

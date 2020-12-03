@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: tokens
+#
+#  id         :integer          not null, primary key
+#  user_id    :integer          default("0"), not null
+#  action     :string(30)       default(""), not null
+#  value      :string(40)       default(""), not null
+#  created_on :datetime         not null
+#
+# Indexes
+#
+#  index_tokens_on_user_id  (user_id)
+#  tokens_value             (value) UNIQUE
+#
+
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -27,8 +43,10 @@ class Token < ActiveRecord::Base
 
   def self.get_or_create_permanent_login_token(user, type)
     token = Token.get_token_from_user(user, type)
+    Rails.logger.info "###### Token.get_token_from_user result: #{token&.value}"
     unless token
       token = Token.create(:user => user, :action => type)
+      Rails.logger.info "###### Token.get_token_from_user is nul and agine create token: #{token&.value}"
     else
       token.update_attribute(:created_on, Time.now)
     end
@@ -37,8 +55,10 @@ class Token < ActiveRecord::Base
 
   def self.get_token_from_user(user, action)
     token = Token.where(:action => action, :user_id => user).first
+    Rails.logger.info "######  self.get_token_from_user query result: #{token&.value}"
     unless token
       token = Token.create!(user_id: user.id, action: action)
+      Rails.logger.info "######  self.get_token_from_user query is nil and create result: #{token&.value}"
     end
     token
   end

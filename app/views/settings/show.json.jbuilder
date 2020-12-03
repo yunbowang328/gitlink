@@ -16,7 +16,16 @@ json.setting do
   #
   #   json.footer setting.footer || default_setting.footer
   #
-  #   json.main_site current_laboratory.main_site?
+  # end
+
+  nav_bar = default_setting.navbar
+
+  # if User.current.logged?
+  #   nav_bar[2]["link"] = "https://forgeplus.trustie.net/users/#{current_user.login}/projects"
+  #   nav_bar[2]["hidden"] = false
+  # else
+  #   nav_bar[2]["link"] = ""
+  #   nav_bar[2]["hidden"] = true
   # end
 
   json.name default_setting.name
@@ -30,7 +39,7 @@ json.setting do
   json.moop_cases_banner_url default_setting.moop_cases_banner_url&.[](1..-1)
   json.oj_banner_url default_setting.oj_banner_url&.[](1..-1)
 
-  json.navbar default_setting.navbar
+  json.navbar nav_bar
 
   json.footer default_setting.footer
 

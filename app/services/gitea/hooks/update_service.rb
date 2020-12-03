@@ -2,14 +2,14 @@ class Gitea::Hooks::UpdateService < Gitea::ClientService
   attr_reader :user, :repo_name, :body,:hook_id
 
   def initialize(user, repo_name, body, hook_id)
-    @user = user 
-    @repo_name = repo_name 
-    @body = body 
+    @user = user
+    @repo_name = repo_name
+    @body = body
     @hook_id = hook_id
   end
 
-  def call 
-    response = patch(url, params)
+  def call
+    patch(url, params)
   end
 
   private

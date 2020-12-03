@@ -12,6 +12,7 @@ class Projects::CreateService < ApplicationService
     @project = Project.new(project_params)
     ActiveRecord::Base.transaction do
       if @project.save!
+        Project.update_common_projects_count!
         Repositories::CreateService.new(user, @project, repository_params).call
       else
         Rails.logger.info("#############___________create_project_erros______###########{@project.errors.messages}")

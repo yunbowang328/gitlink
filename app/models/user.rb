@@ -1,3 +1,67 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                            :integer          not null, primary key
+#  login                         :string(255)      default(""), not null
+#  hashed_password               :string(40)       default(""), not null
+#  firstname                     :string(30)       default(""), not null
+#  lastname                      :string(255)      default(""), not null
+#  mail                          :string(60)
+#  admin                         :boolean          default("0"), not null
+#  status                        :integer          default("1"), not null
+#  last_login_on                 :datetime
+#  language                      :string(5)        default("")
+#  auth_source_id                :integer
+#  created_on                    :datetime
+#  updated_on                    :datetime
+#  type                          :string(255)
+#  identity_url                  :string(255)
+#  mail_notification             :string(255)      default(""), not null
+#  salt                          :string(64)
+#  gid                           :integer
+#  visits                        :integer          default("0")
+#  excellent_teacher             :integer          default("0")
+#  excellent_student             :integer          default("0")
+#  phone                         :string(255)
+#  authentication                :boolean          default("0")
+#  grade                         :integer          default("0")
+#  experience                    :integer          default("0")
+#  nickname                      :string(255)
+#  show_realname                 :boolean          default("1")
+#  professional_certification    :boolean          default("0")
+#  ID_number                     :string(255)
+#  certification                 :integer          default("0")
+#  homepage_teacher              :boolean          default("0")
+#  homepage_engineer             :boolean          default("0")
+#  is_test                       :integer          default("0")
+#  ecoder_user_id                :integer          default("0")
+#  business                      :boolean          default("0")
+#  profile_completed             :boolean          default("0")
+#  laboratory_id                 :integer
+#  platform                      :string(255)      default("0")
+#  gitea_token                   :string(255)
+#  gitea_uid                     :integer
+#  is_shixun_marker              :boolean          default("0")
+#  is_sync_pwd                   :boolean          default("1")
+#  watchers_count                :integer          default("0")
+#  visibility                    :string(255)      default("public")
+#  repo_admin_change_team_access :boolean          default("1")
+#  is_org                        :boolean          default("0")
+#  website                       :string(255)
+#  devops_step                   :integer          default("0")
+#
+# Indexes
+#
+#  index_users_on_ecoder_user_id     (ecoder_user_id)
+#  index_users_on_homepage_engineer  (homepage_engineer)
+#  index_users_on_homepage_teacher   (homepage_teacher)
+#  index_users_on_laboratory_id      (laboratory_id)
+#  index_users_on_login              (login)
+#  index_users_on_mail               (mail)
+#  index_users_on_type               (type)
+#
+
 class User < ApplicationRecord
   extend Enumerize
 
@@ -5,7 +69,15 @@ class User < ApplicationRecord
   include Likeable
   include BaseModel
   include ProjectOperable
+  include ProjectAbility
+  include Droneable
   # include Searchable::Dependents::User
+
+  # devops step
+  # devops_step column:  0: 未填写服务器信息；1: 已填写服务器信息(未认证)；2: 已认证
+  DEVOPS_UNINIT = 0
+  DEVOPS_UNVERIFIED = 1
+  DEVOPS_CERTIFICATION = 2
 
   # Account statuses
   STATUS_ANONYMOUS  = 0
@@ -70,8 +142,9 @@ class User < ApplicationRecord
   # 关注
   has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
   has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-  
-  has_many :watchers, as: :watchable, dependent: :destroy 
+  has_many :watchers, as: :watchable, dependent: :destroy
+
+  has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
   has_many :apply_user_authentication
@@ -91,6 +164,7 @@ class User < ApplicationRecord
   # 教学案例
   # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
+  has_many :oauths , dependent: :destroy
 
   # sponsor
   has_many :as_sponsors, class_name: 'Sponsorship', foreign_key: 'sponsor_id', dependent: :destroy
@@ -515,7 +589,7 @@ class User < ApplicationRecord
   def self.anonymous
     anonymous_user = AnonymousUser.unscoped.take
     if anonymous_user.nil?
-      anonymous_user = AnonymousUser.unscoped.create(lastname: 'Anonymous', firstname: '', login: '', mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platform[:forge])
+      anonymous_user = AnonymousUser.unscoped.create(lastname: 'Anonymous', firstname: '', login: '', mail: '358551897@qq.com', phone: '13333333333', status: 0, platform: User.platform.forge)
       raise "Unable to create the anonymous user： error_info:#{anonymous_user.errors.messages}" if anonymous_user.new_record?
     end
     anonymous_user

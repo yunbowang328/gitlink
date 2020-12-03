@@ -1,8 +1,11 @@
 class UsersController < ApplicationController
+  include Ci::DbConnectable
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
   before_action :require_login, only: %i[me list]
+  before_action :connect_to_ci_database, only: :get_user_info, if: -> { current_user && !current_user.is_a?(AnonymousUser) && current_user.devops_certification? }
+
   skip_before_action :check_sign, only: [:attachment_show]
 
   def list
@@ -149,32 +152,41 @@ class UsersController < ApplicationController
   def trustie_related_projects
     projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
     projects_json = []
+    domain_url = EduSetting.get('host_name') + '/projects'
     if projects.present?
       projects.each do |p|
+        project_url = "/#{p.owner.login}/#{p.identifier}"
         pj = {
           id: p.id,
           name: p.name,
           is_public: p.is_public,
           updated_on: p.updated_on.strftime("%Y-%m-%d"),
+          status: p.status,
+          is_member: p.member?(current_user.try(:id)),
           owner: {
             name: p.owner.try(:show_real_name),
             login: p.owner.login
           },
           members_count: p&.members.size,
           issues_count: p.issues_count - p.pull_requests_count,
-          commits_count: p&.project_score&.changeset_num.to_i
+          commits_count: p&.project_score&.changeset_num.to_i,
+          http_url: domain_url + project_url,
+          http_collaborator_url: domain_url + project_url + "/setting/collaborator",
+          http_issues_url: domain_url + project_url + "/issues",
+          http_commits_url: domain_url + project_url + "/commits",
+          project_score: p&.project_score.present? ? p&.project_score&.as_json(:except=>[:created_at, :updated_at]).merge!(commit_time: format_time(p&.project_score&.commit_time)) : {}
         }
         projects_json.push(pj)
       end
     end
     Rails.logger.info("==========projects_json========+########{projects_json}")
-    render json: { projects: projects_json }
+    render json: { projects: projects_json.present? ? projects_json : {} }
   end
 
   def trustie_projects
     user_id = User.select(:id, :login).where(login: params[:login])&.first&.id
     projects = Project.visible
-    
+
     projects = projects.joins(:members).where(members: { user_id: user_id })
 
     search = params[:search].to_s.strip

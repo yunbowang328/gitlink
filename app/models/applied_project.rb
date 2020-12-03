@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: applied_projects
+#
+#  id         :integer          not null, primary key
+#  project_id :integer          not null
+#  user_id    :integer          not null
+#  role       :integer          default("0")
+#  status     :integer          default("0")
+#
+
 class AppliedProject < ApplicationRecord
   belongs_to :user
   belongs_to :project

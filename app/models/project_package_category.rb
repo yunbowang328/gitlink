@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: project_package_categories
+#
+#  id       :integer          not null, primary key
+#  name     :string(255)
+#  position :integer
+#
+
 class ProjectPackageCategory < ApplicationRecord
   default_scope { order(position: :asc) }
 

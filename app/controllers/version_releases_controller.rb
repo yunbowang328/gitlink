@@ -1,6 +1,6 @@
 class VersionReleasesController < ApplicationController
-  before_action :find_project_with_id
-  before_action :set_user_and_project
+  before_action :load_repository
+  before_action :set_user
   before_action :require_login, except: [:index]
   before_action :find_version , only: [:edit, :update, :destroy]
   skip_after_action :user_trace_log, only: [:update]
@@ -124,14 +124,8 @@ class VersionReleasesController < ApplicationController
 
 
   private
-
-  def set_user_and_project
-    # @project = Project.find_by_id(params[:project_id])
-    @repository = @project.repository  #项目的仓库
-    @user = @project.owner
-    unless @user.present? && @project.present? && @repository.present?
-      normal_status(-1, "仓库不存在")
-    end
+  def set_user
+    @user = @repository.user
   end
 
   def find_version
@@ -141,18 +135,18 @@ class VersionReleasesController < ApplicationController
     end
   end
 
-  def releases_params 
+  def releases_params
    {
       body:	params[:body],
       draft: params[:draft] || false,
       name: params[:name],
-      prerelease: params[:prerelease],
+      prerelease: params[:prerelease] || false,
       tag_name: params[:tag_name],
       target_commitish: params[:target_commitish] || "master"  #分支
     }
   end
 
-  def create_attachments(attachment_ids, target) 
+  def create_attachments(attachment_ids, target)
     attachment_ids.each do |id|
       attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
       unless attachment.blank?

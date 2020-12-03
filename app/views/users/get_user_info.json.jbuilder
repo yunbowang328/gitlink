@@ -13,5 +13,5 @@ json.user_phone_binded @user.phone.present?
 json.profile_completed @user.profile_completed?
 json.professional_certification @user.professional_certification
 json.description @user.description
-
-
+json.devops_step @user.devops_step
+json.ci_certification @user.ci_certification?

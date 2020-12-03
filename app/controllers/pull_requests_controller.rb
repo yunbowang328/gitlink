@@ -1,12 +1,11 @@
 class PullRequestsController < ApplicationController
-  before_action :require_login, except: [:index, :show]
-  before_action :find_project_with_id
-  before_action :set_repository
-  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos]
-  # before_action :get_relatived, only: [:edit]
-  #
-  skip_after_action :user_trace_log, only: [:update]
 
+  before_action :require_login, except: [:index, :show, :files, :commits]
+  before_action :load_repository
+  before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
+  before_action :load_pull_request, only: [:files, :commits]
+
+  skip_after_action :user_trace_log, only: [:update]
   include TagChosenHelper
   include ApplicationHelper
 
@@ -27,12 +26,13 @@ class PullRequestsController < ApplicationController
   end
 
   def new
-    @all_branches = PullRequests::BranchesService.new(@user, @project).call
+    @all_branches = PullRequests::BranchesService.new(@owner, @project).call
     @is_fork = @project.forked_from_project_id.present?
     @projects_names = [{
-      project_user_login: @user.try(:login),
-      project_name: "#{@user.try(:show_real_name)}/#{@repository.try(:identifier)}",
-      project_id: @project.id
+      project_user_login: @owner.try(:login),
+      project_name: "#{@owner.try(:show_real_name)}/#{@repository.try(:identifier)}",
+      project_id: @project.identifier,
+      id: @project.id
     }]
     @merge_projects = @projects_names
     fork_project = @project.fork_project if @is_fork
@@ -40,13 +40,14 @@ class PullRequestsController < ApplicationController
       @merge_projects.push({
         project_user_login: fork_project.owner.try(:login),
         project_name: "#{fork_project.owner.try(:show_real_name)}/#{fork_project.repository.try(:identifier)}",
-        project_id: fork_project.id
+        project_id: fork_project.identifier,
+        id: fork_project.id
       })
     end
   end
 
   def get_branches
-    branch_result = PullRequests::BranchesService.new(@user, @project).call
+    branch_result = PullRequests::BranchesService.new(@owner, @project).call
     render json: branch_result
     # return json: branch_result
   end
@@ -67,7 +68,9 @@ class PullRequestsController < ApplicationController
               project_id: @project.id,
               issue_id: pull_issue.id,
               fork_project_id: params[:fork_project_id],
-              is_original: params[:is_original]
+              is_original: params[:is_original],
+              files_count: params[:files_count] || 0,
+              commits_count: params[:commits_count] || 0
             }
             local_requests = PullRequest.new(@local_params.merge(pr_params))
             if local_requests.save
@@ -91,6 +94,7 @@ class PullRequestsController < ApplicationController
                 if params[:title].to_s.include?("WIP:")
                   pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。", current_user&.id)
                 end
+                # render :json => { status: 0, message: "PullRequest创建成功", id:  pull_issue.id}
                 normal_status(0, "PullRequest创建成功")
               else
                 normal_status(-1, "PullRequest创建失败")
@@ -232,11 +236,11 @@ class PullRequestsController < ApplicationController
     elsif target_head === target_base && !is_original
       normal_status(-2, "分支内容相同，无需创建合并请求")
     else
-      can_merge = @project&.pull_requests.where(user_id: current_user&.id, head: target_head, base: target_base, status: 0, is_original: is_original, fork_project_id: params[:fork_project_id])
+      can_merge = @project&.pull_requests.where(head: target_head, base: target_base, status: 0, is_original: is_original, fork_project_id: params[:fork_project_id])
       if can_merge.present?
         render json: {
           status: -2,
-          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@project.id}/merge/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
+          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
         }
       else
         normal_status(0, "可以合并")
@@ -245,13 +249,19 @@ class PullRequestsController < ApplicationController
   end
 
 
-  private
+  def files
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    # render json: @files_result
+  end
 
-  def set_repository
-    @repository = @project.repository
-    @user = @project.owner
-    normal_status(-1, "仓库不存在") unless @repository.present?
-    normal_status(-1, "用户不存在") unless @user.present?
+  def commits
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    # render json: @commits_result
+  end
+
+  private
+  def load_pull_request
+    @pull_request = PullRequest.find params[:id]
   end
 
   def find_pull_request

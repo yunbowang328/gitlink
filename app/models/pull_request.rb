@@ -1,3 +1,28 @@
+# == Schema Information
+#
+# Table name: pull_requests
+#
+#  id              :integer          not null, primary key
+#  pull_request_id :integer
+#  gpid            :integer
+#  user_id         :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  status          :integer          default("0")
+#  project_id      :integer
+#  title           :string(255)
+#  milestone       :integer
+#  body            :text(65535)
+#  head            :string(255)
+#  base            :string(255)
+#  issue_id        :integer
+#  fork_project_id :integer
+#  is_original     :boolean          default("0")
+#  comments_count  :integer          default("0")
+#  commits_count   :integer          default("0")
+#  files_count     :integer          default("0")
+#
+
 class PullRequest < ApplicationRecord
   #status 0 默认未合并， 1表示合并, 2表示请求拒绝
   belongs_to :issue
@@ -11,5 +36,23 @@ class PullRequest < ApplicationRecord
 
   def fork_project
     Project.find_by(id: self.fork_project_id)
+  end
+
+  # TODO: sync educoder platform repo's for update some statistics count
+  def self.update_some_count
+    PullRequest.includes(:user, :project).select(:id, :user_id, :gpid, :project_id, :fork_project_id).each do |pr|
+      puts pr.id
+      next if pr.gpid.blank?
+      project = pr.project
+
+      next if project.blank?
+      user = project.owner
+      next  if pr.gpid === 6 || pr.gpid === 7
+      files_result = Gitea::PullRequest::FilesService.call(user.login, project.identifier, pr.gpid)
+      pr.update_column(:files_count, files_result['NumFiles']) unless files_result.blank?
+
+      commits_result = Gitea::PullRequest::CommitsService.call(user.login, project.identifier, pr.gpid)
+      pr.update_column(:commits_count, commits_result.size) unless commits_result.blank?
+    end
   end
 end

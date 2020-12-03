@@ -1,6 +1,6 @@
 class MembersController < ApplicationController
   before_action :require_login
-  before_action :find_project_with_id
+  before_action :load_project
   before_action :find_user_with_id, only: %i[create remove change_role]
   before_action :operate!, except: %i[index]
   before_action :check_member_exists!, only: %i[create]

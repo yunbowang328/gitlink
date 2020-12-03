@@ -1,15 +1,16 @@
 module Gitea
   class CreateFileInteractor
-    def self.call(user, params={})
-      interactor = new(user, params)
+    def self.call(token, owner, params={})
+      interactor = new(token, owner, params)
       interactor.run
       interactor
     end
 
     attr_reader :error, :result
 
-    def initialize(user, params)
-      @user   = user
+    def initialize(token, owner, params)
+      @token  = token
+      @owner  = owner
       @params = params
     end
 
@@ -23,7 +24,7 @@ module Gitea
 
     def run
       Contents::CreateForm.new(valid_params).validate!
-      response = Gitea::Repository::Entries::CreateService.new(user, @params[:identifier], @params[:filepath], file_params).call
+      response = Gitea::Repository::Entries::CreateService.new(token, owner, @params[:identifier], @params[:filepath], file_params).call
       render_result(response)
     rescue Exception => exception
       Rails.logger.info "Exception ===========> #{exception.message}"
@@ -33,7 +34,7 @@ module Gitea
 
     private
 
-    attr_reader :params, :user
+    attr_reader :params, :owner, :token
 
     def fail!(error)
       @error = error
@@ -57,6 +58,7 @@ module Gitea
       file_params = file_params.merge(new_branch: @params[:new_branch]) unless @params[:new_branch].blank?
       file_params = file_params.merge(content: Base64.encode64(@params[:content]))
       file_params = file_params.merge(message: @params[:message]) unless @params[:message].blank?
+      file_params = file_params.merge(committer: @params[:committer])
       file_params
     end
   end

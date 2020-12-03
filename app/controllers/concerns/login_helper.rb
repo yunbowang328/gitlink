@@ -11,19 +11,24 @@ module LoginHelper
 
   def set_autologin_cookie(user)
     token = Token.get_or_create_permanent_login_token(user, "autologin")
+    sync_user_token_to_trustie(user.login, token.value)
+
+    Rails.logger.info "###### def set_autologin_cookie and get_or_create_permanent_login_token result: #{token&.value}"
     cookie_options = {
       :value => token.value,
       :expires => 1.month.from_now,
       :path => '/',
       :secure => false,
-      :httponly => false
+      :httponly => true
     }
     if edu_setting('cookie_domain').present?
       cookie_options = cookie_options.merge(domain: edu_setting('cookie_domain'))
     end
-    unless  cookies[autologin_cookie_name].present?
-      cookies[autologin_cookie_name] = cookie_options
-    end
+    # unless  cookies[autologin_cookie_name].present?
+    #   cookies[autologin_cookie_name] = cookie_options
+    # end
+    cookies[autologin_cookie_name] = cookie_options
+
     # for action cable
     cookies.signed[:user_id] ||= user.id
 
@@ -48,11 +53,16 @@ module LoginHelper
     Rails.logger.info("####################__User.current_id______######{current_user.try(:id)}###___#{current_user&.logged?}")
 
     if User.current.logged?
-      if autologin = cookies.delete(autologin_cookie_name)
+      user = User.current
+      autologin =
+        if edu_setting('cookie_domain').present?
+          cookies.delete(autologin_cookie_name, domain: edu_setting('cookie_domain'))
+        else
+           cookies.delete(autologin_cookie_name)
+        end
 
-        User.current.delete_autologin_token(autologin)
-      end
-      User.current.delete_session_token(session[:tk])
+      user.delete_autologin_token(autologin)
+      user.delete_session_token(session[:tk])
       self.logged_user = nil
     end
 
@@ -65,7 +75,7 @@ module LoginHelper
 
   # Sets the logged in user
   def logged_user=(user)
-    # reset_session
+    reset_session
     if user && user.is_a?(User)
       Rails.logger.info("########________logged_user___________###########{user.id}")
 
@@ -107,5 +117,35 @@ module LoginHelper
       Rails.logger.info "########_ login is #{user.login} sync_pwd_to_gitea fail!: #{interactor.error}"
       false
     end
+  end
+
+  # TODO 同步token到trustie平台，保持同步登录状态
+  def sync_user_token_to_trustie(login, token_value)
+
+    config = Rails.application.config_for(:configuration).symbolize_keys!
+
+    token = config[:sync_token]
+    api_host = config[:sync_url]
+
+    return if api_host.blank?
+
+    url = "#{api_host}/api/v1/users/sync_user_token"
+    sync_json = {
+      "token": token,
+      "login": login,
+      "user_token": token_value
+    }
+    uri = URI.parse(url)
+
+    if api_host
+      http = Net::HTTP.new(uri.hostname, uri.port)
+
+      if api_host.include?("https://")
+        http.use_ssl = true
+      end
+
+      http.send_request('POST', uri.path, sync_json.to_json, {'Content-Type' => 'application/json'})
+    end
+
   end
 end

@@ -1,3 +1,73 @@
+# == Schema Information
+#
+# Table name: projects
+#
+#  id                     :integer          not null, primary key
+#  name                   :string(255)      default(""), not null
+#  description            :text(4294967295)
+#  homepage               :string(255)      default("")
+#  is_public              :boolean          default("1"), not null
+#  parent_id              :integer
+#  created_on             :datetime
+#  updated_on             :datetime
+#  identifier             :string(255)
+#  status                 :integer          default("1"), not null
+#  lft                    :integer
+#  rgt                    :integer
+#  inherit_members        :boolean          default("0"), not null
+#  project_type           :integer          default("0")
+#  hidden_repo            :boolean          default("0"), not null
+#  attachmenttype         :integer          default("1")
+#  user_id                :integer
+#  dts_test               :integer          default("0")
+#  enterprise_name        :string(255)
+#  organization_id        :integer
+#  project_new_type       :integer
+#  gpid                   :integer
+#  forked_from_project_id :integer
+#  forked_count           :integer          default("0")
+#  publish_resource       :integer          default("0")
+#  visits                 :integer          default("0")
+#  hot                    :integer          default("0")
+#  invite_code            :string(255)
+#  qrcode                 :string(255)
+#  qrcode_expiretime      :integer          default("0")
+#  script                 :text(65535)
+#  training_status        :integer          default("0")
+#  rep_identifier         :string(255)
+#  project_category_id    :integer
+#  project_language_id    :integer
+#  license_id             :integer
+#  ignore_id              :integer
+#  praises_count          :integer          default("0")
+#  watchers_count         :integer          default("0")
+#  issues_count           :integer          default("0")
+#  pull_requests_count    :integer          default("0")
+#  language               :string(255)
+#  versions_count         :integer          default("0")
+#  issue_tags_count       :integer          default("0")
+#  closed_issues_count    :integer          default("0")
+#  open_devops            :boolean          default("0")
+#  gitea_webhook_id       :integer
+#  open_devops_count      :integer          default("0")
+#  recommend              :boolean          default("0")
+#  platform               :integer          default("0")
+#
+# Indexes
+#
+#  index_projects_on_forked_from_project_id  (forked_from_project_id)
+#  index_projects_on_identifier              (identifier)
+#  index_projects_on_is_public               (is_public)
+#  index_projects_on_lft                     (lft)
+#  index_projects_on_name                    (name)
+#  index_projects_on_platform                (platform)
+#  index_projects_on_project_type            (project_type)
+#  index_projects_on_recommend               (recommend)
+#  index_projects_on_rgt                     (rgt)
+#  index_projects_on_status                  (status)
+#  index_projects_on_updated_on              (updated_on)
+#
+
 class Project < ApplicationRecord
   include Matchable
   include Publicable
@@ -10,15 +80,19 @@ class Project < ApplicationRecord
   #
   enum project_type: { sync_mirror: 2, mirror: 1, common: 0 }
 
+  # forge: trustie平台项目， educoder: educoder平台项目， 默认为forge平台
+  enum platform: { forge: 0, educoder: 1 }
+
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id
+  belongs_to :owner, class_name: 'User', foreign_key: :user_id, optional: true
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
-  # has_many :commits, dependent: :destroy
+  has_many :forked_users, class_name: 'ForkUser', foreign_key: :fork_project_id, dependent: :destroy
+  has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
   has_one :repository, dependent: :destroy
@@ -31,10 +105,13 @@ class Project < ApplicationRecord
   has_many :versions, -> { order("versions.created_on DESC, versions.name DESC") }, dependent: :destroy
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
+  has_one :project_detail, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
+  scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
+
 
 
   def self.search_project(search)
@@ -160,12 +237,46 @@ class Project < ApplicationRecord
     member&.roles&.last&.name || permission
   end
 
-  def fork_project 
+  def fork_project
     Project.find_by(id: self.forked_from_project_id)
   end
 
   def self.members_projects(member_user_id)
     joins(:members).where(members: { user_id: member_user_id})
+  end
+
+  def self.find_with_namespace(namespace_path, identifier)
+    logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
+
+    user = User.find_by_login namespace_path
+    project = user&.projects&.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
+    return nil if project.blank?
+
+    [project, user]
+  end
+
+  def ci_reactivate?
+    open_devops_count > 0
+  end
+
+  def ci_reactivate!(ci_repo)
+    ci_repo.update_column(:repo_active, 1)
+    update_column(:open_devops, true)
+    increment!(:open_devops_count)
+  end
+
+  def self.sync_educoder_shixun(url, private_token, page, per_page)
+    SyncEducoderShixunJob.perform_later(url, private_token, page, per_page)
+  end
+
+  def self.update_common_projects_count!
+    ps = ProjectStatistic.first
+    ps.increment!(:common_projects_count) unless ps.blank?
+  end
+
+  def self.update_mirror_projects_count!
+    ps = ProjectStatistic.first
+    ps.increment!(:mirror_projects_count) unless ps.blank?
   end
 
 end

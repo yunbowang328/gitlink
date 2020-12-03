@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: tidings
+#
+#  id                    :integer          not null, primary key
+#  user_id               :integer
+#  trigger_user_id       :integer
+#  container_id          :integer
+#  container_type        :string(255)
+#  parent_container_id   :integer
+#  parent_container_type :string(255)
+#  belong_container_id   :integer
+#  belong_container_type :string(255)
+#  status                :integer          default("0")
+#  viewed                :boolean
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  tiding_type           :string(255)
+#  extra                 :string(255)
+#  is_delete             :boolean          default("0")
+#
+# Indexes
+#
+#  index_tidings_on_container_id  (container_id)
+#  index_tidings_on_user_id       (user_id)
+#
+
 class Tiding < ApplicationRecord
   belongs_to :user
   belongs_to :trigger_user, class_name: 'User', optional: true

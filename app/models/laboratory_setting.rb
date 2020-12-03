@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: laboratory_settings
+#
+#  id            :integer          not null, primary key
+#  laboratory_id :integer
+#  config        :text(65535)
+#
+# Indexes
+#
+#  index_laboratory_settings_on_laboratory_id  (laboratory_id)
+#
+
 class LaboratorySetting < ApplicationRecord
   belongs_to :laboratory
 
@@ -63,10 +76,11 @@ class LaboratorySetting < ApplicationRecord
       navbar: [
         { 'name' => '首页', 'link' => '/projects',        'hidden' => false },
         { 'name' => '课程', 'link' => '/courses',      'hidden' => false },
-        { 'name' => '项目', 'link' => '/projects',      'hidden' => false },
+        { 'name' => '项目', 'link' => '',      'hidden' => true },
         { 'name' => '数据', 'link' => '/datas', 'hidden' => false },
         { 'name' => '竞赛', 'link' => '/competitions',   'hidden' => false },
         { 'name' => '问吧', 'link' => '/forums',       'hidden' => false },
+        { 'name' => '开源社区', 'link' => '/projects',       'hidden' => false },
       ],
       footer: nil
     }
