@@ -325,20 +325,13 @@ Rails.application.routes.draw do
 
       # protected_branches
       scope do
-        # get ':protected_branches/:action/:id/:user_id', constraints: { branch_name: Forgeplus::Regex.git_reference_regex }
-        # post '/protected_branches' => 'protected_branches#create'
-        # delete '/protected_branches/:branch_name' => 'protected_branches#destroy',
-        #   constraints: { branch_name: Forgeplus::Regex.git_reference_regex }
-        # patch '/protected_branches/:branch_name' => 'protected_branches#update',
-          # constraints: { branch_name: Forgeplus::Regex.git_reference_regex }
         get(
           '/protected_branches/',
           to: 'protected_branches#index'
         )
         delete(
           '/protected_branches/:branch_name',
-          to: 'protected_branches#destroy',
-          constraints: { branch_name: Forgeplus::Regex.git_reference_regex }
+          to: 'protected_branches#destroy'
         )
         post(
           '/protected_branches',
@@ -346,8 +339,7 @@ Rails.application.routes.draw do
         )
         patch(
           '/protected_branches/:branch_name',
-          to: 'protected_branches#update',
-          constraints: { branch_name: Forgeplus::Regex.git_reference_regex }
+          to: 'protected_branches#update'
         )
       end
 
