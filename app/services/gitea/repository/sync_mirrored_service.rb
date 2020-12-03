@@ -15,7 +15,9 @@ class Gitea::Repository::SyncMirroredService < Gitea::ClientService
   end
 
   def call
-    post(url, request_params)
+    response = post(url, request_params)
+
+    render_200_no_body(response)
   end
 
   private

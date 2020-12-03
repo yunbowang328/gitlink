@@ -24,7 +24,8 @@ class Gitea::Hooks::CreateService < Gitea::ClientService
   end
 
   def call
-    post(url, params)
+    response = post(url, params)
+    render_201_response(response)
   end
 
   private

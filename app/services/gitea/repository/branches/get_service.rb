@@ -13,7 +13,7 @@ class Gitea::Repository::Branches::GetService < Gitea::ClientService
 
   def call
     response = get(url, params)
-    render_data(response)
+    render_200_response(response)
   end
 
   private

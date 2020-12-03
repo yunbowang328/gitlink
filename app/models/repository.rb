@@ -37,6 +37,7 @@ class Repository < ApplicationRecord
   has_one :mirror, foreign_key: :repo_id
   has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', foreign_key: :repo_id
   has_many :version_releases, dependent: :destroy
+  has_many :protected_branches, class_name: 'ProtectedBranch', foreign_key: :repo_id, dependent: :destroy
 
   validates :identifier, presence: true
 

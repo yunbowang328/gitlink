@@ -19,6 +19,10 @@ module Educoderplus
     #
     # config.educoder = config_for(:configuration)
 
+    # Custom directories with classes and modules you want to be autoloadable.
+    # config.eager_load_paths << Rails.root.join('lib')
+    config.eager_load_paths += %W(#{config.root}/lib)
+
     config.active_record.default_timezone = :utc
     config.time_zone = 'Beijing'
 
