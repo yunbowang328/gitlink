@@ -7,7 +7,7 @@
 
 ### 开发API服务地址：
 
-**https://testgitea.trustie.net/**
+****
 
 
 响应状态说明:
@@ -2679,7 +2679,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
 |enable_status_check     |否|boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |否|int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |否|boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |否|array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames     |否|array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |否|boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |否|boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |否|boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
@@ -2698,7 +2698,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
 |enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
@@ -2765,7 +2765,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master/edit.json |
 |enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames    |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
@@ -2832,7 +2832,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 |enable_status_check     |否|boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |否|int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |否|boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |否|array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames     |否|array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |否|boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |否|boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |否|boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
@@ -2851,7 +2851,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 |enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
@@ -2955,7 +2955,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
 |enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
@@ -3027,7 +3027,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 |enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
 |required_approvals     |int |所需的批准数， 默认为0 |
 |enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
-|approvals_whitelist_username     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
 |block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
 |dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
 |require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |

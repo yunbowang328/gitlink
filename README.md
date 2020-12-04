@@ -110,3 +110,16 @@ http://localhost:3000/
 - 里程碑
 
 ![](docs/figs/milestone.png)
+
+### API
+- [API](api_document.md)
+
+## 贡献代码
+
+1. Fork 项目
+2. 创建本地分支(git checkout -b my-new-feature)
+3. 提交更改 (git commit -am 'Add some feature')
+4. 推送到分支 (git push origin my-new-feature)
+5. 向源项目的 **develop** 分支发起 Pull Request
+
+## License
