@@ -91,37 +91,37 @@ module ProtectedBranches
     end
 
     def enable_status_check_params
-      params[:enable_status_check] || false
+      str_to_boolean(params[:enable_status_check] || false)
     end
 
     def enable_approvals_whitelist_params
-      params[:enable_approvals_whitelist] || false
+      str_to_boolean(params[:enable_approvals_whitelist] || false)
     end
     def block_on_rejected_reviews_params
-      params[:block_on_rejected_reviews] || false
+      str_to_boolean(params[:block_on_rejected_reviews] || false)
     end
 
     def dismiss_stale_approvals_params
-      params[:dismiss_stale_approvals] || false
+      str_to_boolean(params[:dismiss_stale_approvals] || false)
     end
 
     def require_signed_commits_params
-      params[:require_signed_commits] || false
+      str_to_boolean(params[:require_signed_commits] || false)
     end
 
     def block_on_outdated_branch_params
-      params[:block_on_outdated_branch] || false
+      str_to_boolean(params[:block_on_outdated_branch] || false)
     end
 
     def can_push_params
       return false if !can_push?
       return true if enable_whitelist?
-      params[:enable_push]
+      str_to_boolean(params[:enable_push])
     end
 
     def enable_whitelist_params
       return false if !can_push?
-      params[:enable_push_whitelist]
+      str_to_boolean(params[:enable_push_whitelist])
     end
 
     def whitelist_user_i_ds_params
@@ -134,7 +134,7 @@ module ProtectedBranches
     end
 
     def enable_merge_whitelist_params
-      params[:enable_merge_whitelist] || false
+      str_to_boolean(params[:enable_merge_whitelist] || false)
     end
 
     def merge_whitelist_user_i_ds_params
@@ -195,19 +195,19 @@ module ProtectedBranches
     end
 
     def can_push?
-      params[:enable_push] === true
+      str_to_boolean(params[:enable_push]) === true
     end
 
     def enable_whitelist?
-      params[:enable_push_whitelist] === true
+      str_to_boolean(params[:enable_push_whitelist]) === true
     end
 
     def enable_merge_whitelist?
-      params[:enable_merge_whitelist] === true
+      str_to_boolean(params[:enable_merge_whitelist]) === true
     end
 
     def enable_approvals_whitelist?
-      params[:enable_approvals_whitelist] === true
+      str_to_boolean(params[:enable_approvals_whitelist]) === true
     end
 
     def filter_empty_element(array)
