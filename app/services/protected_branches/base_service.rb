@@ -1,5 +1,6 @@
 module ProtectedBranches
   class BaseService < ApplicationService
+    Error = Class.new(StandardError)
     attr_accessor :repository, :owner, :params
 
     def initialize(repository, user = nil, params = {})
@@ -250,7 +251,7 @@ module ProtectedBranches
 
       }
     end
-    
+
     def validate!
       protected_branch_exists = repository.protected_branches.exists?(params[:branch_name])
       raise Error, "Protected branch '#{branch_name}' already exists" if protected_branch_exists
@@ -262,5 +263,14 @@ module ProtectedBranches
       raise Error, '分支名称不能为空' if params[:branch_name].blank?
 
     end
+  end
+
+  def error(errors, award: nil, status: nil)
+    errors = Array.wrap(errors)
+
+    super(errors.to_sentence.presence, status).merge({
+      award: award,
+      errors: errors
+    })
   end
 end

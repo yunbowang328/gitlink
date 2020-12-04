@@ -3,9 +3,10 @@ module ProtectedBranches
     def call
       validate!
 
-      save_gitea_protected_branch!
-
-      save_protected_branch!
+      ProtectedBranch.transaction do
+        save_gitea_protected_branch!
+        save_protected_branch!
+      end
 
       protected_branch
     end

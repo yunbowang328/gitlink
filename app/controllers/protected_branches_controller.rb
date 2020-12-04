@@ -31,6 +31,10 @@ class ProtectedBranchesController < ApplicationController
     @protected_branch = ProtectedBranches::GetService.call(@repository, @owner, params)
   end
 
+  def edit
+    @branch, @protected_branch = ProtectedBranches::EditService.call(@repository, @owner, params[:branch_name])
+  end
+
   private
     def render_protected_branch_json
       @protected_branch.persisted? ? @protected_branch : render_error('创建失败!')

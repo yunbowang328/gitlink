@@ -168,17 +168,33 @@ class Gitea::ClientService < ApplicationService
     status = response.status
     body = response&.body
 
-    body, message =
-      if body.present?
-        body = JSON.parse(body)
-        fix_body(body)
-      else
-        nil
-      end
-    puts "[gitea] status:  #{status}"
-    puts "[gitea] message: #{message}"
-    puts "[gitea] body:    #{body}"
+    log_error(status, body)
+
+    body, message = get_body_by_status(status, body)
+
     [status, message, body]
+  end
+
+  def get_body_by_status(status, body)
+    body, message =
+      case status
+      when 404 then [nil, "404"]
+      when 403 then [nil, "403"]
+      else
+        if body.present?
+          body = JSON.parse(body)
+          fix_body(body)
+        else
+          nil
+        end
+      end
+
+    [body, message]
+  end
+
+  def log_error(status, body)
+    puts "[gitea] status:  #{status}"
+    puts "[gitea] body:    #{body}"
   end
 
   def fix_body(body)
@@ -241,7 +257,7 @@ class Gitea::ClientService < ApplicationService
     success_statuses = [200, 201, 202, 204]
     status, message, body = render_response(response)
 
-    error(message, status) unless success_statuses.include? status
+    return error(message, status) unless success_statuses.include? status
 
     render_body(body)
   end

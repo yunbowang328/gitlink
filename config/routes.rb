@@ -333,6 +333,10 @@ Rails.application.routes.draw do
           '/protected_branches/:branch_name',
           to: 'protected_branches#show'
         )
+        get(
+          '/protected_branches/:branch_name/edit',
+          to: 'protected_branches#edit'
+        )
         delete(
           '/protected_branches/:branch_name',
           to: 'protected_branches#destroy'
