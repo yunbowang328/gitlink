@@ -1,6 +1,9 @@
 class ProtectedBranchesController < ApplicationController
+  include OperateProjectAbilityAble
+
   before_action :require_login
   before_action :load_repository
+  before_action :authorizate_user_can_edit_project!
 
   def index
     scope = ProtectedBranch.all
@@ -10,6 +13,8 @@ class ProtectedBranchesController < ApplicationController
 
   def create
     @protected_branch = ProtectedBranches::CreateService.call(@repository, @owner, params)
+
+    render_protected_branch_json
   end
 
   def update
@@ -22,13 +27,13 @@ class ProtectedBranchesController < ApplicationController
     render_ok
   end
 
+  def show
+    @protected_branch = ProtectedBranches::GetService.call(@repository, @owner, params)
+  end
+
   private
     def render_protected_branch_json
-      if @protected_branch.persisted?
-        render json: Jbuilder.new { |json| json.extract! @protected_branch, :can_push  }.target!
-      else
-        render_error('创建失败!')
-      end
+      @protected_branch.persisted? ? @protected_branch : render_error('创建失败!')
     end
 
 end

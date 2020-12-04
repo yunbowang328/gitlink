@@ -2825,7 +2825,6 @@ DELETE /api/:owner/:repo/protected_branches/:branch_name
 *示例*
 ```
 curl -X DELETE \
--d 'branch_name=master' \
 http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 ```
 *请求参数说明:*
@@ -2924,6 +2923,72 @@ http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
       "updated_at": "2020-12-03 11:29"
     }
   ]
+}
+```
+---
+
+### 获取某个具体的保护分支
+```
+GET /api/:owner/:repo/protected_branches/:branch_name
+```
+*示例*
+```
+curl -X GET \
+http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|branch_name       |是|string |保护分支名称  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|branch_name       |string |保护分支名称  |
+|enable_push             |boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_username     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+|created_at      |string|创建时间|
+|updated_at      |string|更新时间|
+
+返回值
+```
+{
+  "branch_name": "develop",
+  "enable_push": true,
+  "required_approvals": 0,
+  "enable_status_check": true,
+  "enable_push_whitelist": true,
+  "enable_merge_whitelist": true,
+  "enable_approvals_whitelist": false,
+  "dismiss_stale_approvals": false,
+  "block_on_rejected_reviews": false,
+  "block_on_outdated_branch": false,
+  "require_signed_commits": false,
+  "merge_whitelist_usernames": [
+      "jasder"
+  ],
+  "push_whitelist_usernames": [
+      "jasder"
+  ],
+  "approvals_whitelist_usernames": [],
+  "created_at": "2020-12-02 17:40",
+  "updated_at": "2020-12-03 11:29"
 }
 ```
 ---

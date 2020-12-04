@@ -329,6 +329,10 @@ Rails.application.routes.draw do
           '/protected_branches/',
           to: 'protected_branches#index'
         )
+        get(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#show'
+        )
         delete(
           '/protected_branches/:branch_name',
           to: 'protected_branches#destroy'
