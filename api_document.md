@@ -26,7 +26,7 @@
 POST accounts/remote_register
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "email=2456233122@qq.com" \
 -d "password=djs_D_00001" \
@@ -54,7 +54,7 @@ http://localhost:3000/api/accounts/remote_register  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success",
@@ -71,7 +71,7 @@ http://localhost:3000/api/accounts/remote_register  | jq
 GET api/users/me
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/users/me  | jq
 ```
 
@@ -87,7 +87,7 @@ curl -X GET http://localhost:3000/api/users/me  | jq
 
 
 返回值
-```
+```json
 {
   "username": "18816895620",
   "login": "18816895620",
@@ -103,7 +103,7 @@ curl -X GET http://localhost:3000/api/users/me  | jq
 GET api/users/list
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "limit=10" \
 -d "search=18816895620"
@@ -130,7 +130,7 @@ http://localhost:3000/api/users/list  | jq
 |-- image_url   |string|用户头像|
 
 返回值
-```
+```json
 {
   "total_count": 1,
   "users": [
@@ -150,7 +150,7 @@ http://localhost:3000/api/users/list  | jq
 GET api/project_categories
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=大数据" \
 http://localhost:3000/api/project_categories/  | jq
@@ -172,7 +172,7 @@ http://localhost:3000/api/project_categories/  | jq
 
 
 返回值
-```
+```json
 {
   "project_categories": [
     {
@@ -189,7 +189,7 @@ http://localhost:3000/api/project_categories/  | jq
 GET api/project_languages
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=Ruby" \
 http://localhost:3000/api/project_languages/  | jq
@@ -211,7 +211,7 @@ http://localhost:3000/api/project_languages/  | jq
 
 
 返回值
-```
+```json
 {
   "project_languages": [
     {
@@ -228,7 +228,7 @@ http://localhost:3000/api/project_languages/  | jq
 GET api/ignores
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=Ada" \
 http://localhost:3000/api/ignores/  | jq
@@ -250,7 +250,7 @@ http://localhost:3000/api/ignores/  | jq
 
 
 返回值
-```
+```json
 {
   "ignores": [
     {
@@ -267,7 +267,7 @@ http://localhost:3000/api/ignores/  | jq
 GET api/licenses
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=AFL" \
 http://localhost:3000/api/licenses/  | jq
@@ -289,7 +289,7 @@ http://localhost:3000/api/licenses/  | jq
 
 
 返回值
-```
+```json
 {
   "licenses": [
     {
@@ -322,7 +322,7 @@ http://localhost:3000/api/licenses/  | jq
 POST api/projects
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "user_id=36401" \
 -d "name=hnfl_demo" \
@@ -358,7 +358,7 @@ http://localhost:3000/api/projects/  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3240,
   "name": "好项目"
@@ -371,7 +371,7 @@ http://localhost:3000/api/projects/  | jq
 POST api/projects/migrate
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "user_id=36408" \
 -d "clone_addr=https://gitea.com/mx8090alex/golden.git" \
@@ -407,7 +407,7 @@ http://localhost:3000/api/projects/migrate.json  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3263,
   "name": "ni项目"
@@ -420,7 +420,7 @@ http://localhost:3000/api/projects/migrate.json  | jq
 POST api/repositories/:id/sync_mirror
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 ```
 *请求参数说明:*
@@ -439,7 +439,7 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -453,7 +453,7 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 GET /api/:namespace_id/:id
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 ```
 *请求参数说明:*
@@ -478,7 +478,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 
 返回值
-```
+```json
 {
   "name": "ni项目",
   "identifier": "mirror_demo",
@@ -495,7 +495,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 GET /api/:namespace_id/:id/simple
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 ```
 *请求参数说明:*
@@ -519,7 +519,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 
 
 返回值
-```
+```json
 {
   "identifier": "jasder_test",
   "name": "jasder的测试项目",
@@ -539,7 +539,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 GET  /api/repositories/:id/edit.json
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 ```
 
@@ -558,7 +558,7 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 
 
 返回值
-```
+```json
 {
   "identifier": "mirror_demo",
   "project_id": 3263,
@@ -577,7 +577,7 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 PATCH api/projects/:id
 ```
 *示例*
-```
+```bash
 curl -X PATCH \
 -d "name=hnfl_demo" \
 -d "description=my first project" \
@@ -613,7 +613,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3263,
   "identifier": "mirror_demo",
@@ -631,7 +631,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 DELETE api/projects/:id
 ```
 *示例*
-```
+```bash
 curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 ```
 
@@ -652,7 +652,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -665,7 +665,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 POST api/projects/:id/members
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "user_id=36406" \
 http://localhost:3000/api/projects/3297/members  | jq
@@ -687,7 +687,7 @@ http://localhost:3000/api/projects/3297/members  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -700,7 +700,7 @@ http://localhost:3000/api/projects/3297/members  | jq
 DELETE api/projects/:id/members/remove
 ```
 *示例*
-```
+```bash
 curl -X DELETE \
 -d "user_id=36400" \
 http://localhost:3000/api/projects/3263/members/remove  | jq
@@ -722,7 +722,7 @@ http://localhost:3000/api/projects/3263/members/remove  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -735,7 +735,7 @@ http://localhost:3000/api/projects/3263/members/remove  | jq
 PUT api/projects/:id/members/change_role
 ```
 *示例*
-```
+```bash
 curl -X PUT \
 -d "user_id=36400" \
 -d "role=Developer" \
@@ -759,7 +759,7 @@ http://localhost:3000/api/projects/3263/members/change_role  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -773,7 +773,7 @@ http://localhost:3000/api/projects/3263/members/change_role  | jq
 GET api/projects/:id/members
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -803,7 +803,7 @@ http://localhost:3000/api/projects/3263/members  | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 2,
   "members": [
@@ -833,7 +833,7 @@ http://localhost:3000/api/projects/3263/members  | jq
 POST /api/projects/:project_id/forks
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 ```
 *请求参数说明:*
@@ -852,7 +852,7 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3290,
   "identifier": "newadm"
@@ -865,7 +865,7 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 POST /api/:namespace_id/:project_id/repository/entries
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "ref=develop" \
 http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
@@ -960,7 +960,7 @@ http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 GET /api/repositories/:id/sub_entries
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "ref=master" \
 -d "filepath=test1_create_file.rb" \
@@ -1039,7 +1039,7 @@ http://localhost:3000/api/repositories/87/sub_entries.json | jq
 GET api/project_categories/group_list
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 ```
 
@@ -1053,7 +1053,7 @@ curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 
 
 返回值
-```
+```json
 [
   {
     "id": 1,
@@ -1079,7 +1079,7 @@ curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 GET api/projects/group_type_list
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 ```
 
@@ -1093,7 +1093,7 @@ curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 
 
 返回值
-```
+```json
 [
   {
     "project_type": "common",
@@ -1114,7 +1114,7 @@ curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 GET api/projects
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -1159,7 +1159,7 @@ http://localhost:3000/api/projects  | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 3096,
   "projects": [
@@ -1288,7 +1288,7 @@ http://localhost:3000/api/projects  | jq
 GET api/projects/recommend
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/projects/recommend  | jq
 ```
@@ -1318,7 +1318,7 @@ http://localhost:3000/api/projects/recommend  | jq
 
 
 返回值
-```
+```json
 [
   {
     "id": 20,
@@ -1348,7 +1348,7 @@ GET api/:namespace_id/:id/about
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/:jason/forgeplus/about  | jq
 ```
@@ -1371,7 +1371,7 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 
 返回值
-```
+```json
 {
   "content": "",
   "identifier": "forgeplus",
@@ -1389,7 +1389,7 @@ POST api/:namespace_id/:id/about
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 -d "content=内容" \
 -d "attachment_ids=[1, 2, 2]" \
@@ -1415,7 +1415,7 @@ http://localhost:3000/api/:jasder/forgeplus/about  | jq
 |-- name         |string|用户名，也是用户标识|
 
 返回值
-```
+```json
 {
   "content": "",
   "identifier": "forgeplus",
@@ -1432,7 +1432,7 @@ http://localhost:3000/api/:jasder/forgeplus/about  | jq
 GET /api/:namespace_id/:id/branches
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 ```
 *请求参数说明:*
@@ -1464,7 +1464,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 
 
 返回值
-```
+```json
 [
   {
     "name": "develop",
@@ -1513,7 +1513,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 GET  /api/repositories/:id/tags
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "limit=20" \
 -d "page=1" \
@@ -1550,7 +1550,7 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 
 返回值
-```
+```json
 [
   {
     "name": "develop",
@@ -1599,7 +1599,7 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 GET /api/:namespace_id/:project_id/repository
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 ```
@@ -1645,7 +1645,7 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 
 
 返回值
-```
+```json
 {
   "identifier": "mirror_demo",
   "project_id": 3263,
@@ -1683,7 +1683,7 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 GET  /api/repositories/:id/commits
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "sha=develop" \
 -d "page=1" \
@@ -1714,7 +1714,7 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 63,
   "commits": [
@@ -1748,7 +1748,7 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 GET  /api/:owner/:repo/commits/:sha
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/repo/commits/b0c4a4a1487d53acebf2addc544b29938cad12df.json | jq
 ```
@@ -1847,7 +1847,7 @@ http://localhost:3000/api/jasder/repo/commits/b0c4a4a1487d53acebf2addc544b29938c
 POST /api/projects/:id/praise_tread/like
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 ```
 *请求参数说明:*
@@ -1864,7 +1864,7 @@ curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 
 
 返回值
-```
+```json
 {
     "status": 0,
     "message": "success"
@@ -1877,7 +1877,7 @@ curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 DELETE /api/projects/:id/praise_tread/unlike
 ```
 *示例*
-```
+```bash
 curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 ```
 *请求参数说明:*
@@ -1895,7 +1895,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -1908,7 +1908,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 GET /api/projects/:id/praise_tread/check_like
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 ```
 *请求参数说明:*
@@ -1926,7 +1926,7 @@ curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -1939,7 +1939,7 @@ curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 GET /api/projects/:id/praise_tread
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -1967,7 +1967,7 @@ http://localhost:3000/api/projects/3263/praise_tread | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 1,
   "praises": [
@@ -1986,7 +1986,7 @@ http://localhost:3000/api/projects/3263/praise_tread | jq
 POST /api/projects/:id/watchers/follow
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 ```
 *请求参数说明:*
@@ -2004,7 +2004,7 @@ curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 
 
 返回值
-```
+```json
 {
     "status": 0,
     "message": "响应成功"
@@ -2017,7 +2017,7 @@ curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 DELETE /api/projects/:id/watchers/unfollow
 ```
 *示例*
-```
+```bash
 curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 ```
 *请求参数说明:*
@@ -2035,7 +2035,7 @@ curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "响应成功"
@@ -2048,7 +2048,7 @@ curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 GET /api/projects/:id/watchers/check_watch
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 ```
 *请求参数说明:*
@@ -2066,7 +2066,7 @@ curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -2079,7 +2079,7 @@ curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 GET /api/projects/:id/watchers
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -2106,7 +2106,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 1,
   "watchers": [
@@ -2125,7 +2125,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 POST /api/repositories/:id/create_file
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d 'filepath=test1_create_file1.rb' \
 -d 'branch=master' \
@@ -2164,7 +2164,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 
 
 返回值
-```
+```json
 {
   "name": "test1_create_file12.rb",
   "sha": "7b70509105b587e71f5692b9e8ab70851e321f64",
@@ -2193,7 +2193,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 PUT /api/repositories/:id/update_file.json
 ```
 *示例*
-```
+```bash
 curl -X PUT \
 -d 'filepath=text1.rb' \
 -d 'branch=master' \
@@ -2235,7 +2235,7 @@ http://localhost:3000/api/repositories/3938/update_file.json | jq
 
 
 返回值
-```
+```json
 {
   "name": "test1_create_file6.rb",
   "sha": "57426eb21e4ceabdf4b206f022257e08077e0040",
@@ -2264,7 +2264,7 @@ http://localhost:3000/api/repositories/3938/update_file.json | jq
 DELETE /api/repositories/:id/delete_file
 ```
 *示例*
-```
+```bash
 curl -X DELETE \
 -d 'filepath=test1_create_file12.rb' \
 -d 'test delete file' \
@@ -2321,7 +2321,7 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 GET /api/:owner/:repo/pulls/:id/files.json
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/test-txt/pulls/1/files.json | jq
 ```
@@ -2439,7 +2439,7 @@ http://localhost:3000/api/Jason/test-txt/pulls/1/files.json | jq
 GET /api/:owner/:repo/pulls/:id/commits.json
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/repo/1/commits.json | jq
 ```
@@ -2504,7 +2504,7 @@ http://localhost:3000/api/Jason/repo/1/commits.json | jq
 GET /api/:owner/:repo/compare/{base}...{head}.json
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/test-txt/compare/master...develop | jq
 
@@ -2655,7 +2655,7 @@ http://localhost:3000/api/ysfns/test-txt/compare/master...Jason/test-txt:develop
 POST /api/:owner/:repo/protected_branches
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d 'branch_name=master' \
 -d 'enable_push=true' \
@@ -2739,7 +2739,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
 GET /api/:owner/:repo/protected_branches/:branch_name/edit
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/trustie/truesite/protected_branches/master/edit.json | jq
 ```
@@ -2775,7 +2775,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master/edit.json |
 
 
 返回值
-```
+```json
 {
   "branch_name": "master",
   "protected": true,
@@ -2808,7 +2808,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master/edit.json |
 PATCH /api/:owner/:repo/protected_branches/:branch_name
 ```
 *示例*
-```
+```bash
 curl -X PATCH \
 -d 'branch_name=master' \
 -d 'enable_push=true' \
@@ -2861,7 +2861,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 
 
 返回值
-```
+```json
 {
   "branch_name": "develop",
   "enable_push": true,
@@ -2892,7 +2892,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 DELETE /api/:owner/:repo/protected_branches/:branch_name
 ```
 *示例*
-```
+```bash
 curl -X DELETE \
 http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 ```
@@ -2913,7 +2913,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 |message         |string|信息说明|
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -2926,7 +2926,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 GET /api/:owner/:repo/protected_branches/
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -3001,7 +3001,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
 GET /api/:owner/:repo/protected_branches/:branch_name
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 ```
@@ -3036,7 +3036,7 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 |updated_at      |string|更新时间|
 
 返回值
-```
+```json
 {
   "branch_name": "develop",
   "enable_push": true,
@@ -3071,7 +3071,7 @@ GET  /api/:owner/:repo/ci_authorize
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/forgeplus/ci_authorize.json  | jq
 ```
@@ -3115,7 +3115,7 @@ POST  /api/:owner/:repo/cloud_accounts
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 -d "account=xx" \
 -d "secret=xxx" \
@@ -3156,7 +3156,7 @@ https://localhost:3000/api/jasder/forgeplus/cloud_accounts.json  | jq
 GET /api/users/ci/oauth_grant
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "password=123456" \
 http://localhost:3000/api/users/ci/oauth_grant.json | jq
@@ -3173,7 +3173,8 @@ http://localhost:3000/api/users/ci/oauth_grant.json | jq
 |-|-|-|
 |status           |int|0:成功， -1: 失败|
 
-```
+返回值
+```json
 {
   "status": 0,
   "message": "success"
@@ -3186,7 +3187,7 @@ http://localhost:3000/api/users/ci/oauth_grant.json | jq
 POST /api/:owner/:repo/activate
 ```
 *示例*
-```
+```bash
 curl -X POST \
 http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 ```
@@ -3203,7 +3204,8 @@ http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 |-|-|-|
 |status           |int|0:成功， -1: 失败|
 
-```
+返回值
+```json
 {
   "status": 0,
   "message": "success"
@@ -3216,7 +3218,7 @@ http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 DELETE /api/:owner/:repo/deactivate
 ```
 *示例*
-```
+```bash
 curl -X POST \
 http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
 ```
@@ -3233,7 +3235,8 @@ http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
 |-|-|-|
 |status           |int|0:成功， -1: 失败|
 
-```
+返回值
+```json
 {
   "status": 0,
   "message": "success"
@@ -3246,7 +3249,7 @@ http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
 GET /api/:owner/:repo/get_trustie_pipeline
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 ```
@@ -3267,7 +3270,8 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 |path           |string|文件夹或文件相对路径|
 |content        |string|文件内容，|
 
-```
+返回值
+```json
 {
   "name": ".trustie-pipeline.yml",
   "path": ".trustie-pipeline.yml",
@@ -3282,7 +3286,7 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 PUT /api/:owner/:repo/update_trustie_pipeline
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
 ```
@@ -3324,7 +3328,7 @@ GET  /api/ci/languages
 ```
 
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/ci/languages.json | jq
 ```
 
@@ -3356,7 +3360,7 @@ GET  /api/ci/languages/common
 ```
 
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/ci/languages/common.json | jq
 ```
 
@@ -3388,7 +3392,7 @@ GET  /api/ci/languages/:id
 ```
 
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/ci/languages/114.json | jq
 ```
 
@@ -3426,7 +3430,7 @@ GET  /api/:owner/:repo/builds
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/forge/builds | jq
 ```
@@ -3492,7 +3496,7 @@ GET  /api/:owner/:repo/builds/:build
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://ocalhost:3000/api/jasder/forge/builds/1 | jq
 ```
@@ -3598,7 +3602,7 @@ POST  /api/:owner/:repo/builds/:build/restart
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 http://localhost:3000/api/jasder/forgeplus/builds/1 | jq
 ```
@@ -3656,7 +3660,7 @@ DELETE  /api/:owner/:repo/builds/:build/stop
 ```
 
 *示例*
-```
+```bash
 curl -X DELETE \
 http://localhost:3000/api/jaser/forge/builds/2 | jq
 ```
@@ -3762,7 +3766,7 @@ GET  /api/:owner/:repo/builds/:build/logs/:stage/:step
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 ```
@@ -3836,7 +3840,7 @@ GET  /api/users/ci/cloud_account
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/users/ci/cloud_account | jq
 ```
@@ -3869,7 +3873,7 @@ POST  /api/users/ci/cloud_account/bind
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 -d "account=xx" \
 -d "secret=xxx" \
@@ -3912,7 +3916,7 @@ DELETE  /api/users/ci/cloud_account/unbind
 ```
 
 *示例*
-```
+```bash
 curl -X DELETE \
 http://localhost:3000/api/users/ci/cloud_account/unbind.json | jq
 ```
@@ -3939,7 +3943,7 @@ GET  /api/users/:login/projects
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=20" \
@@ -3979,7 +3983,7 @@ http://localhost:3000/api/users/Jason/projects.json | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 3096,
   "projects": [
