@@ -148,7 +148,7 @@ module ProtectedBranches
 
     def approvals_whitelist_user_i_ds_params
       return [] if !enable_approvals_whitelist?
-      user_ids(get_approvals_whitelist_username)
+      user_ids(get_approvals_whitelist_usernames)
     end
 
     def approvals_whitelist_team_i_ds_params
@@ -177,9 +177,9 @@ module ProtectedBranches
       filter_empty_element Array(params[:merge_whitelist_usernames])
     end
 
-    def get_approvals_whitelist_username
+    def get_approvals_whitelist_usernames
       return [] if !enable_approvals_whitelist?
-      filter_empty_element Array(params[:approvals_whitelist_username])
+      filter_empty_element Array(params[:approvals_whitelist_usernames])
     end
 
     def check_users!(names)
@@ -231,7 +231,7 @@ module ProtectedBranches
 
     def gitea_protected_branch_params
       {
-        approvals_whitelist_username: get_approvals_whitelist_username,
+        approvals_whitelist_username: get_approvals_whitelist_usernames,
         branch_name: params[:branch_name],
         enable_approvals_whitelist: enable_approvals_whitelist_params,
         enable_merge_whitelist: enable_merge_whitelist_params,
@@ -258,7 +258,7 @@ module ProtectedBranches
 
       check_users!(get_push_whitelist_usernames)  if get_push_whitelist_usernames.any?
       check_users!(get_merge_whitelist_usernames)  if get_merge_whitelist_usernames.any?
-      check_users!(get_approvals_whitelist_username)  if get_approvals_whitelist_username.any?
+      check_users!(get_approvals_whitelist_usernames)  if get_approvals_whitelist_usernames.any?
 
       raise Error, '分支名称不能为空' if params[:branch_name].blank?
 
