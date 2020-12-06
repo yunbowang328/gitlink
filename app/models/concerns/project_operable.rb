@@ -7,6 +7,7 @@ module ProjectOperable
     has_many :managers,             -> { joins(:roles).where(roles: { name: 'Manager' }) }, class_name: 'Member'
     has_many :developers,           -> { joins(:roles).where(roles: { name: 'Developer' }) }, class_name: 'Member'
     has_many :reporters,            -> { joins(:roles).where(roles: { name: 'Reporter' }) }, class_name: 'Member'
+    has_many :writable_members,     -> { joins(:roles).where.not(roles: {name: 'Reporter'}) }, class_name: 'Member'
   end
 
   def add_member!(user_id, role_name='Developer')

@@ -27,7 +27,8 @@ class Gitea::Oauth2::CreateService < Gitea::ClientService
   end
 
   def call
-    post(url, request_params)
+    response = post(url, request_params)
+    render_201_response(response)
   end
 
   private

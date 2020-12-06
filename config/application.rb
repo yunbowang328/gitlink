@@ -19,6 +19,8 @@ module Educoderplus
     #
     # config.educoder = config_for(:configuration)
 
+    # Custom directories with classes and modules you want to be autoloadable.
+
     config.active_record.default_timezone = :utc
     config.time_zone = 'Beijing'
 

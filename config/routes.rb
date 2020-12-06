@@ -323,6 +323,34 @@ Rails.application.routes.draw do
         end
       end
 
+      # protected_branches
+      scope do
+        get(
+          '/protected_branches/',
+          to: 'protected_branches#index'
+        )
+        get(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#show'
+        )
+        get(
+          '/protected_branches/:branch_name/edit',
+          to: 'protected_branches#edit'
+        )
+        delete(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#destroy'
+        )
+        post(
+          '/protected_branches',
+          to: 'protected_branches#create'
+        )
+        patch(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#update'
+        )
+      end
+
       resources :issues do
         collection do
           get :commit_issues
