@@ -208,7 +208,7 @@ module ProtectedBranchParamsAble
   end
 
   def gitea_protected_branch_saved?(protected_branch)
-    protected_branch[:status] === success
+    protected_branch[:status] == :success
   end
 
   def gitea_protected_branch_params
