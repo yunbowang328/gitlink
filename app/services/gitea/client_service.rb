@@ -194,7 +194,7 @@ class Gitea::ClientService < ApplicationService
 
   def log_error(status, body)
     puts "[gitea] status:  #{status}"
-    puts "[gitea] body:    #{body}"
+    puts "[gitea] body:    #{body&.force_encoding('UTF-8')}"
   end
 
   def fix_body(body)
