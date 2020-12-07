@@ -19,5 +19,13 @@ module ProtectedBranches
       def save_protected_branch!
         protected_branch.save
       end
+
+      def save_gitea_protected_branch!
+        @gitea_protected_branch ||= Gitea::Repository::ProtectedBranches::CreateService.call(@owner.login,
+          @repository.identifier, gitea_protected_branch_params, @owner.gitea_token)
+
+        raise Error, @gitea_protected_branch[:message] unless gitea_protected_branch_saved?(@gitea_protected_branch)
+      end
+
   end
 end
