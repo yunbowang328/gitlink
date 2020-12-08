@@ -6,7 +6,7 @@ class ProtectedBranchesController < ApplicationController
   before_action :authorizate_user_can_edit_project!
 
   def index
-    scope = ProtectedBranch.all
+    scope = @repository.protected_branches
     @total_count = scope.size
     @protected_branches = paginate(scope)
   end
