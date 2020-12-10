@@ -1,7 +1,7 @@
 module Ci::DbConnectable
   extend ActiveSupport::Concern
 
-  include do
+  included do
   end
 
   # Dynamically sets the database connection.
