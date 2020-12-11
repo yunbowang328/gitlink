@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: sponsorships
+#
+#  id           :integer          not null, primary key
+#  amount       :integer
+#  visible      :integer
+#  sponsor_id   :integer
+#  developer_id :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  accumulate   :integer          default("0")
+#
+
 class Sponsorship < ApplicationRecord
   belongs_to :sponsor, class_name: 'User'
   belongs_to :developer, class_name: 'User'

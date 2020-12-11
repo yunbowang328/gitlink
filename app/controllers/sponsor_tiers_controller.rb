@@ -1,6 +1,7 @@
 class SponsorTiersController < ApplicationController
   before_action :set_sponsor_tier, only: [:show, :edit, :update, :destroy]
   before_action :check_sponsor, only: [:show]
+  before_action :require_login, only: [:create, :update, :destroy]
 
   # GET /sponsor_tiers
   # GET /sponsor_tiers.json
@@ -14,16 +15,6 @@ class SponsorTiersController < ApplicationController
   # GET /sponsor_tiers/1.json
   def show
 
-  end
-
-  # GET /sponsor_tiers/new
-  def new
-    # @sponsor_tier = SponsorTier.new
-    # User.current.create
-  end
-
-  # GET /sponsor_tiers/1/edit
-  def edit
   end
 
   # POST /sponsor_tiers

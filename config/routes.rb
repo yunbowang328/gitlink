@@ -31,8 +31,8 @@ Rails.application.routes.draw do
     # post 'log/download', to: 'log#download'
     match 'log/download/:filename' => 'log#download', :constraints => { filename: /[0-z\.]+/ }, via:[:get]
 
-    resources :sponsor_tiers
-    resources :sponsorships do
+    resources :sponsor_tiers, only: [:index, :show, :create, :update, :destroy]
+    resources :sponsorships, only: [:index, :show, :create, :update, :destroy] do
       collection do
         get :sponsored
         get :sponsoring

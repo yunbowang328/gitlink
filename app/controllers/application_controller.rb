@@ -346,7 +346,8 @@ class ApplicationController < ActionController::Base
 				User.current = User.find 8686
 			elsif params[:debug] == 'admin'
 				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
-				user =  User.find 36480
+				# user =  User.find 36480
+				user = User.find 5
 				User.current = user
 				cookies.signed[:user_id] = user.id
 			end

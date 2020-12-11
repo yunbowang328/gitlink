@@ -1,7 +1,7 @@
 class SponsorshipsController < ApplicationController
   before_action :set_sponsorship, only: [:show, :edit, :update, :destroy]
   # before_action :require_login, except: [:index, :stopped, :sponsored, :sponsoring, :stopped_sponsored, :stopped_sponsoring]
-  before_action :require_login, only: [:show, :new, :create, :edit, :update, :destroy]
+  before_action :require_login, only: [:new, :create, :edit, :update, :destroy]
   skip_after_action :user_trace_log, only: [:update]
   
   # GET /sponsorships
@@ -69,15 +69,6 @@ class SponsorshipsController < ApplicationController
   # GET /sponsorships/1
   # GET /sponsorships/1.json
   def show
-  end
-
-  # GET /sponsorships/new
-  def new
-    @sponsorship = Sponsorship.new
-  end
-
-  # GET /sponsorships/1/edit
-  def edit
   end
 
   # POST /sponsorships

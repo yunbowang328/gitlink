@@ -44,7 +44,7 @@ RSpec.describe SponsorTiersController, type: :controller do
   describe "GET #index" do
     it "returns a success response" do
       SponsorTier.create! valid_attributes
-      get :index, params: {}, session: valid_session
+      get :index, params: {login: qyzh123123}, session: valid_session
       expect(response).to be_successful
     end
   end
