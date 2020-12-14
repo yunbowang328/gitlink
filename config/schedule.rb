@@ -20,7 +20,7 @@
 # Learn more: http://github.com/javan/whenever
 #
 set :environment, :development
-every '0 10 20 * *' do
+every '0 1 20 * *' do
   runner 'Sponsorship.monthly_payment'
 end
 # every 1.month, at: 'January 20th 10:00am' do
