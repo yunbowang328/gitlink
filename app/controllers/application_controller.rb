@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 	include LoggerHelper
 	include LoginHelper
 	include RegisterHelper
+	include UpdateHelper
 
 	protect_from_forgery prepend: true, unless: -> { request.format.json? }
 

@@ -23,9 +23,8 @@ class SponsorTiersController < ApplicationController
     # print("------------\n", sponsor_tier_params, "\n------------\n")
     @check_sponsorship = nil
     @sponsor_tier = SponsorTier.new(sponsor_tier_params)
-
     respond_to do |format|
-      if @sponsor_tier.save
+      if @sponsor_tier.user_id == User.current.id && @sponsor_tier.save
         format.html { redirect_to @sponsor_tier, notice: 'Sponsor tier was successfully created.' }
         format.json { render :show, status: :created, location: @sponsor_tier }
         # render json: {status: 1, message: '创建成功' }
@@ -40,8 +39,10 @@ class SponsorTiersController < ApplicationController
   # PATCH/PUT /sponsor_tiers/1.json
   def update
     @check_sponsorship = nil
+    old_value = old_value_to_hash(@sponsor_tier, params)
     respond_to do |format|
-      if User.current.id == @sponsor_tier.user_id && @sponsor_tier.update(sponsor_tier_params)
+      if User.current.id == @sponsor_tier.user_id && @sponsor_tier.update(sponsor_tier_update_params)
+        user_trace_update_log(old_value)
         format.html { redirect_to @sponsor_tier, notice: 'Sponsor tier was successfully updated.' }
         format.json { render :show, status: :ok, location: @sponsor_tier }
         # render json: {status: 1, message: '修改成功' }
@@ -71,11 +72,15 @@ class SponsorTiersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def check_sponsor
-      @check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", current_user.id, @sponsor_tier.user)
+      @check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", current_user.id, @sponsor_tier.user.id)
     end
 
     def set_sponsor_tier
       @sponsor_tier = SponsorTier.find(params[:id])
+    end
+
+    def sponsor_tier_update_params
+      params.require(:sponsor_tier).permit(:tier, :description)
     end
 
     # Only allow a list of trusted parameters through.

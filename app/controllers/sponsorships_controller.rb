@@ -1,7 +1,7 @@
 class SponsorshipsController < ApplicationController
   before_action :set_sponsorship, only: [:show, :edit, :update, :destroy]
   # before_action :require_login, except: [:index, :stopped, :sponsored, :sponsoring, :stopped_sponsored, :stopped_sponsoring]
-  before_action :require_login, only: [:new, :create, :edit, :update, :destroy]
+  before_action :require_login, only: [:create, :edit, :update, :destroy]
   skip_after_action :user_trace_log, only: [:update]
   
   # GET /sponsorships
@@ -78,7 +78,7 @@ class SponsorshipsController < ApplicationController
     check_sponsorship = Sponsorship.where("sponsor_id=? AND developer_id=?", sponsor_id, params[:developer_id])
 
     @sponsorship = Sponsorship.new(sponsorship_params.merge({sponsor_id: sponsor_id}))
-    # print('#######################', params[:single].class)
+
     unless check_sponsorship.length.zero?
       return render json: {status: -1, message: '您已经赞助了TA' }
     end
@@ -119,11 +119,12 @@ class SponsorshipsController < ApplicationController
     #     format.json { render json: @sponsorship.errors, status: :unprocessable_entity }
     #   end
     # end
+
     if @sponsorship.sponsor.id != current_user.id
-      return render json: {status: -1, message: '没有权限' }
+      return render json: {status: 401, message: '没有权限' }
     end
     old_value = old_value_to_hash(@sponsorship, params)
-    # params.delete :sponsorship
+
     if @sponsorship.update(sponsorship_params)
       user_trace_update_log(old_value)
       render json: {status: 1, message: '修改成功' }
@@ -140,7 +141,9 @@ class SponsorshipsController < ApplicationController
     #   format.html { redirect_to sponsorships_url, notice: 'Sponsorship was successfully destroyed.' }
     #   format.json { head :no_content }
     # end
-    if (User.current.id == @sponsorship.developer.id || User.current.id == @sponsorship.sponsor.id) && @sponsorship.stop
+    developer = @sponsorship.developer
+    sponsor = @sponsorship.sponsor
+    if (User.current.id == developer.id || User.current.id == sponsor.id) && developer.update(sponsored_num: developer.sponsored_num-1) && sponsor.update(sponsor_num: sponsor.sponsor_num-1) && @sponsorship.stop
       render json: {status: 1, message: "终止成功"}
     else
       render json: {status: -1, message: "失败"}

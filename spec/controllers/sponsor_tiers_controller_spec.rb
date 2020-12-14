@@ -29,112 +29,159 @@ RSpec.describe SponsorTiersController, type: :controller do
   # SponsorTier. As you add validations to SponsorTier, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {tier: 10, user_id: 5, description: 'Rspec test description'}
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {t: '10', user_id: -1, descrip: 'Rspec test description'}
   }
 
+  let(:invalid_user_attributes) {
+    {tier: 10, user_id: 4, description: 'Rspec test invalid user description'}
+  }
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # SponsorTiersController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) {
+    # user = User.find 5
+    # User.current = user
+    # cookies.signed[:user_id] = user.id
+    # cookies["autologin"] = "060a555275563b9f096c6ceed84518f64a4614ee"
+    {user_id: 5, www_user_id: 5}
+  }
 
-  describe "GET #index" do
-    it "returns a success response" do
+  describe 'GET #index' do
+    it 'returns a success response' do
       SponsorTier.create! valid_attributes
-      get :index, params: {login: qyzh123123}, session: valid_session
+      get :index, params: {login: 'qyzh123123'}, session: valid_session
       expect(response).to be_successful
     end
   end
 
-  describe "GET #show" do
-    it "returns a success response" do
+  describe 'GET #show' do
+    it 'returns a success response' do
       sponsor_tier = SponsorTier.create! valid_attributes
       get :show, params: {id: sponsor_tier.to_param}, session: valid_session
       expect(response).to be_successful
     end
   end
 
-  describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: {}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET #edit" do
-    it "returns a success response" do
-      sponsor_tier = SponsorTier.create! valid_attributes
-      get :edit, params: {id: sponsor_tier.to_param}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new SponsorTier" do
+  describe 'POST #create' do
+    context 'with valid params' do
+      it 'creates a new SponsorTier' do
         expect {
           post :create, params: {sponsor_tier: valid_attributes}, session: valid_session
         }.to change(SponsorTier, :count).by(1)
       end
 
-      it "redirects to the created sponsor_tier" do
+      it 'redirects to the created sponsor_tier' do
         post :create, params: {sponsor_tier: valid_attributes}, session: valid_session
         expect(response).to redirect_to(SponsorTier.last)
+        # expect(response).to be_successful
       end
     end
 
-    context "with invalid params" do
+    context 'with invalid params' do
       it "returns a success response (i.e. to display the 'new' template)" do
         post :create, params: {sponsor_tier: invalid_attributes}, session: valid_session
         expect(response).to be_successful
       end
     end
+
+    context 'with invalid user id' do
+      it 'does not creates a new SponsorTier' do
+        expect {
+          post :create, params: {sponsor_tier: invalid_user_attributes}, session: valid_session
+        }.to change(SponsorTier, :count).by(0)
+      end
+
+      it "returns a success response" do
+        post :create, params: {sponsor_tier: invalid_user_attributes}, session: valid_session
+        expect(response).to be_successful
+      end
+    end
   end
 
-  describe "PUT #update" do
-    context "with valid params" do
+  describe 'PUT #update' do
+    context 'with valid params' do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {tier: 12, description: 'Rspec test update description'}
       }
 
-      it "updates the requested sponsor_tier" do
+      it 'updates the requested sponsor_tier' do
         sponsor_tier = SponsorTier.create! valid_attributes
         put :update, params: {id: sponsor_tier.to_param, sponsor_tier: new_attributes}, session: valid_session
         sponsor_tier.reload
-        skip("Add assertions for updated state")
+        expect(sponsor_tier.tier).to eq(12)
+        expect(sponsor_tier.description).to eq('Rspec test update description')
       end
 
-      it "redirects to the sponsor_tier" do
+      it 'redirects to the sponsor_tier' do
         sponsor_tier = SponsorTier.create! valid_attributes
         put :update, params: {id: sponsor_tier.to_param, sponsor_tier: valid_attributes}, session: valid_session
         expect(response).to redirect_to(sponsor_tier)
       end
     end
 
-    context "with invalid params" do
-      it "returns a success response (i.e. to display the 'edit' template)" do
+    context 'with invalid params' do
+      it 'does not update and redirects to the sponsor_tier' do
         sponsor_tier = SponsorTier.create! valid_attributes
         put :update, params: {id: sponsor_tier.to_param, sponsor_tier: invalid_attributes}, session: valid_session
-        expect(response).to be_successful
+        expect(response).to redirect_to(sponsor_tier)
+        expect(sponsor_tier.tier).to eq(10)
+        expect(sponsor_tier.description).to eq('Rspec test description')
+      end
+    end
+
+    context 'with invalid user id' do
+      let(:new_attributes) {
+        {tier: 12, description: 'Rspec test update description'}
+      }
+      it 'does not update SponsorTier' do
+        sponsor_tier = SponsorTier.create! invalid_user_attributes
+        put :update, params: {id: sponsor_tier.to_param, sponsor_tier: new_attributes}, session: valid_session
+        sponsor_tier.reload
+        expect(sponsor_tier.tier).to eq(10)
+        expect(sponsor_tier.description).to eq('Rspec test invalid user description')
+      end
+
+      it 'redirects to the sponsor_tier' do
+        sponsor_tier = SponsorTier.create! invalid_user_attributes
+        put :update, params: {id: sponsor_tier.to_param, sponsor_tier: valid_attributes}, session: valid_session
+        expect(response).to be_ok
       end
     end
   end
 
-  describe "DELETE #destroy" do
-    it "destroys the requested sponsor_tier" do
-      sponsor_tier = SponsorTier.create! valid_attributes
-      expect {
+  describe 'DELETE #destroy' do
+    context 'with valid user id' do
+      it 'destroys the requested sponsor_tier' do
+        sponsor_tier = SponsorTier.create! valid_attributes
+        expect {
+          delete :destroy, params: {id: sponsor_tier.to_param}, session: valid_session
+        }.to change(SponsorTier, :count).by(-1)
+      end
+
+      it 'redirects to the sponsor_tiers list' do
+        sponsor_tier = SponsorTier.create! valid_attributes
         delete :destroy, params: {id: sponsor_tier.to_param}, session: valid_session
-      }.to change(SponsorTier, :count).by(-1)
+        expect(response).to redirect_to(sponsor_tiers_url)
+      end
     end
 
-    it "redirects to the sponsor_tiers list" do
-      sponsor_tier = SponsorTier.create! valid_attributes
-      delete :destroy, params: {id: sponsor_tier.to_param}, session: valid_session
-      expect(response).to redirect_to(sponsor_tiers_url)
+    context 'with invalid user id' do
+      it 'does not destroy the requested sponsor_tier' do
+        sponsor_tier = SponsorTier.create! invalid_user_attributes
+        expect {
+          delete :destroy, params: {id: sponsor_tier.to_param}, session: valid_session
+        }.to change(SponsorTier, :count).by(0)
+      end
+
+      it 'be ok' do
+        sponsor_tier = SponsorTier.create! invalid_user_attributes
+        delete :destroy, params: {id: sponsor_tier.to_param}, session: valid_session
+        expect(response).to be_ok
+      end
     end
   end
 

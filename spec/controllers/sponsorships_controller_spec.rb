@@ -29,22 +29,38 @@ RSpec.describe SponsorshipsController, type: :controller do
   # Sponsorship. As you add validations to Sponsorship, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {amount: 10, visible: 1, developer_id: 1, sponsor_id: 5}
+  }
+
+  let(:valid_create_api_attributes) {
+    {amount: 10, visible: 1, developer_id: 1}
+  }
+
+  let(:invalid_user_attributes) {
+    {amount: 10, visible: 1, sponsor_id: 4, developer_id: 1}
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {amunt: 10, visible: 1, developid: 1, sponsoid: 5}
   }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # SponsorshipsController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { {www_user_id: 5} }
 
   describe "GET #index" do
     it "returns a success response" do
       Sponsorship.create! valid_attributes
-      get :index, params: {}, session: valid_session
+      get :index, params: {}, format: 'json', session: valid_session
+      expect(response.body).to eq('[]')
+    end
+  end
+
+  describe "GET #stopped" do
+    it "returns a success response" do
+      sponsorship=StoppedSponsorship.create! valid_attributes
+      get :stopped, params: {}, format: 'json', session: valid_session
       expect(response).to be_successful
     end
   end
@@ -57,32 +73,37 @@ RSpec.describe SponsorshipsController, type: :controller do
     end
   end
 
-  describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: {}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
-  describe "GET #edit" do
-    it "returns a success response" do
-      sponsorship = Sponsorship.create! valid_attributes
-      get :edit, params: {id: sponsorship.to_param}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Sponsorship" do
         expect {
-          post :create, params: {sponsorship: valid_attributes}, session: valid_session
+          post :create, params: {sponsorship: valid_create_api_attributes}, session: valid_session
         }.to change(Sponsorship, :count).by(1)
       end
 
       it "redirects to the created sponsorship" do
-        post :create, params: {sponsorship: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Sponsorship.last)
+        post :create, params: {sponsorship: valid_create_api_attributes}, session: valid_session
+        expect(response).to be_ok
+      end
+    end
+
+    context "single sponsor" do
+      let(:valid_single_params){
+        {amount: 10, visible: 1, developer_id: 1, single: true}
+      }
+      it "creates a stopped sponsorship" do
+        expect {
+          post :create, params: {amount: 10, visible: 1, developer_id: 1, single: true}, session: valid_session
+        }.to change(StoppedSponsorship, :count).by(0)
+      end
+    end
+
+    context "repeat sponsor" do
+      it "creates only one new Sponsorship" do
+        Sponsorship.create! valid_attributes
+        expect {
+          post :create, params: {sponsorship: valid_create_api_attributes}, session: valid_session
+        }.to change(Sponsorship, :count).by(1)
       end
     end
 
@@ -97,20 +118,29 @@ RSpec.describe SponsorshipsController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {amount: 20, visible: 0}
       }
 
       it "updates the requested sponsorship" do
         sponsorship = Sponsorship.create! valid_attributes
         put :update, params: {id: sponsorship.to_param, sponsorship: new_attributes}, session: valid_session
         sponsorship.reload
-        skip("Add assertions for updated state")
+        expect(sponsorship.amount).to eq(20)
+        expect(sponsorship.visible).to eq(0)
       end
 
-      it "redirects to the sponsorship" do
+      it "does not updates the requested sponsorship with wrong user" do
+        sponsorship = Sponsorship.create! invalid_user_attributes
+        put :update, params: {id: sponsorship.to_param, sponsorship: new_attributes}, session: valid_session
+        sponsorship.reload
+        expect(sponsorship.amount).to eq(10)
+        expect(sponsorship.visible).to eq(1)
+      end
+
+      it "return ok" do
         sponsorship = Sponsorship.create! valid_attributes
         put :update, params: {id: sponsorship.to_param, sponsorship: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(sponsorship)
+        expect(response).to be_ok
       end
     end
 
@@ -131,10 +161,23 @@ RSpec.describe SponsorshipsController, type: :controller do
       }.to change(Sponsorship, :count).by(-1)
     end
 
-    it "redirects to the sponsorships list" do
+    it "destroys the requested sponsorship" do
+      sponsorship = Sponsorship.create! invalid_user_attributes
+      expect {
+        delete :destroy, params: {id: sponsorship.to_param}, session: valid_session
+      }.to change(Sponsorship, :count).by(0)
+    end
+
+    it "return ok" do
       sponsorship = Sponsorship.create! valid_attributes
       delete :destroy, params: {id: sponsorship.to_param}, session: valid_session
-      expect(response).to redirect_to(sponsorships_url)
+      expect(response).to be_ok
+    end
+
+    it "return ok" do
+      sponsorship = Sponsorship.create! invalid_user_attributes
+      delete :destroy, params: {id: sponsorship.to_param}, session: valid_session
+      expect(response).to be_ok
     end
   end
 

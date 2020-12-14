@@ -3,36 +3,47 @@ require "rails_helper"
 RSpec.describe SponsorshipsController, type: :routing do
   describe "routing" do
     it "routes to #index" do
-      expect(:get => "/sponsorships").to route_to("sponsorships#index")
+      expect(:get => "/api/sponsorships").to route_to("sponsorships#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/sponsorships/new").to route_to("sponsorships#new")
+    it "routes to stopped" do
+      expect(:get => "/api/sponsorships/stopped").to route_to("sponsorships#stopped")
+    end
+
+    it "routes to sponsoring" do
+      expect(:get => "/api/sponsorships/sponsoring").to route_to("sponsorships#sponsoring")
+    end
+
+    it "routes to stopped_sponsoring" do
+      expect(:get => "/api/sponsorships/stopped_sponsoring").to route_to("sponsorships#stopped_sponsoring")
+    end
+
+    it "routes to sponsored" do
+      expect(:get => "/api/sponsorships/sponsored").to route_to("sponsorships#sponsored")
+    end
+
+    it "routes to stopped_sponsored" do
+      expect(:get => "/api/sponsorships/stopped_sponsored").to route_to("sponsorships#stopped_sponsored")
     end
 
     it "routes to #show" do
-      expect(:get => "/sponsorships/1").to route_to("sponsorships#show", :id => "1")
+      expect(:get => "/api/sponsorships/1").to route_to("sponsorships#show", :id => "1")
     end
-
-    it "routes to #edit" do
-      expect(:get => "/sponsorships/1/edit").to route_to("sponsorships#edit", :id => "1")
-    end
-
 
     it "routes to #create" do
-      expect(:post => "/sponsorships").to route_to("sponsorships#create")
+      expect(:post => "/api/sponsorships").to route_to("sponsorships#create")
     end
 
     it "routes to #update via PUT" do
-      expect(:put => "/sponsorships/1").to route_to("sponsorships#update", :id => "1")
+      expect(:put => "/api/sponsorships/1").to route_to("sponsorships#update", :id => "1")
     end
 
     it "routes to #update via PATCH" do
-      expect(:patch => "/sponsorships/1").to route_to("sponsorships#update", :id => "1")
+      expect(:patch => "/api/sponsorships/1").to route_to("sponsorships#update", :id => "1")
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/sponsorships/1").to route_to("sponsorships#destroy", :id => "1")
+      expect(:delete => "/api/sponsorships/1").to route_to("sponsorships#destroy", :id => "1")
     end
   end
 end
