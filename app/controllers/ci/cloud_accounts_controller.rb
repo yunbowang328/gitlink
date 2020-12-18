@@ -1,7 +1,7 @@
 class Ci::CloudAccountsController < Ci::BaseController
   include Ci::CloudAccountManageable
 
-  skip_before_action :connect_to_ci_database, only: %i[create bind]
+  skip_before_action :connect_to_ci_db, only: %i[create bind trustie_bind]
   before_action :load_project, only: %i[create activate]
   before_action :authorize_owner!, only: %i[create activate]
   before_action :load_repo, only: %i[activate]
@@ -62,6 +62,26 @@ class Ci::CloudAccountsController < Ci::BaseController
 
     ActiveRecord::Base.transaction do
       @cloud_account = bind_account!
+      if @cloud_account.blank?
+        render_error('激活失败, 请检查你的云服务器信息是否正确.')
+        raise ActiveRecord::Rollback
+      else
+        current_user.set_drone_step!(User::DEVOPS_UNVERIFIED)
+      end
+    end
+  rescue Exception => ex
+    render_error(ex.message)
+  end
+
+  def trustie_bind
+    account = params[:account].to_s
+    return render_error("account不能为空.") if account.blank?
+
+    flag, msg = check_trustie_bind_cloud_account!
+    return render_error(msg) if flag === true
+
+    ActiveRecord::Base.transaction do
+      @cloud_account = trustie_bind_account!
       if @cloud_account.blank?
         render_error('激活失败, 请检查你的云服务器信息是否正确.')
         raise ActiveRecord::Rollback
