@@ -162,6 +162,12 @@ Rails.application.routes.draw do
               as: :bind_cloud_acclount
             )
 
+            post(
+                '/cloud_account/trustie_bind',
+                to: 'cloud_accounts#trustie_bind',
+                as: :trustie_bind_cloud_acclount
+            )
+
             get(
               '/cloud_account',
               to: 'cloud_accounts#show',

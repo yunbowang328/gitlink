@@ -20,6 +20,10 @@ class Ci::CloudAccount < Ci::LocalBase
   belongs_to :user
   belongs_to :ci_user, class_name: 'Ci::User', foreign_key: :ci_user_id, optional: true
 
+  # server_type column:  0: 自有服务器；1: trustie提供服务器
+  SERVER_TYPE_SELF = 0
+  SERVER_TYPE_TRUSTIE = 1
+
   def drone_host
     [drone_ip, ":80"].join
   end
