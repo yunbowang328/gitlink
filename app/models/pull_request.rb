@@ -38,6 +38,10 @@ class PullRequest < ApplicationRecord
     Project.find_by(id: self.fork_project_id)
   end
 
+  def bind_gitea_pull_request!(gitea_pull_number)
+    update_column(:gpid, gitea_pull_number)
+  end
+
   # TODO: sync educoder platform repo's for update some statistics count
   def self.update_some_count
     PullRequest.includes(:user, :project).select(:id, :user_id, :gpid, :project_id, :fork_project_id).each do |pr|
