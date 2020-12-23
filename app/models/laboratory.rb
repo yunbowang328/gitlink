@@ -11,11 +11,6 @@
 #  sync_subject :boolean          default("0")
 #  sync_shixun  :boolean          default("0")
 #
-# Indexes
-#
-#  index_laboratories_on_identifier  (identifier) UNIQUE
-#  index_laboratories_on_school_id   (school_id)
-#
 
 class Laboratory < ApplicationRecord
   belongs_to :school, optional: true
