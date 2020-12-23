@@ -1,4 +1,4 @@
-class PullRequests::BranchesService < ApplicationService
+class Branches::ListService < ApplicationService
 
   attr_reader :user, :project
 

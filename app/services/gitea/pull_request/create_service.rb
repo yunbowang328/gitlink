@@ -1,9 +1,9 @@
 class Gitea::PullRequest::CreateService < Gitea::ClientService
-  attr_reader :token, :user, :repo, :params
+  attr_reader :token, :owner, :repo, :params
 
   # 同一个项目下发送pr例子，如下：
   # 参数说明：
-  #   user: 项目拥有者
+  #   owner: 项目拥有者
   #   repo： 项目名称
   #   params:
   #   {
@@ -17,7 +17,7 @@ class Gitea::PullRequest::CreateService < Gitea::ClientService
 
   # fork的项目，向源项目发送pr例子，如下：
   # 参数说明：
-  #   user：源项目拥有者
+  #   owner：源项目拥有者
   #   repo：源项目仓库名称
   #   params:
   #   {
@@ -28,24 +28,31 @@ class Gitea::PullRequest::CreateService < Gitea::ClientService
   #   }
   #  以上例子说明：jasder用户fork的项目master分支向源项目的develop分支发送pr
   #  Gitea::PullRequest::CreateService.call('token', '源项目拥有者', '源项目名称', params)
-  def initialize(token, user, repo, params={})
-    @token = token
-    @user   = user
+  def initialize(token, owner, repo, params={})
+    @token  = token
+    @owner  = owner
     @repo   = repo
     @params = params
   end
 
   def call
-    post(url, request_params)
+    response = post(url, request_params)
+    json_format(response)
   end
 
   private
 
   def url
-    "/repos/#{@user.login}/#{@repo}/pulls".freeze
+    "/repos/#{@owner}/#{@repo}/pulls".freeze
   end
 
   def request_params
     Hash.new.merge(token: token, data: @params)
+  end
+
+  def json_format(response)
+    status, message, body = render_response(response)
+
+    status === 201 ? success(body) : error(message, status)
   end
 end

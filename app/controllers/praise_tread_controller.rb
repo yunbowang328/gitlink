@@ -40,8 +40,5 @@ class PraiseTreadController < ApplicationController
   end
 
   private
-  def render_result
-
-  end
 
 end
