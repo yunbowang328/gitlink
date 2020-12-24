@@ -78,10 +78,5 @@ class Ci::Drone::API < Ci::Drone::Request
   def sync_repos
     post(endpoint, "/api/users/repos", drone_token: drone_token)
   end
-
-  # Creates a user.
-  # POST /api/users
-  def create_user
-    post(endpoint, "/api/users", {login: options[:login], email: "admin@email.com", avatar_url:"",active:true, drone_token: options[:token]})
-  end
+  
 end
