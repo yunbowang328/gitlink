@@ -7,8 +7,7 @@ class Gitea::User::RegisterService < Gitea::ClientService
   end
 
   def call
-    params = {}
-    params = params.merge(data: user_params)
+    params = Hash.new.merge(data: user_params, token: @token)
     post(API_REST, params)
   end
 

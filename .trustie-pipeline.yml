@@ -1,0 +1,22 @@
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+- name: install
+  image: ruby:2.4.5
+  commands:
+  - gem install bundler
+  - bundle -v
+  - bundle  install --jobs=1 --retry=1
+
+- name: test
+  image: ruby:2.4.5
+  volumes:
+  - name: bundle
+    path: /usr/local/bundle
+  commands:
+  - rake

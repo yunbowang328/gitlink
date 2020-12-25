@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: bidding_users
+#
+#  id                 :integer          not null, primary key
+#  project_package_id :integer
+#  user_id            :integer
+#  status             :string(255)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#
+# Indexes
+#
+#  index_bidding_users_on_project_package_id  (project_package_id)
+#  index_bidding_users_on_user_id             (user_id)
+#
+
 class BiddingUser < ApplicationRecord
   include AASM
 

@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: praise_treads
+#
+#  id                       :integer          not null, primary key
+#  user_id                  :integer          not null
+#  praise_tread_object_id   :integer
+#  praise_tread_object_type :string(255)
+#  praise_or_tread          :integer          default("1")
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#
+# Indexes
+#
+#  praise_tread  (praise_tread_object_id,praise_tread_object_type)
+#
+
 class PraiseTread < ApplicationRecord
   belongs_to :user
   belongs_to :praise_tread_object, polymorphic: true, counter_cache: :praises_count

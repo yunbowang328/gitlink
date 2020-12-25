@@ -1,3 +1,53 @@
+# == Schema Information
+#
+# Table name: issues
+#
+#  id                   :integer          not null, primary key
+#  tracker_id           :integer          not null
+#  project_id           :integer          not null
+#  subject              :string(255)      default(""), not null
+#  description          :text(4294967295)
+#  due_date             :date
+#  category_id          :integer
+#  status_id            :integer          not null
+#  assigned_to_id       :integer
+#  priority_id          :integer          not null
+#  fixed_version_id     :integer
+#  author_id            :integer          not null
+#  created_on           :datetime
+#  updated_on           :datetime
+#  start_date           :date
+#  done_ratio           :integer          default("0"), not null
+#  estimated_hours      :float(24)
+#  parent_id            :integer
+#  root_id              :integer
+#  lft                  :integer
+#  rgt                  :integer
+#  is_private           :boolean          default("0"), not null
+#  closed_on            :datetime
+#  project_issues_index :integer
+#  issue_type           :string(255)
+#  token                :integer          default("0")
+#  issue_tags_value     :string(255)
+#  is_lock              :boolean          default("0")
+#  issue_classify       :string(255)
+#  ref_name             :string(255)
+#  branch_name          :string(255)
+#
+# Indexes
+#
+#  index_issues_on_assigned_to_id           (assigned_to_id)
+#  index_issues_on_author_id                (author_id)
+#  index_issues_on_category_id              (category_id)
+#  index_issues_on_created_on               (created_on)
+#  index_issues_on_fixed_version_id         (fixed_version_id)
+#  index_issues_on_priority_id              (priority_id)
+#  index_issues_on_root_id_and_lft_and_rgt  (root_id,lft,rgt)
+#  index_issues_on_status_id                (status_id)
+#  index_issues_on_tracker_id               (tracker_id)
+#  issues_project_id                        (project_id)
+#
+
 class Issue < ApplicationRecord
   #issue_type 1为普通，2为悬赏
   include DunCheckAble

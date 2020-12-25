@@ -7,7 +7,7 @@ class Oauth::EducoderController < Oauth::BaseController
       token = params[:token]
 
       ::OauthEducoderForm.new({login: login, token: token, callback_url: callback_url}).validate!
-      
+
       open_user= OpenUsers::Educoder.find_by(uid: login)
 
       if open_user.present? && open_user.user.present? && open_user.user.email_binded?
@@ -17,15 +17,15 @@ class Oauth::EducoderController < Oauth::BaseController
         redirect_to callback_url
       else
         Rails.logger.info "######## open user not exits"
-        user = User.find_by('login = ? or mail = ?', login, mail)
+        user = User.find_by(login: login) || User.find_by(mail: mail)
 
-        if user.is_a?(User)
+        if user.is_a?(User) && !user.is_a?(AnonymousUser)
           OpenUsers::Educoder.create!(user: user, uid: login)
           successful_authentication(user)
 
           redirect_to callback_url
         else
-          redirect_to oauth_register_path(login: login, callback_url: callback_url)
+          redirect_to oauth_register_path(login: login, mail: mail, callback_url: callback_url)
         end
       end
     rescue WechatOauth::Error => ex

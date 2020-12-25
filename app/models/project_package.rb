@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: project_packages
+#
+#  id                          :integer          not null, primary key
+#  creator_id                  :integer
+#  status                      :string(255)
+#  title                       :string(255)
+#  content                     :text(65535)
+#  contact_name                :string(255)
+#  contact_phone               :string(255)
+#  min_price                   :decimal(10, )
+#  max_price                   :decimal(10, )
+#  visit_count                 :integer          default("0")
+#  bidding_users_count         :integer          default("0")
+#  deadline_at                 :datetime
+#  published_at                :datetime
+#  bidding_finished_at         :datetime
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  project_package_category_id :integer
+#
+# Indexes
+#
+#  index_project_packages_on_creator_id    (creator_id)
+#  index_project_packages_on_published_at  (published_at)
+#
+
 class ProjectPackage < ApplicationRecord
   include AASM
 

@@ -110,33 +110,33 @@ class AccountsController < ApplicationController
   # params[:login] 邮箱或者手机号
   # params[:code]  验证码
   # code_type 1：注册手机验证码  8：邮箱注册验证码
+  # 本地forge注册入口
   def register
     begin
       # 查询验证码是否正确;type只可能是1或者8
       type = phone_mail_type(params[:login].strip)
-      code = params[:code].strip
+      # code = params[:code].strip
 
       if type == 1
         uid_logger("start register by phone:  type is #{type}")
         pre = 'p'
         email = nil
         phone = params[:login]
-        verifi_code = VerificationCode.where(phone: phone, code: code, code_type: 1).last
+        # verifi_code = VerificationCode.where(phone: phone, code: code, code_type: 1).last
+        # TODO: 暂时限定邮箱注册
+        return normal_status(-1, '只支持邮箱注册')
       else
         uid_logger("start register by email:  type is #{type}")
         pre = 'm'
         email = params[:login]
         phone = nil
-        verifi_code = VerificationCode.where(email: email, code: code, code_type: 8).last
+        return normal_status(-1, "该邮箱已注册") if User.exists?(mail: params[:login])
+        return normal_status(-1, "邮箱格式错误") unless params[:login] =~ CustomRegexp::EMAIL
+        # verifi_code = VerificationCode.where(email: email, code: code, code_type: 8).last
       end
-      uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
+      # uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
       # check_code = (verifi_code.try(:code) == code.strip && (Time.now.to_i - verifi_code.created_at.to_i) <= 10*60)
       # todo 上线前请删除万能验证码"513231"
-      unless code == "513231" && request.subdomain == "test-newweb"
-        return normal_status(-2, "验证码不正确") if verifi_code.try(:code) != code.strip
-        return normal_status(-2, "验证码已失效") if !verifi_code&.effective?
-      end
-
       return normal_status(-1, "8~16位密码，支持字母数字和符号") unless params[:password] =~ CustomRegexp::PASSWORD
 
       code = generate_identifier User, 8, pre
@@ -146,23 +146,20 @@ class AccountsController < ApplicationController
       # 现在因为是验证码，所以在注册的时候就可以激活
       @user.activate
       # 必须要用save操作，密码的保存是在users中
-      if @user.save!
-        # todo user_extension
-        UserExtension.create!(user_id: @user.id)
-        # 注册完成，手机号或邮箱想可以奖励500金币
-        # RewardGradeService.call(
-        #   @user,
-        #   container_id: @user.id,
-        #   container_type: pre == 'p' ? 'Phone' : 'Mail',
-        #   score: 500
-        # )
-        # 注册时，记录是否是引流用户
-        ip = request.remote_ip
-        ua = UserAgent.find_by_ip(ip)
-        ua.update_column(:agent_type, UserAgent::USER_REGISTER) if ua
-        successful_authentication(@user)
-        # session[:user_id] = @user.id
-        normal_status("注册成功")
+
+      interactor = Gitea::RegisterInteractor.call({username: login, email: email, password: params[:password]})
+      if interactor.success?
+        gitea_user = interactor.result
+        result = Gitea::User::GenerateTokenService.new(login, params[:password]).call
+        @user.gitea_token = result['sha1']
+        @user.gitea_uid = gitea_user['id']
+        if @user.save!
+          UserExtension.create!(user_id: @user.id)
+          successful_authentication(@user)
+          normal_status("注册成功")
+        end
+      else
+        tip_exception(-1, interactor.error)
       end
     rescue Exception => e
       uid_logger_error(e.message)

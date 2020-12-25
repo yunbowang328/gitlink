@@ -24,7 +24,7 @@
  <div class="input-group-append">
             <% rails_env = EduSetting.get('rails_env') %>
             <span class="input-group-text font-14" id="site-prefix"><%= rails_env && rails_env != 'production' ? ".#{rails_env}.educoder.net" : '.educoder.net' %></span>
-          </div> 
+          </div>
 <%
 =end%>
         </div>
@@ -147,24 +147,34 @@
     </div>
 
     <div class="form-group px-2 setting-item">
-      <div class="setting-item-head"><h6>导航设置</h6></div>
+      <div class="setting-item-head">
+      <h6>导航设置
+      <%= link_to "<i class='fa fa-plus-circle'></i>".html_safe,new_admins_laboratory_laboratory_setting_path, remote: true,  class: "btn btn-primary btn-sm"%>
+</h6>
+      </div>
       <div class="dropdown-divider"></div>
       <div class="pl-0 py-3 setting-item-body">
         <table class="table">
           <thead class="thead-light">
             <tr>
-              <th width="35%">导航名称</th>
+              <th width="30%">导航名称</th>
               <th width="50%">导航链接</th>
-              <th width="15%" class="text-center">是否展示</th>
+              <th width="10%" class="text-center">是否展示</th>
+              <th width="10%" class="text-center">操作</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="laboratories-show-content">
             <% (setting.navbar || setting.default_navbar).each do |nav| %>
               <tr>
                 <td><%= text_field_tag('navbar[][name]', nav['name'], id: nil, class: 'form-control') %></td>
                 <td><%= text_field_tag('navbar[][link]', nav['link'], id: nil, class: 'form-control') %></td>
                 <td class="text-center">
                   <%= check_box_tag('navbar[][hidden]', 0, !nav['hidden'], id: nil, class: 'font-16') %>
+                </td>
+                <td class="text-center">
+                  <div class="btn btn-primary btn-sm" onclick="destroy_tr(this)">
+                    <i class='fa fa-trash'></i>
+                  </div>
                 </td>
               </tr>
             <% end %>

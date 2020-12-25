@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
 	include LoggerHelper
 	include LoginHelper
 	include RegisterHelper
-	
+
 	protect_from_forgery prepend: true, unless: -> { request.format.json? }
 
 	before_action :check_sign
@@ -343,7 +343,8 @@ class ApplicationController < ActionController::Base
 			elsif params[:debug] == 'student'
 				User.current = User.find 8686
 			elsif params[:debug] == 'admin'
-				user = User.find 1
+				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
+				user =  User.find 36480
 				User.current = user
 				cookies.signed[:user_id] = user.id
 			end
@@ -384,11 +385,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def current_user
-		if Rails.env.development?
-			User.current = User.find 1
-		else
-			User.current
-		end
+		User.current
 	end
 
 	## 默认输出json
@@ -744,12 +741,12 @@ class ApplicationController < ActionController::Base
     namespace = params[:owner]
     id = params[:repo] || params[:id]
 
-    @project = Project.find_with_namespace(namespace, id)
+    @project, @owner = Project.find_with_namespace(namespace, id)
 
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"
 			@project
-    elsif current_user.is_a?(AnonymousUser)
+    elsif @project && current_user.is_a?(AnonymousUser)
 			logger.info "###########：This is AnonymousUser"
 			@project = nil if !@project.is_public?
 			render_forbidden and return
@@ -762,7 +759,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def load_repository
-		@repository ||= load_project.repository
+		@repository ||= load_project&.repository
 	end
 
   private

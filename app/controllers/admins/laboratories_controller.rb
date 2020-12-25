@@ -6,6 +6,12 @@ class Admins::LaboratoriesController < Admins::BaseController
     @laboratories = paginate laboratories.preload(:laboratory_users)
   end
 
+  def new 
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def create
     Admins::CreateLaboratoryService.call(create_params)
     render_ok

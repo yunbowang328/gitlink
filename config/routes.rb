@@ -8,8 +8,10 @@ Rails.application.routes.draw do
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
 
+  get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
+
   get 'auth/qq/callback', to: 'oauth/qq#create'
   get 'auth/failure', to: 'oauth/base#auth_failure'
   get 'auth/cas/callback', to: 'oauth/cas#create'
@@ -20,7 +22,26 @@ Rails.application.routes.draw do
 
   resources :edu_settings
 
+  resources :edu_settings
   scope '/api' do
+    namespace :ci  do
+      resources :languages, only: [:index, :show] do
+        collection do
+          get :common
+        end
+      end
+
+      # resources :repos, only: :index do
+      #   collection do
+      #     get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
+      #     get ':number', to: 'builds#detail', as: 'detail'
+      #     post ':number', to: 'builds#restart', as: 'restart'
+      #     delete ':number', to: 'builds#delete', as: 'delete'
+      #     get ':number/logs/:stage/:step', to: 'builds#logs', as: 'logs'
+      #   end
+      # end
+    end
+
     resources :sync_forge, only: [:create] do
       collection do
         post :sync_users
@@ -31,6 +52,9 @@ Rails.application.routes.draw do
       resources :compose_projects, only: [:create, :destroy]
     end
     resources :attachments do
+      member do
+        post :preview_attachment
+      end
       collection do
         delete :destroy_files
       end
@@ -84,6 +108,7 @@ Rails.application.routes.draw do
       collection do
         post :migrate
         get :group_type_list
+        get :recommend
       end
     end
 
@@ -128,10 +153,37 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
+
+        scope '/ci', module: :ci do
+          scope do
+            post(
+              '/cloud_account/bind',
+              to: 'cloud_accounts#bind',
+              as: :bind_cloud_acclount
+            )
+
+            get(
+              '/cloud_account',
+              to: 'cloud_accounts#show',
+              as: :get_cloud_account
+            )
+
+            delete(
+              '/cloud_account/unbind',
+              to: 'cloud_accounts#unbind',
+              as: :unbind_cloud_acclount
+            )
+
+            get(
+              'oauth_grant',
+              to: 'cloud_accounts#oauth_grant',
+              as: :ci_oauth_grant
+            )
+          end
+        end
       end
 
       scope module: :users do
-        # resources :courses, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]
@@ -249,6 +301,7 @@ Rails.application.routes.draw do
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
           get :members, to: 'projects#fork_users'
+          match :about, :via => [:get, :put, :post]
         end
       end
 
@@ -270,6 +323,34 @@ Rails.application.routes.draw do
         end
       end
 
+      # protected_branches
+      scope do
+        get(
+          '/protected_branches/',
+          to: 'protected_branches#index'
+        )
+        get(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#show'
+        )
+        get(
+          '/protected_branches/:branch_name/edit',
+          to: 'protected_branches#edit'
+        )
+        delete(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#destroy'
+        )
+        post(
+          '/protected_branches',
+          to: 'protected_branches#create'
+        )
+        patch(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#update'
+        )
+      end
+
       resources :issues do
         collection do
           get :commit_issues
@@ -284,11 +365,18 @@ Rails.application.routes.draw do
         end
       end
 
+      # compare
+      resources :compare, only: [:index, :create]
+      get '/compare/:base...:head' => 'compare#show', :as => 'compare',
+            :constraints => { base: /.+/, head: /.+/ }
+
       resources :pull_requests, :path => :pulls, except: [:destroy] do
         member do
           post :pr_merge
           # post :check_merge
           post :refuse_merge
+          get :files
+          get :commits
         end
         collection do
           post :check_can_merge
@@ -315,6 +403,51 @@ Rails.application.routes.draw do
       resources :project_trends, :path => :activity, only: [:index, :create]
       resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
       resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+
+      scope module: :ci do
+        scope do
+          match(
+            'ci_authorize',
+            to: 'projects#authorize',
+            as: :ci_authorize,
+            :via => [:get, :put]
+          )
+          get(
+            'get_trustie_pipeline',
+            to: 'projects#get_trustie_pipeline',
+            as: :get_trustie_pipeline
+          )
+          put(
+            'update_trustie_pipeline',
+            to: 'projects#update_trustie_pipeline',
+            as: :update_trustie_pipeline
+          )
+          post(
+            'activate',
+            to: 'projects#activate',
+            as: :ci_activate_project
+          )
+          delete(
+            'deactivate',
+            to: 'projects#deactivate',
+            as: :ci_deactivate_project
+          )
+        end
+
+        resources :cloud_accounts, only: [:create] do
+          member do
+            post :activate
+            delete :deactivate
+          end
+        end
+        resources :builds, param: :build do
+          member do
+            post :restart
+            delete :stop
+            get '/logs/:stage/:step', to: 'builds#logs', as: 'logs'
+          end
+        end
+      end
 
       scope module: :projects do
         scope do
@@ -560,7 +693,7 @@ Rails.application.routes.draw do
         post :update_sync_course
       end
 
-      resource :laboratory_setting, only: [:show, :update]
+      resource :laboratory_setting, only: [:show, :update, :new]
       resource :laboratory_user, only: [:create, :destroy]
 
       resources :carousels, only: [:index, :create, :update, :destroy] do

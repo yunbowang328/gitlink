@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: project_scores
+#
+#  id                :integer          not null, primary key
+#  project_id        :string(255)
+#  score             :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  issue_num         :integer          default("0")
+#  issue_journal_num :integer          default("0")
+#  news_num          :integer          default("0")
+#  documents_num     :integer          default("0")
+#  changeset_num     :integer          default("0")
+#  board_message_num :integer          default("0")
+#  board_num         :integer          default("0")
+#  attach_num        :integer          default("0")
+#  commit_time       :datetime
+#  pull_request_num  :integer          default("0")
+#
+
 class ProjectScore < ApplicationRecord
   belongs_to :project
 

@@ -1,10 +1,10 @@
-json.identifier @project.identifier
+json.identifier render_identifier(@project)
 json.name @project.name
 json.project_id @project.id
 json.repo_id @repo.id
 json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
 json.pull_requests_count @project.pull_requests_count
-json.project_identifier @project.identifier
+json.project_identifier render_identifier(@project)
 json.praises_count @project.praises_count.to_i
 json.forked_count @project.forked_count.to_i
 json.watchers_count @project.watchers_count.to_i
@@ -12,10 +12,11 @@ json.versions_count @project.versions_count  #里程碑数量
 json.version_releases_count @project.releases_size(@user.try(:id), "all")
 json.version_releasesed_count @project.releases_size(@user.try(:id), "released")  #已发行的版本
 json.contributor_users_count @project.contributor_users
-json.permission  User.current&.admin? ? "Manager" : @project.get_premission(@user)
+json.permission render_permission(@user, @project)
 json.mirror_url @project&.repository.mirror_url
 json.mirror @project&.repository.mirror_url.present?
 json.type @project.numerical_for_project_type
+json.open_devops @project.open_devops?
 
 unless @project.common?
   json.mirror_status @repo.mirror_status

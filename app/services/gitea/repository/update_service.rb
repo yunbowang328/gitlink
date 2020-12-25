@@ -28,6 +28,6 @@ class Gitea::Repository::UpdateService < Gitea::ClientService
   end
 
   def data_params
-    Hash.new.merge(token: user.gitea_token, data: params)
+    Hash.new.merge(token: user.gitea_token, data: params).compact
   end
 end

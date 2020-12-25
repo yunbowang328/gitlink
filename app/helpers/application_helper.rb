@@ -436,4 +436,9 @@ module ApplicationHelper
   def find_user_by_login(login)
     User.find_by_login login
   end
+
+  def render_base64_decoded(str)
+    return nil if str.blank?
+    Base64.decode64 str
+  end
 end

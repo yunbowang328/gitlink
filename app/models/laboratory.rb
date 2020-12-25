@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: laboratories
+#
+#  id           :integer          not null, primary key
+#  school_id    :integer
+#  identifier   :string(255)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  sync_course  :boolean          default("0")
+#  sync_subject :boolean          default("0")
+#  sync_shixun  :boolean          default("0")
+#
+
 class Laboratory < ApplicationRecord
   belongs_to :school, optional: true
 

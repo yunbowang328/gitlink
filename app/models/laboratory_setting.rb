@@ -1,3 +1,12 @@
+# == Schema Information
+#
+# Table name: laboratory_settings
+#
+#  id            :integer          not null, primary key
+#  laboratory_id :integer
+#  config        :text(65535)
+#
+
 class LaboratorySetting < ApplicationRecord
   belongs_to :laboratory
 

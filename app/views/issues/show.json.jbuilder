@@ -1,5 +1,5 @@
 json.partial! "commons/success"
-json.extract! @issue, :id,:subject,:is_lock,:description,:is_private, :start_date,:due_date,:estimated_hours
+json.extract! @issue, :id,:subject,:is_lock,:description,:is_private, :start_date,:due_date,:estimated_hours, :status_id
 
 json.user_permission @user_permission
 json.closed_on @issue.closed_on.present? ? format_time(@issue.closed_on) : ""

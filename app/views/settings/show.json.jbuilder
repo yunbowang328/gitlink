@@ -16,7 +16,6 @@ json.setting do
   #
   #   json.footer setting.footer || default_setting.footer
   #
-  #   json.main_site current_laboratory.main_site?
   # end
 
   nav_bar = default_setting.navbar

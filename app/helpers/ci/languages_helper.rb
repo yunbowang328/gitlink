@@ -1,0 +1,2 @@
+module Ci::LanguagesHelper
+end

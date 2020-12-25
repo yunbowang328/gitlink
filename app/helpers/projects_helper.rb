@@ -28,8 +28,10 @@ module ProjectsHelper
     (User.find_by_login identifier) || (User.find_by_mail identifier)
   end
 
-  def json_response(project)
-    repo = project.repository
+  def json_response(project, user)
+    # repo = project.repository
+    repo = Repository.includes(:mirror).select(:id, :mirror_url).find_by(project: project)
+
     tmp_json = {}
     unless project.common?
       tmp_json = tmp_json.merge({
@@ -41,16 +43,48 @@ module ProjectsHelper
     end
 
     tmp_json = tmp_json.merge({
-      identifier: project.identifier,
+      identifier: render_identifier(project),
       name: project.name,
+      platform: project.platform,
       id: project.id,
+      repo_id: repo.id,
+      open_devops: (user.blank? || user.is_a?(AnonymousUser)) ? false : project.open_devops?,
       type: project.numerical_for_project_type,
-      author: {
-        login: project.owner.login,
-        name: project.owner.real_name,
-        image_url: url_to_avatar(project.owner)
-      }
+      author: render_owner(project)
     }).compact
+
     render json: tmp_json
+  end
+
+  def render_owner(project)
+    if project.educoder?
+      {
+        login: project.project_educoder.owner,
+        name: project.project_educoder.owner,
+        image_url: project.project_educoder.image_url
+      }
+    else
+      {
+        login: @owner.login,
+        name: @owner.real_name,
+        image_url: url_to_avatar(@owner)
+      }
+    end
+  end
+
+  def render_identifier(project)
+    project.educoder? ? project.project_educoder&.repo_name&.split('/')[1] : project.identifier
+  end
+
+  def render_author(project)
+    project.educoder? ? project.project_educoder&.repo_name&.split('/')[0] : project.owner.login
+  end
+
+  def render_educoder_avatar_url(project_educoder)
+    [Rails.application.config_for(:configuration)['educoder']['cdn_url'], project_educoder&.image_url].join('/')
+  end
+
+  def render_avatar_url(owner)
+    ['images', url_to_avatar(owner)].join('/')
   end
 end

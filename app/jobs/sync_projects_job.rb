@@ -8,7 +8,7 @@ class SyncProjectsJob < ApplicationJob
     SyncLog.sync_log("==========begin to sync #{sync_params[:type]} to forge============")
     SyncLog.sync_log("==========sync_params:#{sync_params}============")
 
-    begin     
+    begin
       url = "#{gitea_main}/sync_forges"  #trustie上的相关路由
       uri = URI.parse(url)
       http = Net::HTTP.new(uri.hostname, uri.port)
@@ -85,7 +85,7 @@ class SyncProjectsJob < ApplicationJob
               new_target = target_type.constantize.new(re[:target_params].merge(user_id: u_id))
             end
           end
-  
+
           if !is_exists && new_target.save!
             SyncLog.sync_log("***【#{target_type}】. create_success---------------")
             if re[:journals].present?
@@ -112,10 +112,8 @@ class SyncProjectsJob < ApplicationJob
         SyncLog.sync_log("=========***【#{target_type}】creat_had_erros:#{e}===================")
         next
       end
-
     end
 
-    
   end
 
   def create_journals(target_jsons, target_type,issue_id)
@@ -127,7 +125,7 @@ class SyncProjectsJob < ApplicationJob
         if re[:target_params].present?
           u_id = User.select(:id, :login).where(login: re[:user_login]).pluck(:id).first
           is_exists = Journal.exists?(user_id: u_id, journalized_id: re[:target_params][:journalized_id], created_on: re[:target_params][:created_on].to_s.to_time)
-  
+
           if is_exists
             SyncLog.sync_log("***00000. Journal:#{re[:target_params][:id]}-is exists--------------")
           else
@@ -142,7 +140,7 @@ class SyncProjectsJob < ApplicationJob
               end
             else
               SyncLog.sync_log("***111222. journal_create failed---------------")
-  
+
             end
           end
         end

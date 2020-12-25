@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: mirrors
+#
+#  id               :integer          not null, primary key
+#  repo_id          :integer
+#  status           :integer          default("0"), not null
+#  interval         :integer
+#  next_update_time :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  sync_num         :integer          default("1")
+#
+
 class Mirror < ApplicationRecord
 
   #  0 - succeeded, 1 - waiting, 2 - failed

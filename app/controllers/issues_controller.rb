@@ -105,9 +105,6 @@ class IssuesController < ApplicationController
       normal_status(-1, "标题不能为空")
     elsif params[:subject].to_s.size > 255
       normal_status(-1, "标题不能超过255个字符")
-    elsif (params[:issue_type].to_s == "2")
-      return normal_status(-1, "悬赏的奖金必须大于0") if params[:token].to_i == 0
-
     else
       issue_params = issue_send_params(params)
 
@@ -137,17 +134,16 @@ class IssuesController < ApplicationController
         end
 
         @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-        # normal_status(0, "创建成功",)
-        render :json => { status: 0, message: "创建成功", id:  @issue.id}
+        render json: {status: 0, message: "创建成", id: @issue.id}
       else
         normal_status(-1, @issue.errors.messages.values[0][0])
       end
+
     end
 
   end
 
   def edit
-    # @all_branches = get_branches
     # @issue_chosen = issue_left_chosen(@project, @issue.id)
     @issue_attachments = @issue.attachments
   end
@@ -204,7 +200,6 @@ class IssuesController < ApplicationController
     else
       normal_status(-1, @issue.errors.messages.values[0][0])
     end
-
   end
 
   def show
@@ -306,6 +301,9 @@ class IssuesController < ApplicationController
       if type == 5
         @issue&.project_trends&.update_all(action_type: "close")
         @issue.issue_times.update_all(end_time: Time.now)
+        if @issue.issue_type.to_s == "2"
+          post_to_chain("add", @issue.token, @issue.get_assign_user.try(:login))
+        end
         if @issue.issue_classify.to_s == "pull_request"
           @issue&.pull_request&.update_attribute(:status, 2)
         end
@@ -397,17 +395,6 @@ class IssuesController < ApplicationController
       tracker_array.push(tracker_info)
     end
     tracker_array
-  end
-
-  def get_branches
-    all_branches = []
-    get_all_branches = Gitea::Repository::Branches::ListService.new(@user, @project&.repository.try(:identifier)).call
-    if get_all_branches && get_all_branches.size > 0
-      get_all_branches.each do |b|
-        all_branches.push(b["name"])
-      end
-    end
-    all_branches
   end
 
   def issue_send_params(params)

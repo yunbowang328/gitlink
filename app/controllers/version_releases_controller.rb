@@ -139,7 +139,7 @@ class VersionReleasesController < ApplicationController
       body:	params[:body],
       draft: params[:draft] || false,
       name: params[:name],
-      prerelease: params[:prerelease],
+      prerelease: params[:prerelease] || false,
       tag_name: params[:tag_name],
       target_commitish: params[:target_commitish] || "master"  #分支
     }
