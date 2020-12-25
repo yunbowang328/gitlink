@@ -106,12 +106,16 @@ class Project < ApplicationRecord
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
+  has_many :apply_signatures, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
 
+  scope :secret_and_visible, -> {joins(:license).where("licenses.is_secret = TRUE OR projects.is_public = TRUE")}
+
+  delegate :is_secret, to: :license
 
 
   def self.search_project(search)

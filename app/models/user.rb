@@ -161,6 +161,7 @@ class User < ApplicationRecord
   # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
   has_many :oauths , dependent: :destroy
+  has_many :apply_signatures, dependent: :destroy
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
