@@ -16,6 +16,12 @@ json.permission  User.current&.admin? ? "Manager" : @project.get_premission(@use
 json.mirror_url @project&.repository.mirror_url
 json.mirror @project&.repository.mirror_url.present?
 json.type @project.numerical_for_project_type
+json.is_secret @project.is_secret
+user_apply_signatures = @project.apply_signatures.with_user_id(current_user.id)
+json.user_apply_signatures user_apply_signatures do |signature|
+  json.id signature.id
+  json.status signature.status
+end
 
 unless @project.common?
   json.mirror_status @repo.mirror_status

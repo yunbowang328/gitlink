@@ -52,6 +52,11 @@ class Projects::CreateService < ApplicationService
   # end
 
   def repo_is_public
-    params[:private].blank? ? true : !params[:private]
+    license = License.find_by_id(params[:license_id])
+    if license.is_secret 
+      false
+    else
+      params[:private].blank? ? true : !params[:private]
+    end
   end
 end

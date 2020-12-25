@@ -12,7 +12,7 @@ class ProjectCategoriesController < ApplicationController
     #   projects = Project.visible
     # end
     @project_children_categories = ProjectCategory.descendants
-    projects = Project.no_anomory_projects.visible
+    projects = Project.no_anomory_projects.secret_and_visible
     categories = projects.joins(:project_category).where(project_categories: {ancestry: nil}).group("project_categories.name", "project_categories.id").size.keys.to_h
     extra_category_id = categories.delete("其他")
     categories = categories.merge({"其他": extra_category_id}) if extra_category_id.present? #其他的放在最后面

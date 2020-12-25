@@ -1,1 +1,1 @@
-json.licenses @licenses, :id, :name
+json.licenses @licenses, :id, :name, :is_secret

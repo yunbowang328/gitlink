@@ -43,7 +43,7 @@ class ProjectsController < ApplicationController
     # else
     #   projects = Project.visible
     # end
-    projects = Project.no_anomory_projects.visible
+    projects = Project.no_anomory_projects.secret_and_visible
     language_lists = projects.joins(:project_language).group("project_languages.name", "project_languages.id").size.keys.sort.to_h
     @project_group_list = language_lists.delete_if { |k, v| k.blank? }
   end

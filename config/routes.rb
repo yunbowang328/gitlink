@@ -35,6 +35,7 @@ Rails.application.routes.draw do
         delete :destroy_files
       end
     end
+    resources :apply_signatures, only: [:create]
     get 'home/index'
     get 'home/search'
     get 'main/first_stamp'
