@@ -286,6 +286,7 @@ http://localhost:3000/api/licenses/  | jq
 |licenses|array |返回数据|
 |-- id             |int   |id |
 |-- name           |string|开源许可证名称|
+|-- is_secret           |string|是否为特殊许可证|
 
 
 返回值
@@ -294,23 +295,33 @@ http://localhost:3000/api/licenses/  | jq
   "licenses": [
     {
       "id": 57,
-      "name": "AFL-1.2"
+      "name": "AFL-1.2",
+      "is_secret": false
     },
     {
       "id": 76,
-      "name": "AFL-3.0"
+      "name": "AFL-3.0",
+      "is_secret": false
     },
     {
       "id": 214,
-      "name": "AFL-1.1"
+      "name": "AFL-1.1",
+      "is_secret": false
     },
     {
       "id": 326,
-      "name": "AFL-2.1"
+      "name": "AFL-2.1",
+      "is_secret": false
     },
     {
       "id": 350,
-      "name": "AFL-2.0"
+      "name": "AFL-2.0",
+      "is_secret": false
+    },
+    {
+      "id": 359,
+      "name": "PHengLEI",
+      "is_secret": true
     }
   ]
 }
@@ -555,6 +566,8 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 |project_category_id  |int|项目类别id|
 |project_language_id  |int|项目语言id|
 |private              |boolean|项目是否私有, true：为私有，false: 公开  |
+|is_secret            |boolean|项目是否为特殊协议项目, true：是，false: 否  |
+
 
 
 返回值
@@ -567,7 +580,8 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
   "project_description": "my first project mirror_demo",
   "project_category_id": 1,
   "project_language_id": 2,
-  "private": false
+  "private": false,
+  "is_secret": true
 }
 ```
 ---
@@ -1146,6 +1160,7 @@ http://localhost:3000/api/projects  | jq
 |forked_count    |int|被fork的数量|
 |praises_count   |int|star数量|
 |is_public       |boolean|是否公开， true:公开，false:未公开|
+|is_secret       |boolean|是否为特殊许可证项目， true:是，false:否|
 |mirror_url      |string|镜像url|
 |last_update_time|int|最后更新时间，为UNIX格式的时间戳|
 |author          |object|项目创建者|
@@ -1156,6 +1171,10 @@ http://localhost:3000/api/projects  | jq
 |language        |object|项目语言|
 |-- id           |int|项目语言id|
 |-- name         |string|项目语言名称|
+|user_apply_signatures        |object|用户申请的项目签名|
+|-- id           |int|用户申请的项目签名id|
+|-- status       |int|用户申请的项目签名审核状态， 0: 正在审核，1:已审核|
+
 
 
 返回值
@@ -1171,6 +1190,7 @@ http://localhost:3000/api/projects  | jq
       "praises_count": 0,
       "forked_count": 0,
       "is_public": true,
+      "is_secret": true,
       "mirror_url": null,
       "last_update_time": 1577697461,
       "author": {
@@ -1184,7 +1204,13 @@ http://localhost:3000/api/projects  | jq
       "language": {
         "id": 2,
         "name": "C"
-      }
+      },
+      "user_apply_signatures":[
+        {
+          "id": 1,
+          "status": 0
+        }
+      ]
     },
     {
       "id": 2,
@@ -1194,6 +1220,7 @@ http://localhost:3000/api/projects  | jq
       "praises_count": 0,
       "forked_count": 0,
       "is_public": true,
+      "is_secret": false,
       "mirror_url": null,
       "last_update_time": 1577697403,
       "author": {
@@ -1207,7 +1234,8 @@ http://localhost:3000/api/projects  | jq
       "language": {
         "id": 2,
         "name": "C"
-      }
+      },
+      "user_apply_signatures":[]
     },
     {
       "id": 3,
@@ -1217,6 +1245,7 @@ http://localhost:3000/api/projects  | jq
       "praises_count": 0,
       "forked_count": 0,
       "is_public": true,
+      "is_secret": true,  
       "mirror_url": null,
       "last_update_time": 1577415173,
       "author": {
@@ -1230,7 +1259,8 @@ http://localhost:3000/api/projects  | jq
       "language": {
         "id": 2,
         "name": "C"
-      }
+      },
+      "user_apply_signatures":[]
     },
     {
       "id": 5,
@@ -1240,6 +1270,7 @@ http://localhost:3000/api/projects  | jq
       "praises_count": 0,
       "forked_count": 0,
       "is_public": false,
+      "is_secret": true,
       "mirror_url": "https://gitea.com/CasperVector/slew.git",
       "last_update_time": 1577346228,
       "author": {
@@ -1253,7 +1284,8 @@ http://localhost:3000/api/projects  | jq
       "language": {
         "id": 2,
         "name": "C"
-      }
+      },
+      "user_apply_signatures":[]
     },
     {
       "id": 7,
@@ -1263,6 +1295,7 @@ http://localhost:3000/api/projects  | jq
       "praises_count": 0,
       "forked_count": 0,
       "is_public": true,
+      "is_secret": true,
       "mirror_url": null,
       "last_update_time": 1577341572,
       "author": {
@@ -1276,7 +1309,8 @@ http://localhost:3000/api/projects  | jq
       "language": {
         "id": 2,
         "name": "C"
-      }
+      },
+      "user_apply_signatures":[]
     }
   ]
 }
@@ -3970,6 +4004,7 @@ http://localhost:3000/api/users/Jason/projects.json | jq
 |forked_count    |int|被fork的数量|
 |praises_count   |int|star数量|
 |is_public       |boolean|是否公开， true:公开，false:未公开|
+|is_secret       |boolean|是否为特殊许可证项目， true:是，false:否|
 |mirror_url      |string|镜像url|
 |last_update_time|int|最后更新时间，为UNIX格式的时间戳|
 |author          |object|项目创建者|
@@ -3980,7 +4015,9 @@ http://localhost:3000/api/users/Jason/projects.json | jq
 |language        |object|项目语言|
 |-- id           |int|项目语言id|
 |-- name         |string|项目语言名称|
-
+|user_apply_signatures        |object|用户申请的项目签名|
+|-- id           |int|用户申请的项目签名id|
+|-- status       |int|用户申请的项目签名审核状态， 0: 正在审核，1:已审核|
 
 返回值
 ```json
@@ -3995,6 +4032,7 @@ http://localhost:3000/api/users/Jason/projects.json | jq
       "praises_count": 0,
       "forked_count": 0,
       "is_public": true,
+      "is_secret": false,
       "mirror_url": null,
       "last_update_time": 1577697461,
       "author": {
@@ -4008,9 +4046,53 @@ http://localhost:3000/api/users/Jason/projects.json | jq
       "language": {
         "id": 2,
         "name": "C"
-      }
+      },
+      "user_apply_signatures":[
+        {
+          "id": 1,
+          "status": 0
+        }
+      ]
     }
   ]
+}
+```
+---
+#### 特殊许可证项目用户创建申请
+```
+POST  /api/apply_signatures
+```
+
+*示例*
+```bash
+curl -X POST \
+-d "project_id=8" \
+-d "attachment_id=4" \
+http://localhost:3000/api/apply_signatures.json | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id          |是|int |项目id  |
+|attachment_id       |是|int |上传的文件id |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|id           |int|特殊许可证项目用户创建申请的id|
+|attachment   |object|上传的文件|
+|--filename   |string|上传的文件的文件名|
+
+返回值
+```json
+{
+    "id": 5,
+    "attachment": {
+        "name": "timg.jpeg"
+    }
 }
 ```
 ---

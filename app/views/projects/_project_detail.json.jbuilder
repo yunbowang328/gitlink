@@ -52,9 +52,10 @@ json.category do
       json.name project.project_language.name
     end
   end
-  user_apply_signatures = project.apply_signatures.with_user_id(current_user.id)
-  json.user_apply_signatures user_apply_signatures do |signature|
-    json.id signature.id
-    json.status signature.status
-  end
+end
+
+user_apply_signatures = project.apply_signatures.with_user_id(current_user.id)
+json.user_apply_signatures user_apply_signatures do |signature|
+  json.id signature.id
+  json.status signature.status
 end
