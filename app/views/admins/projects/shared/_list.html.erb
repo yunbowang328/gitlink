@@ -5,6 +5,7 @@
       <th width="4%">ID</th>
       <th width="15%" class="text-left">项目名称</th>
       <th width="6%">公开</th>
+      <th width="6%">特殊协议</th>
       <th width="5%">issue</th>
       <th width="5%">资源</th>
       <th width="6%">版本库</th>
@@ -26,6 +27,7 @@
         <%= link_to(project.name, "/projects/#{project.owner.login}/#{project.identifier}", target: '_blank') %>
       </td>
       <td><%= project.is_public ? '√' : '' %></td>
+      <td><%= project.is_secret ? '√' : '' %></td>
       <td><%= project.issues.size %></td>
       <td><%= project.attachments.size %></td>
       <td><%= project&.project_score.try(:changeset_num).to_i %></td>

@@ -1171,9 +1171,9 @@ http://localhost:3000/api/projects  | jq
 |language        |object|项目语言|
 |-- id           |int|项目语言id|
 |-- name         |string|项目语言名称|
-|user_apply_signatures        |object|用户申请的项目签名|
-|-- id           |int|用户申请的项目签名id|
-|-- status       |int|用户申请的项目签名审核状态， 0: 正在审核，1:已审核|
+|user_apply_signatures        |object|用户创建的特殊许可申请|
+|-- id           |int|用户创建的特殊许可申请id|
+|-- status       |int|用户创建的特殊许可申请审核状态， 'unpassed': 审核未通过，'waiting': 等待审核 'passed':审核通过|
 
 
 
@@ -1208,7 +1208,7 @@ http://localhost:3000/api/projects  | jq
       "user_apply_signatures":[
         {
           "id": 1,
-          "status": 0
+          "status": "waiting"
         }
       ]
     },
@@ -4015,9 +4015,9 @@ http://localhost:3000/api/users/Jason/projects.json | jq
 |language        |object|项目语言|
 |-- id           |int|项目语言id|
 |-- name         |string|项目语言名称|
-|user_apply_signatures        |object|用户申请的项目签名|
-|-- id           |int|用户申请的项目签名id|
-|-- status       |int|用户申请的项目签名审核状态， 0: 正在审核，1:已审核|
+|user_apply_signatures        |object|用户创建的特殊许可申请|
+|-- id           |int|用户创建的特殊许可申请id|
+|-- status       |int|用户创建的特殊许可申请审核状态， 'unpassed': 审核未通过，'waiting': 等待审核 'passed':审核通过|
 
 返回值
 ```json
@@ -4050,7 +4050,7 @@ http://localhost:3000/api/users/Jason/projects.json | jq
       "user_apply_signatures":[
         {
           "id": 1,
-          "status": 0
+          "status": "waiting"
         }
       ]
     }
@@ -4091,7 +4091,7 @@ http://localhost:3000/api/apply_signatures.json | jq
 {
     "id": 5,
     "attachment": {
-        "name": "timg.jpeg"
+        "filename": "timg.jpeg"
     }
 }
 ```

@@ -10,8 +10,8 @@ module ProjectOperable
     has_many :writable_members,     -> { joins(:roles).where.not(roles: {name: 'Reporter'}) }, class_name: 'Member'
   end
 
-  def add_member!(user_id, role_name='Developer')
-    member = members.create!(user_id: user_id)
+  def add_member!(user_id, role_name='Developer', is_apply_signature=false)
+    member = members.create!(user_id: user_id, is_apply_signature: is_apply_signature)
     set_developer_role(member)
   end
 

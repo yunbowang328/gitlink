@@ -1,0 +1,7 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('特殊许可申请列表') %>
+<% end %>
+
+<div class="box admin-list-container apply_signatures-list-container">
+  <%= render partial: 'admins/apply_signatures/shared/list', locals: { apply_signatures: @apply_signatures } %>
+</div>

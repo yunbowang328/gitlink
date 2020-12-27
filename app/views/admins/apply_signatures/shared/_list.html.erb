@@ -1,0 +1,42 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+    <tr>
+      <th width="10%">序号</th>
+      <th width="20%" class="text-left">项目名称</th>
+      <th width="20%">申请人</th>
+      <th width="25%">申请材料</th>
+      <th width="25%">操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if apply_signatures.present? %>
+    <% apply_signatures.each_with_index do |signature, index| %>
+    <tr class="sinature-item-<%= signature.id %>">
+      <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+      <td class="text-left">
+        <%= link_to(signature&.project&.name, "/projects/#{signature&.project&.owner.login}/#{signature&.project&.identifier}", target: '_blank') %>
+      </td>
+      <td>
+        <%= link_to(signature&.user&.real_name, "/users/#{signature&.user&.login}", target: '_blank') %>
+      </td>
+      <td>
+        <% if signature.attachments.present? %>
+          <% signature.attachments.each do |attachment|%>
+            <%= image_tag("/api/attachments/#{attachment.id}", width: 40, height: 40, class: 'preview-image auth-image', data: { toggle: 'tooltip', title: '点击预览' }) %>
+          <% end %>
+        <% end %>
+        
+      </td>
+      <td class="action-container">
+        <%= link_to "同意", admins_apply_signature_path(signature.id, status: 1), method: :patch, class: "delete-project-action" %>
+        <%= link_to "拒绝", admins_apply_signature_path(signature.id, status: -1), method: :patch, class: "delete-project-action" %>
+      </td>
+    </tr>
+    <% end %>
+    <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: apply_signatures } %>

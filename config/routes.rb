@@ -772,6 +772,7 @@ Rails.application.routes.draw do
     resources :salesman_customers, only: [:index, :create, :edit, :update, :destroy] do
       post :batch_add, on: :collection
     end
+    resources :apply_signatures, only: [:index, :update]
   end
 
 
