@@ -115,7 +115,7 @@ class Project < ApplicationRecord
 
   scope :secret_and_visible, -> {joins(:license).where("licenses.is_secret = TRUE OR projects.is_public = TRUE")}
 
-  delegate :is_secret, to: :license
+  delegate :is_secret, to: :license, allow_nil: true
 
 
   def self.search_project(search)
