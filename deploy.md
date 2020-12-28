@@ -72,7 +72,7 @@ rails db:migrate RAILS_ENV=development
 ### 8. clone前端代码
 **将前端代码克隆到public/react目录下，目录结构应该是: public/react/build**
 ```bash
-git clone https://git.trustie.net/jasder/build.git
+git clone -b dev_trustie https://git.trustie.net/jasder/build.git
 ```
 
 ### 9. 启动redis(此处已mac系统为例)
