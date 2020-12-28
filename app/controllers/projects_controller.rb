@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, owner: :user_extension)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :apply_signatures, owner: :user_extension)
 
     category_id = params[:category_id]
     @total_count =
@@ -53,7 +53,7 @@ class ProjectsController < ApplicationController
     # else
     #   projects = Project.visible
     # end
-    projects = Project.no_anomory_projects.visible
+    projects = Project.no_anomory_projects.secret_and_visible
     language_lists = projects.joins(:project_language).group("project_languages.name", "project_languages.id").size.keys.sort.to_h
     @project_group_list = language_lists.delete_if { |k, v| k.blank? }
   end
@@ -153,7 +153,7 @@ class ProjectsController < ApplicationController
   private
   def project_params
     params.permit(:user_id, :name, :description, :repository_name,
-                  :project_category_id, :project_language_id, :license_id, :ignore_id)
+                  :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 
   def mirror_params

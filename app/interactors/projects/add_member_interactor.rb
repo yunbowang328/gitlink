@@ -1,18 +1,19 @@
 module Projects
   class AddMemberInteractor
-    def self.call(owner, project, collaborator, permission="write")
-      interactor = new(owner, project, collaborator, permission)
+    def self.call(owner, project, collaborator, permission="write", is_apply_signature=false)
+      interactor = new(owner, project, collaborator, permission, is_apply_signature)
       interactor.run
       interactor
     end
 
     attr_reader :error, :result
 
-    def initialize(owner, project, collaborator, permission)
-      @owner        = owner
-      @project      = project
-      @collaborator = collaborator
-      @permission   = permission
+    def initialize(owner, project, collaborator, permission, is_apply_signature)
+      @owner              = owner
+      @project            = project
+      @collaborator       = collaborator
+      @permission         = permission
+      @is_apply_signature = is_apply_signature
     end
 
     def success?
@@ -23,7 +24,7 @@ module Projects
       ActiveRecord::Base.transaction do
         gitea_result = Gitea::Repository::Members::AddService.new(owner, project.identifier, collaborator.login, permission).call
         if gitea_result.status == 204
-          project.add_member!(collaborator.id)
+          project.add_member!(collaborator.id, 'Developer', is_apply_signature)
         end
         fail!(nil)
       end
@@ -32,7 +33,7 @@ module Projects
     end
 
     private
-    attr_reader :owner, :project, :collaborator, :permission
+    attr_reader :owner, :project, :collaborator, :permission, :is_apply_signature
 
     def fail!(error)
       @error = error

@@ -10,6 +10,7 @@ json.projects @projects do |project|
   json.praises_count project.praises_count.to_i
   json.forked_count project.forked_count.to_i
   json.is_public project.is_public
+  json.is_secret project.is_secret
   json.mirror_url project.repository&.mirror_url
   json.type project&.numerical_for_project_type
   json.last_update_time render_unix_time(project.updated_on)
@@ -46,5 +47,10 @@ json.projects @projects do |project|
       json.id project.project_language.id
       json.name project.project_language.name
     end
+  end
+  user_apply_signatures = project.apply_signatures.with_user_id(current_user.id)
+  json.user_apply_signatures user_apply_signatures do |signature|
+    json.id signature.id
+    json.status signature.status
   end
 end
