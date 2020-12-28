@@ -1,4 +1,13 @@
 class ApplySignaturesController < ApplicationController
+  include ApplicationHelper
+
+  def template_file
+    license = License.find_by_name("PHengLET")
+    file = license.attachments.take
+    normal_status(-1, "文件不存在") if file.blank?
+    send_file(absolute_path(local_path(file)), filename: file.title,stream:false, type: file.content_type.presence || 'application/octet-stream')
+  end
+
   def create 
     ActiveRecord::Base.transaction do
       begin

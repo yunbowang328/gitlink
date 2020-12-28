@@ -59,7 +59,11 @@ Rails.application.routes.draw do
         delete :destroy_files
       end
     end
-    resources :apply_signatures, only: [:create]
+    resources :apply_signatures, only: [:create] do 
+      collection do 
+        get :template_file
+      end
+    end
     get 'home/index'
     get 'home/search'
     get 'main/first_stamp'
