@@ -6,7 +6,6 @@ class IssuesController < ApplicationController
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
-  before_action :get_branches, only: [:new, :edit]
 
   include ApplicationHelper
   include TagChosenHelper
@@ -96,7 +95,7 @@ class IssuesController < ApplicationController
   end
 
   def new
-    @all_branches = get_branches
+    # @all_branches = get_branches
     @issue_chosen = issue_left_chosen(@project, nil)
   end
 
