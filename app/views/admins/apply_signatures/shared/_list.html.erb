@@ -28,8 +28,8 @@
         
       </td>
       <td class="action-container">
-        <%= link_to "同意", admins_apply_signature_path(signature.id, status: 1), method: :patch, class: "delete-project-action" %>
-        <%= link_to "拒绝", admins_apply_signature_path(signature.id, status: -1), method: :patch, class: "delete-project-action" %>
+        <%= link_to "同意", admins_apply_signature_path(signature.id, status: "passed"), method: :patch, class: "delete-project-action" %>
+        <%= link_to "拒绝", admins_apply_signature_path(signature.id, status: "unpassed"), method: :patch, class: "delete-project-action" %>
       </td>
     </tr>
     <% end %>
