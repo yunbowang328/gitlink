@@ -69,23 +69,29 @@ bundle exec rake sync_table_structure:import_csv
 rails db:migrate RAILS_ENV=development
 ```
 
-### 8. 启动redis(此处已mac系统为例)
+### 8. clone前端代码
+**将前端代码克隆到public/react目录下，目录结构应该是: public/react/build**
+```bash
+git clone -b dev_trustie https://git.trustie.net/jasder/build.git
+```
+
+### 9. 启动redis(此处已mac系统为例)
 ```bash
 redis-server&
 ```
 
-### 9. 启动sidekiq
+### 10. 启动sidekiq
 **开发环境为development， 生成环境为production**
 ```bash
 bundle exec sidekiq -C config/sidekiq.yml -e production -d
 ```
 
-### 10. 启动rails服务
+### 1`. 启动rails服务
 ```bash
 rails s
 ```
 
-### 11. 浏览器访问
+### 12. 浏览器访问
 在浏览器中输入如下地址访问：
 ```bash
 http://localhost:3000/

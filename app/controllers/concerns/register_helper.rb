@@ -15,7 +15,7 @@ module RegisterHelper
     interactor = Gitea::RegisterInteractor.call({username: username, email: email, password: password})
     if interactor.success?
       gitea_user = interactor.result
-      result = Gitea::User::GenerateTokenService.new(username, password).call
+      result = Gitea::User::GenerateTokenService.call(username, password)
       user.gitea_token = result['sha1']
       user.gitea_uid = gitea_user['id']
       if user.save!
