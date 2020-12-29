@@ -9,14 +9,18 @@ class Gitea::User::GenerateTokenService < Gitea::ClientService
 
 
   def call
-    params = {}
-    url = "/users/#{username}/tokens".freeze
-    params = params.merge(token: token_params, data: request_params)
-    post(url, params)
+    params = Hash.new.merge(token: token_params, data: request_params)
+    response = post(url, params)
 
+    render_200_response(response)
   end
 
   private
+
+  def url
+    "/users/#{@username}/tokens".freeze
+  end
+
   def token_params
     {
       username: username,
@@ -25,6 +29,10 @@ class Gitea::User::GenerateTokenService < Gitea::ClientService
   end
 
   def request_params
-    { name: username }
+    { name: "#{@username}-#{token_name}" }
+  end
+
+  def token_name
+    SecureRandom.hex(6)
   end
 end
