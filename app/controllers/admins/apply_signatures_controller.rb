@@ -3,16 +3,16 @@ class Admins::ApplySignaturesController < Admins::BaseController
     def index
       sort_by = params[:sort_by] ||= 'created_on'
       sort_direction = params[:sort_direction] ||= 'desc'
-  
+
       @apply_signatures = paginate ApplySignature.waiting.includes(:attachments)
     end
-  
+
     def update
-      ActiveRecord::Base.transaction do 
+      ActiveRecord::Base.transaction do
         begin
           apply_signature = ApplySignature.find_by!(id: params[:id])
           apply_signature.update_attributes!(apply_signatures_params)
-          Projects::AddMemberInteractor.call(apply_signature.project.owner, apply_signature.project, apply_signature.user, "write", true)
+          Projects::AddMemberInteractor.call(apply_signature.project.owner, apply_signature.project, apply_signature.user, "read", true)
           redirect_to admins_apply_signatures_path
           flash[:success] = "更新成功"
         rescue => e
@@ -23,7 +23,7 @@ class Admins::ApplySignaturesController < Admins::BaseController
       end
     end
 
-    private 
+    private
     def apply_signatures_params
       params.permit(:status)
     end
