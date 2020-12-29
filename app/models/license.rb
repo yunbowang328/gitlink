@@ -7,6 +7,7 @@
 #  content    :text(65535)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  is_secret  :boolean          default("0")
 #
 
 class License < ApplicationRecord
