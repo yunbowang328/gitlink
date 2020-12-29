@@ -12,7 +12,9 @@ class Admins::ApplySignaturesController < Admins::BaseController
         begin
           apply_signature = ApplySignature.find_by!(id: params[:id])
           apply_signature.update_attributes!(apply_signatures_params)
-          Projects::AddMemberInteractor.call(apply_signature.project.owner, apply_signature.project, apply_signature.user, "read", true)
+          if apply_signature.status == "passed"
+            Projects::AddMemberInteractor.call(apply_signature.project.owner, apply_signature.project, apply_signature.user, "read", true)
+          end
           redirect_to admins_apply_signatures_path
           flash[:success] = "更新成功"
         rescue => e
