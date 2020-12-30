@@ -2,14 +2,15 @@
 #
 # Table name: ci_cloud_accounts
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  ip_num     :integer
-#  account    :string(255)
-#  secret     :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  ci_user_id :integer
+#  id          :integer          not null, primary key
+#  user_id     :integer          not null
+#  ip_num      :integer
+#  account     :string(255)
+#  secret      :string(255)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  ci_user_id  :integer
+#  server_type :integer          default("0")
 #
 # Indexes
 #
