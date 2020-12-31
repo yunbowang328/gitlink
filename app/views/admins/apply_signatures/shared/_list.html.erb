@@ -22,7 +22,7 @@
       <td>
         <% if signature.attachments.present? %>
           <% signature.attachments.each do |attachment|%>
-            <%= image_tag("/api/attachments/#{attachment.id}", width: 40, height: 40, class: 'preview-image auth-image', data: { toggle: 'tooltip', title: '点击预览' }) %>
+            <%= link_to "#{attachment.try(:filename)}",attachment_path(attachment), target: "_blank"  %>
           <% end %>
         <% end %>
         

@@ -11,9 +11,12 @@ class ApplySignaturesController < ApplicationController
   def create 
     ActiveRecord::Base.transaction do
       begin
-        @signature = current_user.apply_signatures.create!(project_id: params[:project_id])
+        @signature = current_user.apply_signatures.find_or_create_by!(project_id: params[:project_id])
+        @signature.status = 0
+        @signature.attachments = Attachment.none
         @attachment = Attachment.find_by_id(params[:attachment_id])
         @attachment.container = @signature
+        @signature.save!
         @attachment.save!
       rescue Exception => e
         tip_exception("#{e}")

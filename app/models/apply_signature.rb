@@ -23,5 +23,7 @@ class ApplySignature < ApplicationRecord
 
     scope :with_user_id, -> (user_id) {where(user_id: user_id)}
 
+    validates :project_id, uniqueness: {scope: :user_id}
+
     enum status: {unpassed: -1, waiting: 0, passed: 1}
 end
