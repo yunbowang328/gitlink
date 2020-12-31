@@ -7,6 +7,17 @@ class UsersController < ApplicationController
   before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
 
+  def connect_to_ci_db(options={})
+    if !(current_user && !current_user.is_a?(AnonymousUser) && current_user.devops_certification?)
+      return
+    end
+    if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+      connect_to_trustie_ci_database(options)
+    else
+      connect_to_ci_database(options)
+    end
+  end
+
   def list
     scope = User.active.recent.like(params[:search]).includes(:user_extension)
     @total_count = scope.size
