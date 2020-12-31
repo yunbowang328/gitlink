@@ -154,21 +154,32 @@ module Ci::CloudAccountManageable
 
   def drone_oauth_user!(url, state)
     cloud_account = current_user.ci_cloud_account
+    # 如果是使用trustie服务器，则只需要调用drone接口创建用户即可
     if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
-      url = "#{@cloud_account.drone_url}/login"
+      config = Rails.application.config_for(:configuration).symbolize_keys!
+      trustie_drone_config = config[:trustie_drone].symbolize_keys!
+      createUserParams = {
+          login: cloud_account.account,
+          token: trustie_drone_config[:admin_token],
+          email: trustie_drone_config[:email],
+          avatar_url: trustie_drone_config[:avatar_url]
+      }
+      #创建drone用户
+      result = Ci::Drone::API.new(trustie_drone_config[:admin_token], cloud_account.drone_url, nil, nil, createUserParams).create_user
+      result['login'] == cloud_account.account ? true : false
+    elsif
+      logger.info "[drone] drone_oauth_user url: #{url}"
+      conn = Faraday.new(url: url) do |req|
+        req.request :url_encoded
+        req.adapter Faraday.default_adapter
+        req.headers["cookie"] = "_session_=#{SecureRandom.hex(28)}; _oauth_state_=#{state}"
+      end
+
+      response = conn.get
+      logger.info "[drone] response headers: #{response.headers}"
+
+      response.headers['location'].include?('error') ? false : true
     end
-
-    logger.info "[drone] drone_oauth_user url: #{url}"
-    conn = Faraday.new(url: url) do |req|
-      req.request :url_encoded
-      req.adapter Faraday.default_adapter
-      req.headers["cookie"] = "_session_=#{SecureRandom.hex(28)}; _oauth_state_=#{state}"
-    end
-
-    response = conn.get
-    logger.info "[drone] response headers: #{response.headers}"
-
-    response.headers['location'].include?('error') ? false : true
   end
 
   private
