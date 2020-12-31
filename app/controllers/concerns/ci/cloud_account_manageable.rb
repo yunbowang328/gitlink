@@ -153,6 +153,11 @@ module Ci::CloudAccountManageable
   end
 
   def drone_oauth_user!(url, state)
+    cloud_account = current_user.ci_cloud_account
+    if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+      url = "#{@cloud_account.drone_url}/login"
+    end
+
     logger.info "[drone] drone_oauth_user url: #{url}"
     conn = Faraday.new(url: url) do |req|
       req.request :url_encoded
