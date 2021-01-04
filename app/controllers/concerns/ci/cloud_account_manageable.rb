@@ -97,7 +97,11 @@ module Ci::CloudAccountManageable
 
     if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_SELF
       @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone") # TOTO drop drone database
+    else
+      #删除drone用户
+      @trustie_db_connection.execute("DELETE FROM users WHERE user_login = '#{cloud_account.account}'")
     end
+
     cloud_account.destroy! unless cloud_account.blank?
     current_user.unbind_account!
   end
@@ -120,7 +124,11 @@ module Ci::CloudAccountManageable
     return [true, "你已经绑定了云帐号."] unless current_user.ci_cloud_account.blank?
 
     ip_num = IPAddr.new(devops_params[:ip_num]).to_i
-    Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
+
+    #自有服务器进行判断
+    if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_SELF
+      Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
+    end
   end
 
   def check_trustie_bind_cloud_account!
