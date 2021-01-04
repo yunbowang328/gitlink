@@ -59,7 +59,7 @@ Rails.application.routes.draw do
         delete :destroy_files
       end
     end
-    resources :apply_signatures, only: [:create] do 
+    resources :apply_signatures, only: [:index, :create, :update] do 
       collection do 
         get :template_file
       end
