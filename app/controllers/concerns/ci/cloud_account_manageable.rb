@@ -16,6 +16,9 @@ module Ci::CloudAccountManageable
     # 2. 生成oauth2应用程序的client_id和client_secrete
     gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline-#{SecureRandom.hex(8)}", redirect_uris: ["#{cloud_account.drone_url}/login"]})
     logger.info "######### gitea_oauth: #{gitea_oauth}"
+
+    raise 'Gitea接口异常' if gitea_oauth['client_id'].blank?
+
     oauth = Oauth.new(client_id: gitea_oauth['client_id'],
       client_secret: gitea_oauth['client_secret'],
       redirect_uri: gitea_oauth['redirect_uris'],
@@ -71,6 +74,9 @@ module Ci::CloudAccountManageable
     #生成oauth2应用程序的client_id和client_secrete
     gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline-#{SecureRandom.hex(8)}", redirect_uris: ["#{cloud_account.drone_url}/login"]})
     logger.info "######### gitea_oauth: #{gitea_oauth}"
+
+    raise 'Gitea接口异常' if gitea_oauth['client_id'].blank?
+
     oauth = Oauth.new(client_id: gitea_oauth['client_id'],
                       client_secret: gitea_oauth['client_secret'],
                       redirect_uri: gitea_oauth['redirect_uris'],
