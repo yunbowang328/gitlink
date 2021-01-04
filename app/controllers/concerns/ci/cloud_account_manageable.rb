@@ -172,6 +172,7 @@ module Ci::CloudAccountManageable
       }
       #创建drone用户
       result = Ci::Drone::API.new(trustie_drone_config[:admin_token], cloud_account.drone_url, nil, nil, createUserParams).create_user
+      logger.info "[drone] drone_create_user result: #{result}"
       result['login'] == cloud_account.account ? true : false
     elsif
       logger.info "[drone] drone_oauth_user url: #{url}"
