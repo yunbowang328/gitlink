@@ -126,7 +126,8 @@ module Ci::CloudAccountManageable
     ip_num = IPAddr.new(devops_params[:ip_num]).to_i
 
     #自有服务器进行判断
-    if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_SELF
+    cloud_account = current_user.ci_cloud_account
+    if cloud_account && cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_SELF
       Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
     end
   end
