@@ -9,4 +9,11 @@ json.apply_signatures @apply_signatures do |signature|
       json.is_owner @project.owner?(signature.user)
     end
   end
+  if signature.attachments.present?
+    attachment = signature.attachments.take
+    json.attachment do 
+      json.filename attachment.filename
+      json.path attachment_path(attachment)
+    end
+  end
 end

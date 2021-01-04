@@ -4099,6 +4099,9 @@ http://localhost:3000/api/apply_signatures  | jq
 |-- image_url      |string|用户头像|
 |-- email          |string|用户邮箱|
 |-- is_owner       |boolean|是否是项目的拥有者，true:是， false:不是|
+|attachment        |object|上传附件|
+|--filename        |string|附件名称|
+|--path            |string|附件地址|
 
 
 返回值
@@ -4108,7 +4111,7 @@ http://localhost:3000/api/apply_signatures  | jq
     "apply_signatures": [
         {
             "id": 18,
-            "status": "waiting",
+            "status": "passed",
             "user": {
                 "id": 3,
                 "name": "16895620",
@@ -4116,6 +4119,10 @@ http://localhost:3000/api/apply_signatures  | jq
                 "image_url": "avatars/User/boy.jpg",
                 "email": "2456233122@qq.com",
                 "is_owner": false
+            },
+            "attachment": {
+                "filename": "PHengLEI软件开源协议.docx",
+                "path": "/api/attachments/23"
             }
         }
     ]
