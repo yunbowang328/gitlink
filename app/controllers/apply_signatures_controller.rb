@@ -69,7 +69,7 @@ class ApplySignaturesController < ApplicationController
   end
 
   def status 
-    params.fetch(:status, "waiting")
+    params.fetch(:status, "")
   end
 
   def require_owner

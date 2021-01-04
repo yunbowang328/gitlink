@@ -4170,6 +4170,7 @@ PATCH  /api/apply_signatures/:id
 curl -X POST \
 -d "id=18" \
 -d "status=passed" \
+-d "project_id=36" \
 http://localhost:3000/api/apply_signatures/18 | jq
 ```
 
@@ -4179,6 +4180,8 @@ http://localhost:3000/api/apply_signatures/18 | jq
 |-|-|-|-|
 |id                  |是|int |特殊许可证项目申请id  |
 |status              |是|string |特殊许可证项目申请状态 ，'unpassed': 审核未通过，'waiting': 等待审核 'passed':审核通过|
+|project_id          |是|int |项目id|
+
 
 *返回参数说明:*
 
