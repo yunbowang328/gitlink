@@ -57,12 +57,16 @@ module Ci::CloudAccountManageable
     result && !result.blank? ? cloud_account : nil
   end
 
-  # trustie提供服务器,绑定流程
-  def trustie_bind_account!
-
+  def trustie_drone_server_config
     # 读取drone配置信息
     config = Rails.application.config_for(:configuration).symbolize_keys!
     trustie_drone_config = config[:trustie_drone].symbolize_keys!
+    return trustie_drone_config
+  end
+
+  # trustie提供服务器,绑定流程
+  def trustie_bind_account!
+    trustie_drone_config = trustie_drone_server_config
     raise 'trustie_drone config missing' if trustie_drone_config.blank?
 
     # 创建云账号
@@ -152,7 +156,8 @@ module Ci::CloudAccountManageable
     # redirect_uri eg:
     #  https://localhost:3000/login/oauth/authorize?client_id=94976481-ad0e-4ed4-9247-7eef106007a2&redirect_uri=http%3A%2F%2F121.69.81.11%3A80%2Flogin&response_type=code&state=9cab990b9cfb1805
     redirect_uri = CGI.escape("#{@cloud_account.drone_url}/login")
-    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{oauth&.client_id}&redirect_uri=#{redirect_uri}&response_type=code&state=#{state}"
+    clientId = client_id(oauth)
+    grant_url = "#{Gitea.gitea_config[:domain]}/login/oauth/authorize?client_id=#{clientId}&redirect_uri=#{redirect_uri}&response_type=code&state=#{state}"
     logger.info "[gitea] grant_url: #{grant_url}"
 
     conn = Faraday.new(url: grant_url) do |req|
@@ -185,5 +190,15 @@ module Ci::CloudAccountManageable
     def devops_params
       params.permit(:account, :secret, :ip_num)
     end
+
+  def client_id(oauth)
+    #如果是使用trustie服务器使用管理员用户的clientId
+    if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+      trustie_drone_config = trustie_drone_server_config
+      return trustie_drone_config[:client_id]
+    else
+      return oauth&.client_id
+    end
+  end
 
 end
