@@ -5,6 +5,7 @@ class Ci::CloudAccountsController < Ci::BaseController
   before_action :load_project, only: %i[create activate]
   before_action :authorize_owner!, only: %i[create activate]
   before_action :load_repo, only: %i[activate]
+  before_action :load_all_repo, only: %i[unbind]
   before_action :find_cloud_account, only: %i[show oauth_grant]
   before_action :validate_params!, only: %i[create bind]
   before_action only: %i[create bind] do
@@ -96,6 +97,11 @@ class Ci::CloudAccountsController < Ci::BaseController
   def unbind
     ActiveRecord::Base.transaction do
       unbind_account!
+      if @repos
+        @repos.each do |repo|
+          repo.deactivate!
+        end
+      end
       render_ok
     end
   rescue Exception => ex

@@ -14,6 +14,12 @@ class Ci::Repo < Ci::RemoteBase
     [user, repo]
   end
 
+  def self.find_all_with_namespace(namespace_path)
+    logger.info "########namespace_path: #{namespace_path}"
+    repos = Ci::Repo.where(repo_namespace: namespace_path)
+    return repos
+  end
+
   def activate!(ci_user_id)
     update(repo_active: 1,
       repo_signer: generate_code,
