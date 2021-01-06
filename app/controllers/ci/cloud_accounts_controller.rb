@@ -96,12 +96,14 @@ class Ci::CloudAccountsController < Ci::BaseController
 
   def unbind
     ActiveRecord::Base.transaction do
-      unbind_account!
-      if @repos
-        @repos.each do |repo|
-          repo.deactivate!
+      if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+        if @repos
+          @repos.each do |repo|
+            repo.deactivate!
+          end
         end
       end
+      unbind_account!
       render_ok
     end
   rescue Exception => ex
