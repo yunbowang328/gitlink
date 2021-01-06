@@ -4058,6 +4058,77 @@ http://localhost:3000/api/users/Jason/projects.json | jq
 }
 ```
 ---
+
+#### 特殊许可证项目申请列表
+```
+GET /api/apply_signatures
+```
+*示例*
+```bash
+curl -X GET \
+-d "project_id=36" \
+-d "page=1" \
+-d "limit=5" \
+-d "search=16895620" \
+-d "status=waiting" \
+http://localhost:3000/api/apply_signatures  | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|project_id    |是|int    |项目id  |
+|page          |否|string |页数，第几页  |
+|limit         |否|string |每页多少条数据，默认15条  |
+|search        |否|string |用户名、登录名匹配搜索  |
+|status        |否|string |状态匹配搜索，'unpassed': 审核未通过，'waiting': 等待审核 'passed':审核通过  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|total_count       |int   |返回记录总条数 |
+|apply_signatures  |array|特殊许可证项目申请信息|
+|-- id             |int|特殊许可证项目申请id|
+|-- status         |int|特殊许可证项目申请状态，'unpassed': 审核未通过，'waiting': 等待审核 'passed':审核通过|
+|user              |object|用户|
+|-- id             |int|用户id|
+|-- name           |string|用户名称|
+|-- login          |string|用户登录名/标识|
+|-- image_url      |string|用户头像|
+|-- email          |string|用户邮箱|
+|-- is_owner       |boolean|是否是项目的拥有者，true:是， false:不是|
+|attachment        |object|上传附件|
+|--filename        |string|附件名称|
+|--path            |string|附件地址|
+
+
+返回值
+```json
+{
+    "total_count": 1,
+    "apply_signatures": [
+        {
+            "id": 18,
+            "status": "passed",
+            "user": {
+                "id": 3,
+                "name": "16895620",
+                "login": "16895620",
+                "image_url": "avatars/User/boy.jpg",
+                "email": "2456233122@qq.com",
+                "is_owner": false
+            },
+            "attachment": {
+                "filename": "PHengLEI软件开源协议.docx",
+                "path": "/api/attachments/23"
+            }
+        }
+    ]
+}
+```
+---
 #### 特殊许可证项目用户创建申请
 ```
 POST  /api/apply_signatures
@@ -4093,6 +4164,45 @@ http://localhost:3000/api/apply_signatures.json | jq
     "attachment": {
         "filename": "timg.jpeg"
     }
+}
+```
+---
+#### 特殊许可证项目申请修改
+```
+PATCH  /api/apply_signatures/:id
+```
+
+*示例*
+```bash
+curl -X POST \
+-d "id=18" \
+-d "status=passed" \
+-d "project_id=36" \
+http://localhost:3000/api/apply_signatures/18 | jq
+```
+
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|id                  |是|int |特殊许可证项目申请id  |
+|status              |是|string |特殊许可证项目申请状态 ，'unpassed': 审核未通过，'waiting': 等待审核 'passed':审核通过|
+|project_id          |是|int |项目id|
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status            |int   |0:添加成功， -1: 更改失败， 1: 表示已经是该状态了 |
+|message           |string|返回信息说明|
+
+
+返回值
+```json
+{
+  "status": 0,
+  "message": "success"
 }
 ```
 ---
