@@ -3,11 +3,11 @@ module RegisterHelper
 
   def autologin_register(username, email, password, platform= 'forge')
     result = {message: nil, user: nil}
-    email ||=  "#{username@example.org}"
+    email ||=  "#{username}@example.org"
 
     user = User.find_by(login: username)
     user ||= User.new(admin: false, login: username, mail: email, type: "User")
-    
+
     user.password = password
     user.platform = platform
     user.activate
