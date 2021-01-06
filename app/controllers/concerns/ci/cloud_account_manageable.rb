@@ -4,9 +4,10 @@ module Ci::CloudAccountManageable
   included do
   end
 
+  # 自有服务器绑定流程
   def bind_account!
     # 1. 保存华为云服务器帐号
-    create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num].strip).to_i, secret: Ci::CloudAccount.encrypted_secret(devops_params[:secret]))
+    create_params = devops_params.merge(ip_num: IPAddr.new(devops_params[:ip_num].strip).to_i, secret: Ci::CloudAccount.encrypted_secret(devops_params[:secret]), server_type: Ci::CloudAccount::SERVER_TYPE_SELF)
 
     cloud_account = Ci::CloudAccount.new(create_params)
     cloud_account.user = current_user
@@ -53,13 +54,45 @@ module Ci::CloudAccountManageable
     result && !result.blank? ? cloud_account : nil
   end
 
+  # trustie提供服务器,绑定流程
+  def trustie_bind_account!
+
+    # 读取drone配置信息
+    config = Rails.application.config_for(:configuration).symbolize_keys!
+    trustie_drone_config = config[:trustie_drone].symbolize_keys!
+    raise 'trustie_drone config missing' if trustie_drone_config.blank?
+
+    # 创建云账号
+    create_params = devops_params.merge(ip_num: IPAddr.new(trustie_drone_config[:ip_num].strip).to_i, secret: Ci::CloudAccount.encrypted_secret(trustie_drone_config[:secret]), server_type: Ci::CloudAccount::SERVER_TYPE_TRUSTIE)
+    cloud_account = Ci::CloudAccount.new(create_params)
+    cloud_account.user = current_user
+    cloud_account.save!
+
+    #生成oauth2应用程序的client_id和client_secrete
+    gitea_oauth = Gitea::Oauth2::CreateService.call(current_user.gitea_token, {name: "pipeline-#{SecureRandom.hex(8)}", redirect_uris: ["#{cloud_account.drone_url}/login"]})
+    logger.info "######### gitea_oauth: #{gitea_oauth}"
+    oauth = Oauth.new(client_id: gitea_oauth['client_id'],
+                      client_secret: gitea_oauth['client_secret'],
+                      redirect_uri: gitea_oauth['redirect_uris'],
+                      gitea_oauth_id: gitea_oauth['id'],
+                      user_id: current_user.id)
+    result = oauth.save!
+
+    redirect_url = "#{cloud_account.drone_url}/login"
+    logger.info "######### redirect_url: #{redirect_url}"
+
+    return nil unless result.present?
+    result ? cloud_account : nil
+  end
+
   def unbind_account!
     cloud_account = current_user.ci_cloud_account
     return render_error('你未绑定CI服务器') if current_user.devops_step == User::DEVOPS_UNINIT || cloud_account.blank?
 
+    if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_SELF
+      @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone") # TOTO drop drone database
+    end
     cloud_account.destroy! unless cloud_account.blank?
-    @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone") # TOTO drop drone database
-
     current_user.unbind_account!
   end
 
@@ -84,6 +117,10 @@ module Ci::CloudAccountManageable
     Ci::CloudAccount.exists?(ip_num: ip_num) ? [true, "#{devops_params[:ip_num]}服务器已被使用."] : [false, nil]
   end
 
+  def check_trustie_bind_cloud_account!
+    return [true, "你已经绑定了云帐号."] unless current_user.ci_cloud_account.blank?
+  end
+
   def gitea_auto_create_auth_grant!(gitea_oauth_id)
     connection = Gitea::Database.set_connection.connection
     unix_time = Time.now.to_i
@@ -97,7 +134,6 @@ module Ci::CloudAccountManageable
     gitea_auto_create_auth_grant!(oauth&.gitea_oauth_id)
 
     state = SecureRandom.hex(8)
-
     # redirect_uri eg:
     #  https://localhost:3000/login/oauth/authorize?client_id=94976481-ad0e-4ed4-9247-7eef106007a2&redirect_uri=http%3A%2F%2F121.69.81.11%3A80%2Flogin&response_type=code&state=9cab990b9cfb1805
     redirect_uri = CGI.escape("#{@cloud_account.drone_url}/login")

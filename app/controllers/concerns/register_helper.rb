@@ -17,7 +17,7 @@ module RegisterHelper
       gitea_user = interactor.result
       result = Gitea::User::GenerateTokenService.call(username, password)
       user.gitea_token = result['sha1']
-      user.gitea_uid = gitea_user['id']
+      user.gitea_uid = gitea_user[:body]['id']
       if user.save!
         UserExtension.create!(user_id: user.id) if user.user_extension.blank?
         result[:user] = {id: user.id, token: user.gitea_token}

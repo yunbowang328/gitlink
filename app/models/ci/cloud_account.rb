@@ -2,14 +2,15 @@
 #
 # Table name: ci_cloud_accounts
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  ip_num     :integer
-#  account    :string(255)
-#  secret     :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  ci_user_id :integer
+#  id          :integer          not null, primary key
+#  user_id     :integer          not null
+#  ip_num      :integer
+#  account     :string(255)
+#  secret      :string(255)
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  ci_user_id  :integer
+#  server_type :integer          default("0")
 #
 # Indexes
 #
@@ -19,6 +20,10 @@
 class Ci::CloudAccount < Ci::LocalBase
   belongs_to :user
   belongs_to :ci_user, class_name: 'Ci::User', foreign_key: :ci_user_id, optional: true
+
+  # server_type column:  0: 自有服务器；1: trustie提供服务器
+  SERVER_TYPE_SELF = 0
+  SERVER_TYPE_TRUSTIE = 1
 
   def drone_host
     [drone_ip, ":80"].join
