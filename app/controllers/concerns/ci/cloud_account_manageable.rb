@@ -145,8 +145,16 @@ module Ci::CloudAccountManageable
     unix_time = Time.now.to_i
 
     # 目前直接操作db，可以建立对应的model进行操作
-    sql = "INSERT INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{current_user.gitea_uid}, #{gitea_oauth_id}, 0, #{unix_time}, #{unix_time} );"
+    sql = "REPLACE INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{current_user.gitea_uid}, #{gitea_oauth_id}, 0, #{unix_time}, #{unix_time} );"
     connection.execute(sql)
+
+    #如果使用trustie提供的服务器，需要多增加一条授权信息
+    if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+      trustie_drone_config = trustie_drone_server_config
+      admin_application_id = trustie_drone_config[:admin_application_id]
+      sql = "REPLACE INTO oauth2_grant ( user_id, application_id, counter, created_unix, updated_unix ) VALUES ( #{current_user.gitea_uid}, #{admin_application_id}, 0, #{unix_time}, #{unix_time} );"
+      connection.execute(sql)
+    end
   end
 
   def gitea_oauth_grant!(password, oauth)
