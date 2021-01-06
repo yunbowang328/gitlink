@@ -8,4 +8,8 @@ module Ci::BuildsHelper
     return nil if end_time == 0 || start_time == 0
     game_spend_time(end_time - start_time)
   end
+
+  def render_build_author login
+    User.find_by(login: login)
+  end
 end
