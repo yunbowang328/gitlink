@@ -279,4 +279,9 @@ class Project < ApplicationRecord
     ps.increment!(:mirror_projects_count) unless ps.blank?
   end
 
+  def set_updated_on(time)
+    return if time.blank?
+    update_column(:updated_on, time)
+  end
+
 end
