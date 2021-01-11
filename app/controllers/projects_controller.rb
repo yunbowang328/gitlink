@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :apply_signatures, owner: :user_extension)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :apply_signatures, :members, owner: :user_extension)
 
     category_id = params[:category_id]
     @total_count =
