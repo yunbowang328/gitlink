@@ -53,7 +53,7 @@ json.category do
     end
   end
 end
-
+json.is_member !project.members.where(user_id: current_user.id).blank?
 user_apply_signatures = project.apply_signatures.with_user_id(current_user.id)
 json.user_apply_signatures user_apply_signatures do |signature|
   json.id signature.id

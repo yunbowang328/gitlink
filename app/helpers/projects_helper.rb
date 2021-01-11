@@ -52,6 +52,7 @@ module ProjectsHelper
       type: project.numerical_for_project_type,
       author: render_owner(project),
       is_secret: project.is_secret,
+      is_member: !project.members.where(user_id: user.id).blank?,
       user_apply_signatures: project.apply_signatures.with_user_id(user.id).collect{|s| {id: s.id, status: s.status}}
     }).compact
 
