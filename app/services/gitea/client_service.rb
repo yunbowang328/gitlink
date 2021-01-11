@@ -132,7 +132,8 @@ class Gitea::ClientService < ApplicationService
     when 204
 
       puts "[gitea] "
-      raise Error, "[gitea] delete ok"
+      # raise Error, "[gitea] delete ok"
+      {status: 204}
     when 409
       message = "创建失败，请检查该分支合并是否已存在"
       raise Error, mark + message

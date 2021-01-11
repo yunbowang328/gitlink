@@ -59,6 +59,7 @@
 #
 
 class User < ApplicationRecord
+  default_scope {where(type: %w(User AnonymousUser))}
   extend Enumerize
 
   include Watchable

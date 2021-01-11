@@ -113,6 +113,8 @@ http://localhost:3000/
 
 ### API
 - [API](api_document.md)
+- [API](showdoc.com.cn)
+  账号：forgeplus@admin.com 密码：forge123
 
 ## 贡献代码
 

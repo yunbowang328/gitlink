@@ -103,6 +103,19 @@ Rails.application.routes.draw do
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
 
+    scope module: :organizations do
+      resources :organizations do
+
+      end
+      resources :teams do
+        resources :team_users do
+        end
+        resources :team_projects do
+
+        end
+      end
+    end
+
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
       resources :journals, only: [:index, :create, :destroy, :edit, :update] do
         member do

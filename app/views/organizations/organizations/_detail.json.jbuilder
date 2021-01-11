@@ -1,0 +1,9 @@
+json.id organization.id
+json.name organization.login
+json.description organization.description
+json.website organization.website
+json.location organization.location
+json.repo_admin_change_team_access organization.repo_admin_change_team_access
+json.visibility organization.visibility
+json.max_repo_creation organization.max_repo_creation
+json.avatar_url url_to_avatar(organization)
