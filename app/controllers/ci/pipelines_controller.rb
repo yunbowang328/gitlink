@@ -12,7 +12,7 @@ class Ci::PipelinesController < ApplicationController
 
       # 默认创建四个初始阶段
       init_stages = Ci::PipelineStage::INIT_STAGES
-      index = 0
+      index = 1
       init_stages.each do |type, name|
         pipeline.pipeline_stages.build(
           stage_name: name,
@@ -21,7 +21,7 @@ class Ci::PipelinesController < ApplicationController
         ).save!
         index += 1
       end
-      render_ok
+      render_ok({id: pipeline.id})
     end
   rescue Exception => ex
     render_error(ex.message)
@@ -74,15 +74,12 @@ class Ci::PipelinesController < ApplicationController
 
   def create_stage
     ActiveRecord::Base.transaction do
-      stages = params[:stages]
-      unless stages.empty?
-        stages.each do |stage|
-          pipeline_stage = Ci::PipelineStage.new(stage_name: stage[:stage_name],
-                                                 stage_type: stage[:stage_type].blank? ? 'customize' : stage[:stage_type],
-                                                 pipeline_id: params[:id], show_index: stage[:show_index])
-          pipeline_stage.save!
-        end
-      end
+      # 修改stage排序
+      update_stage_index(params[:id], params[:show_index], 1)
+      pipeline_stage = Ci::PipelineStage.new(stage_name: params[:stage_name],
+                                            stage_type: params[:stage_type].blank? ? 'customize' : params[:stage_type],
+                                            pipeline_id: params[:id], show_index: params[:show_index])
+      pipeline_stage.save!
       render_ok
     end
   rescue Exception => ex
@@ -92,7 +89,7 @@ class Ci::PipelinesController < ApplicationController
   def update_stage
     pipeline_stage = Ci::PipelineStage.find(params[:stage_id])
     if pipeline_stage
-      pipeline_stage.update!(stage_name: params[:stage_name], show_index: params[:show_index])
+      pipeline_stage.update!(stage_name: params[:stage_name])
     end
     render_ok
   rescue Exception => ex
@@ -100,28 +97,25 @@ class Ci::PipelinesController < ApplicationController
   end
 
   def delete_stage
-    pipeline_stage = Ci::PipelineStage.find(params[:stage_id])
-    if pipeline_stage
-      pipeline_stage.destroy!
+    ActiveRecord::Base.transaction do
+      update_stage_index(params[:id], params[:show_index].to_i, -1)
+      pipeline_stage = Ci::PipelineStage.find(params[:stage_id])
+      if pipeline_stage
+        pipeline_stage.destroy!
+      end
+      render_ok
     end
-    render_ok
   rescue Exception => ex
     render_error(ex.message)
   end
 
-  def sort_stage
-    stages = params[:stage_index]
-    if stages && !stages.empty?
-      stages.each do |stage|
-        pipeline_stage = Ci::PipelineStage.find(stage[:id])
-        if pipeline_stage
-          pipeline_stage.update!(show_index: stage[:show_index])
-        end
+  def update_stage_index(pipeline_id, show_index, diff)
+    stages = Ci::Pipeline.find(pipeline_id).pipeline_stages
+    stages.each do |stage|
+      if stage.show_index >= show_index
+        stage.update!(show_index: stage.show_index + diff)
       end
     end
-    render_ok
-  rescue Exception => ex
-    render_error(ex.message)
   end
 
   # ========步骤相关接口========= #

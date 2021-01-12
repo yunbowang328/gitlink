@@ -18,5 +18,5 @@ class Ci::PipelineStageStep < Ci::LocalBase
   validates :stage_id, presence: {message: "阶段id不能为空"}
 
   belongs_to :pipeline_stage, foreign_key: :stage_id, :class_name => 'Ci::PipelineStage'
-  has_one :template, :class_name => 'Ci::Template', foreign_key: :template_id
+
 end

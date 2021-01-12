@@ -3966,13 +3966,12 @@ http://localhost:3000/api/ci/pipelines/list.json | jq
 
 *返回参数说明:*
 
-| 参数名        | 类型   | 说明                                           |
-| ------------- | ------ | ---------------------------------------------- |
-| id            | int    | 流水线id                                       |
-| pipeline_name | string | 流水线名称                                     |
-| file_name     | string | 流水线文件名                                   |
-| created_at    | string | 创建时间                                       |
-| stages        | arr    | 流水线包含的阶段数组（字段详情看阶段查询接口） |
+| 参数名        | 类型   | 说明         |
+| ------------- | ------ | ------------ |
+| id            | int    | 流水线id     |
+| pipeline_name | string | 流水线名称   |
+| file_name     | string | 流水线文件名 |
+| created_at    | string | 创建时间     |
 
 返回值
 
@@ -3984,27 +3983,7 @@ http://localhost:3000/api/ci/pipelines/list.json | jq
             "pipeline_name": "2020-01-08 流水线",
             "file_name": ".trustie.pipeline.yaml",
             "created_at": "2021-01-08 04:16:24",
-            "updated_at": "2021-01-08 04:16:24",
-            "stages": [
-                {
-                    "id": 1,
-                    "stage_name": "初始化",
-                    "stage_type": "init",
-                    "pipeline_id": 1,
-                    "show_index": 0,
-                    "created_at": "2021-01-08 04:16:24",
-                    "updated_at": "2021-01-08 04:16:24"
-                },
-                {
-                    "id": 2,
-                    "stage_name": "编译构建",
-                    "stage_type": "build",
-                    "pipeline_id": 1,
-                    "show_index": 1,
-                    "created_at": "2021-01-08 04:16:24",
-                    "updated_at": "2021-01-11 04:16:24"
-                }
-            ]
+            "updated_at": "2021-01-08 04:16:24"
         }
     ]
 }
@@ -4013,8 +3992,6 @@ http://localhost:3000/api/ci/pipelines/list.json | jq
 ---
 
 #### 流水线新增
-
-点击"新增流水线"按钮时调用。
 
 ```
 POST  /api/ci/pipelines
@@ -4035,22 +4012,24 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 
 | 参数名        | 必选 | 类型   | 说明                                           |
 | ------------- | ---- | ------ | ---------------------------------------------- |
-| pipeline_name | 是   | string | 流水线名称（默认初始值：流水线 yyyy-mm-dd）    |
+| pipeline_name | 是   | string | 流水线名称                                     |
 | file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
 
 *返回参数说明:*
 
-| 参数名  | 类型   | 说明         |
-| ------- | ------ | ------------ |
-| status  | int    | 状态码 0成功 |
-| message | string | 返回消息     |
+| 参数名  | 类型   | 说明           |
+| ------- | ------ | -------------- |
+| status  | int    | 状态码 0成功   |
+| message | string | 返回消息       |
+| id      | int    | 新增流水线的id |
 
 返回值
 
 ```json
 {
     "status": 0,
-    "message": "success"
+    "message": "success",
+    "id": 18
 }
 ```
 
@@ -4136,56 +4115,64 @@ https://localhost:3000/api/ci/pipelines/1  | jq
 
 ------
 
-#### 流水线阶段排序
-
-当新增阶段或者删除阶段时重新给受影响的stage设置show_index。
+#### 流水线的阶段查询
 
 ```
-PUT  /api/ci/pipelines/{id}/sort_stage
+GET  /api/ci/pipelines/{id}/stages
 ```
 
 *示例*
 
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/sort_stage.json' \
---header 'Content-Type: application/json' \
---data-raw ' {"stage_index":[
-     {"id": 1,"show_index": 0},
-     {"id": 2,"show_index": 1},
-     {"id": 3,"show_index": 2},
-     {"id": 4,"show_index": 3},
-     {"id": 7,"show_index": 4}
- ]
- }'
+curl --location --request GET 'http://localhost:3000/api/ci/pipelines/19/stages.json'
 ```
 
 *请求参数说明:*
 
-| 参数名      | 必选 | 类型 | 说明       |
-| ----------- | ---- | ---- | ---------- |
-| stage_index | 是   | arr  | 参数数组   |
-| id          | 是   | int  | 阶段id     |
-| show_index  | 是   | int  | 阶段的序号 |
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
 
 *返回参数说明:*
 
-| 参数名  | 类型   | 说明         |
-| ------- | ------ | ------------ |
-| status  | int    | 状态码 0成功 |
-| message | string | 返回消息     |
+| 参数名      | 类型   | 说明     |
+| ----------- | ------ | -------- |
+| stages      | arr    | 阶段数组 |
+| stage_name  | string | 阶段名称 |
+| stage_type  | string | 阶段类型 |
+| pipeline_id | int    | 流水线id |
+| show_index  | int    | 排序     |
 
 返回值
 
 ```json
 {
-    "status": 0,
-    "message": "success"
+    "stages": [
+        {
+            "id": 37,
+            "stage_name": "初始化",
+            "stage_type": "init",
+            "pipeline_id": 19,
+            "show_index": 1,
+            "created_at": "2021-01-12T15:18:00.000+08:00",
+            "updated_at": "2021-01-12T15:18:00.000+08:00"
+        },
+        {
+            "id": 38,
+            "stage_name": "编译构建",
+            "stage_type": "build",
+            "pipeline_id": 19,
+            "show_index": 2,
+            "created_at": "2021-01-12T15:18:00.000+08:00",
+            "updated_at": "2021-01-12T15:18:00.000+08:00"
+        }
+    ]
 }
 ```
 
 ------
 
-#### 确认阶段流水线内容查询
+#### 确认阶段流水线完整内容查询
 
 ```
 GET  /api/ci/pipelines/{id}/content
@@ -4223,30 +4210,21 @@ POST  /api/ci/pipelines/{id}/create_stage
 *示例*
 
 ```bash
-curl --location --request POST 'http://localhost:3000/api/ci/pipelines/14/create_stage.json' \
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines/19/create_stage.json' \
 --header 'Content-Type: application/json' \
---data-raw ' {"stages":[{
-            "stage_name": "新阶段1",
-            "stage_type": "customize",
-            "show_index": 5
-},
-{
+--data-raw '{
             "stage_name": "新阶段2",
-            "stage_type": "customize",
-            "show_index": 5
-}
-]
- }'
+            "show_index": 2
+}'
 ```
 
 *请求参数说明:*
 
-| 参数名     | 必选 | 类型   | 说明                             |
-| ---------- | ---- | ------ | -------------------------------- |
-| stages     | 是   | arr    | 新增的阶段数组                   |
-| id         | 是   | int    | 流水线id                         |
-| stage_name | 是   | string | 阶段名称（默认为 阶段名-模板名） |
-| show_index | 是   | int    | 阶段排序                         |
+| 参数名     | 必选 | 类型   | 说明     |
+| ---------- | ---- | ------ | -------- |
+| id         | 是   | int    | 流水线id |
+| show_index | 是   | int    | 阶段排序 |
+| stage_name | 是   | string | 阶段名称 |
 
 *返回参数说明:*
 
@@ -4269,7 +4247,7 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines/14/create
 #### 流水线阶段更新
 
 ```
-PUT  /api/ci/pipelines/{id}/update_stage
+PUT  /api/ci/pipelines/{id}/{stage_id}/update_stage
 ```
 
 *示例*
@@ -4278,9 +4256,7 @@ PUT  /api/ci/pipelines/{id}/update_stage
 curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/5/update_stage.json' \
 --header 'Content-Type: application/json' \
 --data-raw ' {
-            "stage_name": "新阶段-更新",
-            "stage_type": "customize",
-            "show_index": 10
+            "stage_name": "新阶段-更新"
 }'
 ```
 
@@ -4290,7 +4266,6 @@ curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/5/update
 | ---------- | ---- | ------ | -------------------------------- |
 | id         | 是   | int    | 流水线id                         |
 | stage_name | 是   | string | 阶段名称（默认为 阶段名-模板名） |
-| show_index | 是   | int    | 阶段排序                         |
 
 *返回参数说明:*
 
@@ -4313,22 +4288,22 @@ curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/5/update
 #### 流水线阶段删除
 
 ```
-DELETE  /api/ci/pipelines/{id}/{stage_id}/delete_stage
+DELETE  /api/ci/pipelines/{id}/{stage_id}/delete_stage?show_index={index}
 ```
 
 *示例*
 
 ```bash
-curl -X DELETE \
-https://localhost:3000/api/ci/pipelines/1/6/delete_stage.json  | jq
+curl --location --request DELETE 'http://localhost:3000/api/ci/pipelines/19/42/delete_stage.json?show_index=2' \
 ```
 
 *请求参数说明:*
 
-| 参数名   | 必选 | 类型 | 说明     |
-| -------- | ---- | ---- | -------- |
-| id       | 是   | int  | 流水线id |
-| stage_id | 是   | int  | 阶段id   |
+| 参数名     | 必选 | 类型 | 说明                   |
+| ---------- | ---- | ---- | ---------------------- |
+| id         | 是   | int  | 流水线id               |
+| stage_id   | 是   | int  | 阶段id                 |
+| show_index | 是   | int  | 被删除阶段的show_index |
 
 *返回参数说明:*
 
@@ -4370,14 +4345,14 @@ http://localhost:3000/api/ci/pipelines/1/2/steps.json | jq
 
 *返回参数说明:*
 
-| 参数名      | 类型   | 说明       |
-| ----------- | ------ | ---------- |
-| id          | int    | 步骤id     |
-| step_name   | string | 步骤名称   |
-| stage_id    | int    | 所属阶段id |
-| template_id | int    | 模板id     |
-| show_index  | int    | 显示顺序   |
-| content     | String | 步骤内容   |
+| 参数名     | 类型   | 说明               |
+| ---------- | ------ | ------------------ |
+| id         | int    | 步骤id             |
+| step_name  | string | 步骤名称           |
+| stage_id   | int    | 所属阶段id         |
+| show_index | int    | 显示顺序           |
+| content    | String | 步骤内容           |
+| template   | Object | 步骤对应的模板对象 |
 
 返回值
 
@@ -4388,21 +4363,19 @@ http://localhost:3000/api/ci/pipelines/1/2/steps.json | jq
             "id": 1,
             "step_name": "编译构建-maven",
             "stage_id": 2,
-            "template_id": null,
             "show_index": 0,
-            "content": "xxxxxxxxxxx",
+            "content": "- name: Maven编译\r\n  image: arm64v8/maven\r\n",
             "created_at": "2021-01-11T09:57:17.000+08:00",
-            "updated_at": "2021-01-11T09:57:17.000+08:00"
-        },
-        {
-            "id": 2,
-            "step_name": "编译构建-maven-更新",
-            "stage_id": 2,
-            "template_id": 2,
-            "show_index": 2,
-            "content": "xxxx====xxxxxxx",
-            "created_at": "2021-01-11T10:12:58.000+08:00",
-            "updated_at": "2021-01-11T10:40:54.000+08:00"
+            "updated_at": "2021-01-11T09:57:17.000+08:00",
+            "template": {
+                "id": 3,
+                "template_name": "maven",
+                "stage_type": "build",
+                "category": "java",
+                "content": "- name: maven\r\n  image: maven:3-jdk-10\r\n",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            }
         }
     ]
 }
@@ -4578,9 +4551,9 @@ http://localhost:3000/api/ci/templates/templates_by_stage.json?stage_type=build 
 
 *请求参数说明:*
 
-| 参数名     | 必选 | 类型   | 说明                                          |
-| ---------- | ---- | ------ | --------------------------------------------- |
-| stage_type | 是   | string | 阶段类型：init/build/deploy/customize/confirm |
+| 参数名     | 必选 | 类型   | 说明                                  |
+| ---------- | ---- | ------ | ------------------------------------- |
+| stage_type | 是   | string | 阶段类型：init/build/deploy/customize |
 
 *返回参数说明:*
 
