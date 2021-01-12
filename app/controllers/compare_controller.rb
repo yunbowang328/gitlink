@@ -6,9 +6,9 @@ class CompareController < ApplicationController
   end
 
   def show
-    base_ref = Addressable::URI.unescape(params[:base])
-    @ref = head_ref = Addressable::URI.unescape(params[:head]&.split('.json')[0])
-    @compare_result = Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, base_ref, head_ref)
+    base = Addressable::URI.unescape(params[:base])
+    head = params[:head].include?('json') ? params[:head]&.split('.json')[0] : params[:head]
+    @compare_result = Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, head, base)
 
     # render json: @compare_result
   end
