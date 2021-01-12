@@ -1,26 +1,54 @@
 class Gitea::PullRequest::UpdateService < Gitea::ClientService
-  attr_reader :user, :repo, :params,:pull_request_id
+  attr_reader :owner, :repo, :params, :number, :token
 
-
-  def initialize(user, repo, params,pull_request_id)
-    @user   = user
+  # params:
+  # {
+  #   "assignee": "string",
+  #   "assignees": [
+  #     "string"
+  #   ],
+  #   "base": "string",
+  #   "body": "string",
+  #   "due_date": "2021-01-11T10:11:52.074Z",
+  #   "labels": [
+  #     0
+  #   ],
+  #   "milestone": 0,
+  #   "state": "string",
+  #   "title": "string",
+  #   "unset_due_date": true
+  # }
+  def initialize(owner, repo, number, params, token=nil)
+    @owner  = owner
     @repo   = repo
     @params = params
-    @pull_request_id = pull_request_id
+    @number = number
+    @token  = token
   end
 
   def call
-    put(url, request_params)
+    response = patch(url, request_params)
+
+    status, message, body = render_response(response)
+    json_format(status, message, body)
   end
 
   private
 
   def request_params
-    Hash.new.merge(token: @user.gitea_token, data: @params)
+    Hash.new.merge(token: token, data: @params)
   end
 
   def url
-    "/repos/#{@user.try(:login)}/#{@repo}/pulls/#{@pull_request_id}".freeze
+    "/repos/#{owner}/#{repo}/pulls/#{number}".freeze
+  end
+
+  def json_format(status, message, body)
+    case status
+    when 201 then success(body)
+    else
+      error(message, status)
+    end
   end
 
 end
