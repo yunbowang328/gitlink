@@ -20,5 +20,6 @@ class Ci::PipelineStage < Ci::LocalBase
   has_many :pipeline_stage_steps, -> { reorder(show_index: :asc) }, foreign_key: "stage_id", :class_name => 'Ci::PipelineStageStep',  dependent: :destroy
 
   INIT_STAGES = {init:"初始化", build:"编译构建", deploy:"部署", confirm:"确认"}.freeze
-
+  CUSTOMIZE_STAGE_TYPE = 'customize'
+  INIT_STAGE_TYPE = 'init'
 end

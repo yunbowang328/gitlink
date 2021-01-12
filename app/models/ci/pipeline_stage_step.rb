@@ -7,7 +7,7 @@
 #  stage_id    :integer          not null
 #  template_id :integer
 #  content     :text(65535)
-#  show_index  :integer
+#  show_index  :integer          default("0"), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #

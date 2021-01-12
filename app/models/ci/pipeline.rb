@@ -4,10 +4,10 @@
 #
 #  id              :integer          not null, primary key
 #  pipeline_name   :string(255)      not null
-#  pipeline_status :integer          default("0"), not null
 #  file_name       :string(255)      not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  pipeline_status :string(50)       default("unknown"), not null
 #
 
 class Ci::Pipeline < Ci::LocalBase
