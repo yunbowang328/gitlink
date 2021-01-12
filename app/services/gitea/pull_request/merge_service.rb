@@ -18,7 +18,9 @@ class Gitea::PullRequest::MergeService < Gitea::ClientService
   end
 
   def call
-    post(url, request_params)
+    response = post(url, request_params)
+
+    render_200_no_body(response)
   end
 
   private
@@ -27,7 +29,6 @@ class Gitea::PullRequest::MergeService < Gitea::ClientService
   end
 
   def request_params
-    Hash.new.merge(token: token, data: params)
+    Hash.new.merge(token: token, data: params.compact)
   end
-
 end

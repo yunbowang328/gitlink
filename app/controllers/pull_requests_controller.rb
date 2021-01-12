@@ -87,8 +87,10 @@ class PullRequestsController < ApplicationController
 
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
-              gitea_request = Gitea::PullRequest::UpdateService.new(@project.owner, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
-              if gitea_request
+              gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
+                  @pull_request.gpid, @requests_params, current_user.gitea_token)
+
+              if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
                     IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
@@ -117,9 +119,8 @@ class PullRequestsController < ApplicationController
   def refuse_merge
     ActiveRecord::Base.transaction do
       begin
-        @pull_request.update(status: 2)
-        @pull_request.issue.update(status_id: 5)
-        normal_status(1, "已拒绝")
+        colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
+        colsed === true ? normal_status(1, "已拒绝") : normal_status(-1, '合并失败')
       rescue => e
         normal_status(-1, e.message)
         raise ActiveRecord::Rollback
@@ -145,15 +146,10 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          requests_params = {
-            Do: params[:do],
-            MergeMessageField: params[:body],
-            MergeTitleField: params[:title]
-          }
-          merge_pr = Gitea::PullRequest::MergeService.call(current_user.gitea_token, @project.owner.login,
-            @repository.try(:identifier), @pull_request.try(:gpid), requests_params)
-          if @pull_request.update_attribute(:status, 1) && merge_pr[:status].to_i == 200
-            @pull_request&.project_trends&.update_all(action_type: "close")
+          result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+
+          if result && @pull_request.merge!
+            @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
