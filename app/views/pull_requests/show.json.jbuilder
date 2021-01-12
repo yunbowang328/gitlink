@@ -1,5 +1,6 @@
 json.partial! "commons/success"
 json.project_name @project.name
+json.identifier @project.identifier
 json.pr_time time_from_now(@pull_request.updated_at)
 json.commits_count @pull_request.commits_count
 json.files_count @pull_request.files_count
