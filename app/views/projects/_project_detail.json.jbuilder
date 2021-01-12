@@ -36,21 +36,13 @@ json.category do
     json.id project.project_category.id
     json.name project.project_category.name
   end
-  json.category do
-    if project.project_category.blank?
-      json.nil!
-    else
-      json.id project.project_category.id
-      json.name project.project_category.name
-    end
-  end
-  json.language do
-    if project.project_language.blank?
-      json.nil!
-    else
-      json.id project.project_language.id
-      json.name project.project_language.name
-    end
+end
+json.language do
+  if project.project_language.blank?
+    json.nil!
+  else
+    json.id project.project_language.id
+    json.name project.project_language.name
   end
 end
 json.is_member !project.members.where(user_id: current_user.id).blank?
