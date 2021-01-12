@@ -5,6 +5,7 @@ class Ci::CloudAccountsController < Ci::BaseController
   before_action :load_project, only: %i[create activate]
   before_action :authorize_owner!, only: %i[create activate]
   before_action :load_repo, only: %i[activate]
+  before_action :load_all_repo, only: %i[unbind]
   before_action :find_cloud_account, only: %i[show oauth_grant]
   before_action :validate_params!, only: %i[create bind]
   before_action only: %i[create bind] do
@@ -95,6 +96,13 @@ class Ci::CloudAccountsController < Ci::BaseController
 
   def unbind
     ActiveRecord::Base.transaction do
+      if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+        if @repos
+          @repos.each do |repo|
+            repo.deactivate!
+          end
+        end
+      end
       unbind_account!
       render_ok
     end

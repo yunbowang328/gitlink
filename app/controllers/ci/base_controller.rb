@@ -11,6 +11,11 @@ class Ci::BaseController < ApplicationController
     @ci_user, @repo = Ci::Repo.find_with_namespace(namespace, id)
   end
 
+  def load_all_repo
+    namespace = current_user.login
+    @repos = Ci::Repo.find_all_with_namespace(namespace)
+  end
+
   private
     def authorize_access_project!
       unless @project.manager?(current_user)
@@ -45,14 +50,22 @@ class Ci::BaseController < ApplicationController
     end
 
   def connect_to_ci_db(options={})
-    if !(current_user && !current_user.is_a?(AnonymousUser) && !current_user.devops_uninit?)
+    current = current_user
+    owner = params[:owner]
+    if owner
+      current = User.find_by(login: owner)
+    end
+
+    if !(current && !current.is_a?(AnonymousUser) && !current.devops_uninit?)
       return
     end
-    if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+
+    if current.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
       connect_to_trustie_ci_database(options)
     else
       connect_to_ci_database(options)
     end
+
   end
 
 end

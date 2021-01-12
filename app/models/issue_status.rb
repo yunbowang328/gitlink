@@ -17,6 +17,13 @@
 #
 
 class IssueStatus < ApplicationRecord
+  ADD      = 1
+  SOLVING  = 2
+  SOLVED   = 3
+  FEEDBACK = 4
+  CLOSED   = 5
+  REJECTED = 6
+
   has_many :issues
   belongs_to :project, optional: true
 end

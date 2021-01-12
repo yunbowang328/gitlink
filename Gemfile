@@ -100,6 +100,7 @@ gem 'rails-i18n', '~> 5.1'
 # job
 gem 'sidekiq'
 gem 'sinatra'
+gem "sidekiq-cron", "~> 1.1"
 
 # batch insert
 gem 'bulk_insert'

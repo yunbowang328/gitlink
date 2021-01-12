@@ -8,7 +8,6 @@ class Ci::BuildsController < Ci::BaseController
 
   def index
     @user = current_user
-    scope = @repo.builds
 
     scope = Ci::Builds::ListQuery.call(@repo, params)
 

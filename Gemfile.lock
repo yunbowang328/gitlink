@@ -118,12 +118,17 @@ GEM
     enumerize (2.3.1)
       activesupport (>= 3.2)
     erubi (1.9.0)
+    et-orbi (1.2.4)
+      tzinfo
     execjs (2.7.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
     font-awesome-sass (4.7.0)
       sass (>= 3.2)
+    fugit (1.4.1)
+      et-orbi (~> 1.1, >= 1.1.8)
+      raabro (~> 1.4)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     grape-entity (0.7.1)
@@ -211,6 +216,7 @@ GEM
     prettier (0.18.2)
     public_suffix (4.0.3)
     puma (3.12.2)
+    raabro (1.4.0)
     rack (2.0.9)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
@@ -353,6 +359,9 @@ GEM
       rack (< 2.1.0)
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 5)
+    sidekiq-cron (1.2.0)
+      fugit (~> 1.1)
+      sidekiq (>= 4.2.1)
     simple_form (5.0.2)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -477,6 +486,7 @@ DEPENDENCIES
   searchkick
   selenium-webdriver
   sidekiq
+  sidekiq-cron (~> 1.1)
   simple_form
   simple_xlsx_reader
   sinatra
