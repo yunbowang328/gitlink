@@ -1,16 +1,21 @@
 class Organizations::OrganizationsController < Organizations::BaseController
-  before_action :require_login, except: [:index]
+  before_action :require_login, except: [:index, :show]
   before_action :convert_base64_image!, only: [:create, :update]
-  before_action :load_organization, only: [:update, :destroy]
+  before_action :load_organization, only: [:show, :update, :destroy]
 
   def index
     if current_user.logged?
       @organizations = Organization.with_visibility(%w(common limited)) +
           Organization.with_visibility("privacy").joins(:organization_users).where(organization_users: {user_id: current_user.id})
+      kaminary_array_paginate(@organizations)
     else
       @organizations = Organization.with_visibility("common")
+      kaminari_paginate(@organizations)
     end
-    kaminary_array_paginate(@organizations)
+  end
+
+  def show
+
   end
 
   def create
