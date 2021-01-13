@@ -189,12 +189,12 @@ class PullRequestsController < ApplicationController
 
 
   def files
-    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
     # render json: @files_result
   end
 
   def commits
-    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
     # render json: @commits_result
   end
 
