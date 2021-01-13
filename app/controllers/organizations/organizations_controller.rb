@@ -11,6 +11,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
       @organizations = Organization.from("( #{ logged_organizations_sql } UNION #{ privacy_organizations_sql } ) AS users")
     else
       @organizations = Organization.with_visibility("common")
+      kaminari_paginate(@organizations)
     end
     @organizations = @organizations.ransack(login_cont: params[:search]).result if params[:search].present?
     @organizations = @organizations.includes(:organization_extension).order("organization_extensions.#{sort_by} #{sort_direction}")
