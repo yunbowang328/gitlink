@@ -22,7 +22,7 @@ class Gitea::PullRequest::CommitsService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: owner)
+    Hash.new.merge(token: token)
   end
 
   def url
