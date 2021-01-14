@@ -4383,72 +4383,16 @@ http://localhost:3000/api/ci/pipelines/1/2/steps.json | jq
 
 ------
 
-#### 流水线阶段步骤新增
+#### 流水线阶段步骤新增/更新
 
 ```
-POST  /api/ci/pipelines/{id}/{stage_id}/create_step
-```
-
-*示例*
-
-```bash
-curl --location --request POST 'http://localhost:3000/api/ci/pipelines/14/20/create_step.json' \
---header 'Content-Type: application/json' \
---data-raw ' {"steps":[{
-            "step_name": "编译构建-gradle",
-            "show_index": 1,
-            "content": "xxxxxxxxxxx",
-            "template_id":1
-},
-{
-            "step_name": "编译构建-maven",
-            "show_index": 1,
-            "content": "xxxxxxxxxxx",
-            "template_id":1
-}
-]
- }'
-```
-
-*请求参数说明:*
-
-| 参数名      | 必选 | 类型   | 说明                      |
-| ----------- | ---- | ------ | ------------------------- |
-| steps       | 是   | arr    | 需要新增的步骤数组        |
-| id          | 是   | int    | 流水线id                  |
-| stage_id    | 是   | int    | 阶段id                    |
-| step_name   | 是   | string | 阶段名称（阶段名-模板名） |
-| content     | 是   | string | 步骤内容                  |
-| template_id | 是   | int    | 模板id                    |
-
-*返回参数说明:*
-
-| 参数名  | 类型   | 说明         |
-| ------- | ------ | ------------ |
-| status  | int    | 状态码 0成功 |
-| message | string | 返回消息     |
-
-返回值
-
-```json
-{
-    "status": 0,
-    "message": "success"
-}
-```
-
-------
-
-#### 流水线阶段步骤更新
-
-```
-PUT  /api/ci/pipelines/{id}/{stage_id}/update_step
+PUT  /api/ci/pipelines/{id}/{stage_id}/stage_step
 ```
 
 *示例*
 
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/2/update_step.json' \
+curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/2/stage_step.json' \
 --header 'Content-Type: application/json' \
 --data-raw ' {"steps":[{
            "id":7,
@@ -4470,14 +4414,14 @@ curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/2/update
 
 *请求参数说明:*
 
-| 参数名      | 必选 | 类型   | 说明                      |
-| ----------- | ---- | ------ | ------------------------- |
-| steps       | 是   | arr    | 需要更新step数组          |
-| id          | 是   | int    | 流水线id                  |
-| stage_id    | 是   | int    | 阶段id                    |
-| step_name   | 是   | string | 阶段名称（阶段名-模板名） |
-| content     | 是   | string | 步骤内容                  |
-| template_id | 是   | int    | 模板id                    |
+| 参数名      | 必选 | 类型   | 说明                             |
+| ----------- | ---- | ------ | -------------------------------- |
+| steps       | 是   | arr    | 需要更新step数组                 |
+| id          | 是   | int    | 流水线id                         |
+| step_id     | 是   | int    | 阶段id（存在则更新，不存在新增） |
+| step_name   | 是   | string | 阶段名称（阶段名-模板名）        |
+| content     | 是   | string | 步骤内容                         |
+| template_id | 是   | int    | 模板id                           |
 
 *返回参数说明:*
 

@@ -123,6 +123,28 @@ class Ci::PipelinesController < ApplicationController
     @pipeline_stage_steps = Ci::PipelineStageStep.where('stage_id=?', params[:stage_id]).order('show_index asc')
   end
 
+  def stage_step
+    ActiveRecord::Base.transaction do
+      steps = params[:steps]
+      unless steps.empty?
+        steps.each do |step|
+          if !step[:id]
+            step = Ci::PipelineStageStep.new(step_name: step[:step_name], stage_id: params[:stage_id],
+                                             template_id: step[:template_id], content: step[:content], show_index: step[:show_index])
+            step.save!
+          else
+            pipeline_stage_step = Ci::PipelineStageStep.find(step[:id])
+            pipeline_stage_step.update(step_name: step[:step_name], content: step[:content],
+                                       show_index: step[:show_index], template_id: step[:template_id])
+          end
+        end
+      end
+      render_ok
+    end
+  rescue Exception => ex
+    render_error(ex.message)
+  end
+
   def create_stage_step
     ActiveRecord::Base.transaction do
       steps = params[:steps]

@@ -50,6 +50,7 @@ Rails.application.routes.draw do
           put :update_stage, :path => ":stage_id/update_stage", to: 'pipelines#update_stage'
           get :stage_steps, :path => ":stage_id/steps", to: 'pipelines#steps'
           post :create_stage_step, :path => ":stage_id/create_step", to: 'pipelines#create_stage_step'
+          post :stage_step, :path => ":stage_id/stage_step", to: 'pipelines#stage_step'
           delete :delete_stage_step, :path => ":stage_id/:step_id/delete_step", to: 'pipelines#delete_stage_step'
           put :update_stage_step, :path => ":stage_id/update_step", to: 'pipelines#update_stage_step'
         end
