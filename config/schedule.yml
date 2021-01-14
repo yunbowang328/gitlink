@@ -1,4 +1,0 @@
-sync_gitea_repo_updated_at:
-  cron: "0 0 * * * "
-  class: "SyncRepoUpdateTimeJob"
-  queue: default
