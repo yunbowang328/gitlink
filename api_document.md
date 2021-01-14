@@ -4407,14 +4407,15 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines/1/2/stage
 
 *请求参数说明:*
 
-| 参数名      | 必选 | 类型   | 说明                             |
-| ----------- | ---- | ------ | -------------------------------- |
-| steps       | 是   | arr    | 需要更新step数组                 |
-| id          | 是   | int    | 流水线id                         |
-| step_id     | 是   | int    | 阶段id（存在则更新，不存在新增） |
-| step_name   | 是   | string | 阶段名称（阶段名-模板名）        |
-| content     | 是   | string | 步骤内容                         |
-| template_id | 是   | int    | 模板id                           |
+| 参数名           | 必选 | 类型   | 说明                             |
+| ---------------- | ---- | ------ | -------------------------------- |
+| steps            | 是   | arr    | 需要更新step数组                 |
+| id               | 是   | int    | 流水线id                         |
+| stage_id         | 是   | int    | 阶段id                           |
+| id（数组中的id） | 否   | int    | 步骤id（存在则更新，不存在新增） |
+| step_name        | 是   | string | 阶段名称（阶段名-模板名）        |
+| content          | 是   | string | 步骤内容                         |
+| template_id      | 是   | int    | 模板id                           |
 
 *返回参数说明:*
 
