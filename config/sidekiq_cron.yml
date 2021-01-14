@@ -1,5 +1,5 @@
 sync_gitea_repo_update_time:
-  cron: "0 0 * * * "
+  cron: "0 0 * * *"
   class: "SyncRepoUpdateTimeJob"
   queue: default
   description: 'sync gitea repo update time
