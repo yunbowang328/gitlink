@@ -4386,24 +4386,17 @@ http://localhost:3000/api/ci/pipelines/1/2/steps.json | jq
 #### 流水线阶段步骤新增/更新
 
 ```
-PUT  /api/ci/pipelines/{id}/{stage_id}/stage_step
+POST  /api/ci/pipelines/{id}/{stage_id}/stage_step
 ```
 
 *示例*
 
 ```bash
-curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/2/stage_step.json' \
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines/1/2/stage_step.json' \
 --header 'Content-Type: application/json' \
 --data-raw ' {"steps":[{
            "id":7,
             "step_name": "编译构建11-gradle",
-            "show_index": 1,
-            "content": "xxxxxxxxxxx",
-            "template_id":2
-},
-{
-            "id":8,
-            "step_name": "编译构建22-maven",
             "show_index": 1,
             "content": "xxxxxxxxxxx",
             "template_id":2
