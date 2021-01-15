@@ -5,17 +5,17 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def index
     if current_user.logged?
-      @organizations = Organization.with_visibility(%w(common limited)) +
-          Organization.with_visibility("privacy").joins(:organization_users).where(organization_users: {user_id: current_user.id})
-      kaminary_array_paginate(@organizations)
+      logged_organizations_sql = Organization.with_visibility(%w(common limited)).to_sql
+      privacy_organizations_sql = Organization.with_visibility("privacy").joins(:organization_users).where(organization_users: {user_id: current_user.id}).to_sql
+      @organizations = Organization.from("( #{ logged_organizations_sql } UNION #{ privacy_organizations_sql } ) AS users")
     else
       @organizations = Organization.with_visibility("common")
-      kaminari_paginate(@organizations)
     end
+    @organizations = @organizations.includes(:organization_extension).order(id: :asc)
+    @organizations = kaminari_paginate(@organizations)
   end
 
   def show
-
   end
 
   def create
@@ -29,11 +29,12 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def update
+    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
       login = @organization.login
       @organization.update!(login: organization_params[:name]) if organization_params[:name].present?
       @organization.organization_extension.update_attributes!(organization_params.except(:name))
-      Gitea::Organization::UpdateService.call(current_user.gitea_token, login, @organization)
+      Gitea::Organization::UpdateService.call(current_user.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
   rescue Exception => e
@@ -42,8 +43,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def destroy
-    render_unauthorized unless current_user.check_password?(password)
-    render_forbidden("您没有权限进行该操作") unless @organization.check_owner?(current_user)
+    tip_exception("密码不正确") unless current_user.check_password?(password)
+    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
       Gitea::Organization::DeleteService.call(current_user.gitea_token, @organization.login)
       @organization.destroy!
@@ -74,6 +75,12 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def password
     params.fetch(:password, "")
+  end
+
+  def load_organization
+    @organization = Organization.find_by(login: params[:id]) || Organization.find_by(id: params[:id])
+    tip_exception("组织不存在") if @organization.nil?
+    tip_exception("没有查看组织的权限") if org_limited_condition || org_privacy_condition
   end
 
 end

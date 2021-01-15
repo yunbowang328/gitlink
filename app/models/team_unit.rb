@@ -20,7 +20,7 @@ class TeamUnit < ApplicationRecord
   belongs_to :organization
   belongs_to :team
 
-  enum unit_type: {code: 1, issue: 2, pull_request: 3, releases: 4}
+  enum unit_type: {code: 1, issues: 2, pulls: 3, releases: 4}
 
   validates :unit_type, uniqueness: { scope: [:organization_id, :team_id]}
 
@@ -28,9 +28,4 @@ class TeamUnit < ApplicationRecord
     self.create!(organization_id: organization_id, team_id: team_id, unit_type: unit_type)
   end
 
-  def self.build_owner(organization_id, team_id)
-    self.unit_types.keys.each do |u_type|
-      self.build(organization_id, team_id, u_type)
-    end
-  end
 end

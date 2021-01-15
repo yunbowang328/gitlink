@@ -15,12 +15,13 @@ class Gitea::Organization::UpdateService < Gitea::ClientService
   private
   def request_params
     update_params = {
-        username: org.login,
+        name: org.login,
         description: org.description,
         location: org.location,
         repo_admin_change_team_access: org.repo_admin_change_team_access,
         visibility: visibility(org.visibility),
-        website: org.website
+        website: org.website,
+        max_repo_creation: org.max_repo_creation
     }
     Hash.new.merge(token: token, data: update_params)
   end

@@ -104,14 +104,19 @@ Rails.application.routes.draw do
     delete 'commons/delete',      to: 'commons#delete'
 
     scope module: :organizations do
-      resources :organizations do
-
-      end
-      resources :teams do
-        resources :team_users do
+      resources :organizations, except: [:edit, :new] do
+        resources :organization_users, only: [:index, :destroy] do
+          collection do
+            delete :quit
+          end
         end
-        resources :team_projects do
-
+        resources :teams, except: [:edit, :new] do
+          resources :team_users, only: [:index, :create, :destroy] do
+            collection do
+              delete :quit
+            end
+          end
+          resources :team_projects, only: [:index, :create, :destroy] do ;end
         end
       end
     end
@@ -238,6 +243,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]

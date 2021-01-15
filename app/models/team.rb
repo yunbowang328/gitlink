@@ -27,6 +27,8 @@ class Team < ApplicationRecord
   has_many :team_units, dependent: :destroy
   has_many :team_users, dependent: :destroy
 
+  validates :name, uniqueness: {scope: :organization_id}
+
   enum authorize: {common: 0, read: 1, write: 2, admin: 3, owner: 4}
 
   def self.build(organization_id, name, description, authorize, includes_all_project, can_create_org_project)
@@ -38,7 +40,4 @@ class Team < ApplicationRecord
                  can_create_org_project: can_create_org_project)
   end
 
-  def self.build_owner(organization_id)
-    self.build(organization_id, "Owner", "", 4, true, true)
-  end
 end

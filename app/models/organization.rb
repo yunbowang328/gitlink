@@ -78,11 +78,8 @@ class Organization < ApplicationRecord
     self.create!(login: name)
   end
 
-  def owner_team
-    teams.where(authorize: 4).take
+  def is_owner?(user)
+    team_users.joins(:team).where(user_id: user.id, teams: {authorize: %w(owner)}).present?
   end
 
-  def check_owner?(user)
-    owner_team.team_users.where(user_id: user.id).present?
-  end
 end

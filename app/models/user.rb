@@ -163,6 +163,9 @@ class User < ApplicationRecord
   has_many :project_trends, dependent: :destroy
   has_many :oauths , dependent: :destroy
 
+  has_many :organization_users, dependent: :destroy
+  has_many :organizations, through: :organization_users
+
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|

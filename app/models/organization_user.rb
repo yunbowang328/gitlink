@@ -18,8 +18,17 @@
 class OrganizationUser < ApplicationRecord
 
   belongs_to :organization
+  belongs_to :user
 
-  def self.build(organization_id, user_id, is_creator)
+  validates :user_id, uniqueness: {scope: :organization_id}
+
+  def self.build(organization_id, user_id, is_creator = false)
+    org_user = self.find_by(organization_id: organization_id, user_id: user_id)
+    return org_user unless org_user.nil?
     self.create!(organization_id: organization_id, user_id: user_id, is_creator: is_creator)
+  end
+
+  def teams
+    organization.teams.joins(:team_users).where(team_users: {user_id: user_id})
   end
 end

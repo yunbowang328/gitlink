@@ -22,6 +22,8 @@ class TeamUser < ApplicationRecord
   belongs_to :team, counter_cache: :num_users
   belongs_to :user
 
+  validates :user_id, uniqueness: {scope: [:organization_id, :team_id]}
+
   def self.build(organization_id, user_id, team_id)
     self.create!(organization_id: organization_id, user_id: user_id, team_id: team_id)
   end

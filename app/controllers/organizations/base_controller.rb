@@ -1,22 +1,25 @@
 class Organizations::BaseController < ApplicationController
   include ApplicationHelper
 
-  def load_organization
-    @organization = Organization.find_by(login: params[:id]) || Organization.find_by(id: params[:id])
+  protected
 
-    @organization = nil if limited_condition || privacy_condition
-
-    render_not_found if @organization.nil?
-
-    @organization
+  def organization_owner
+    @organization.team_users.joins(:team).where(teams: {authorize: 'owner'}).take.user
   end
 
-  private
-  def limited_condition
+  def org_limited_condition
     @organization.organization_extension.limited? && !current_user.logged?
   end
 
-  def privacy_condition
+  def org_privacy_condition
     @organization.organization_extension.privacy? && @organization.organization_users.where(user_id: current_user.id).blank?
+  end
+
+  def team_not_found_condition
+    @team.team_users.where(user_id: current_user.id).blank? && !@organization.is_owner?(current_user)
+  end
+
+  def user_mark
+    params[:username] || params[:id]
   end
 end

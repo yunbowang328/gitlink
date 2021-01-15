@@ -19,7 +19,8 @@ class Gitea::Organization::CreateService < Gitea::ClientService
         location: org.location,
         repo_admin_change_team_access: org.repo_admin_change_team_access,
         visibility: visibility(org.visibility),
-        website: org.website
+        website: org.website,
+        max_repo_creation: org.max_repo_creation
     }
     Hash.new.merge(token: token, data: create_params)
   end
