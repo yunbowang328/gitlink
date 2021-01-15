@@ -8,12 +8,13 @@ if @project.forge?
   json.path entry['path']
   json.type entry['type']
   json.size entry['size']
-  json.content entry['content'].present? && !direct_download ? render_decode64_content(entry['content']) : ""
+
+  json.content decode64_content(entry, @owner, @repository, @ref)
   json.target entry['target']
   json.download_url entry['download_url']
   json.direct_download direct_download
   json.image_type image_type
-  json.is_readme_file is_readme_type?(file_name)
+  json.is_readme_file is_readme?(entry['type'], entry['name'])
   if entry['latest_commit']
     if entry['type'] != 'file'
       json.partial! 'last_commit', entry: entry
