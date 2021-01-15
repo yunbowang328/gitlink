@@ -11,7 +11,6 @@ class Organizations::OrganizationsController < Organizations::BaseController
       @organizations = Organization.from("( #{ logged_organizations_sql } UNION #{ privacy_organizations_sql } ) AS users")
     else
       @organizations = Organization.with_visibility("common")
-      kaminari_paginate(@organizations)
     end
     @organizations = @organizations.ransack(login_cont: params[:search]).result if params[:search].present?
     @organizations = @organizations.includes(:organization_extension).order("organization_extensions.#{sort_by} #{sort_direction}")
@@ -32,6 +31,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def update
+    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
       login = @organization.login
       @organization.update!(login: organization_params[:name]) if organization_params[:name].present?
