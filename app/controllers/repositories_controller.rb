@@ -133,6 +133,13 @@ class RepositoriesController < ApplicationController
     render_ok
   end
 
+  def readme
+    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
+
+    @readme = result[:status] === :success ? result[:body] : nil
+    render json: @readme
+  end
+
   private
 
   def find_project

@@ -3062,6 +3062,49 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 ```
 ---
 
+#### 获取仓库README文件
+```
+GET api/:owner/:repo/readme
+```
+*示例*
+```bash
+curl -X GET http://localhost:3000/api/trusite/trusite/readme | jq
+```
+
+*请求参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|owner |是|string |项目拥有者登录名  |
+|repo  |否|boolean |仓库名称  |
+|ref   |否|string |分支、tag或commit。默认: 仓库的默认分支(通常是master)|
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|name           |string|文件名称|
+|path           |string|文件相对路径|
+|type           |string|文件类型， file:文件|
+|size           |int|文件大小 单位KB|
+|content        |string|文件内容，base64加密|
+
+返回值
+```json
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 13544,
+  "name": "README.md",
+  "path": "README.md",
+  "content": "Q2hpbmVzZSAmbmJzcDsgfCAmbmJzcDsgW0VuZ7i9yZWFkbWUvaW5kZXgucG5"
+}
+```
+---
+
+
+
 ### DevOps相关api
 ---
 
