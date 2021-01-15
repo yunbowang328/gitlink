@@ -353,6 +353,7 @@ Rails.application.routes.draw do
           post :sync_mirror
           get :top_counts
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
+          get 'readme'
         end
       end
 
