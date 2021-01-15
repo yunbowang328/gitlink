@@ -11,30 +11,16 @@ class Organizations::CreateService < ApplicationService
     Rails.logger.info("######Organization create_service begin######")
     Rails.logger.info("######params #{params}######")
     ActiveRecord::Base.transaction do
-<<<<<<< HEAD
       create_org_and_extension
       create_owner_info
       create_gitea_org
       sync_owner_team_gtid
-=======
-      @organization = Organization.build(params[:name])
-      org_extension = OrganizationExtension.build(@organization.id, description, website,
-                                                  location, repo_admin_change_team_access,
-                                                  visibility, max_repo_creation)
-      team = Team.build_owner(@organization.id)
-      TeamUnit.build_owner(@organization.id, team.id)
-      OrganizationUser.build(@organization.id, user.id, true)
-      TeamUser.build(@organization.id, user.id, team.id)
-
-      Gitea::Organization::CreateService.call(user.gitea_token, @organization)
->>>>>>> 38887e6... [FIX]
 
       Rails.logger.info("######Organization create_service end######")
     end
     @organization
   end
 
-<<<<<<< HEAD
   private
   def description
     params[:description]
@@ -45,19 +31,7 @@ class Organizations::CreateService < ApplicationService
   end
 
   def location
-    params[:location]
-=======
-  def description
-    params[:description].present? ? params[:description] : nil
-  end
-
-  def website
-    params[:website].present? ? params[:website] : nil
-  end
-
-  def location
     params[:location].present? ? params[:location] : nil
->>>>>>> 38887e6... [FIX]
   end
 
   def repo_admin_change_team_access

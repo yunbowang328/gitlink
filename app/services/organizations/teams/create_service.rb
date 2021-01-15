@@ -65,7 +65,11 @@ class Organizations::Teams::CreateService < ApplicationService
   end
 
   def create_gitea_team
+<<<<<<< HEAD
     @gitea_team = Gitea::Organization::Team::CreateService.call(org.gitea_token, org, team)
+=======
+    @gitea_team = Gitea::Organization::Team::CreateService.call(user.gitea_token, org, team)
+>>>>>>> 4a50873... [ADD]组织、组织团队
   end
 
   def sync_team_gtid

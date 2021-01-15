@@ -31,4 +31,8 @@ class OrganizationUser < ApplicationRecord
   def teams
     organization.teams.joins(:team_users).where(team_users: {user_id: user_id})
   end
+
+  def teams
+    organization.teams.joins(:team_users).where(team_users: {user_id: user_id})
+  end
 end
