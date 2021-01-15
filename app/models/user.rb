@@ -58,15 +58,13 @@
 #  index_users_on_type               (type)
 #
 
-class User < ApplicationRecord
+class User < Owner
   default_scope {where(type: %w(User AnonymousUser))}
   extend Enumerize
 
   include Watchable
   include Likeable
   include BaseModel
-  include ProjectOperable
-  include ProjectAbility
   include Droneable
   # include Searchable::Dependents::User
 
@@ -154,9 +152,6 @@ class User < ApplicationRecord
 
   # 项目
   has_many :applied_projects, dependent: :destroy
-
-  has_many :projects, dependent: :destroy
-  has_many :repositories, dependent: :destroy
 
   # 教学案例
   # has_many :libraries, dependent: :destroy

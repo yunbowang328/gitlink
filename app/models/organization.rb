@@ -58,8 +58,7 @@
 #  index_users_on_type               (type)
 #
 
-class Organization < ApplicationRecord
-  self.table_name = "users"
+class Organization < Owner
   default_scope { where(type: "Organization") }
 
   has_one :organization_extension, dependent: :destroy
@@ -74,8 +73,8 @@ class Organization < ApplicationRecord
 
   scope :with_visibility, ->(visibility) { joins(:organization_extension).where(organization_extensions: {visibility: visibility}) if visibility.present? }
 
-  def self.build(name)
-    self.create!(login: name)
+  def self.build(name, gitea_token=nil)
+    self.create!(login: name, gitea_token: gitea_token)
   end
 
   def is_owner?(user)

@@ -85,7 +85,7 @@ class Project < ApplicationRecord
 
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id, optional: true
+  belongs_to :owner, class_name: 'Owner', foreign_key: :user_id, optional: true
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
@@ -248,7 +248,7 @@ class Project < ApplicationRecord
   def self.find_with_namespace(namespace_path, identifier)
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
-    user = User.find_by_login namespace_path
+    user = Owner.find_by_login namespace_path
     project = user&.projects&.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
     return nil if project.blank?
 
