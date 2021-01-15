@@ -11,7 +11,7 @@ module RepositoriesHelper
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx dot)
     default_type.include?(str&.downcase)
   end
 
@@ -20,8 +20,8 @@ module RepositoriesHelper
     default_type.include?(str&.downcase)
   end
 
-  def is_readme_type?(str)
-    return false if str.blank?
+  def is_readme?(type, str)
+    return false if type != 'file' || str.blank?
     readme_types = ["readme.md", "readme", "readme_en.md", "readme_zh.md", "readme_en", "readme_zh"]
     readme_types.include?(str.to_s.downcase)
   end
@@ -71,5 +71,16 @@ module RepositoriesHelper
   # date for example: 2020-11-01T19:57:27+08:00
   def render_format_time_with_date(date)
     date.to_time.strftime("%Y-%m-%d %H:%M")
+  end
+
+  def decode64_content(entry, owner, repo, ref, path=nil)
+    if is_readme?(entry['type'], entry['name'])
+      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content']
+      readme_render_decode64_content(content, path)
+    else
+      file_type = entry['name'].to_s.split(".").last
+      return entry['content'] if download_type(file_type)
+      render_decode64_content(entry['content'])
+    end
   end
 end
