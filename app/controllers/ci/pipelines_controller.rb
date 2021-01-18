@@ -72,6 +72,7 @@ class Ci::PipelinesController < Ci::BaseController
   # =========阶段相关接口========= #
   def stages
     pipeline_id = params[:id]
+    @pipeline_name = Ci::Pipeline.find(pipeline_id).pipeline_name
     @pipeline_stages = Ci::PipelineStage.where('pipeline_id=?', pipeline_id).order('show_index asc')
   end
 
@@ -171,8 +172,7 @@ class Ci::PipelinesController < Ci::BaseController
         steps.each do |step|
           pipeline_stage_step = Ci::PipelineStageStep.find(step[:id])
           if pipeline_stage_step
-            pipeline_stage_step.update(step_name: step[:step_name], content: step[:content],
-                                       show_index: step[:show_index], template_id: step[:template_id])
+            pipeline_stage_step.update(step_name: step[:step_name], content: step[:content], template_id: step[:template_id])
           end
         end
       end
