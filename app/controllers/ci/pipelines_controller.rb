@@ -1,13 +1,16 @@
-class Ci::PipelinesController < ApplicationController
+class Ci::PipelinesController < Ci::BaseController
+
+  before_action :require_login, only: %i[list create]
+  skip_before_action :connect_to_ci_db
 
   # ======流水线相关接口========== #
   def list
-    @pipelines = Ci::Pipeline.all
+    @pipelines = Ci::Pipeline.where('login=?', current_user.login)
   end
 
   def create
     ActiveRecord::Base.transaction do
-      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name])
+      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name], login: current_user.login)
       pipeline.save!
 
       # 默认创建四个初始阶段

@@ -2,13 +2,14 @@
 #
 # Table name: ci_templates
 #
-#  id            :integer          not null, primary key
-#  template_name :string(255)      not null
-#  stage_type    :string(255)      not null
-#  category      :string(255)      not null
-#  content       :text(65535)      not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
+#  id              :integer          not null, primary key
+#  template_name   :string(255)      not null
+#  stage_type      :string(255)      not null
+#  category        :string(255)      not null
+#  content         :text(65535)      not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  parent_category :string(255)
 #
 # Indexes
 #

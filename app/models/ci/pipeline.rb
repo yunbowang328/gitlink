@@ -8,6 +8,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  pipeline_status :string(50)       default("unknown"), not null
+#  login           :string(255)
 #
 
 class Ci::Pipeline < Ci::LocalBase
