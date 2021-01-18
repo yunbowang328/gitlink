@@ -450,7 +450,7 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 #### 项目详情
 ```
-GET /api/:namespace_id/:id
+GET /api/:owner/:repo
 ```
 *示例*
 ```bash
@@ -460,8 +460,8 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -492,7 +492,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 #### 项目详情(简版)
 ```
-GET /api/:namespace_id/:id/simple
+GET /api/:owner/:repo/simple
 ```
 *示例*
 ```bash
@@ -502,7 +502,8 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id            |是|int    |项目id  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -862,7 +863,7 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 #### 获取代码目录列表
 ```
-POST /api/:namespace_id/:project_id/repository/entries
+POST /api/:owner/:repo/repository/entries
 ```
 *示例*
 ```bash
@@ -874,7 +875,8 @@ http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id           |是|int |项目id  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
 
@@ -1344,7 +1346,7 @@ http://localhost:3000/api/projects/recommend  | jq
 
 #### 项目主页
 ```
-GET api/:namespace_id/:id/about
+GET api/:owner/:repo/about
 ```
 
 *示例*
@@ -1357,8 +1359,8 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 *返回参数说明:*
 
@@ -1385,7 +1387,7 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 #### 修改项目主页内容
 ```
-POST api/:namespace_id/:id/about
+POST api/:owner/:repo/about
 ```
 
 *示例*
@@ -1393,15 +1395,15 @@ POST api/:namespace_id/:id/about
 curl -X POST \
 -d "content=内容" \
 -d "attachment_ids=[1, 2, 2]" \
-http://localhost:3000/api/:jasder/forgeplus/about  | jq
+http://localhost:3000/api/jasder/forgeplus/about  | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 |content        |是|string |内容信息  |
 |attachment_ids |是|array |附件id  |
 
@@ -1429,7 +1431,7 @@ http://localhost:3000/api/:jasder/forgeplus/about  | jq
 
 ### 获取分支列表
 ```
-GET /api/:namespace_id/:id/branches
+GET /api/:owner/:repo/branches
 ```
 *示例*
 ```bash
@@ -1439,7 +1441,8 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id               |是|id |项目id |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -1596,7 +1599,7 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 ## 仓库详情
 ```
-GET /api/:namespace_id/:project_id/repository
+GET /api/:owner/:repo/repository
 ```
 *示例*
 ```bash
@@ -1607,8 +1610,8 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|project_id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
