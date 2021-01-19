@@ -16,6 +16,7 @@
 class Ci::Pipeline < Ci::LocalBase
   validates :pipeline_name, presence: {message: "流水线名称不能为空"}
   validates :file_name, presence: {message: "流水线文件名称不能为空"}
+  validates :identifier, presence: {message: "项目identifier不能为空"}
 
   has_many :pipeline_stages, -> { reorder(show_index: :asc) }, foreign_key: "pipeline_id", :class_name => 'Ci::PipelineStage',  dependent: :destroy
 
