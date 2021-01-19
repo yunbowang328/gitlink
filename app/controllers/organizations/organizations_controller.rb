@@ -31,7 +31,6 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def update
-    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
       login = @organization.login
       @organization.update!(login: organization_params[:name]) if organization_params[:name].present?
