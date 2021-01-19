@@ -46,6 +46,7 @@ Rails.application.routes.draw do
           get :content
           get :stages
           post :create_stage
+          post :create_trustie_pipeline
           delete :delete_stage, :path => ":stage_id/delete_stage", to: 'pipelines#delete_stage'
           put :update_stage, :path => ":stage_id/update_stage", to: 'pipelines#update_stage'
           get :stage_steps, :path => ":stage_id/steps", to: 'pipelines#steps'

@@ -2,7 +2,8 @@ class Ci::PipelinesController < Ci::BaseController
 
   before_action :require_login, only: %i[list create]
   skip_before_action :connect_to_ci_db
-  before_action :load_project, only: %i[content]
+  before_action :load_project, only: %i[content, create_trustie_pipeline]
+  before_action :load_repository, only: %i[create_trustie_pipeline]
 
   # ======流水线相关接口========== #
   def list
@@ -84,6 +85,47 @@ class Ci::PipelinesController < Ci::BaseController
       return file['sha']
     end
   end
+
+  def create_trustie_pipeline
+    pipeline = Ci::Pipeline.find(params[:id])
+    sha = get_pipeline_file_sha(pipeline.file_name)
+    if sha
+      pipeline.update!(sync: 1)
+      return update_trustie_pipeline(sha)
+    else
+      interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
+      if interactor.success?
+        pipeline.update!(sync: 1)
+      else
+        render_error(interactor.error)
+      end
+    end
+  end
+
+  def update_trustie_pipeline(sha)
+    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier,sha: sha))
+    if interactor.success?
+      return render_ok("更新成功")
+    else
+      return render_error(interactor.error)
+    end
+  end
+
+  def content_params
+    {
+        filepath: params[:filepath],
+        branch: params[:branch],
+        new_branch: params[:new_branch],
+        content: params[:content],
+        message: params[:message],
+        committer: {
+            email: current_user.mail,
+            name: current_user.login
+        },
+        identifier: @project.identifier
+    }
+  end
+
   # =========阶段相关接口========= #
   def stages
     pipeline_id = params[:id]
