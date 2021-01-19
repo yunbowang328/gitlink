@@ -354,6 +354,7 @@ Rails.application.routes.draw do
           get :top_counts
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
           get 'readme'
+          get 'languages'
         end
       end
 

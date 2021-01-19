@@ -1,6 +1,7 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
+  include Repository::LanguagesPercentagable
 
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :load_repository
@@ -149,6 +150,10 @@ class RepositoriesController < ApplicationController
 
     @readme = result[:status] === :success ? result[:body] : nil
     render json: @readme
+  end
+
+  def languages
+    render json: languages_precentagable
   end
 
   private

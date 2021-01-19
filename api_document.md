@@ -3106,6 +3106,35 @@ curl -X GET http://localhost:3000/api/trusite/trusite/readme | jq
 ```
 ---
 
+#### 获取仓库仓库的语言百分占比
+```
+GET api/:owner/:repo/languages
+```
+*示例*
+```bash
+curl -X GET http://localhost:3000/api/jasder/trusite/languages | jq
+```
+
+*请求参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|owner |是|string |项目拥有者登录名  |
+|repo  |否|boolean |仓库名称  |
+
+
+返回值
+```json
+{
+  "JavaScript": "90.2%",
+  "CSS": "6.1%",
+  "Java": "2.9%",
+  "HTML": "0.8%"
+}
+```
+---
+
+
 
 
 ### DevOps相关api
