@@ -91,23 +91,20 @@ class Ci::PipelinesController < Ci::BaseController
     sha = get_pipeline_file_sha(pipeline.file_name)
     if sha
       pipeline.update!(sync: 1)
-      return update_trustie_pipeline(sha)
+      interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier,sha: sha))
+      if interactor.success?
+        render_ok
+      else
+        render_error(interactor.error)
+      end
     else
       interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
       if interactor.success?
         pipeline.update!(sync: 1)
+        render_ok
       else
         render_error(interactor.error)
       end
-    end
-  end
-
-  def update_trustie_pipeline(sha)
-    interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier,sha: sha))
-    if interactor.success?
-      return render_ok("更新成功")
-    else
-      return render_error(interactor.error)
     end
   end
 
