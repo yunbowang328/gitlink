@@ -4179,22 +4179,24 @@ curl --location --request GET 'http://localhost:3000/api/ci/pipelines/19/stages.
 #### 确认阶段流水线完整内容查询
 
 ```
-GET  /api/ci/pipelines/{id}/content
+GET  /api/ci/pipelines/{id}/content?owner={owner}&repo={repo}
 ```
 
 *示例*
 
 ```bash
 curl -X GET \
-http://localhost:3000/api/ci/pipelines/1/content.json | jq
+http://localhost:3000/api/ci/pipelines/1/content.json?owner=xx&repo=xx | jq
 ```
 
 *返回参数说明:*
 
-| 参数名  | 类型   | 说明       |
-| ------- | ------ | ---------- |
-| content | String | 流水线内容 |
-| sync    | int    | 同步状态   |
+| 参数名  | 类型   | 说明             |
+| ------- | ------ | ---------------- |
+| content | String | 流水线内容       |
+| sync    | int    | 同步状态         |
+| owner   | string | 用户登录名       |
+| repo    | string | 项目的identifier |
 
 返回值
 

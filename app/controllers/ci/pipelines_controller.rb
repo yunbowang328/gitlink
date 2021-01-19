@@ -2,6 +2,7 @@ class Ci::PipelinesController < Ci::BaseController
 
   before_action :require_login, only: %i[list create]
   skip_before_action :connect_to_ci_db
+  before_action :load_project, only: %i[content]
 
   # ======流水线相关接口========== #
   def list
@@ -54,6 +55,7 @@ class Ci::PipelinesController < Ci::BaseController
     @yaml = "#pipeline \n"
     pipeline = Ci::Pipeline.find(params[:id])
     @sync = pipeline.sync
+    @sha = ''
     stages = pipeline.pipeline_stages
     if stages && !stages.empty?
       init_step = stages.first.pipeline_stage_steps.first
@@ -69,8 +71,19 @@ class Ci::PipelinesController < Ci::BaseController
         end
       end
     end
+    if @sync == 1
+      @sha = get_pipeline_file_sha(pipeline.file_name)
+    end
   end
 
+  def get_pipeline_file_sha(file_name)
+    file_path_uri = URI.parse(file_name)
+    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: params[:ref] || "master")
+    if interactor.success?
+      file = interactor.result
+      return file['sha']
+    end
+  end
   # =========阶段相关接口========= #
   def stages
     pipeline_id = params[:id]
