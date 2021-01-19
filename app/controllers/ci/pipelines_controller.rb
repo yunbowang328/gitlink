@@ -2,7 +2,7 @@ class Ci::PipelinesController < Ci::BaseController
 
   before_action :require_login, only: %i[list create]
   skip_before_action :connect_to_ci_db
-  before_action :load_project, only: %i[content, create_trustie_pipeline]
+  before_action :load_project, only: %i[content create_trustie_pipeline]
   before_action :load_repository, only: %i[create_trustie_pipeline]
 
   # ======流水线相关接口========== #
