@@ -139,6 +139,7 @@ class Ci::PipelinesController < Ci::BaseController
 
   # ========步骤相关接口========= #
   def steps
+    @stage_type = Ci::PipelineStage.find(params[:stage_id]).stage_type
     @pipeline_stage_steps = Ci::PipelineStageStep.where('stage_id=?', params[:stage_id]).order('show_index asc')
   end
 
