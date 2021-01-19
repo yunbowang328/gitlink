@@ -2,6 +2,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
   before_action :load_organization, :load_team
   before_action :load_operate_user, only: [:create, :destroy]
   before_action :load_team_user, only: [:destroy]
+  before_action :check_user_can_edit_org, only: [:create, :destroy]
 
   def index
     @team_users = @team.team_users
@@ -10,11 +11,10 @@ class Organizations::TeamUsersController < Organizations::BaseController
   end
 
   def create
-    render_forbidden("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
       @team_user = TeamUser.build(@organization.id, @operate_user.id, @team.id)
       @organization_user = OrganizationUser.build(@organization.id, @operate_user.id)
-      Gitea::Organization::TeamUser::CreateService.call(current_user.gitea_token, @team.gtid, @operate_user.login)
+      Gitea::Organization::TeamUser::CreateService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -22,11 +22,10 @@ class Organizations::TeamUsersController < Organizations::BaseController
   end
 
   def destroy
-    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @team.owner? && @team.num_users == 1
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(@operate_user)
     ActiveRecord::Base.transaction do
       @team_user.destroy!
-      Gitea::Organization::TeamUser::DeleteService.call(current_user.gitea_token, @team.gtid, @operate_user.login)
+      Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
       render_ok
     end
   rescue Exception => e
@@ -37,10 +36,10 @@ class Organizations::TeamUsersController < Organizations::BaseController
   def quit
     @team_user = @team.team_users.find_by(user_id: current_user.id)
     tip_exception("您不在该组织团队中") if @team_user.nil?
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @team.owner? && @team.num_users == 1
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(current_user)
     ActiveRecord::Base.transaction do
       @team_user.destroy!
-      Gitea::Organization::TeamUser::DeleteService.call(organization_owner.gitea_token, @team.gtid, current_user.login)
+      Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, current_user.login)
       render_ok
     end
   rescue Exception => e

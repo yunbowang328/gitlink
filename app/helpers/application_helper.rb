@@ -143,7 +143,7 @@ module ApplicationHelper
   def url_to_avatar(source)
     if File.exist?(disk_filename(source&.class, source&.id))
       ctime = File.ctime(disk_filename(source.class, source.id)).to_i
-      if source.class.to_s == 'User'
+      if %w(User Organization).include?(source.class.to_s)
         File.join(relative_path, ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       else
         File.join("images/avatars", ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"

@@ -2,6 +2,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   before_action :require_login, except: [:index, :show]
   before_action :convert_base64_image!, only: [:create, :update]
   before_action :load_organization, only: [:show, :update, :destroy]
+  before_action :check_user_can_edit_org, only: [:update, :destroy]
 
   def index
     if current_user.logged?
@@ -29,12 +30,11 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def update
-    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
       login = @organization.login
       @organization.update!(login: organization_params[:name]) if organization_params[:name].present?
       @organization.organization_extension.update_attributes!(organization_params.except(:name))
-      Gitea::Organization::UpdateService.call(current_user.gitea_token, login, @organization.reload)
+      Gitea::Organization::UpdateService.call(@organization.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
   rescue Exception => e
@@ -44,9 +44,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def destroy
     tip_exception("密码不正确") unless current_user.check_password?(password)
-    tip_exception("您没有权限进行该操作") unless @organization.is_owner?(current_user)
     ActiveRecord::Base.transaction do
-      Gitea::Organization::DeleteService.call(current_user.gitea_token, @organization.login)
+      Gitea::Organization::DeleteService.call(@organization.gitea_token, @organization.login)
       @organization.destroy!
     end
     render_ok

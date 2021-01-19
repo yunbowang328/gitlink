@@ -16,6 +16,7 @@ class Organizations::Teams::CreateService < ApplicationService
       create_units
       create_gitea_team
       sync_team_gtid
+      team.setup_team_project!
     end
     Rails.logger.info("######Team create_service end######")
 
@@ -64,7 +65,7 @@ class Organizations::Teams::CreateService < ApplicationService
   end
 
   def create_gitea_team
-    @gitea_team = Gitea::Organization::Team::CreateService.call(user.gitea_token, org, team)
+    @gitea_team = Gitea::Organization::Team::CreateService.call(org.gitea_token, org, team)
   end
 
   def sync_team_gtid

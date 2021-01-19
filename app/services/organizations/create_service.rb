@@ -63,7 +63,7 @@ class Organizations::CreateService < ApplicationService
   end
 
   def create_gitea_org
-    @gitea_organization = Gitea::Organization::CreateService.call(user.gitea_token, organization)
+    @gitea_organization = Gitea::Organization::CreateService.call(@organization.gitea_token, organization)
   end
 
   def sync_owner_team_gtid

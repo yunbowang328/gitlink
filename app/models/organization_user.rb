@@ -5,7 +5,6 @@
 #  id              :integer          not null, primary key
 #  user_id         :integer
 #  organization_id :integer
-#  is_creator      :boolean          default("0")
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
@@ -22,10 +21,10 @@ class OrganizationUser < ApplicationRecord
 
   validates :user_id, uniqueness: {scope: :organization_id}
 
-  def self.build(organization_id, user_id, is_creator = false)
+  def self.build(organization_id, user_id)
     org_user = self.find_by(organization_id: organization_id, user_id: user_id)
     return org_user unless org_user.nil?
-    self.create!(organization_id: organization_id, user_id: user_id, is_creator: is_creator)
+    self.create!(organization_id: organization_id, user_id: user_id)
   end
 
   def teams

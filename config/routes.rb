@@ -103,6 +103,8 @@ Rails.application.routes.draw do
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
 
+    resources :owners, only: [:index]
+
     scope module: :organizations do
       resources :organizations, except: [:edit, :new] do
         resources :organization_users, only: [:index, :destroy] do
@@ -118,6 +120,7 @@ Rails.application.routes.draw do
           end
           resources :team_projects, only: [:index, :create, :destroy] do ;end
         end
+        resources :projects, only: [:index]
       end
     end
 
@@ -512,6 +515,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
+        resources :teams, only: [:index]
         scope do
           get(
             '/blob/*id/diff',

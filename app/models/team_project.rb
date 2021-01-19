@@ -22,9 +22,9 @@ class TeamProject < ApplicationRecord
   belongs_to :project
   belongs_to :team, counter_cache: :num_projects
 
-  validates :project_id, uniqueness: {scope: :organization_id}
+  validates :project_id, uniqueness: {scope: [:organization_id, :team_id]}
 
   def self.build(organization_id, team_id, project_id)
-    self.create!(organization_id: organization_id, team_id: team_id, project_id: project_id)
+    self.find_or_create_by!(organization_id: organization_id, team_id: team_id, project_id: project_id)
   end
 end

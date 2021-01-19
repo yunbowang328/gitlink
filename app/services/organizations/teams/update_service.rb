@@ -14,6 +14,7 @@ class Organizations::Teams::UpdateService < ApplicationService
       update_team(update_params)
       update_units
       team.reload
+      team.setup_team_project!
       update_gitea_team
     end
     Rails.logger.info("######Team update_service end######")
@@ -53,6 +54,6 @@ class Organizations::Teams::UpdateService < ApplicationService
   end
 
   def update_gitea_team
-    Gitea::Organization::Team::UpdateService.call(user.gitea_token, team)
+    Gitea::Organization::Team::UpdateService.call(team&.organization&.gitea_token, team)
   end
 end

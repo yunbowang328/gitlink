@@ -40,4 +40,11 @@ class Team < ApplicationRecord
                  can_create_org_project: can_create_org_project)
   end
 
+  def setup_team_project!
+    return unless includes_all_project
+    organization.projects.each do |project|
+      TeamProject.build(organization.id, id, project.id)
+    end
+  end
+
 end

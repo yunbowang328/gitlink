@@ -1,5 +1,6 @@
 class Repositories::CreateService < ApplicationService
   attr_reader :user, :project, :params
+  attr_accessor :repository, :gitea_repository
 
   def initialize(user, project, params)
     @project = project
@@ -10,10 +11,10 @@ class Repositories::CreateService < ApplicationService
   def call
     @repository = Repository.new(repository_params)
     ActiveRecord::Base.transaction do
-      if @repository.save!
-        gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
-        sync_project(@repository, gitea_repository)
-        sync_repository(@repository, gitea_repository)
+      if repository.save!
+        create_gitea_repository
+        sync_project
+        sync_repository
         # if project.project_type == "common"
         #   chain_params = {
         #     type: "create",
@@ -29,7 +30,7 @@ class Repositories::CreateService < ApplicationService
       else
         Rails.logger.info("#############___________create_repository_erros______###########{@repository.errors.messages}")
       end
-      @repository
+      repository
     end
   rescue => e
     puts "create repository service error: #{e.message}"
@@ -38,7 +39,16 @@ class Repositories::CreateService < ApplicationService
 
   private
 
-  def sync_project(repository, gitea_repository)
+  def create_gitea_repository
+    if project.owner.is_a?(User)
+      @gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
+    elsif project.owner.is_a?(Organization)
+      @gitea_repository = Gitea::Organization::Repository::CreateService.call(user.gitea_token, project.owner.login, gitea_repository_params)
+      project.owner.teams.map{|t|t.setup_team_project!}
+    end
+  end
+
+  def sync_project
     if gitea_repository
       project.update_columns(
         gpid: gitea_repository["id"],
@@ -47,7 +57,7 @@ class Repositories::CreateService < ApplicationService
     end
   end
 
-  def sync_repository(repository, gitea_repository)
+  def sync_repository
     repository.update_columns(url: remote_repository_url,) if gitea_repository
   end
 

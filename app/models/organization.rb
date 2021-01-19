@@ -77,8 +77,38 @@ class Organization < Owner
     self.create!(login: name, gitea_token: gitea_token)
   end
 
-  def is_owner?(user)
-    team_users.joins(:team).where(user_id: user.id, teams: {authorize: %w(owner)}).present?
+  def is_owner?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(owner)}).present?
   end
 
+  def is_admin?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(admin owner)}).present?
+  end
+
+  def is_write?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(write admin owner)}).present?
+  end
+
+  def is_read?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(read write admin owner)}).present?
+  end
+
+  # 是不是所有者团队的最后一个成员
+  def is_owner_team_last_one?(user_id)
+    owner_team_users = team_users.joins(:team).where(teams: {authorize: %w(owner)})
+    owner_team_users.pluck(:user_id).include?(user_id) && owner_team_users.size == 1
+  end
+
+  def real_name
+    login
+  end
+
+  def show_real_name
+    name = lastname + firstname
+    if name.blank?
+      nickname.blank? ? login : nickname
+    else
+      name
+    end
+  end
 end
