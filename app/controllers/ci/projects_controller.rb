@@ -28,9 +28,17 @@ class Ci::ProjectsController < Ci::BaseController
     interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier))
     if interactor.success?
       @file = interactor.result
+      update_pipeline(params[:pipeline_id])
       render_result(1, "更新成功")
     else
       render_error(interactor.error)
+    end
+  end
+
+  def update_pipeline(pipeline_id)
+    pipeline = Ci::Pipeline.find(pipeline_id)
+    if pipeline
+      pipeline.update!(sync: 1)
     end
   end
 

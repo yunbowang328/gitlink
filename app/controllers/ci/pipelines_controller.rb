@@ -5,12 +5,12 @@ class Ci::PipelinesController < Ci::BaseController
 
   # ======流水线相关接口========== #
   def list
-    @pipelines = Ci::Pipeline.where('login=?', current_user.login)
+    @pipelines = Ci::Pipeline.where('login=? and project_id=?', current_user.login, params[:project_id])
   end
 
   def create
     ActiveRecord::Base.transaction do
-      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name], login: current_user.login)
+      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name], login: current_user.login, project_id: params[:project_id])
       pipeline.save!
 
       # 默认创建四个初始阶段
@@ -132,6 +132,10 @@ class Ci::PipelinesController < Ci::BaseController
       steps = params[:steps]
       unless steps.empty?
         steps.each do |step|
+          unless step[:template_id]
+            render_error("请选择模板！")
+            return
+          end
           if !step[:id]
             step = Ci::PipelineStageStep.new(step_name: step[:step_name], stage_id: params[:stage_id],
                                              template_id: step[:template_id], content: step[:content], show_index: step[:show_index])

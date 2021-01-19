@@ -3283,12 +3283,12 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 
 #### 更新'.trustie-pipeline.yml'文件
 ```
-PUT /api/:owner/:repo/update_trustie_pipeline
+PUT /api/:owner/:repo/update_trustie_pipeline?pipeline_id={pipeline_id}
 ```
 *示例*
 ```bash
 curl -X GET \
-http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
+http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json?pipeline_id=1 | jq
 ```
 *请求参数说明:*
 
@@ -3305,6 +3305,7 @@ http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
 |branch         |否|string |分支名称, branch和new_branch必须存在一个,且只能存在一个 |
 |new_branch     |否|string |新的分支名称 |
 |ci_language_id     |否|string |新的分支名称 |
+|pipeline_id |是|int |流水线id |
 
 
 *返回参数说明:*
@@ -3954,24 +3955,25 @@ https://localhost:3000/api/users/ci/cloud_account/bind.json  | jq
 #### 流水线查询
 
 ```
-GET  /api/ci/pipelines/list
+GET  /api/ci/pipelines/list?project_id={project_id}
 ```
 
 *示例*
 
 ```bash
 curl -X GET \
-http://localhost:3000/api/ci/pipelines/list.json | jq
+http://localhost:3000/api/ci/pipelines/list.json?project_id=1 | jq
 ```
 
 *返回参数说明:*
 
-| 参数名        | 类型   | 说明         |
-| ------------- | ------ | ------------ |
-| id            | int    | 流水线id     |
-| pipeline_name | string | 流水线名称   |
-| file_name     | string | 流水线文件名 |
-| created_at    | string | 创建时间     |
+| 参数名        | 类型   | 说明            |
+| ------------- | ------ | --------------- |
+| id            | int    | 流水线id        |
+| pipeline_name | string | 流水线名称      |
+| file_name     | string | 流水线文件名    |
+| created_at    | string | 创建时间        |
+| sync          | int    | 是否同步到gitea |
 
 返回值
 
@@ -4004,7 +4006,8 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 --header 'Content-Type: application/json' \
 --data-raw ' {
             "pipeline_name": "流水线 2021-01-12",
-            "file_name": ".trustie.pipeline.yaml"
+            "file_name": ".trustie.pipeline.yaml",
+            "project_id": 1
 }'
 ```
 
@@ -4014,6 +4017,7 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 | ------------- | ---- | ------ | ---------------------------------------------- |
 | pipeline_name | 是   | string | 流水线名称                                     |
 | file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
+| project_id    | 是   | int    | 项目id                                         |
 
 *返回参数说明:*
 
