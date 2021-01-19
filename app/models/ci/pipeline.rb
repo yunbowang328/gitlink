@@ -9,6 +9,8 @@
 #  updated_at      :datetime         not null
 #  pipeline_status :string(50)       default("unknown"), not null
 #  login           :string(255)
+#  sync            :integer          default("0"), not null
+#  project_id      :integer
 #
 
 class Ci::Pipeline < Ci::LocalBase
