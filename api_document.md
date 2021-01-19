@@ -3283,9 +3283,10 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 
 #### 更新'.trustie-pipeline.yml'文件
 ```
-PUT /api/:owner/:repo/update_trustie_pipeline?pipeline_id={pipeline_id}
+PUT /api/:owner/:repo/update_trustie_pipeline
 ```
 *示例*
+
 ```bash
 curl -X GET \
 http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json?pipeline_id=1 | jq
@@ -3305,7 +3306,6 @@ http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json?pipeline_id=
 |branch         |否|string |分支名称, branch和new_branch必须存在一个,且只能存在一个 |
 |new_branch     |否|string |新的分支名称 |
 |ci_language_id     |否|string |新的分支名称 |
-|pipeline_id |是|int |流水线id |
 
 
 *返回参数说明:*
@@ -3955,14 +3955,14 @@ https://localhost:3000/api/users/ci/cloud_account/bind.json  | jq
 #### 流水线查询
 
 ```
-GET  /api/ci/pipelines/list?project_id={project_id}
+GET  /api/ci/pipelines/list?identifier={identifier}
 ```
 
 *示例*
 
 ```bash
 curl -X GET \
-http://localhost:3000/api/ci/pipelines/list.json?project_id=1 | jq
+http://localhost:3000/api/ci/pipelines/list.json?identifier="xxx" | jq
 ```
 
 *返回参数说明:*
@@ -4007,7 +4007,7 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 --data-raw ' {
             "pipeline_name": "流水线 2021-01-12",
             "file_name": ".trustie.pipeline.yaml",
-            "project_id": 1
+            "identifier": "xxx"
 }'
 ```
 
@@ -4017,7 +4017,7 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 | ------------- | ---- | ------ | ---------------------------------------------- |
 | pipeline_name | 是   | string | 流水线名称                                     |
 | file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
-| project_id    | 是   | int    | 项目id                                         |
+| identifier    | 是   | string | 项目identifier                                 |
 
 *返回参数说明:*
 

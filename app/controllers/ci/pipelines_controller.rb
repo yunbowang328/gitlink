@@ -5,12 +5,12 @@ class Ci::PipelinesController < Ci::BaseController
 
   # ======流水线相关接口========== #
   def list
-    @pipelines = Ci::Pipeline.where('login=? and project_id=?', current_user.login, params[:project_id])
+    @pipelines = Ci::Pipeline.where('login=? and identifier=?', current_user.login, params[:identifier])
   end
 
   def create
     ActiveRecord::Base.transaction do
-      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name], login: current_user.login, project_id: params[:project_id])
+      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name], login: current_user.login, identifier: params[:identifier])
       pipeline.save!
 
       # 默认创建四个初始阶段
