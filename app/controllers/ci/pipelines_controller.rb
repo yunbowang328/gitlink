@@ -52,7 +52,9 @@ class Ci::PipelinesController < Ci::BaseController
 
   def content
     @yaml = "#pipeline \n"
-    stages = Ci::Pipeline.find(params[:id]).pipeline_stages
+    pipeline = Ci::Pipeline.find(params[:id])
+    @sync = pipeline.sync
+    stages = pipeline.pipeline_stages
     if stages && !stages.empty?
       init_step = stages.first.pipeline_stage_steps.first
       @yaml += init_step.content + "\n" + "steps:\n"

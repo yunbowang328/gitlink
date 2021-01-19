@@ -4191,15 +4191,17 @@ http://localhost:3000/api/ci/pipelines/1/content.json | jq
 
 *返回参数说明:*
 
-| 参数名 | 类型 | 说明     |
-| ------ | ---- | -------- |
-| id     | int  | 流水线id |
+| 参数名  | 类型   | 说明       |
+| ------- | ------ | ---------- |
+| content | String | 流水线内容 |
+| sync    | int    | 同步状态   |
 
 返回值
 
 ```json
 {
-    "content": "#pipeline \nkind: pipeline\r\nname: maven项目-镜像仓库\r\n\r\nplatform:\r\n  os: linux\r\n  arch: arm64\nsteps:\n- name: Maven编译\r\n  image: arm64v8/maven\r\n  commands:\r\n    - mvn install\n- name: 编译镜像-推送到仓库\r\n  image: plugins/docker\r\n  settings:\r\n    username: moshenglv\r\n    password: RL9UB5P7Jtzukka\r\n    repo: docker.io/moshenglv/demo\r\n    tags: latest\n"
+    "content": "#pipeline \nkind: pipeline\r\nname: maven项目-镜像仓库\r\n\r\nplatform:\r\n  os: linux\r\n  arch: arm64\nsteps:\n- name: Maven编译\r\n  image: arm64v8/maven\r\n  commands:\r\n    - mvn install\n- name: 编译镜像-推送到仓库\r\n  image: plugins/docker\r\n  settings:\r\n    username: moshenglv\r\n    password: RL9UB5P7Jtzukka\r\n    repo: docker.io/moshenglv/demo\r\n    tags: latest\n",
+    "sync": 1
 }
 ```
 
