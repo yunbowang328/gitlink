@@ -9,6 +9,17 @@ class Users::OrganizationsController < Users::BaseController
       @organizations = observed_user.organizations.with_visibility("common")
     end
 
-    @organizations = @organizations.includes(:organization_extension).order(id: :asc)
+    @organizations = @organizations.ransack(login_cont: params[:search]).result if params[:search].present?
+    @organizations = @organizations.includes(:organization_extension).order("organization_extensions.#{sort_by} #{sort_direction}")
+    @organizations = kaminari_paginate(@organizations)
+  end
+
+  private
+  def sort_by
+    params.fetch(:sort_by, "created_at")
+  end
+
+  def sort_direction
+    params.fetch(:sort_direction, "desc")
   end
 end

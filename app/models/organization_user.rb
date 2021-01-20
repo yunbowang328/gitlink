@@ -17,6 +17,7 @@
 class OrganizationUser < ApplicationRecord
 
   belongs_to :organization
+  belongs_to :organization_extension, foreign_key: :organization_id, primary_key: :organization_id, counter_cache: :num_users
   belongs_to :user
 
   validates :user_id, uniqueness: {scope: :organization_id}

@@ -12,7 +12,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
     else
       @organizations = Organization.with_visibility("common")
     end
-    @organizations = @organizations.includes(:organization_extension).order(id: :asc)
+    @organizations = @organizations.ransack(login_cont: params[:search]).result if params[:search].present?
+    @organizations = @organizations.includes(:organization_extension).order("organization_extensions.#{sort_by} #{sort_direction}")
     @organizations = kaminari_paginate(@organizations)
   end
 
@@ -80,6 +81,14 @@ class Organizations::OrganizationsController < Organizations::BaseController
     @organization = Organization.find_by(login: params[:id]) || Organization.find_by(id: params[:id])
     tip_exception("组织不存在") if @organization.nil?
     tip_exception("没有查看组织的权限") if org_limited_condition || org_privacy_condition
+  end
+
+  def sort_by
+    params.fetch(:sort_by, "created_at")
+  end
+
+  def sort_direction
+    params.fetch(:sort_direction, "desc")
   end
 
 end

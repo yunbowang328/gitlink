@@ -69,7 +69,8 @@ class Organization < Owner
   validates :login, presence: true
   validates_uniqueness_of :login, :if => Proc.new { |user| user.login_changed? && user.login.present? }, case_sensitive: false
 
-  delegate :description, :website, :location, :repo_admin_change_team_access, :visibility, :max_repo_creation, to: :organization_extension, allow_nil: true
+  delegate :description, :website, :location, :repo_admin_change_team_access,
+           :visibility, :max_repo_creation, :num_projects, :num_users, to: :organization_extension, allow_nil: true
 
   scope :with_visibility, ->(visibility) { joins(:organization_extension).where(organization_extensions: {visibility: visibility}) if visibility.present? }
 

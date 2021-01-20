@@ -86,6 +86,7 @@ class Project < ApplicationRecord
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
   belongs_to :owner, class_name: 'Owner', foreign_key: :user_id, optional: true
+  belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy

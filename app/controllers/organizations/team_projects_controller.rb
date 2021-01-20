@@ -11,6 +11,7 @@ class Organizations::TeamProjectsController < Organizations::BaseController
   end
 
   def create
+    tip_exception("该组织团队项目包括组织所有项目,不允许更改") if @team.includes_all_project
     ActiveRecord::Base.transaction do
       @team_project = TeamProject.build(@organization.id, @team.id, @operate_project.id)
       Gitea::Organization::TeamProject::CreateService.call(@organization.gitea_token, @team.gtid, @organization.login, @operate_project.identifier)
@@ -21,8 +22,9 @@ class Organizations::TeamProjectsController < Organizations::BaseController
   end
 
   def destroy
+    tip_exception("该组织团队项目包括组织所有项目,不允许更改") if @team.includes_all_project
     ActiveRecord::Base.transaction do
-      @team_projects.destroy!
+      @team_project.destroy!
       Gitea::Organization::TeamProject::DeleteService.call(@organization.gitea_token, @team.gtid, @organization.login, @operate_project.identifier)
       render_ok
     end
@@ -45,7 +47,7 @@ class Organizations::TeamProjectsController < Organizations::BaseController
   end
 
   def load_operate_project
-    @operate_project = Project.find_by(name: params[:id]) || Project.find_by(identifier: params[:id])
+    @operate_project = Project.find_by(id: project_mark) || Project.find_by(identifier: project_mark)
     tip_exception("项目不存在") if @operate_project.nil?
   end
 
