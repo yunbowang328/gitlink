@@ -11,9 +11,9 @@ class SyncRepoUpdateTimeJob < ApplicationJob
   private
   def gitea_repo_updated_at(project)
     admin = User.where(admin: true).select(:id, :gitea_token, :gitea_uid).last
+    puts "########## project id: #{project.id}"
 
     return nil if project.gpid.blank?
-
     result = Gitea::Repository::GetByIdService.call(project.gpid, admin.gitea_token)
 
     result[:status] === :success ? result[:body]['updated_at'] : nil

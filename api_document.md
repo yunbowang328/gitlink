@@ -3106,7 +3106,7 @@ curl -X GET http://localhost:3000/api/trusite/trusite/readme | jq
 ```
 ---
 
-#### 获取仓库仓库的语言百分占比
+#### 获库仓库的语言百分占比
 ```
 GET api/:owner/:repo/languages
 ```
