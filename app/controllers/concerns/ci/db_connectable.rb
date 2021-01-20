@@ -17,7 +17,8 @@ module Ci::DbConnectable
       password: db_config[:password],
       port: db_config[:port]
     }
-    req_params = req_params.merge(database: "#{current_user.login}_#{db_config[:database]}") unless master_db === true
+    db_name = options[:db_name].blank? ? current_user.login : options[:db_name]
+    req_params = req_params.merge(database: "#{db_name}_#{db_config[:database]}") unless master_db === true
 
     db_params = Ci::Database.get_connection_params(req_params)
     @connection = Ci::Database.set_connection(db_params).connection

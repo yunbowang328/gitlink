@@ -63,6 +63,7 @@ class Ci::BaseController < ApplicationController
     if current.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
       connect_to_trustie_ci_database(options)
     else
+      options = options.merge(db_name: current.login)
       connect_to_ci_database(options)
     end
 
