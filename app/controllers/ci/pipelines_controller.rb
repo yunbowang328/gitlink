@@ -7,7 +7,7 @@ class Ci::PipelinesController < Ci::BaseController
 
   # ======流水线相关接口========== #
   def list
-    @pipelines = Ci::Pipeline.where('login=? and identifier=?', current_user.login, params[:identifier])
+    @pipelines = Ci::Pipeline.where('identifier=?', params[:identifier])
   end
 
   def create
