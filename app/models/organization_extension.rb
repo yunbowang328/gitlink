@@ -12,6 +12,8 @@
 #  max_repo_creation             :integer          default("-1")
 #  created_at                    :datetime         not null
 #  updated_at                    :datetime         not null
+#  num_projects                  :integer          default("0")
+#  num_users                     :integer          default("0")
 #
 # Indexes
 #
@@ -21,6 +23,8 @@
 class OrganizationExtension < ApplicationRecord
 
   belongs_to :organization
+  has_many :organization_users, foreign_key: :organization_id, primary_key: :organization_id
+  has_many :projects, foreign_key: :user_id, primary_key: :organization_id
 
   enum visibility: {common: 0, limited: 1, privacy: 2}
 

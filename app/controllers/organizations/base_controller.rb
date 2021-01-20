@@ -27,4 +27,8 @@ class Organizations::BaseController < ApplicationController
   def user_mark
     params[:username] || params[:id]
   end
+
+  def project_mark
+    params[:repo_name] || params[:id]
+  end
 end

@@ -44,7 +44,10 @@ class Repositories::CreateService < ApplicationService
       @gitea_repository = Gitea::Repository::CreateService.new(user.gitea_token, gitea_repository_params).call
     elsif project.owner.is_a?(Organization)
       @gitea_repository = Gitea::Organization::Repository::CreateService.call(user.gitea_token, project.owner.login, gitea_repository_params)
-      project.owner.teams.map{|t|t.setup_team_project!}
+      project.owner.teams.each do |team|
+        next unless team.includes_all_project
+        TeamProject.build(project.user_id, team.id, project.id)
+      end
     end
   end
 
