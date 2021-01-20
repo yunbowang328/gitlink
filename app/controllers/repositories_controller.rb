@@ -95,8 +95,19 @@ class RepositoriesController < ApplicationController
     if interactor.success?
       @file = interactor.result
       # create_new_pr(params)
+      #如果是更新流水线文件
+      if params[:pipeline_id]
+        update_pipeline(params[:pipeline_id])
+      end
     else
       render_error(interactor.error)
+    end
+  end
+
+  def update_pipeline(pipeline_id)
+    pipeline = Ci::Pipeline.find(pipeline_id)
+    if pipeline
+      pipeline.update!(sync: 1)
     end
   end
 
