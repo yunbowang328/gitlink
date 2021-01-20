@@ -15,12 +15,8 @@ if @project.forge?
   json.direct_download direct_download
   json.image_type image_type
   json.is_readme_file is_readme?(entry['type'], entry['name'])
-  if entry['latest_commit']
-    if entry['type'] != 'file'
-      json.partial! 'last_commit', entry: entry
-    else
-      json.commit nil
-    end
+  json.commit do
+    json.partial! 'last_commit', latest_commit: entry['latest_commit']
   end
 end
 
@@ -38,8 +34,11 @@ if @project.educoder?
   json.direct_download false
   json.image_type false
   json.is_readme_file false
-  if entry['latest_commit']
-    # json.partial! 'last_commit', entry: entry
-    json.partial! 'repositories/simple_entry', locals: { entry: entry }
+  json.commit do
+    json.message entry['title']
+    json.time_from_now entry['time']
+    json.sha nil
+    json.created_at_unix nil
+    json.created_at nil
   end
 end

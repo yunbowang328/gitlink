@@ -54,8 +54,8 @@ if @project.forge?
       json.is_readme_file is_readme?(entry['type'], entry['name'])
       json.content decode64_content(entry, @owner, @repository, @ref, @path)
       json.target entry['target']
-      if entry['latest_commit']
-        json.partial! 'last_commit', entry: entry
+      json.commit do
+        json.partial! 'last_commit', latest_commit: entry['latest_commit']
       end
     end
   end
