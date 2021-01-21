@@ -58,7 +58,7 @@ class Organizations::CreateService < ApplicationService
     TeamUnit.unit_types.keys.each do |u_type|
       TeamUnit.build(organization.id, owner_team.id, u_type)
     end
-    OrganizationUser.build(organization.id, user.id, true)
+    OrganizationUser.build(organization.id, user.id)
     TeamUser.build(organization.id, user.id, owner_team.id)
   end
 
