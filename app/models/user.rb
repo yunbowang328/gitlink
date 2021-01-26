@@ -167,7 +167,7 @@ class User < Owner
     where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
-  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid)}
+  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid, :type)}
 
   attr_accessor :password, :password_confirmation
 
