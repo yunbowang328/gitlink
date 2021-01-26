@@ -11,4 +11,6 @@ class Ci::Build < Ci::RemoteBase
   scope :pending,   -> { by_status('pending') }
   scope :killed,   -> { by_status('killed') }
   scope :by_status, ->(status) { where(build_status: status) }
+
+  scope :by_branch, ->(branch) { where(build_target: branch) }
 end

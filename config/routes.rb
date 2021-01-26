@@ -32,7 +32,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :templates, only: [:list,:templates_by_stage,:create,:update,:destroy] do
+      resources :templates, only: [:list,:templates_by_stage,:create,:update,:destroy,:show] do
         collection do
           get :list
           get :templates_by_stage

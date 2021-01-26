@@ -38,7 +38,7 @@ class Ci::CloudAccountsController < Ci::BaseController
       ActiveRecord::Base.transaction do
         if @repo
           return render_error('该项目已经激活') if @repo.repo_active?
-          @repo.activate!(@ci_user.user_id)
+          @repo.activate!(@project)
         else
           @repo = Ci::Repo.auto_create!(@ci_user, @project)
           @user.update_column(:user_syncing, false)

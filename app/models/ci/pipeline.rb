@@ -10,7 +10,10 @@
 #  pipeline_status :string(50)       default("unknown"), not null
 #  login           :string(255)
 #  sync            :integer          default("0"), not null
-#  project_id      :integer
+#  identifier      :string(11)
+#  branch          :string(255)
+#  event           :string(255)
+#  sha             :string(255)
 #
 
 class Ci::Pipeline < Ci::LocalBase
@@ -19,5 +22,7 @@ class Ci::Pipeline < Ci::LocalBase
   validates :identifier, presence: {message: "项目identifier不能为空"}
 
   has_many :pipeline_stages, -> { reorder(show_index: :asc) }, foreign_key: "pipeline_id", :class_name => 'Ci::PipelineStage',  dependent: :destroy
+
+  attr_accessor :last_build_time
 
 end

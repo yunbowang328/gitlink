@@ -16,6 +16,10 @@ class Ci::BaseController < ApplicationController
     @repos = Ci::Repo.find_all_with_namespace(namespace)
   end
 
+  def load_repo_by_repo_slug(slug)
+    @repo_slug = Ci::Repo.load_repo_by_repo_slug(slug)
+  end
+
   private
     def authorize_access_project!
       unless @project.manager?(current_user)

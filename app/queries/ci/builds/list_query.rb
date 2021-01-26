@@ -24,6 +24,9 @@ class Ci::Builds::ListQuery < ApplicationQuery
       else
         scope
       end
+
+    builds = scope.by_branch(params[:branch]) if params[:branch]
+
     custom_sort(builds, params[:sort_by], params[:sort_direction])
   end
 end
