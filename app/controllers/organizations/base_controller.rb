@@ -31,4 +31,13 @@ class Organizations::BaseController < ApplicationController
   def project_mark
     params[:repo_name] || params[:id]
   end
+
+  private
+  def limited_condition
+    @organization.organization_extension.limited? && !current_user.logged?
+  end
+
+  def privacy_condition
+    @organization.organization_extension.privacy? && @organization.organization_users.where(user_id: current_user.id).blank?
+  end
 end

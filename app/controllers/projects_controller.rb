@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, owner: :user_extension)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner)
 
     category_id = params[:category_id]
     @total_count =
@@ -128,7 +128,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, owner: :user_extension).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
   end
 
   def about
