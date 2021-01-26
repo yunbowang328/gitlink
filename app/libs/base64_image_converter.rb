@@ -1,5 +1,7 @@
 class Base64ImageConverter
-  BASE64_HEAD = 'data:image/jpeg;base64,'.freeze
+  # BASE64_HEAD = 'data:image/jpeg;base64,'.freeze
+  BASE64_HEAD_ARRAY = ['data:image/jpeg;base64,', 'data:image/jpg;base64,',
+    'data:image/png;base64,', 'data:image/gif;base64,']
 
   Error         = Class.new(StandardError)
   OutLimit      = Class.new(Error)
@@ -27,11 +29,20 @@ class Base64ImageConverter
   private
 
   def valid_base64?(data)
-    data&.start_with?(BASE64_HEAD)
+    # data&.start_with?(BASE64_HEAD)
+    BASE64_HEAD_ARRAY.include? base64_head_data(data)
+  end
+
+  def base64_head_data(data)
+    data&.split(',')[0] + ','
+  end
+
+  def base64_head(data)
+    valid_base64?(data) ? base64_head_data(data) : ''
   end
 
   def image_data(data)
-    data[BASE64_HEAD.size..-1]
+    data[base64_head(data).size..-1]
   end
 
   def size_limit
