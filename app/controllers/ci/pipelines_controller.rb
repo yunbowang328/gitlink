@@ -70,17 +70,20 @@ class Ci::PipelinesController < Ci::BaseController
 
   # 在drone数据库repo表新增一条repo记录
   def create_ci_repo(pipeline)
-    create_params = {
-      repo_user_id: @ci_user.user_id,
-      repo_namespace: @project.owner.login,
-      repo_name: @project.identifier,
-      repo_slug: "#{@project.owner.login}/#{@project.identifier}-" + pipeline.id.to_s,
-      repo_clone_url: @project.repository.url,
-      repo_branch: pipeline.branch,
-      repo_config: pipeline.file_name
-    }
-    repo = Ci::Repo.create_repo(create_params)
-    repo
+    if pipeline.branch != 'master'
+      create_params = {
+        repo_user_id: @ci_user.user_id,
+        repo_namespace: @project.owner.login,
+        repo_name: @project.identifier,
+        repo_slug: "#{@project.owner.login}/#{@project.identifier}-" + pipeline.id.to_s,
+        repo_clone_url: @project.repository.url,
+        repo_branch: pipeline.branch,
+        repo_config: pipeline.file_name
+      }
+      repo = Ci::Repo.create_repo(create_params)
+      repo
+    end
+    nil
   end
 
   def get_pipeline_file_sha(file_name, branch)
@@ -88,9 +91,7 @@ class Ci::PipelinesController < Ci::BaseController
     interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: branch || 'master')
     if interactor.success?
       file = interactor.result
-      return file['sha']
-    else
-      return nil
+      file['sha']
     end
   end
 
