@@ -4104,7 +4104,7 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 | file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
 | repo          | 是   | string | 项目identifier                                 |
 | owner         | 是   | string | 项目的owner                                    |
-| branch        | 否   | string | 分支名称, branch必须存在一个                   |
+| branch        | 是   | string | 分支名称, branch必须存在一个                   |
 | event         | 是   | string | 触发事件，可多选，多个逗号隔开                 |
 
 *返回参数说明:*
