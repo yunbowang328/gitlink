@@ -3502,13 +3502,13 @@ curl -X GET http://localhost:3000/api/ci/languages/114.json | jq
 
 #### 获取构建列表
 ```
-GET  /api/:owner/:repo/builds
+GET  /api/:owner/:repo/builds??branch={branch}
 ```
 
 *示例*
 ```bash
 curl -X GET \
-http://localhost:3000/api/Jason/forge/builds | jq
+http://localhost:3000/api/Jason/forge/builds?branch=develop | jq
 ```
 
 *请求参数说明:*
