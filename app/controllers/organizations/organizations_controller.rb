@@ -57,7 +57,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   private
   def convert_image!
-    max_size = EduSetting.get('upload_avatar_max_size') || 2 * 1024 * 1024 # 2M
+    return unless params[:image].present?
+    max_size = EduSetting.get('upload_avatar_max_size').to_i || 2 * 1024 * 1024 # 2M
     if params[:image].class == ActionDispatch::Http::UploadedFile
       @image = params[:image]
       render_error('请上传文件') if @image.size.zero?
