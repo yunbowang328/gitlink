@@ -40,7 +40,7 @@ module Educoderplus
       allow do
         origins '*'
         # location of your api
-        resource '/*', :headers => :any, :methods => [:get, :post, :delete, :options, :put]
+        resource '/*', :headers => :any, :methods => [:get, :post, :delete, :options, :put, :patch]
       end
     end
   end
