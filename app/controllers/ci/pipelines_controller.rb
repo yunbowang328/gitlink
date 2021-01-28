@@ -10,12 +10,15 @@ class Ci::PipelinesController < Ci::BaseController
     @result = Array.new
     list = Ci::Pipeline.where('identifier=?', params[:identifier])
     # 查询build状态
-    list = list.collect do |pipeline|
+    list.collect do |pipeline|
+      pipeline.last_build_time = nil
       repo = load_repo_by_repo_slug("#{pipeline.login}/#{pipeline.identifier}")
-      build = repo.builds.order("build_created desc").find_by(build_target: pipeline.branch)
-      if build
-        pipeline.pipeline_status = build.build_status
-        pipeline.last_build_time = Time.at(build.build_created)
+      if repo
+        build = repo.builds.order("build_created desc").find_by(build_target: pipeline.branch)
+        if build
+          pipeline.pipeline_status = build.build_status
+          pipeline.last_build_time = Time.at(build.build_created)
+        end
       end
       @result.push(pipeline)
     end
