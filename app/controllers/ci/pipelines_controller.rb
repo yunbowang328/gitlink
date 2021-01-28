@@ -1,9 +1,9 @@
 class Ci::PipelinesController < Ci::BaseController
 
-  before_action :require_login, only: %i[list create]
-  skip_before_action :connect_to_ci_db, except: %i[list create destroy]
-  before_action :load_project, only: %i[create]
-  before_action :load_repo, only: %i[create]
+  before_action :require_login, only: %i[list create content]
+  skip_before_action :connect_to_ci_db, except: %i[list create destroy content]
+  before_action :load_project, only: %i[create content]
+  before_action :load_repo, only: %i[create content]
 
   # ======流水线相关接口========== #
   def list
@@ -116,7 +116,7 @@ class Ci::PipelinesController < Ci::BaseController
   def update
     pipeline = Ci::Pipeline.find(params[:id])
     if pipeline
-      pipeline.update!(pipeline_name: params[:pipeline_name])
+      pipeline.update!(pipeline_name: params[:pipeline_name],branch: params[:branch], event: params[:event])
     end
     render_ok
   rescue Exception => ex
@@ -140,7 +140,6 @@ class Ci::PipelinesController < Ci::BaseController
   def content
     @yaml = "\n"
     pipeline = Ci::Pipeline.find(params[:id])
-    @sha = pipeline.sha
     stages = pipeline.pipeline_stages
     if stages && !stages.empty?
       init_step = stages.first.pipeline_stage_steps.first
@@ -155,6 +154,10 @@ class Ci::PipelinesController < Ci::BaseController
           end
         end
       end
+    end
+    @sha = pipeline.sha
+    unless @sha
+      @sha = get_pipeline_file_sha(pipeline.file_name, pipeline.branch)
     end
     trigger = ''
     trigger += "  branch:\r\n  - #{pipeline.branch}\r\n" unless pipeline.branch.blank?
