@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include ApplicationHelper
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
@@ -66,7 +67,7 @@ class UsersController < ApplicationController
 
   def attachment_show
     file_name = params[:file_name]
-    path = params[:path] || edu_setting('attachment_folder')
+    path = params[:path] || file_storage_directory
     send_file "#{path}/#{file_name}", :filename => "#{file_name}",
               :type => 'game',
               :disposition => 'attachment' #inline can open in browser

@@ -323,7 +323,15 @@ module ApplicationHelper
   end
 
   def absolute_path(file_path)
-    File.join(edu_setting('attachment_folder'), file_path)
+    file_root_directory + File.join(edu_setting('attachment_folder'), file_path)
+  end
+
+  def file_root_directory
+    Rails.root.to_s
+  end
+
+  def file_storage_directory
+    file_root_directory + edu_setting('attachment_folder')
   end
 
   def local_path(file)
