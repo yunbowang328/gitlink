@@ -32,6 +32,32 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :templates, only: [:list,:templates_by_stage,:create,:update,:destroy] do
+        collection do
+          get :list
+          get :templates_by_stage
+        end
+      end
+
+      resources :pipelines do
+        collection do
+          get :list
+        end
+        member do
+          get :content
+          get :stages
+          post :create_stage
+          post :create_trustie_pipeline
+          delete :delete_stage, :path => ":stage_id/delete_stage", to: 'pipelines#delete_stage'
+          put :update_stage, :path => ":stage_id/update_stage", to: 'pipelines#update_stage'
+          get :stage_steps, :path => ":stage_id/steps", to: 'pipelines#steps'
+          post :create_stage_step, :path => ":stage_id/create_step", to: 'pipelines#create_stage_step'
+          post :stage_step, :path => ":stage_id/stage_step", to: 'pipelines#stage_step'
+          delete :delete_stage_step, :path => ":stage_id/:step_id/delete_step", to: 'pipelines#delete_stage_step'
+          put :update_stage_step, :path => ":stage_id/update_step", to: 'pipelines#update_stage_step'
+        end
+      end
+
       # resources :repos, only: :index do
       #   collection do
       #     get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
@@ -332,6 +358,8 @@ Rails.application.routes.draw do
           post :sync_mirror
           get :top_counts
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
+          get 'readme'
+          get 'languages'
         end
       end
 

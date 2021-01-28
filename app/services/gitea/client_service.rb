@@ -178,8 +178,10 @@ class Gitea::ClientService < ApplicationService
   def get_body_by_status(status, body)
     body, message =
       case status
+      when 401 then [nil, "401"]
       when 404 then [nil, "404"]
       when 403 then [nil, "403"]
+      when 500 then [nil, "500"]
       else
         if body.present?
           body = JSON.parse(body)
@@ -198,7 +200,7 @@ class Gitea::ClientService < ApplicationService
   end
 
   def fix_body(body)
-    return [body, nil] if body.is_a? Array
+    return [body, nil] if body.is_a?(Array) || body.is_a?(Hash)
 
     body['message'].blank? ? [body, nil] : [nil, body['message']]
   end

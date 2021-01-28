@@ -28,8 +28,8 @@ class AttachmentsController < ApplicationController
     update_downloads(@file)
   end
 
-  
-  def get_file 
+
+  def get_file
     normal_status(-1, "参数缺失") if params[:download_url].blank?
     url = URI.encode(params[:download_url].to_s.gsub("http:", "https:"))
     response = Faraday.get(url)
@@ -46,7 +46,7 @@ class AttachmentsController < ApplicationController
       uid_logger("#########################file_params####{params["#{params[:file_param_name]}"]}")
       raise "未上传文件" unless upload_file
 
-      folder = edu_setting('attachment_folder')
+      folder = file_storage_directory
       raise "存储目录未定义" unless folder.present?
 
       month_folder = current_month_folder
@@ -117,7 +117,7 @@ class AttachmentsController < ApplicationController
   end
 
   # 附件为视频时，点击播放
-  def preview_attachment 
+  def preview_attachment
     attachment = Attachment.find_by(id: params[:id])
     dir_path = "#{Rails.root}/public/preview"
     Dir.mkdir(dir_path) unless Dir.exist?(dir_path)
@@ -127,10 +127,10 @@ class AttachmentsController < ApplicationController
       else
         normal_status(-1, "出现错误，请稍后重试")
       end
-    else 
+    else
       if system("rm -rf #{dir_path}/#{attachment.disk_filename}")
         normal_status(1, "操作成功")
-      else 
+      else
         normal_status(-1, "出现错误，请稍后重试")
       end
     end

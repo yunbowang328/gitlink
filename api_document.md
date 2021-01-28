@@ -461,7 +461,7 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 #### 项目详情
 ```
-GET /api/:namespace_id/:id
+GET /api/:owner/:repo
 ```
 *示例*
 ```bash
@@ -471,8 +471,8 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -503,7 +503,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 #### 项目详情(简版)
 ```
-GET /api/:namespace_id/:id/simple
+GET /api/:owner/:repo/simple
 ```
 *示例*
 ```bash
@@ -513,7 +513,8 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id            |是|int    |项目id  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -876,7 +877,7 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 #### 获取代码目录列表
 ```
-POST /api/:namespace_id/:project_id/repository/entries
+POST /api/:owner/:repo/repository/entries
 ```
 *示例*
 ```bash
@@ -888,7 +889,8 @@ http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id           |是|int |项目id  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
 
@@ -1378,7 +1380,7 @@ http://localhost:3000/api/projects/recommend  | jq
 
 #### 项目主页
 ```
-GET api/:namespace_id/:id/about
+GET api/:owner/:repo/about
 ```
 
 *示例*
@@ -1391,8 +1393,8 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 *返回参数说明:*
 
@@ -1419,7 +1421,7 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 #### 修改项目主页内容
 ```
-POST api/:namespace_id/:id/about
+POST api/:owner/:repo/about
 ```
 
 *示例*
@@ -1427,15 +1429,15 @@ POST api/:namespace_id/:id/about
 curl -X POST \
 -d "content=内容" \
 -d "attachment_ids=[1, 2, 2]" \
-http://localhost:3000/api/:jasder/forgeplus/about  | jq
+http://localhost:3000/api/jasder/forgeplus/about  | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 |content        |是|string |内容信息  |
 |attachment_ids |是|array |附件id  |
 
@@ -1463,7 +1465,7 @@ http://localhost:3000/api/:jasder/forgeplus/about  | jq
 
 ### 获取分支列表
 ```
-GET /api/:namespace_id/:id/branches
+GET /api/:owner/:repo/branches
 ```
 *示例*
 ```bash
@@ -1473,7 +1475,8 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id               |是|id |项目id |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -1630,7 +1633,7 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 ## 仓库详情
 ```
-GET /api/:namespace_id/:project_id/repository
+GET /api/:owner/:repo/repository
 ```
 *示例*
 ```bash
@@ -1641,8 +1644,8 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|project_id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -3096,6 +3099,78 @@ http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
 ```
 ---
 
+#### 获取仓库README文件
+```
+GET api/:owner/:repo/readme
+```
+*示例*
+```bash
+curl -X GET http://localhost:3000/api/trusite/trusite/readme | jq
+```
+
+*请求参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|owner |是|string |项目拥有者登录名  |
+|repo  |否|boolean |仓库名称  |
+|ref   |否|string |分支、tag或commit。默认: 仓库的默认分支(通常是master)|
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|name           |string|文件名称|
+|path           |string|文件相对路径|
+|type           |string|文件类型， file:文件|
+|size           |int|文件大小 单位KB|
+|content        |string|文件内容，base64加密|
+
+返回值
+```json
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 13544,
+  "name": "README.md",
+  "path": "README.md",
+  "content": "Q2hpbmVzZSAmbmJzcDsgfCAmbmJzcDsgW0VuZ7i9yZWFkbWUvaW5kZXgucG5"
+}
+```
+---
+
+#### 获库仓库的语言百分占比
+```
+GET api/:owner/:repo/languages
+```
+*示例*
+```bash
+curl -X GET http://localhost:3000/api/jasder/trusite/languages | jq
+```
+
+*请求参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|owner |是|string |项目拥有者登录名  |
+|repo  |否|boolean |仓库名称  |
+
+
+返回值
+```json
+{
+  "JavaScript": "90.2%",
+  "CSS": "6.1%",
+  "Java": "2.9%",
+  "HTML": "0.8%"
+}
+```
+---
+
+
+
+
 ### DevOps相关api
 ---
 
@@ -3320,9 +3395,10 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 PUT /api/:owner/:repo/update_trustie_pipeline
 ```
 *示例*
+
 ```bash
 curl -X GET \
-http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
+http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json?pipeline_id=1 | jq
 ```
 *请求参数说明:*
 
@@ -3899,6 +3975,48 @@ http://localhost:3000/api/users/ci/cloud_account | jq
   }
 }
 ```
+------
+
+#### 绑定CI服务器-Trustie提供服务器
+
+```
+POST  /api/users/ci/cloud_account/trustie_bind
+```
+
+*示例*
+
+```bash
+curl -X POST \
+-d "account=xx" \
+https://localhost:3000/api/users/ci/cloud_account/trustie_bind.json  | jq
+```
+
+*请求参数说明:*
+
+| 参数名  | 必选 | 类型   | 说明       |
+| ------- | ---- | ------ | ---------- |
+| account | 是   | string | 登录用户名 |
+
+*返回参数说明:*
+
+| 参数名       | 类型   | 说明                                    |
+| ------------ | ------ | --------------------------------------- |
+| step         | int    | 0: 未绑定；1: 未认证(已绑定)，2: 已认证 |
+| ip           | string | ci服务器ip                              |
+| redirect_url | string | 认证地址                                |
+
+返回值
+
+```json
+{
+  "step": 0,
+  "cloud_account": {
+    "ip": "xxx.xxx.xxx.x",
+    "redirect_url": "http://localhost:3000/login"
+  }
+}
+```
+
 ---
 
 #### 绑定CI服务器
@@ -3941,10 +4059,616 @@ https://localhost:3000/api/users/ci/cloud_account/bind.json  | jq
   }
 }
 ```
+------
+
+#### 流水线查询
+
+```
+GET  /api/ci/pipelines/list?identifier={identifier}
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/pipelines/list.json?identifier="xxx" | jq
+```
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明            |
+| ------------- | ------ | --------------- |
+| id            | int    | 流水线id        |
+| pipeline_name | string | 流水线名称      |
+| file_name     | string | 流水线文件名    |
+| created_at    | string | 创建时间        |
+| sync          | int    | 是否同步到gitea |
+
+返回值
+
+```json
+{
+    "pipelines": [
+        {
+            "id": 1,
+            "pipeline_name": "2020-01-08 流水线",
+            "file_name": ".trustie.pipeline.yaml",
+            "created_at": "2021-01-08 04:16:24",
+            "updated_at": "2021-01-08 04:16:24"
+        }
+    ]
+}
+```
+
 ---
 
+#### 流水线新增
 
-### 解除CI服务器绑定
+```
+POST  /api/ci/pipelines
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
+--header 'Content-Type: application/json' \
+--data-raw ' {
+            "pipeline_name": "流水线 2021-01-12",
+            "file_name": ".trustie.pipeline.yaml",
+            "identifier": "xxx"
+}'
+```
+
+*请求参数说明:*
+
+| 参数名        | 必选 | 类型   | 说明                                           |
+| ------------- | ---- | ------ | ---------------------------------------------- |
+| pipeline_name | 是   | string | 流水线名称                                     |
+| file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
+| identifier    | 是   | string | 项目identifier                                 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明           |
+| ------- | ------ | -------------- |
+| status  | int    | 状态码 0成功   |
+| message | string | 返回消息       |
+| id      | int    | 新增流水线的id |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success",
+    "id": 18
+}
+```
+
+------
+
+#### 流水线更新
+
+修改流水线名称时调用。
+
+```
+PUT  /api/ci/pipelines/{id}
+```
+
+*示例*
+
+```bash
+curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/3' \
+--header 'Content-Type: application/json' \
+--data-raw ' {
+            "pipeline_name": "2020-01-11 流水线"
+}'
+```
+
+*请求参数说明:*
+
+| 参数名        | 必选 | 类型   | 说明       |
+| ------------- | ---- | ------ | ---------- |
+| id            | 是   | id     | 流水线id   |
+| pipeline_name | 是   | string | 流水线名称 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线删除
+
+```
+DELETE  /api/ci/pipelines/{id}
+```
+
+*示例*
+
+```bash
+curl -X DELETE \
+https://localhost:3000/api/ci/pipelines/1  | jq
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线的阶段查询
+
+```
+GET  /api/ci/pipelines/{id}/stages
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/pipelines/19/stages.json'
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
+
+*返回参数说明:*
+
+| 参数名      | 类型   | 说明     |
+| ----------- | ------ | -------- |
+| stages      | arr    | 阶段数组 |
+| stage_name  | string | 阶段名称 |
+| stage_type  | string | 阶段类型 |
+| pipeline_id | int    | 流水线id |
+| show_index  | int    | 排序     |
+
+返回值
+
+```json
+{
+    "stages": [
+        {
+            "id": 37,
+            "stage_name": "初始化",
+            "stage_type": "init",
+            "pipeline_id": 19,
+            "show_index": 1,
+            "created_at": "2021-01-12T15:18:00.000+08:00",
+            "updated_at": "2021-01-12T15:18:00.000+08:00"
+        },
+        {
+            "id": 38,
+            "stage_name": "编译构建",
+            "stage_type": "build",
+            "pipeline_id": 19,
+            "show_index": 2,
+            "created_at": "2021-01-12T15:18:00.000+08:00",
+            "updated_at": "2021-01-12T15:18:00.000+08:00"
+        }
+    ]
+}
+```
+
+------
+
+#### 确认阶段流水线完整内容查询
+
+```
+GET  /api/ci/pipelines/{id}/content?owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/pipelines/1/content.json?owner=xx&repo=xx | jq
+```
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明             |
+| ------- | ------ | ---------------- |
+| content | String | 流水线内容       |
+| sync    | int    | 同步状态         |
+| owner   | string | 用户登录名       |
+| repo    | string | 项目的identifier |
+
+返回值
+
+```json
+{
+    "content": "#pipeline \nkind: pipeline\r\nname: maven项目-镜像仓库\r\n\r\nplatform:\r\n  os: linux\r\n  arch: arm64\nsteps:\n- name: Maven编译\r\n  image: arm64v8/maven\r\n  commands:\r\n    - mvn install\n- name: 编译镜像-推送到仓库\r\n  image: plugins/docker\r\n  settings:\r\n    username: moshenglv\r\n    password: RL9UB5P7Jtzukka\r\n    repo: docker.io/moshenglv/demo\r\n    tags: latest\n",
+    "sync": 1,
+    "sha":"xxxxx"
+}
+```
+
+------
+
+#### 流水线阶段新增
+
+```
+POST  /api/ci/pipelines/{id}/create_stage
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines/19/create_stage.json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+            "stage_name": "新阶段2",
+            "show_index": 2
+}'
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明     |
+| ---------- | ---- | ------ | -------- |
+| id         | 是   | int    | 流水线id |
+| show_index | 是   | int    | 阶段排序 |
+| stage_name | 是   | string | 阶段名称 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段更新
+
+```
+PUT  /api/ci/pipelines/{id}/{stage_id}/update_stage
+```
+
+*示例*
+
+```bash
+curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/5/update_stage.json' \
+--header 'Content-Type: application/json' \
+--data-raw ' {
+            "stage_name": "新阶段-更新"
+}'
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明                             |
+| ---------- | ---- | ------ | -------------------------------- |
+| id         | 是   | int    | 流水线id                         |
+| stage_name | 是   | string | 阶段名称（默认为 阶段名-模板名） |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段删除
+
+```
+DELETE  /api/ci/pipelines/{id}/{stage_id}/delete_stage?show_index={index}
+```
+
+*示例*
+
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/ci/pipelines/19/42/delete_stage.json?show_index=2' \
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型 | 说明                   |
+| ---------- | ---- | ---- | ---------------------- |
+| id         | 是   | int  | 流水线id               |
+| stage_id   | 是   | int  | 阶段id                 |
+| show_index | 是   | int  | 被删除阶段的show_index |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段步骤查询
+
+```
+GET  /api/ci/pipelines/{id}/{stage_id}/steps.json
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/pipelines/1/2/steps.json | jq
+```
+
+*请求参数说明:*
+
+| 参数名   | 必选 | 类型 | 说明     |
+| -------- | ---- | ---- | -------- |
+| id       | 是   | int  | 流水线id |
+| stage_id | 是   | int  | 阶段id   |
+
+*返回参数说明:*
+
+| 参数名     | 类型   | 说明               |
+| ---------- | ------ | ------------------ |
+| id         | int    | 步骤id             |
+| step_name  | string | 步骤名称           |
+| stage_id   | int    | 所属阶段id         |
+| show_index | int    | 显示顺序           |
+| content    | String | 步骤内容           |
+| template   | Object | 步骤对应的模板对象 |
+
+返回值
+
+```json
+{
+    "steps": [
+        {
+            "id": 1,
+            "step_name": "编译构建-maven",
+            "stage_id": 2,
+            "show_index": 0,
+            "content": "- name: Maven编译\r\n  image: arm64v8/maven\r\n",
+            "created_at": "2021-01-11T09:57:17.000+08:00",
+            "updated_at": "2021-01-11T09:57:17.000+08:00",
+            "template": {
+                "id": 3,
+                "template_name": "maven",
+                "stage_type": "build",
+                "category": "java",
+                "content": "- name: maven\r\n  image: maven:3-jdk-10\r\n",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            }
+        }
+    ]
+}
+```
+
+------
+
+#### 流水线阶段步骤新增/更新
+
+```
+POST  /api/ci/pipelines/{id}/{stage_id}/stage_step
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines/1/2/stage_step.json' \
+--header 'Content-Type: application/json' \
+--data-raw ' {"steps":[{
+           "id":7,
+            "step_name": "编译构建11-gradle",
+            "show_index": 1,
+            "content": "xxxxxxxxxxx",
+            "template_id":2
+}
+]
+ }'
+```
+
+*请求参数说明:*
+
+| 参数名           | 必选 | 类型   | 说明                             |
+| ---------------- | ---- | ------ | -------------------------------- |
+| steps            | 是   | arr    | 需要更新step数组                 |
+| id               | 是   | int    | 流水线id                         |
+| stage_id         | 是   | int    | 阶段id                           |
+| id（数组中的id） | 否   | int    | 步骤id（存在则更新，不存在新增） |
+| step_name        | 是   | string | 阶段名称（阶段名-模板名）        |
+| content          | 是   | string | 步骤内容                         |
+| template_id      | 是   | int    | 模板id                           |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段步骤删除
+
+```
+DELETE  /api/ci/pipelines/{id}/{stage_id}/{step_id}/delete_step
+```
+
+*示例*
+
+```bash
+curl -X DELETE \
+https://localhost:3000/api/ci/pipelines/1/6/2/delete_stage.json  | jq
+```
+
+*请求参数说明:*
+
+| 参数名   | 必选 | 类型 | 说明     |
+| -------- | ---- | ---- | -------- |
+| id       | 是   | int  | 流水线id |
+| stage_id | 是   | int  | 阶段id   |
+| step_id  | 是   | int  | 步骤id   |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 阶段模板查询
+
+```
+GET  /api/ci/templates/templates_by_stage?stage_type={stage_type}
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/templates/templates_by_stage.json?stage_type=build | jq
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明                                  |
+| ---------- | ---- | ------ | ------------------------------------- |
+| stage_type | 是   | string | 阶段类型：init/build/deploy/customize |
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明             |
+| ------------- | ------ | ---------------- |
+| category      | string | 分类名称         |
+| templates     | arr    | 分类下的模板列表 |
+| id            | int    | 模板id           |
+| template_name | string | 模板名称         |
+| content       | String | 模板内容         |
+
+返回值
+
+```json
+[
+    {
+        "category": "java",
+        "templates": [
+            {
+                "id": 3,
+                "template_name": "maven",
+                "stage_type": "build",
+                "category": "java",
+                "content": "#maven",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            },
+            {
+                "id": 4,
+                "template_name": "gradle",
+                "stage_type": "build",
+                "category": "java",
+                "content": "#gradle",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            }
+        ]
+    },
+    {
+        "category": "c++",
+        "templates": [
+            {
+                "id": 5,
+                "template_name": "make",
+                "stage_type": "build",
+                "category": "c++",
+                "content": "#make",
+                "created_at": "2021-01-11T17:29:17.000+08:00",
+                "updated_at": "2021-01-11T17:29:18.000+08:00"
+            }
+        ]
+    }
+]
+```
+
+------
+
+
+#### 解除CI服务器绑定
 ```
 DELETE  /api/users/ci/cloud_account/unbind
 ```

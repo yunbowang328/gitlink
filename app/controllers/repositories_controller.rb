@@ -1,6 +1,7 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
+  include Repository::LanguagesPercentagable
 
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :load_repository
@@ -94,8 +95,19 @@ class RepositoriesController < ApplicationController
     if interactor.success?
       @file = interactor.result
       # create_new_pr(params)
+      #如果是更新流水线文件
+      if params[:pipeline_id]
+        update_pipeline(params[:pipeline_id])
+      end
     else
       render_error(interactor.error)
+    end
+  end
+
+  def update_pipeline(pipeline_id)
+    pipeline = Ci::Pipeline.find(pipeline_id)
+    if pipeline
+      pipeline.update!(sync: 1)
     end
   end
 
@@ -131,6 +143,17 @@ class RepositoriesController < ApplicationController
     @repository.sync_mirror!
     SyncMirroredRepositoryJob.perform_later(@repository.id, current_user.id)
     render_ok
+  end
+
+  def readme
+    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
+
+    @readme = result[:status] === :success ? result[:body] : nil
+    render json: @readme
+  end
+
+  def languages
+    render json: languages_precentagable
   end
 
   private
