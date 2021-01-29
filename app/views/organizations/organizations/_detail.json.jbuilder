@@ -9,3 +9,4 @@ json.max_repo_creation organization.max_repo_creation
 json.num_projects organization.num_projects
 json.num_user organization.num_users
 json.avatar_url url_to_avatar(organization)
+json.created_at organization.created_on.strftime("%Y-%m-%d")
