@@ -9,6 +9,8 @@ class Organizations::TeamsController < Organizations::BaseController
     else
       @teams = @organization.teams.joins(:team_users).where(team_users: {user_id: current_user.id})
     end
+    @is_admin = can_edit_org?
+    @teams = @teams.includes(:team_units, :team_users)
 
     @teams = kaminari_paginate(@teams)
   end
