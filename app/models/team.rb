@@ -47,4 +47,8 @@ class Team < ApplicationRecord
     end
   end
 
+  def is_member?(user_id)
+    team_users.where(user_id: user_id).present?
+  end
+
 end

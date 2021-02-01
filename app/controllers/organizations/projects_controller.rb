@@ -14,6 +14,19 @@ class Organizations::ProjectsController < Organizations::BaseController
     @projects = paginate(@projects)
   end
 
+  def search
+    tip_exception("请输入搜索关键词") if params[:search].nil?
+    public_projects_sql = @organization.projects.where(is_public: true).to_sql
+    private_projects_sql = @organization.projects
+                               .where(is_public: false)
+                               .joins(team_projects: {team: :team_users})
+                               .where(team_users: {user_id: current_user.id}).to_sql
+    @projects = Project.from("( #{ public_projects_sql} UNION #{ private_projects_sql } ) AS projects")
+
+    @projects = @projects.ransack(name_or_identifier_cont: params[:search]).result
+    @projects = @projects.includes(:owner).order("projects.#{sort} #{sort_direction}")
+  end
+
   private
 
   def load_organization
