@@ -79,7 +79,6 @@ class Ci::TemplatesController < Ci::BaseController
   #======流水线模板查询=====#
   def templates_by_stage
     stage_type = params[:stage_type]
-    pipeline_id = params[:id]
     if stage_type != Ci::PipelineStage::CUSTOMIZE_STAGE_TYPE
       @templates = Ci::Template.where("stage_type = ?", stage_type)
       @templates = @templates.select{ |template| template.login == current_user.login || template.login == 'admin'} unless current_user.admin?
@@ -87,7 +86,7 @@ class Ci::TemplatesController < Ci::BaseController
         @templates.each do |template|
           content = template.content
           unless content.blank?
-            pipeline = Ci::Pipeline.find(pipeline_id)
+            pipeline = Ci::Pipeline.find(params[:id])
             template.content = content.gsub(/{name}/, pipeline.pipeline_name) unless pipeline.nil?
           end
         end
