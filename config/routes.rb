@@ -120,7 +120,11 @@ Rails.application.routes.draw do
           end
           resources :team_projects, only: [:index, :create, :destroy] do ;end
         end
-        resources :projects, only: [:index]
+        resources :projects, only: [:index] do
+          collection do
+            get :search
+          end
+        end
       end
     end
 

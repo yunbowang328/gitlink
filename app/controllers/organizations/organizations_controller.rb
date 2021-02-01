@@ -18,6 +18,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def show
+    @is_admin = can_edit_org?
+    @is_member = @organization.is_member?(current_user.id)
   end
 
   def create

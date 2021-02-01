@@ -78,6 +78,10 @@ class Organization < Owner
     self.create!(login: name, gitea_token: gitea_token)
   end
 
+  def is_member?(user_id)
+    organization_users.where(user_id: user_id).present?
+  end
+
   def is_owner?(user_id)
     team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(owner)}).present?
   end

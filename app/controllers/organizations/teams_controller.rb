@@ -14,6 +14,8 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def show
+    @is_admin = can_edit_org?
+    @is_member = @team.is_member?(current_user.id)
   end
 
   def create
