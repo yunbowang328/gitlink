@@ -166,6 +166,7 @@ class Ci::PipelinesController < Ci::BaseController
       pipeline.event.split(',').each { |event| trigger += "  - #{event}\r\n"}
     end
     @yaml += "trigger:\r\n" + trigger unless trigger.blank?
+    @branch = pipeline.branch
   end
 
   # =========阶段相关接口========= #
