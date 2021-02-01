@@ -61,12 +61,10 @@ class Ci::PipelinesController < Ci::BaseController
     sha = get_pipeline_file_sha(pipeline.file_name, pipeline.branch)
     if sha
       logger.info "#{pipeline.file_name}已存在"
-      pipeline.update!(sync: 1, sha: sha)
     else
       interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
       if interactor.success?
         logger.info "#{pipeline.file_name}创建成功"
-        pipeline.update!(sync: 1, sha: interactor.result['content']['sha'])
       end
     end
   end
@@ -155,10 +153,7 @@ class Ci::PipelinesController < Ci::BaseController
         end
       end
     end
-    @sha = pipeline.sha
-    unless @sha
-      @sha = get_pipeline_file_sha(pipeline.file_name, pipeline.branch)
-    end
+    @sha = get_pipeline_file_sha(pipeline.file_name, pipeline.branch)
     trigger = ''
     trigger += "  branch:\r\n  - #{pipeline.branch}\r\n" unless pipeline.branch.blank?
     unless pipeline.event.blank?
