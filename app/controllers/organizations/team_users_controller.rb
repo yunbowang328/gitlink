@@ -25,7 +25,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
   end
 
   def destroy
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(@operate_user)
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(@operate_user.id)
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
@@ -39,7 +39,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
   def quit
     @team_user = @team.team_users.find_by(user_id: current_user.id)
     tip_exception("您不在该组织团队中") if @team_user.nil?
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(current_user)
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(current_user.id)
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, current_user.login)
