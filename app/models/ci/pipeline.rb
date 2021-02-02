@@ -10,11 +10,11 @@
 #  updated_at      :datetime         not null
 #  login           :string(255)
 #  sync            :integer          default("0"), not null
-#  identifier      :string(11)
+#  identifier      :string(255)
 #  branch          :string(255)
 #  event           :string(255)
 #  sha             :string(255)
-#  identifier      :string(255)
+#  owner           :string(255)
 #
 
 class Ci::Pipeline < Ci::LocalBase
