@@ -4,10 +4,10 @@ class Ci::Perm < Ci::RemoteBase
   belongs_to :user, class_name: 'Ci::User', foreign_key: :perm_user_id
   belongs_to :repo, class_name: 'Ci::Repo', foreign_key: :perm_repo_uid
 
-  def self.auto_create!(user, repo)
+  def self.auto_create!(user_id, repo_id)
     perm = new(
-      perm_user_id: user.user_id,
-      perm_repo_uid: repo.repo_id,
+      perm_user_id: user_id,
+      perm_repo_uid: repo_id,
       perm_read: true,
       perm_write: true,
       perm_admin: true,

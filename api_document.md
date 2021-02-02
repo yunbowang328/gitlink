@@ -3502,13 +3502,13 @@ curl -X GET http://localhost:3000/api/ci/languages/114.json | jq
 
 #### 获取构建列表
 ```
-GET  /api/:owner/:repo/builds
+GET  /api/:owner/:repo/builds??branch={branch}
 ```
 
 *示例*
 ```bash
 curl -X GET \
-http://localhost:3000/api/Jason/forge/builds | jq
+http://localhost:3000/api/Jason/forge/builds?branch=develop | jq
 ```
 
 *请求参数说明:*
@@ -3520,6 +3520,7 @@ http://localhost:3000/api/Jason/forge/builds | jq
 |page          |否|string |页数，第几页  |
 |limit         |否|string |每页多少条数据，默认20条  |
 |search          |是|string |构建状态条件过滤; 值说明：pending: 准备中，failure: 构建失败，running: 运行中，error：构建失败(.trustie-pipeline.yml文件错误)，success: 构建成功，killed: 撤销构建  |
+|branch |是|string |分支 |
 
 *返回参数说明:*
 
@@ -4042,13 +4043,15 @@ http://localhost:3000/api/ci/pipelines/list.json?identifier="xxx" | jq
 
 *返回参数说明:*
 
-| 参数名        | 类型   | 说明            |
-| ------------- | ------ | --------------- |
-| id            | int    | 流水线id        |
-| pipeline_name | string | 流水线名称      |
-| file_name     | string | 流水线文件名    |
-| created_at    | string | 创建时间        |
-| sync          | int    | 是否同步到gitea |
+| 参数名            | 类型   | 说明         |
+| ----------------- | ------ | ------------ |
+| id                | int    | 流水线id     |
+| pipeline_name     | string | 流水线名称   |
+| file_name         | string | 流水线文件名 |
+| branch            | string | 触发分支     |
+| event             | string | 触发事件     |
+| last_build_time   | string | 上次构建时间 |
+| last_build_status | string | 上次构建状态 |
 
 返回值
 
@@ -4056,11 +4059,15 @@ http://localhost:3000/api/ci/pipelines/list.json?identifier="xxx" | jq
 {
     "pipelines": [
         {
-            "id": 1,
-            "pipeline_name": "2020-01-08 流水线",
-            "file_name": ".trustie.pipeline.yaml",
-            "created_at": "2021-01-08 04:16:24",
-            "updated_at": "2021-01-08 04:16:24"
+            "id": 65,
+            "pipeline_name": "流水线 2021-01-25",
+            "file_name": ".drone.yml",
+            "branch": "develop",
+            "event": "push",
+            "sha": "19fb5eb28603a4a1ec799ad44c1a3ef69d5c2cd0",
+            "identifier": "trustieTest",
+            "last_build_status": "success",
+            "last_build_time": "2021-01-25 15:54:22"
         }
     ]
 }
@@ -4082,7 +4089,10 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 --data-raw ' {
             "pipeline_name": "流水线 2021-01-12",
             "file_name": ".trustie.pipeline.yaml",
-            "identifier": "xxx"
+            "repo": "xxx",
+            "owner": "xxx",
+            "branch": "master",
+            "event": "push"
 }'
 ```
 
@@ -4092,7 +4102,10 @@ curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
 | ------------- | ---- | ------ | ---------------------------------------------- |
 | pipeline_name | 是   | string | 流水线名称                                     |
 | file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
-| identifier    | 是   | string | 项目identifier                                 |
+| repo          | 是   | string | 项目identifier                                 |
+| owner         | 是   | string | 项目的owner                                    |
+| branch        | 是   | string | 分支名称, branch必须存在一个                   |
+| event         | 是   | string | 触发事件，可多选，多个逗号隔开                 |
 
 *返回参数说明:*
 
@@ -4630,6 +4643,192 @@ http://localhost:3000/api/ci/templates/templates_by_stage.json?stage_type=build 
     }
 ]
 ```
+
+------
+
+#### 模板列表查询
+
+```
+GET  /api/ci/templates/list.json?limit=10&page=1&name=&stage_type=customize
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/templates/list.json?limit=10&page=1&name=&stage_type=customize' 
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明                                      |
+| ---------- | ---- | ------ | ----------------------------------------- |
+| stage_type | 是   | string | 阶段类型：init/build/deploy/customize/all |
+| limit      | 是   | int    | 每页条数                                  |
+| page       | 是   | int    | 页码                                      |
+| name       | 否   | string | 模糊查询参数                              |
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明             |
+| ------------- | ------ | ---------------- |
+| category      | string | 分类名称         |
+| templates     | arr    | 分类下的模板列表 |
+| id            | int    | 模板id           |
+| template_name | string | 模板名称         |
+| content       | String | 模板内容         |
+
+返回值
+
+```json
+{
+    "total_count": 1,
+    "templates": [
+        {
+            "id": 19,
+            "template_name": "工具1",
+            "stage_type": "customize",
+            "category": "其他",
+            "content": "xxxxxxxxxxxxxxxxxxxxxx",
+            "login": "victor",
+            "created_at": "2021-01-26T15:51:30.000+08:00",
+            "updated_at": "2021-01-26T15:51:30.000+08:00"
+        }
+    ]
+}
+```
+
+
+
+------
+
+#### 模板详情查询
+
+```
+GET  /api/ci/templates/id
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/templates/17.json' 
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明   |
+| ------ | ---- | ---- | ------ |
+| id     | 是   | int  | 模板id |
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明     |
+| ------------- | ------ | -------- |
+| category      | string | 分类名称 |
+| id            | int    | 模板id   |
+| template_name | string | 模板名称 |
+| content       | String | 模板内容 |
+
+返回值
+
+```json
+{
+    "id": 17,
+    "template_name": "win/x86_64",
+    "stage_type": "init",
+    "category": "初始化",
+    "content": "kind: pipeline\r\ntype: docker\r\nname: default\r\nplatform:\r\n  os: linux\r\n  arch: amd64",
+    "login": "victor",
+    "created_at": "2021-01-26T15:29:27.000+08:00",
+    "updated_at": "2021-01-26T15:29:27.000+08:00"
+}
+```
+
+
+
+------
+
+#### 模板新增/更新
+
+```
+POST  /api/ci/templates
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/templates' \
+--data-raw ' {
+            "template_name": "java++",
+            "stage_type": "build",
+            "category": "java",
+            "content": "xxxxxxxxxxxxxxxxxxxxxx",
+            "id": 21
+}' 
+```
+
+*请求参数说明:*
+
+| 参数名        | 必选 | 类型   | 说明             |
+| ------------- | ---- | ------ | ---------------- |
+| template_name | 是   | string | 模板名称         |
+| stage_type    | 是   | string | 阶段类型         |
+| category      | 是   | string | 分类             |
+| content       | 是   | string | 模板内容         |
+| id            | 否   | int    | 模板id，更新时传 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 消息         |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 模板删除
+
+```
+DELETE  /api/ci/templates/{id}
+```
+
+*示例*
+
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/ci/templates/10'
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
 
 ------
 
