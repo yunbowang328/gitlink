@@ -14,6 +14,7 @@
 #  branch          :string(255)
 #  event           :string(255)
 #  sha             :string(255)
+#  identifier      :string(255)
 #
 
 class Ci::Pipeline < Ci::LocalBase
