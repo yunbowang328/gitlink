@@ -11,7 +11,7 @@ class Organizations::OrganizationUsersController < Organizations::BaseController
   end
 
   def destroy
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(@operate_user)
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(@operate_user.id)
     ActiveRecord::Base.transaction do
       @organization_user.destroy!
       TeamUser.where(organization_id: @organization.id, user_id: @operate_user.id).map{|u| u.destroy!}
@@ -26,7 +26,7 @@ class Organizations::OrganizationUsersController < Organizations::BaseController
   def quit
     @organization_user = @organization.organization_users.find_by(user_id: current_user.id)
     tip_exception("您不在该组织中") if @organization_user.nil?
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(current_user)
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(current_user.id)
     ActiveRecord::Base.transaction do
       @organization_user.destroy!
       TeamUser.where(organization_id: @organization.id, user_id: current_user.id).map{|u| u.destroy!}

@@ -4,7 +4,7 @@ class Organizations::TeamsController < Organizations::BaseController
   before_action :check_user_can_edit_org, only: [:create, :update, :destroy]
 
   def index
-    if @organization.is_owner?(current_user)
+    if @organization.is_owner?(current_user) || current_user.admin?
       @teams = @organization.teams
     else
       @teams = @organization.teams.joins(:team_users).where(team_users: {user_id: current_user.id})
@@ -35,6 +35,7 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def destroy
+    tip_exception("组织团队不允许被删除") if @team.owner?
     ActiveRecord::Base.transaction do
       Gitea::Organization::Team::DeleteService.call(@organization.gitea_token, @team.gtid)
       @team.destroy!
