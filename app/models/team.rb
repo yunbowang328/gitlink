@@ -23,6 +23,7 @@
 class Team < ApplicationRecord
 
   belongs_to :organization
+  belongs_to :organization_extension, foreign_key: :organization_id, primary_key: :organization_id, counter_cache: :num_teams
   has_many :team_projects, dependent: :destroy
   has_many :team_units, dependent: :destroy
   has_many :team_users, dependent: :destroy
