@@ -12,7 +12,7 @@ class Ci::PipelinesController < Ci::BaseController
     # 查询build状态
     list.collect do |pipeline|
       pipeline.last_build_time = nil
-      repo = load_repo_by_repo_slug("#{pipeline.login}/#{pipeline.identifier}")
+      repo = load_repo_by_repo_slug("#{pipeline.owner}/#{pipeline.identifier}")
       if repo
         build = repo.builds.order("build_created desc").find_by(build_target: pipeline.branch)
         if build
