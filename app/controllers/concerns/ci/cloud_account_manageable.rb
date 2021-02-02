@@ -101,9 +101,6 @@ module Ci::CloudAccountManageable
 
     if cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_SELF
       @connection.execute("DROP DATABASE IF EXISTS #{current_user.login}_drone") # TOTO drop drone database
-    else
-      #删除drone用户
-      @trustie_db_connection.execute("DELETE FROM users WHERE user_login = '#{cloud_account.account}'")
     end
 
     cloud_account.destroy! unless cloud_account.blank?
