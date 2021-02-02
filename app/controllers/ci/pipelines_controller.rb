@@ -8,7 +8,7 @@ class Ci::PipelinesController < Ci::BaseController
   # ======流水线相关接口========== #
   def list
     @result = Array.new
-    list = Ci::Pipeline.where('identifier=?', params[:identifier])
+    list = Ci::Pipeline.where('identifier=? and owner=?', params[:identifier], params[:owner])
     # 查询build状态
     list.collect do |pipeline|
       pipeline.last_build_time = nil
@@ -28,12 +28,12 @@ class Ci::PipelinesController < Ci::BaseController
 
   def create
     ActiveRecord::Base.transaction do
-      size = Ci::Pipeline.where('branch=? and identifier=?', params[:branch], params[:repo]).size
+      size = Ci::Pipeline.where('branch=? and identifier=? and owner=?', params[:branch], params[:repo], params[:owner]).size
       if size > 0
         render_error("#{params[:branch]}分支已经存在流水线！")
         return
       end
-      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name],
+      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name],owner: params[:owner],
                                   login: current_user.login, identifier: params[:repo], branch: params[:branch], event: params[:event])
       pipeline.save!
 
