@@ -11,6 +11,8 @@
 
 * Redis 5+
 
+* NodeJS > 13.0.0
+
 
 ## Steps
 
