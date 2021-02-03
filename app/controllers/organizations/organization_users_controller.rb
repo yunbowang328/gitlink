@@ -5,7 +5,7 @@ class Organizations::OrganizationUsersController < Organizations::BaseController
   def index
     @organization_users = @organization.organization_users.includes(:user)
     search = params[:search].to_s.downcase
-    @organization_users = @organization_users.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    @organization_users = @organization_users.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
 
     @organization_users = kaminari_paginate(@organization_users)
   end
@@ -41,8 +41,8 @@ class Organizations::OrganizationUsersController < Organizations::BaseController
   private
   def load_organization
     @organization = Organization.find_by(login: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
-    tip_exception("组织不存在") if @organization.nil?
-    tip_exception("没有查看组织的权限") if org_limited_condition || org_privacy_condition
+    return render_not_found("组织不存在") if @organization.nil?
+    return render_forbidden("没有查看组织的权限") if org_limited_condition || org_privacy_condition
   end
 
   def load_operate_user
