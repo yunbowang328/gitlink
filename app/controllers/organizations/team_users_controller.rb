@@ -5,10 +5,10 @@ class Organizations::TeamUsersController < Organizations::BaseController
   before_action :check_user_can_edit_org, only: [:create, :destroy]
 
   def index
-    @team_users = @team.team_users
+    @team_users = @team.team_users.includes(:user)
 
     search = params[:search].to_s.downcase
-    @team_users = @team_users.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    @team_users = @team_users.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
 
     @team_users = kaminari_paginate(@team_users)
   end
@@ -25,7 +25,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
   end
 
   def destroy
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(@operate_user.id)
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @team.owner? && @organization.is_owner_team_last_one?(@operate_user.id)
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
@@ -39,7 +39,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
   def quit
     @team_user = @team.team_users.find_by(user_id: current_user.id)
     tip_exception("您不在该组织团队中") if @team_user.nil?
-    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @organization.is_owner_team_last_one?(current_user.id)
+    tip_exception("您不能从 Owner 团队中删除最后一个用户") if @team.owner? && @organization.is_owner_team_last_one?(current_user.id)
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, current_user.login)
@@ -53,14 +53,14 @@ class Organizations::TeamUsersController < Organizations::BaseController
   private
   def load_organization
     @organization = Organization.find_by(login: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
-    tip_exception("组织不存在") if @organization.nil?
-    tip_exception("没有查看组织的权限") if org_limited_condition || org_privacy_condition
+    return render_not_found("组织不存在") if @organization.nil?
+    return render_forbidden("没有查看组织的权限") if org_limited_condition || org_privacy_condition
   end
 
   def load_team
     @team = Team.find_by_id(params[:team_id])
-    tip_exception("组织团队不存在") if @team.nil?
-    tip_exception("没有查看组织团队的权限") if team_not_found_condition
+    return render_not_found("组织团队不存在") if @team.nil?
+    return render_forbidden("没有查看组织团队的权限") if team_not_found_condition
   end
 
   def load_operate_user

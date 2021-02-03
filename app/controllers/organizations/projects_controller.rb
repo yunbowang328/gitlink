@@ -31,8 +31,8 @@ class Organizations::ProjectsController < Organizations::BaseController
 
   def load_organization
     @organization = Organization.find_by(login: params[:organization_id]) || Organization.find_by(id: params[:organization_id])
-    tip_exception("组织不存在") if @organization.nil?
-    tip_exception("没有查看组织的权限") if org_limited_condition || org_privacy_condition
+    return render_not_found("组织不存在") if @organization.nil?
+    return render_forbidden("没有查看组织的权限") if org_limited_condition || org_privacy_condition
   end
 
   def sort
