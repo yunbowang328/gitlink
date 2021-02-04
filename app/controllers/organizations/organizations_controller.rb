@@ -18,6 +18,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def show
+    @can_create_project = @organization.can_create_project?(current_user.id)
     @is_admin = can_edit_org?
     @is_member = @organization.is_member?(current_user.id)
   end
@@ -60,15 +61,15 @@ class Organizations::OrganizationsController < Organizations::BaseController
   private
   def convert_image!
     return unless params[:image].present?
-    max_size = EduSetting.get('upload_avatar_max_size').to_i || 2 * 1024 * 1024 # 2M
+    max_size = EduSetting.get('upload_avatar_max_size') || 2 * 1024 * 1024 # 2M
     if params[:image].class == ActionDispatch::Http::UploadedFile
       @image = params[:image]
       render_error('请上传文件') if @image.size.zero?
-      render_error('文件大小超过限制') if @image.size > max_size
+      render_error('文件大小超过限制') if @image.size > max_size.to_i
     else
       image = params[:image].to_s.strip
       return render_error('请上传正确的图片') if image.blank?
-      @image = Util.convert_base64_image(image, max_size: max_size)
+      @image = Util.convert_base64_image(image, max_size: max_size.to_i)
     end
   rescue Base64ImageConverter::Error => ex
     render_error(ex.message)
