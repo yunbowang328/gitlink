@@ -15,6 +15,18 @@ class Organizations::TeamsController < Organizations::BaseController
     @teams = kaminari_paginate(@teams)
   end
 
+  def search
+    tip_exception("请输入搜索关键词") if params[:search].nil?
+    if @organization.is_owner?(current_user) || current_user.admin?
+      @teams = @organization.teams
+    else
+      @teams = @organization.teams.joins(:team_users).where(team_users: {user_id: current_user.id})
+    end
+    @is_admin = can_edit_org?
+    @teams  = @teams.ransack(name_cont: params[:search]).result if params[:search].present?
+    @teams = @teams.includes(:team_units, :team_users)
+  end
+
   def show
     @is_admin = can_edit_org?
     @is_member = @team.is_member?(current_user.id)

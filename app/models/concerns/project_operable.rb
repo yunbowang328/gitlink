@@ -13,7 +13,7 @@ module ProjectOperable
 
   def add_member!(user_id, role_name='Developer')
     member = members.create!(user_id: user_id)
-    set_developer_role(member)
+    set_developer_role(member, role_name)
   end
 
   def remove_member!(user_id)
@@ -84,8 +84,8 @@ module ProjectOperable
     end
   end
 
-  def set_developer_role(member)
-    role = Role.find_by_name 'Developer'
+  def set_developer_role(member, role_name)
+    role = Role.find_by(name: role_name)
     member.member_roles.create!(role: role)
   end
 

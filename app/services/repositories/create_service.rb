@@ -13,6 +13,7 @@ class Repositories::CreateService < ApplicationService
     ActiveRecord::Base.transaction do
       if repository.save!
         create_gitea_repository
+        create_manager_member
         sync_project
         sync_repository
         # if project.project_type == "common"
@@ -49,6 +50,11 @@ class Repositories::CreateService < ApplicationService
         TeamProject.build(project.user_id, team.id, project.id)
       end
     end
+  end
+
+  def create_manager_member
+    return if project.owner.is_owner?(user.id)
+    project.add_member!(user.id, "Manager")
   end
 
   def sync_project

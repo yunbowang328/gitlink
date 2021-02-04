@@ -113,6 +113,9 @@ Rails.application.routes.draw do
           end
         end
         resources :teams, except: [:edit, :new] do
+          collection do
+            get :search
+          end
           resources :team_users, only: [:index, :create, :destroy] do
             collection do
               delete :quit
@@ -519,7 +522,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
-        resources :teams, only: [:index]
+        resources :teams, only: [:index, :create, :destroy]
         scope do
           get(
             '/blob/*id/diff',
