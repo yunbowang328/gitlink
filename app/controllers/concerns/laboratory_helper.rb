@@ -9,6 +9,8 @@ module LaboratoryHelper
     helper_method :default_yun_session
     helper_method :default_course_links
     helper_method :manager_main_site_url
+    helper_method :main_web_site_url
+    helper_method :current_main_site_url
   end
 
   def current_laboratory
@@ -42,17 +44,20 @@ module LaboratoryHelper
       # my_projects: "/users/#{current_user.try(:login)}/projects",
       # my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
       # default_url: "https://www.trustie.net/",
-      tiding_url: "#{host_main_site}/users/#{current_user.try(:login)}/user_tidings",
-      register_url: "#{host_main_site}/user_join"
+      tiding_url: "#{main_web_site_url}/users/#{current_user.try(:login)}/user_tidings",
+      register_url: "#{main_web_site_url}/user_join"
     }
   end
 
   def manager_main_site_url
-    {name: '管理', link: "#{host_main_site}/managements"}
+    {name: '管理', link: "#{main_web_site_url}/managements"}
   end
 
-  def host_main_site
+  def main_web_site_url
     EduSetting.get('host_main_site')
   end
 
+  def current_main_site_url
+    EduSetting.get('host_name')
+  end
 end
