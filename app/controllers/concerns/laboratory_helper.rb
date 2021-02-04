@@ -33,7 +33,7 @@ module LaboratoryHelper
   end
 
   def default_course_links
-    
+
     {
       # new_syllabuses: "https://www.trustie.net/syllabuses/new",
       # new_course: "https://www.trustie.net/courses/new",
@@ -42,12 +42,17 @@ module LaboratoryHelper
       # my_projects: "/users/#{current_user.try(:login)}/projects",
       # my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
       # default_url: "https://www.trustie.net/",
-      tiding_url: "http://39.105.176.215/users/#{current_user.try(:login)}/user_tidings",
-      register_url: "http://39.105.176.215/user_join"
+      tiding_url: "#{host_main_site}/users/#{current_user.try(:login)}/user_tidings",
+      register_url: "#{host_main_site}/user_join"
     }
   end
 
   def manager_main_site_url
-    {name: '管理', link: "#{EduSetting.get('host_main_site')}/managements"}
+    {name: '管理', link: "#{host_main_site}/managements"}
   end
+
+  def host_main_site
+    EduSetting.get('host_main_site')
+  end
+
 end
