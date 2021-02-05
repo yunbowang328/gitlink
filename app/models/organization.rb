@@ -59,6 +59,9 @@
 #
 
 class Organization < Owner
+  alias_attribute :name, :login
+  NAME_REGEX = /^(?!_)(?!.*?_$)[a-zA-Z0-9_-]+$/ #只含有数字、字母、下划线不能以下划线开头和结尾
+
   default_scope { where(type: "Organization") }
 
   has_one :organization_extension, dependent: :destroy
@@ -68,6 +71,7 @@ class Organization < Owner
 
   validates :login, presence: true
   validates_uniqueness_of :login, :if => Proc.new { |user| user.login_changed? && user.login.present? }, case_sensitive: false
+  validates :login, format: { with: NAME_REGEX, multiline: true, message: "只能含有数字、字母、下划线且不能以下划线开头和结尾" }
 
   delegate :description, :website, :location, :repo_admin_change_team_access,
            :visibility, :max_repo_creation, :num_projects, :num_users, :num_teams, to: :organization_extension, allow_nil: true
