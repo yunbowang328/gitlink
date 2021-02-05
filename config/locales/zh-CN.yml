@@ -61,6 +61,8 @@ zh-CN:
     close_issue: 工单
   activerecord:
     attributes:
+      organization:
+        login: '组织名称'
       user:
         login: '登录名'
         lastname: '姓名'
