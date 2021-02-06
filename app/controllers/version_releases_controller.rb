@@ -124,7 +124,7 @@ class VersionReleasesController < ApplicationController
 
   private
   def set_user
-    @user = @repository.user
+    @user = @repository.owner
   end
 
   def find_version

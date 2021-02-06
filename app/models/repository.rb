@@ -33,7 +33,7 @@
 class Repository < ApplicationRecord
   self.inheritance_column = nil # FIX  The single-table inheritance mechanism failed
   belongs_to :project, :touch => true
-  belongs_to :user, optional: true
+  belongs_to :owner, class_name: 'Owner', foreign_key: :user_id, optional: true
   has_one :mirror, foreign_key: :repo_id
   has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', foreign_key: :repo_id
   has_many :version_releases, dependent: :destroy

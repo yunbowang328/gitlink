@@ -103,6 +103,34 @@ Rails.application.routes.draw do
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
 
+    resources :owners, only: [:index]
+
+    scope module: :organizations do
+      resources :organizations, except: [:edit, :new] do
+        resources :organization_users, only: [:index, :destroy] do
+          collection do
+            delete :quit
+          end
+        end
+        resources :teams, except: [:edit, :new] do
+          collection do
+            get :search
+          end
+          resources :team_users, only: [:index, :create, :destroy] do
+            collection do
+              delete :quit
+            end
+          end
+          resources :team_projects, only: [:index, :create, :destroy] do ;end
+        end
+        resources :projects, only: [:index] do
+          collection do
+            get :search
+          end
+        end
+      end
+    end
+
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
       resources :journals, only: [:index, :create, :destroy, :edit, :update] do
         member do
@@ -225,6 +253,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]
@@ -493,6 +522,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
+        resources :teams, only: [:index, :create, :destroy]
         scope do
           get(
             '/blob/*id/diff',

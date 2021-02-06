@@ -20,7 +20,7 @@ class Projects::ForkService < ApplicationService
       clone_project.save!
 
       new_repository = clone_project.repository
-      new_repository.user = @target_owner
+      new_repository.owner = @target_owner
       new_repository.identifier = @project.identifier
       new_repository.save!
 

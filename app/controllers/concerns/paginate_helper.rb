@@ -1,12 +1,14 @@
 module PaginateHelper
-  def paginate(objs, **opts)
-    page     = params[:page].to_i <= 0 ? 1 : params[:page].to_i
-    per_page = params[:per_page].to_i > 0 && params[:per_page].to_i < 50 ? params[:per_page].to_i : opts[:per_page] || 20
 
-    if objs.is_a?(Array)
-      Kaminari.paginate_array(objs).page(page).per(per_page)
+  def paginate(relation)
+    limit = params[:limit] || params[:per_page]
+    limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+    page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
+
+    if relation.is_a?(Array)
+      Kaminari.paginate_array(relation).page(page).per(limit)
     else
-      objs.page(page).per(per_page)
+      relation.page(page).per(limit)
     end
   end
 end
