@@ -14,7 +14,7 @@ class Organizations::CreateService < ApplicationService
       create_org_and_extension
       create_owner_info
       create_gitea_org
-      sync_owner_team_gtid
+      sync_gitea_info
 
       Rails.logger.info("######Organization create_service end######")
     end
@@ -66,7 +66,8 @@ class Organizations::CreateService < ApplicationService
     @gitea_organization = Gitea::Organization::CreateService.call(@organization.gitea_token, organization)
   end
 
-  def sync_owner_team_gtid
+  def sync_gitea_info
+    organization.update!(gitea_uid: gitea_organization["id"])
     owner_team.update!(gtid: gitea_organization["owner_team"]["id"])
   end
 end
