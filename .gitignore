@@ -36,6 +36,7 @@ public/react/yarn.lock
 /.idea/*
 
 # Ignore react node_modules
+public/react/*
 /public/react/.cache
 /public/react/node_modules/
 /public/react/config/stats.json
