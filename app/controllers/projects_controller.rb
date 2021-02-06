@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, owner: :user_extension)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner)
 
     category_id = params[:category_id]
     @total_count =
@@ -128,7 +128,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, owner: :user_extension).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
   end
 
   def about
@@ -163,7 +163,7 @@ class ProjectsController < ApplicationController
   private
   def project_params
     params.permit(:user_id, :name, :description, :repository_name,
-                  :project_category_id, :project_language_id, :license_id, :ignore_id)
+                  :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 
   def mirror_params

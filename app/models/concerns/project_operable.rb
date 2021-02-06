@@ -8,11 +8,12 @@ module ProjectOperable
     has_many :developers,           -> { joins(:roles).where(roles: { name: 'Developer' }) }, class_name: 'Member'
     has_many :reporters,            -> { joins(:roles).where(roles: { name: 'Reporter' }) }, class_name: 'Member'
     has_many :writable_members,     -> { joins(:roles).where.not(roles: {name: 'Reporter'}) }, class_name: 'Member'
+    has_many :team_projects, dependent: :destroy
   end
 
   def add_member!(user_id, role_name='Developer')
     member = members.create!(user_id: user_id)
-    set_developer_role(member)
+    set_developer_role(member, role_name)
   end
 
   def remove_member!(user_id)
@@ -21,7 +22,13 @@ module ProjectOperable
   end
 
   def member?(user_id)
-    members.exists?(user_id: user_id)
+    if owner.is_a?(User)
+      members.exists?(user_id: user_id)
+    elsif owner.is_a?(Organization)
+      members.exists?(user_id: user_id) || team_projects.joins(team: :team_users).where(team_users: {user_id: user_id}).present?
+    else
+      false
+    end
   end
 
   # 除了项目创建者本身
@@ -35,26 +42,50 @@ module ProjectOperable
   end
 
   def owner?(user)
-    self.owner == user
+    if owner.is_a?(User)
+      self.owner == user
+    elsif owner.is_a?(Organization)
+      owner.is_owner?(user.id)
+    else
+      false
+    end
   end
 
   # 项目管理员(包含项目拥有者)，权限：仓库设置、仓库可读可写
   def manager?(user)
-    managers.exists?(user_id: user.id)
+    if owner.is_a?(User)
+      managers.exists?(user_id: user.id)
+    elsif owner.is_a?(Organization)
+      managers.exists?(user_id: user.id) || owner.is_admin?(user.id)
+    else
+      false
+    end
   end
 
   # 项目开发者，可读可写权限
   def develper?(user)
-    developers.exists?(user_id: user.id)
+    if owner.is_a?(User)
+      developers.exists?(user_id: user.id)
+    elsif owner.is_a?(Organization)
+      developers.exists?(user_id: user.id) || owner.is_write?(user.id)
+    else
+      false
+    end
   end
 
   # 报告者，只有可读权限
   def reporter?(user)
-    reporters.exists?(user_id: user.id)
+    if owner.is_a?(User)
+      reporters.exists?(user_id: user.id)
+    elsif owner.is_a?(Organization)
+      reporters.exists?(user_id: user.id) || owner.is_read?(user.id)
+    else
+      false
+    end
   end
 
-  def set_developer_role(member)
-    role = Role.find_by_name 'Developer'
+  def set_developer_role(member, role_name)
+    role = Role.find_by(name: role_name)
     member.member_roles.create!(role: role)
   end
 

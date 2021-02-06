@@ -61,12 +61,14 @@ module ProjectsHelper
       {
         login: project.project_educoder.owner,
         name: project.project_educoder.owner,
+        type: 'Educoder',
         image_url: project.project_educoder.image_url
       }
     else
       {
         login: @owner.login,
         name: @owner.real_name,
+        type: @owner.type,
         image_url: url_to_avatar(@owner)
       }
     end
