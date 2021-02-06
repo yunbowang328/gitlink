@@ -69,6 +69,14 @@ Rails.application.routes.draw do
       # end
     end
 
+    resources :statistic, only: [:index] do
+      collection do 
+        get :platform_profile
+        get :platform_code
+        get :active_project_rank
+        get :active_developer_rank
+      end 
+    end
     resources :sync_forge, only: [:create] do
       collection do
         post :sync_users
