@@ -13,7 +13,6 @@ class Repositories::CreateService < ApplicationService
     ActiveRecord::Base.transaction do
       if repository.save!
         create_gitea_repository
-        create_manager_member
         sync_project
         sync_repository
         # if project.project_type == "common"
@@ -49,6 +48,7 @@ class Repositories::CreateService < ApplicationService
         next unless team.includes_all_project
         TeamProject.build(project.user_id, team.id, project.id)
       end
+      create_manager_member
     end
   end
 
