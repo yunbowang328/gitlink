@@ -6,10 +6,6 @@
 #  laboratory_id :integer
 #  config        :text(65535)
 #
-# Indexes
-#
-#  index_laboratory_settings_on_laboratory_id  (laboratory_id)
-#
 
 class LaboratorySetting < ApplicationRecord
   belongs_to :laboratory
