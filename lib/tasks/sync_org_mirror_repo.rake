@@ -10,8 +10,11 @@ namespace :sync_org_mirror_repo do
     puts "=========need init count is [#{need_init_orgs.size}]=========="
     need_init_orgs.find_each do |org|
       puts "=== fix org name is [#{org.name}] ==="
-      user = User.first
-      gitea_org = Gitea::Organization::GetService.call(user, org.name)
+      gitea_org = Gitea::Organization::GetService.call(org)
+      if gitea_org[:status] == 404
+        org.destroy
+        next
+      end
       org.update(gitea_uid: gitea_org["id"])
     end
     puts "========end to init organization gitea_uid==========="
@@ -24,6 +27,7 @@ namespace :sync_org_mirror_repo do
                          .where.not(mirrors: {id: nil})
                          .where(users: {type: 'Organization'})
     need_fix_repos.find_each do |repo|
+      next if repo.user_id == repo.project&.user_id
       puts "=== fix repository owner is [#{repo&.project&.owner&.login}] ==="
       puts "=== fix repository identifier is [#{repo.identifier}] ==="
       Gitea::Repository::DeleteService.call(repo.project.owner, repo.identifier)

@@ -1,9 +1,8 @@
 class Gitea::Organization::GetService < Gitea::ClientService
-  attr_reader :user, :org_name
+  attr_reader :org
 
-  def initialize(user, org_name)
-    @user = user
-    @org_name = org_name
+  def initialize(org)
+    @org = org
   end
 
   def call
@@ -13,10 +12,10 @@ class Gitea::Organization::GetService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: user.gitea_token)
+    Hash.new.merge(token: org.gitea_token)
   end
 
   def url
-    "/orgs/#{org_name}".freeze
+    "/orgs/#{org.login}".freeze
   end
 end
