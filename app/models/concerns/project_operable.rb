@@ -12,7 +12,7 @@ module ProjectOperable
 
   def add_member!(user_id, role_name='Developer', is_apply_signature=false)
     member = members.create!(user_id: user_id, is_apply_signature: is_apply_signature)
-    set_developer_role(member)
+    set_developer_role(member, role_name)
   end
 
   def remove_member!(user_id)
@@ -53,8 +53,8 @@ module ProjectOperable
     reporters.exists?(user_id: user.id)
   end
 
-  def set_developer_role(member)
-    role = Role.find_by_name 'Developer'
+  def set_developer_role(member, role_name)
+    role = Role.find_by_name(role_name)
     member.member_roles.create!(role: role)
   end
 
