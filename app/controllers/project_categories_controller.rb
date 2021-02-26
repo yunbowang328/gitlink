@@ -6,6 +6,8 @@ class ProjectCategoriesController < ApplicationController
   end
 
   def group_list
-    @project_categories = ProjectCategory.where('projects_count > 0').order(projects_count: :desc)
+    # @project_categories = ProjectCategory.where('projects_count > 0').order(projects_count: :desc)
+    @project_categories = ProjectCategory.eager_load(:projects)
+        .where(projects: {is_public: true})
   end
 end
