@@ -59,6 +59,7 @@
 #
 
 class Owner < ApplicationRecord
+  self.abstract_class = true
   self.table_name = "users"
 
   include ProjectAbility

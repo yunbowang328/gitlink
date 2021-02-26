@@ -76,7 +76,7 @@ class ProjectsController < ApplicationController
         default_branch: params[:default_branch]
       }
       if [true, false].include? private
-        new_project_params = project_params.merge(is_public: !private)
+        new_project_params = project_params.except(:private).merge(is_public: !private)
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
         @project.repository.update_column(:hidden, private)
       end
