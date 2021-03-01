@@ -116,7 +116,7 @@ class Project < ApplicationRecord
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
 
-  scope :secret_and_visible, -> {joins(:license).where("licenses.is_secret = TRUE OR projects.is_public = TRUE")}
+  scope :secret_and_visible, -> {left_outer_joins(:license).where("licenses.is_secret = TRUE OR projects.is_public = TRUE")}
 
   delegate :is_secret, to: :license, allow_nil: true
 
