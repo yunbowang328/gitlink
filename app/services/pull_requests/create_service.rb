@@ -1,6 +1,7 @@
 class PullRequests::CreateService < ApplicationService
 
   attr_reader :current_user, :owner, :project, :params
+  attr_accessor :pull_issue, :pull_request
 
   def initialize(current_user, owner, project, params)
     @owner        = owner
@@ -10,13 +11,15 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def call
-    validate!
-    save_pull_issue!
-    save_pull_request!
-    save_issue_tags_relates!
-    save_tiding!
-    save_project_trend!
-    save_custom_journal_detail!
+    ActiveRecord::Base.transaction do
+      validate!
+      save_pull_issue!
+      save_pull_request!
+      save_issue_tags_relates!
+      save_tiding!
+      save_project_trend!
+      save_custom_journal_detail!
+    end
 
     [pull_request, gitea_pull_request]
   end
@@ -43,7 +46,7 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def save_pull_issue!
-    pull_issue.save
+    pull_issue.save!
   end
 
   def pull_request
@@ -51,7 +54,7 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def save_pull_request!
-    pull_request.save
+    pull_request.save!
   end
 
   def save_issue_tags_relates!
@@ -76,7 +79,7 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def save_project_trend!
-    project_trend.save
+    project_trend.save!
   end
 
   def project_trend
@@ -142,5 +145,7 @@ class PullRequests::CreateService < ApplicationService
     raise "title参数不能为空" if @params[:title].blank?
     raise "head参数不能为空" if @params[:head].blank?
     raise "base参数不能为空" if @params[:base].blank?
+    raise @pull_issue.errors.full_messages.join(", ") unless pull_issue.valid?
+    raise @pull_request.errors.full_messages.join(", ") unless pull_request.valid?
   end
 end
