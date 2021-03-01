@@ -19,11 +19,13 @@ json.author do
   if project.educoder?
     project_educoder = project.project_educoder
     json.name project_educoder&.owner
+    json.type 'Educoder'
     json.login project_educoder&.repo_name.split('/')[0]
     json.image_url render_educoder_avatar_url(project.project_educoder)
   else
     user = project.owner
     json.name user.try(:show_real_name)
+    json.type user&.type
     json.login user.login
     json.image_url render_avatar_url(user)
   end

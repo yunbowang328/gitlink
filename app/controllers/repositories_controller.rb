@@ -88,7 +88,7 @@ class RepositoriesController < ApplicationController
   end
 
   def edit
-    return render_forbidden if !@project.manager?(current_user)
+    return render_forbidden if !@project.manager?(current_user) && !current_user.admin?
   end
 
   def create_file

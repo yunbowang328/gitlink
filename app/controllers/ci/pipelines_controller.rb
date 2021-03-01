@@ -1,18 +1,40 @@
 class Ci::PipelinesController < Ci::BaseController
 
-  before_action :require_login, only: %i[list create]
-  skip_before_action :connect_to_ci_db
-  before_action :load_project, only: %i[content create_trustie_pipeline]
-  before_action :load_repository, only: %i[create_trustie_pipeline]
+  before_action :require_login, only: %i[list create content]
+  skip_before_action :connect_to_ci_db, except: %i[list create destroy content]
+  before_action :load_project, only: %i[create content]
+  before_action :load_repo, only: %i[create content]
 
   # ======流水线相关接口========== #
   def list
-    @pipelines = Ci::Pipeline.where('identifier=?', params[:identifier])
+    @result = Array.new
+    list = Ci::Pipeline.where('identifier=? and owner=?', params[:identifier], params[:owner])
+    # 查询build状态
+    list.collect do |pipeline|
+      pipeline.last_build_time = nil
+      repo = load_repo_by_repo_slug("#{pipeline.owner}/#{pipeline.identifier}")
+      if repo
+        build = repo.builds.order("build_created desc").find_by(build_target: pipeline.branch)
+        if build
+          pipeline.pipeline_status = build.build_status
+          pipeline.last_build_time = Time.at(build.build_created)
+        end
+      end
+      @result.push(pipeline)
+    end
+    @total_count = @result.size
+    @pipelines = paginate @result
   end
 
   def create
     ActiveRecord::Base.transaction do
-      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name], login: current_user.login, identifier: params[:identifier])
+      size = Ci::Pipeline.where('branch=? and identifier=? and owner=?', params[:branch], params[:repo], params[:owner]).size
+      if size > 0
+        render_error("#{params[:branch]}分支已经存在流水线！")
+        return
+      end
+      pipeline = Ci::Pipeline.new(pipeline_name: params[:pipeline_name], file_name: params[:file_name],owner: params[:owner],
+                                  login: current_user.login, identifier: params[:repo], branch: params[:branch], event: params[:event])
       pipeline.save!
 
       # 默认创建四个初始阶段
@@ -26,16 +48,73 @@ class Ci::PipelinesController < Ci::BaseController
         ).save!
         index += 1
       end
+      create_pipeline_file(pipeline)
+      create_ci_repo(pipeline)
       render_ok({id: pipeline.id})
     end
   rescue Exception => ex
     render_error(ex.message)
   end
 
+  # 在代码库创建文件
+  def create_pipeline_file(pipeline)
+    sha = get_pipeline_file_sha(pipeline.file_name, pipeline.branch)
+    if sha
+      logger.info "#{pipeline.file_name}已存在"
+    else
+      interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
+      if interactor.success?
+        logger.info "#{pipeline.file_name}创建成功"
+      end
+    end
+  end
+
+  # 在drone数据库repo表新增一条repo记录
+  def create_ci_repo(pipeline)
+    if pipeline.branch != 'master'
+      create_params = {
+        repo_user_id: @ci_user.user_id,
+        repo_namespace: @project.owner.login,
+        repo_name: @project.identifier,
+        repo_slug: "#{@project.owner.login}/#{@project.identifier}-" + pipeline.id.to_s,
+        repo_clone_url: @project.repository.url,
+        repo_branch: pipeline.branch,
+        repo_config: pipeline.file_name
+      }
+      repo = Ci::Repo.create_repo(create_params)
+      repo
+    end
+    nil
+  end
+
+  def get_pipeline_file_sha(file_name, branch)
+    file_path_uri = URI.parse(file_name)
+    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: branch || 'master')
+    if interactor.success?
+      file = interactor.result
+      file['sha']
+    end
+  end
+
+  def content_params
+    {
+      filepath: params[:file_name],
+      branch: params[:branch],
+      new_branch: params[:new_branch],
+      content: "#pipeline \n",
+      message: 'create pipeline',
+      committer: {
+        email: current_user.mail,
+        name: current_user.login
+      },
+      identifier: params[:repo]
+    }
+  end
+
   def update
     pipeline = Ci::Pipeline.find(params[:id])
     if pipeline
-      pipeline.update!(pipeline_name: params[:pipeline_name])
+      pipeline.update!(pipeline_name: params[:pipeline_name],branch: params[:branch], event: params[:event])
     end
     render_ok
   rescue Exception => ex
@@ -45,6 +124,10 @@ class Ci::PipelinesController < Ci::BaseController
   def destroy
     pipeline = Ci::Pipeline.find(params[:id])
     if pipeline
+      repo = load_repo_by_repo_slug("#{pipeline.login}/#{pipeline.identifier}-" + pipeline.id.to_s)
+      if repo
+        repo.destroy!
+      end
       pipeline.destroy!
     end
     render_ok
@@ -53,10 +136,8 @@ class Ci::PipelinesController < Ci::BaseController
   end
 
   def content
-    @yaml = "#pipeline \n"
+    @yaml = "\n"
     pipeline = Ci::Pipeline.find(params[:id])
-    @sync = pipeline.sync
-    @sha = ''
     stages = pipeline.pipeline_stages
     if stages && !stages.empty?
       init_step = stages.first.pipeline_stage_steps.first
@@ -72,55 +153,15 @@ class Ci::PipelinesController < Ci::BaseController
         end
       end
     end
-    if @sync == 1
-      @sha = get_pipeline_file_sha(pipeline.file_name)
+    @sha = get_pipeline_file_sha(pipeline.file_name, pipeline.branch)
+    trigger = ''
+    trigger += "  branch:\r\n  - #{pipeline.branch}\r\n" unless pipeline.branch.blank?
+    unless pipeline.event.blank?
+      trigger += "  event:\r\n"
+      pipeline.event.split(',').each { |event| trigger += "  - #{event}\r\n"}
     end
-  end
-
-  def get_pipeline_file_sha(file_name)
-    file_path_uri = URI.parse(file_name)
-    interactor = Repositories::EntriesInteractor.call(@project.owner, @project.identifier, file_path_uri, ref: params[:ref] || "master")
-    if interactor.success?
-      file = interactor.result
-      return file['sha']
-    end
-  end
-
-  def create_trustie_pipeline
-    pipeline = Ci::Pipeline.find(params[:id])
-    sha = get_pipeline_file_sha(pipeline.file_name)
-    if sha
-      pipeline.update!(sync: 1)
-      interactor = Gitea::UpdateFileInteractor.call(current_user.gitea_token, params[:owner], params.merge(identifier: @project.identifier,sha: sha))
-      if interactor.success?
-        render_ok
-      else
-        render_error(interactor.error)
-      end
-    else
-      interactor = Gitea::CreateFileInteractor.call(current_user.gitea_token, @owner.login, content_params)
-      if interactor.success?
-        pipeline.update!(sync: 1)
-        render_ok
-      else
-        render_error(interactor.error)
-      end
-    end
-  end
-
-  def content_params
-    {
-        filepath: params[:filepath],
-        branch: params[:branch],
-        new_branch: params[:new_branch],
-        content: params[:content],
-        message: params[:message],
-        committer: {
-            email: current_user.mail,
-            name: current_user.login
-        },
-        identifier: @project.identifier
-    }
+    @yaml += "trigger:\r\n" + trigger unless trigger.blank?
+    @branch = pipeline.branch
   end
 
   # =========阶段相关接口========= #
@@ -135,8 +176,8 @@ class Ci::PipelinesController < Ci::BaseController
       # 修改stage排序
       update_stage_index(params[:id], params[:show_index], 1)
       pipeline_stage = Ci::PipelineStage.new(stage_name: params[:stage_name],
-                                            stage_type: params[:stage_type].blank? ? 'customize' : params[:stage_type],
-                                            pipeline_id: params[:id], show_index: params[:show_index])
+                                             stage_type: params[:stage_type].blank? ? 'customize' : params[:stage_type],
+                                             pipeline_id: params[:id], show_index: params[:show_index])
       pipeline_stage.save!
       render_ok
     end
@@ -188,7 +229,7 @@ class Ci::PipelinesController < Ci::BaseController
       unless steps.empty?
         steps.each do |step|
           unless step[:template_id]
-            render_error("请选择模板！")
+            render_error('请选择模板！')
             return
           end
           if !step[:id]

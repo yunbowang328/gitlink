@@ -31,6 +31,7 @@ class UsersController < ApplicationController
       #用户的组织数量
       # @user_composes_count =  @user.composes.size
       @user_composes_count = 0
+      @user_org_count = User.current.logged? ? @user.organizations.with_visibility(%w(common limited)).size + @user.organizations.with_visibility("privacy").joins(:organization_users).where(organization_users: {user_id: current_user.id}).size : @user.organizations.with_visibility("common").size
       user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size

@@ -41,11 +41,8 @@ class Ci::ProjectsController < Ci::BaseController
       ActiveRecord::Base.transaction do
         if @repo
           return render_error('该项目已经激活') if @repo.repo_active?
-          if @project.ci_reactivate?
-            @project.ci_reactivate!(@repo)
-            return render_ok
-          end
-          @repo.activate!(@ci_user.user_id)
+          @repo.activate!(@project)
+          return render_ok
         else
           @repo = Ci::Repo.auto_create!(@ci_user, @project)
           @ci_user.update_column(:user_syncing, false)
@@ -66,7 +63,7 @@ class Ci::ProjectsController < Ci::BaseController
     return render_error('该项目已经取消激活') if !@repo.repo_active?
 
     @project.update_column(:open_devops, false)
-    @repo.deactivate!
+    @repo.deactivate_repos!
     render_ok
   end
 

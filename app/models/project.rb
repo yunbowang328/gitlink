@@ -86,7 +86,8 @@ class Project < ApplicationRecord
 
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id, optional: true
+  belongs_to :owner, class_name: 'Owner', foreign_key: :user_id, optional: true
+  belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
@@ -108,6 +109,7 @@ class Project < ApplicationRecord
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
   has_many :apply_signatures, dependent: :destroy
+  has_many :team_projects, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
@@ -253,7 +255,7 @@ class Project < ApplicationRecord
   def self.find_with_namespace(namespace_path, identifier)
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
-    user = User.find_by_login namespace_path
+    user = Owner.find_by_login namespace_path
     project = user&.projects&.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
     return nil if project.blank?
 
