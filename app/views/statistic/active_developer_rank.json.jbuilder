@@ -6,7 +6,7 @@ json.developers @active_developer_rank_query.each_with_index.to_a do |item, inde
   json.login item["develop_name"]
   json.name user.full_name
   json.develop_projects projects do |project|
-    json.(project, :name, :identifier, :description)
+    json.(project, :name, :identifier)
   end
   json.total_commit_count item["total_count"]
   json.active_commit_count item["active_count"]

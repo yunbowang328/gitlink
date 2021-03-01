@@ -28,7 +28,7 @@ class Repositories::MigrateService < ApplicationService
     {
       clone_addr: params[:mirror_url],
       repo_name: params[:identifier],
-      uid: user.gitea_uid,
+      uid: project&.owner&.gitea_uid,
       private: params[:hidden],
       mirror: wrapper_mirror || false,
       auth_username: params[:login],

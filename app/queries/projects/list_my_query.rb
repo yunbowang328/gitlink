@@ -17,15 +17,12 @@ class Projects::ListMyQuery < ApplicationQuery
       projects = Project.visible
     end
 
-    if params[:is_public].present?
-      projects = projects.is_private.members_projects(user.id) if params[:is_public].to_s == "private"
-      projects = projects.visible.members_projects(user.id) if params[:is_public].to_s == "public"
-    end
-
     if params[:category].blank?
       projects = projects.members_projects(user.id)
     elsif params[:category].to_s == "join"
-      projects = projects.where.not(user_id: user.id).members_projects(user.id)
+      normal_projects = projects.where.not(user_id: user.id).members_projects(user.id).to_sql
+      org_projects = projects.joins(team_projects: [team: :team_users]).where(team_users: {user_id: user.id}).to_sql
+      projects = Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
     elsif params[:category].to_s == "manage"
       projects = projects.where(user_id: user.id)
     elsif params[:category].to_s == "watched"  #我关注的
@@ -37,6 +34,11 @@ class Projects::ListMyQuery < ApplicationQuery
     #   projects = projects.visible.joins(:members).where(members: { user_id: user.id })
     # elsif params[:category].to_s == "private"
     #   projects = projects.is_private.joins(:members).where(members: { user_id: user.id })
+    end
+
+    if params[:is_public].present?
+      projects = projects.is_private if params[:is_public].to_s == "private"
+      projects = projects.visible if params[:is_public].to_s == "public"
     end
 
     if params[:project_type].to_s === "common"
