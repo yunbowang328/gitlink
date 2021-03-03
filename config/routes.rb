@@ -39,6 +39,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :secrets do
+        member do
+          delete :destroy, :path => ":name", to: 'secrets#destroy'
+        end
+      end
+
       resources :pipelines do
         collection do
           get :list
