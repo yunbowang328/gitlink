@@ -4919,13 +4919,13 @@ curl --location --request POST 'http://localhost:3000/api/ci/secrets?owner=test&
 #### 参数删除
 
 ```
-DELETE  /api/ci/secrets/{id}/{name}?owner={owner}&repo={repo}
+DELETE  /api/ci/secrets/{id}?name={name}&owner={owner}&repo={repo}
 ```
 
 *示例*
 
 ```bash
-curl --location --request DELETE 'http://localhost:3000/api/ci/secrets/1/p2?owner=victor&repo=trustieTest' \
+curl --location --request DELETE 'http://localhost:3000/api/ci/secrets/1?name=p1&owner=victor&repo=trustieTest' \
 ```
 
 *请求参数说明:*
