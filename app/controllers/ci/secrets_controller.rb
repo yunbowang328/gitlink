@@ -44,6 +44,8 @@ class Ci::SecretsController < Ci::BaseController
     else
       render_error("参数名不能为空")
     end
+  rescue Exception => ex
+    render_ok
   end
 
 end
