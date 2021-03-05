@@ -1,4 +1,3 @@
----
 
 
 # API文档
@@ -19,7 +18,6 @@
 
 
 ### API接口
----
 
 #### 用户注册(通过其他平台)
 ```
@@ -4864,7 +4862,132 @@ curl --location --request DELETE 'http://localhost:3000/api/ci/templates/10'
 
 ------
 
+#### 参数列表查询
+
+```
+GET /api/ci/secrets/secrets?owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/secrets?owner=test&repo=test'
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型   | 说明       |
+| ------ | ---- | ------ | ---------- |
+| owner  | 是   | string | 仓库所有人 |
+| repo   | 是   | string | 仓库名     |
+
+*返回参数说明:*
+
+| 参数名 | 类型   | 说明   |
+| ------ | ------ | ------ |
+| name   | string | 参数名 |
+| data   | string | 参数值 |
+| repo   | string | 仓库   |
+
+返回值
+
+```json
+ [
+        {
+            "id": 1,
+            "name": "test",
+            "data": "test",
+            "repo": "test"
+        }
+]
+
+```
+
 ------
+
+#### 参数新增/更新
+
+```
+POST  /api/ci/secrets?owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/secrets?owner=test&repo=test' \
+--data-raw ' {
+            "name": "ip",
+            "data": "1.1.1.1",
+            "id": 21
+}' 
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型   | 说明         |
+| ------ | ---- | ------ | ------------ |
+| owner  | 是   | string | 仓库拥有者   |
+| repo   | 是   | string | 仓库名       |
+| name   | 是   | string | 参数名       |
+| data   | 是   | string | 参数值       |
+| id     | 否   | int    | id，更新时传 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 消息         |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 参数删除
+
+```
+DELETE  /api/ci/secrets/{id}?name={name}&owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/ci/secrets/1?name=p1&owner=victor&repo=trustieTest' \
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型   | 说明   |
+| ------ | ---- | ------ | ------ |
+| name   | 是   | string | 参数名 |
+| id     | 是   | int    | 参数id |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+
 
 
 #### 解除CI服务器绑定
