@@ -39,6 +39,9 @@
       </td>
       <td><%= project.created_on&.strftime('%Y-%m-%d %H:%M') %></td>
       <td class="action-container">
+          <% if project.is_secret %>
+             <%= link_to "同步", sync_phenglei_user_admins_project_path(project.id), method: :get, data:{confirm: "确认同步吗？"}, class: "sync-phenglei-user-project-action" %>
+          <% end %>
           <%= link_to "删除", admins_project_path(project.id), method: :delete, data:{confirm: "确认删除的吗？"}, class: "delete-project-action" %>
       </td>
     </tr>

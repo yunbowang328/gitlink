@@ -824,7 +824,11 @@ Rails.application.routes.draw do
 
     resources :courses, only: [:index, :destroy, :update]
 
-    resources :projects, only: [:index, :destroy]
+    resources :projects, only: [:index, :destroy] do
+      member do
+        get :sync_phenglei_user
+      end
+    end
 
     resources :disciplines, only: [:index, :create, :edit, :update, :destroy] do
       post :adjust_position, on: :member
