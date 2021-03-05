@@ -8,6 +8,8 @@ module RegisterHelper
     user.password = password
     user.platform = platform
     user.activate
+    
+    return unless user.valid?
 
     interactor = Gitea::RegisterInteractor.call({username: username, email: email, password: password})
     if interactor.success?
