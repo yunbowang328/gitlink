@@ -46,8 +46,8 @@ class Ci::SecretsController < Ci::BaseController
   end
 
   def ci_drone_url
-    ci_user = Ci::CloudAccount.find_by(account: params[:owner])
-    ci_user&.drone_url
+    user = User.find_by(login: params[:owner])
+    user&.ci_cloud_account.drone_url
   end
 
 end
