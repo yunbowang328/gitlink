@@ -39,6 +39,9 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :secrets do
+      end
+
       resources :pipelines do
         collection do
           get :list
