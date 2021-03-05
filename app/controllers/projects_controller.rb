@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = kaminari_paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :apply_signatures, :members, owner: :user_extension)
+    @projects = kaminari_paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :apply_signatures, :members, :owner)
 
     category_id = params[:category_id]
     @total_count = @projects.total_count
@@ -67,7 +67,7 @@ class ProjectsController < ApplicationController
         default_branch: params[:default_branch]
       }
       if [true, false].include? private
-        new_project_params = project_params.merge(is_public: !private)
+        new_project_params = project_params.except(:private).merge(is_public: !private)
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
         @project.repository.update_column(:hidden, private)
       end
@@ -119,7 +119,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, owner: :user_extension).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
   end
 
   def about

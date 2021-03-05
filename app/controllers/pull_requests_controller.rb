@@ -230,7 +230,8 @@ class PullRequestsController < ApplicationController
     }
     @requests_params = @local_params.merge({
       assignee: current_user.try(:login),
-      assignees: ["#{params[:assigned_login].to_s}"],
+      # assignees: ["#{params[:assigned_login].to_s}"],
+      assignees: ["#{current_user.try(:login).to_s}"],
       labels: params[:issue_tag_ids],
       due_date: Time.now
     })

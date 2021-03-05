@@ -58,14 +58,13 @@
 #  index_users_on_type               (type)
 #
 
-class User < ApplicationRecord
+class User < Owner
+  default_scope {where(type: %w(User AnonymousUser))}
   extend Enumerize
 
   include Watchable
   include Likeable
   include BaseModel
-  include ProjectOperable
-  include ProjectAbility
   include Droneable
   # include Searchable::Dependents::User
 
@@ -136,9 +135,8 @@ class User < ApplicationRecord
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
 
   # 关注
-  has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
-  has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-  has_many :watchers, as: :watchable, dependent: :destroy
+  # has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
+  # has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
 
   has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
@@ -154,14 +152,14 @@ class User < ApplicationRecord
   # 项目
   has_many :applied_projects, dependent: :destroy
 
-  has_many :projects, dependent: :destroy
-  has_many :repositories, dependent: :destroy
-
   # 教学案例
   # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
   has_many :oauths , dependent: :destroy
   has_many :apply_signatures, dependent: :destroy
+
+  has_many :organization_users, dependent: :destroy
+  has_many :organizations, through: :organization_users
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
@@ -169,7 +167,7 @@ class User < ApplicationRecord
     where("LOWER(concat(nickname, lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
-  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid)}
+  scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid, :type)}
 
   attr_accessor :password, :password_confirmation
 
