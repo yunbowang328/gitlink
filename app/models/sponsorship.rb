@@ -23,10 +23,8 @@ class Sponsorship < ApplicationRecord
   end
 
   def pay
-    sponsor.create_wallet(balance: 0) if sponsor.wallet.nil?
-    developer.create_wallet(balance: 0) if developer.wallet.nil?
-    sponsor_wallet = sponsor.wallet
-    developer_wallet = developer.wallet
+    sponsor_wallet = sponsor.get_wallet
+    developer_wallet = developer.get_wallet
 
     return false if sponsor.wallet.balance < amount
 

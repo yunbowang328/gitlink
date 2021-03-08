@@ -598,6 +598,7 @@ class User < ApplicationRecord
   # Returns the user who matches the given autologin +key+ or nil
   def self.try_to_autologin(key)
     user = Token.find_active_user('autologin', key)
+    user.daily_reward if user
     user.update(last_login_on: Time.now) if user
     user
   end
@@ -742,6 +743,34 @@ class User < ApplicationRecord
 
   def from_sub_site?
     laboratory_id.present? && laboratory_id != 1
+  end
+
+  def get_wallet
+    if wallet.nil?
+      create_wallet(balance: 100)
+      reason = "系统初始赠送"
+      CoinChange.create(amount: amount, reason: reason, to_wallet_id: wallet.id)
+    end
+    wallet
+  end
+
+  def daily_reward
+    t1 = Time.now
+    t2 = Time.new(t1.year, t1.month, t1.day)
+    if(last_login_on.nil? or t2 > last_login_on)
+      User.transaction do
+        if(last_login_on.nil? or t2 > last_login_on)
+          amount = 2
+          user_wallet = get_wallet
+          user_wallet.update(balance: user_wallet.balance += amount)
+          reason = "每日登录奖励"
+          CoinChange.create(amount: amount, reason: reason, to_wallet_id: user_wallet.id)
+          update(last_login_on: Time.now)
+        end
+      end
+    else
+      # puts("#################################NOOO DAILY REWARD, #{last_login_on}, #{t2}")
+    end
   end
 
   protected

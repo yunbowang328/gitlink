@@ -1,14 +1,14 @@
 class WalletsController < ApplicationController
+  before_action :require_login
+
   def balance
     user = User.find_by_id(params[:id])
-    user.create_wallet(balance: 0) if user.wallet.nil?
-    @wallet = user.wallet
+    @wallet = user.get_wallet
   end
 
   def coin_changes
     user = User.find_by_id(params[:id])
-    user.create_wallet(balance: 0) if user.wallet.nil?
-    @wallet = user.wallet
+    @wallet = user.get_wallet
     if params[:category] == 'all'
       scope = CoinChange.where('to_wallet_id = ? OR from_wallet_id = ?', @wallet.id, @wallet.id)
     elsif params[:category] == 'income'
