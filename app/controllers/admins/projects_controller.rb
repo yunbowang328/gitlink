@@ -27,10 +27,10 @@ class Admins::ProjectsController < Admins::BaseController
   def sync_phenglei_user
     if @project.is_secret
       SyncPhengleiUserJob.perform_later(@project.id)
-      redirect_to admins_projects_path
+      redirect_to admins_phenglei_users_path
       flash[:success] = "已开启后台同步任务"
     else
-      redirect_to admins_projects_path
+      redirect_to admins_phenglei_users_path
       flash[:danger] = "非风雷协议项目"
     end
   end

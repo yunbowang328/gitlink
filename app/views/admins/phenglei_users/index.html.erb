@@ -1,0 +1,19 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('风雷意向用户管理', admins_phenglei_users_path) %>
+<% end %>
+
+<div class="box search-form-container user-list-form">
+  <%= form_tag(admins_phenglei_users_path, method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+    <%= text_field_tag(:keyword, params[:keyword], class: 'form-control col-sm-2 ml-3', placeholder: '手机号检索') %>
+
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+    <%= link_to "同步", sync_phenglei_user_admins_project_path(@phenglei_project.id), method: :get, data: {confirm: "确认同步吗？"}, class: "btn btn-primary pull-right ml-3", "data-disabled-with":"...同步"  %>
+  <% end %>
+  <%= link_to "新增", new_admins_phenglei_user_path, remote: true, class: "btn btn-primary ml-3", "data-disabled-with":"...新增" %> 
+</div>
+
+<div class="box admin-list-container phenglei-users-list-container">
+  <%= render partial: 'admins/phenglei_users/shared/list', locals: { phenglei_users: @phenglei_users } %>
+</div>
+<div id="phenglei-users-modals">
+</div>

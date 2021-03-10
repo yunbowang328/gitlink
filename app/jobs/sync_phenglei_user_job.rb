@@ -1,7 +1,8 @@
 class SyncPhengleiUserJob < ApplicationJob
   queue_as :default
 
-  def perform(project_id)
+  def perform(project_id=nil)
+    project_id ||= EduSetting.get("sync_phenglei_user_project")
     project = Project.find_by_id(project_id)
     return if project.nil?
     member_count, success_count, error_count, not_exsit_count = 0, 0, 0, 0
