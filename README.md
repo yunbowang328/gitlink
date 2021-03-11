@@ -112,7 +112,7 @@ http://localhost:3000/
 ![](docs/figs/milestone.png?raw=true)
 
 ### API
-- [API](https://forgeplus.trustie.net/docs/api)
+- [API文档](https://forgeplus.trustie.net/docs/api)
 - [API](showdoc.com.cn)
   账号：forgeplus@admin.com 密码：forge123
 
