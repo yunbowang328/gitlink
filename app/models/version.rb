@@ -24,7 +24,7 @@
 #
 
 class Version < ApplicationRecord
-  belongs_to :project, counter_cache: true
+  belongs_to :project, counter_cache: true, optional: true
   has_many :issues, class_name: "Issue", foreign_key: "fixed_version_id"
   belongs_to :user, optional: true
 

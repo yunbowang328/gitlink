@@ -37,8 +37,6 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
-#  license_id             :integer
-#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
@@ -52,6 +50,8 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
+#  license_id             :integer
+#  ignore_id              :integer
 #
 # Indexes
 #
