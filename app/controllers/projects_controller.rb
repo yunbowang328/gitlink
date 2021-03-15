@@ -73,7 +73,8 @@ class ProjectsController < ApplicationController
       private = params[:private]
       gitea_params = {
         private: private,
-        default_branch: params[:default_branch]
+        default_branch: params[:default_branch],
+        website: params[:website]
       }
       if [true, false].include? private
         new_project_params = project_params.except(:private).merge(is_public: !private)
@@ -162,7 +163,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name,
+    params.permit(:user_id, :name, :description, :repository_name, :website,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 

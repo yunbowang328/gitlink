@@ -380,6 +380,7 @@ Rails.application.routes.draw do
 
       resource :repositories, path: '/', only: [:show, :create, :edit] do
         member do
+          get :detail
           get :archive
           get :top_counts
           get :entries

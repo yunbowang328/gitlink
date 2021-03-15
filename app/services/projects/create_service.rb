@@ -36,6 +36,7 @@ class Projects::CreateService < ApplicationService
       is_public: repo_is_public,
       ignore_id: params[:ignore_id],
       license_id: params[:license_id],
+      website: params[:website],
       identifier: params[:repository_name]  #新增,hs
     }
   end
@@ -44,6 +45,7 @@ class Projects::CreateService < ApplicationService
     {
       hidden: !repo_is_public,
       user_id: params[:user_id],
+      website: params[:website],
       identifier: params[:repository_name]
     }
   end

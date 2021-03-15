@@ -11,6 +11,20 @@ class RepositoriesController < ApplicationController
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
 
+  # 新版项目详情
+  def detail 
+    @user = current_user  
+    @result = Repositories::DetailService.call(@owner, @repository, @user)
+    @project_fork_id = @project.try(:forked_from_project_id)
+    if @project_fork_id.present?
+      @fork_project = Project.find_by(id: @project_fork_id)
+      @fork_project_user = @fork_project.owner
+    end
+  rescue Exception => e 
+    uid_logger_error(e.message)
+    tip_exception(e.message)
+  end
+
   def show
     @user = current_user
     @repo = @project.repository
@@ -187,7 +201,7 @@ class RepositoriesController < ApplicationController
   end
 
   def get_ref
-    @ref = params[:ref] || "master"
+    @ref = params[:ref] || @project.default_branch
   end
 
   def get_latest_commit

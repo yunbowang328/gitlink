@@ -52,6 +52,8 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
+#  default_branch         :string(255)      default("master")
+#  website                :string(255)
 #
 # Indexes
 #
@@ -67,6 +69,7 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
 
 
 
@@ -116,6 +119,8 @@ class Project < ApplicationRecord
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
 
+  delegate :content, to: :project_detail, allow_nil: true
+  delegate :name, to: :license, prefix: true, allow_nil: true
 
 
   def self.search_project(search)

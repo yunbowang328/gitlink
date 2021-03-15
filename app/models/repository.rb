@@ -41,6 +41,8 @@ class Repository < ApplicationRecord
 
   validates :identifier, presence: true
 
+  delegate :default_branch, to: :project, allow_nil: true
+
   def to_param
     self.identifier.parameterize
   end
