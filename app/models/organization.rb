@@ -39,13 +39,14 @@
 #  business                   :boolean          default("0")
 #  profile_completed          :boolean          default("0")
 #  laboratory_id              :integer
-#  platform                   :string(255)      default("0")
-#  gitea_token                :string(255)
-#  gitea_uid                  :integer
 #  is_shixun_marker           :boolean          default("0")
+#  admin_visitable            :boolean          default("0")
+#  collaborator               :boolean          default("0")
+#  gitea_uid                  :integer
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
+#  gitea_token                :string(255)
 #
 # Indexes
 #
@@ -53,8 +54,9 @@
 #  index_users_on_homepage_engineer  (homepage_engineer)
 #  index_users_on_homepage_teacher   (homepage_teacher)
 #  index_users_on_laboratory_id      (laboratory_id)
-#  index_users_on_login              (login)
-#  index_users_on_mail               (mail)
+#  index_users_on_login              (login) UNIQUE
+#  index_users_on_mail               (mail) UNIQUE
+#  index_users_on_phone              (phone) UNIQUE
 #  index_users_on_type               (type)
 #
 
