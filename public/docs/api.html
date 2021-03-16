@@ -369,6 +369,9 @@
                     <a href="#32bf9fcdcf" class="toc-h2 toc-link" data-title="仓库详情(简版)">仓库详情(简版)</a>
                   </li>
                   <li>
+                    <a href="#ba8983357c" class="toc-h2 toc-link" data-title="仓库详情(新版)">仓库详情(新版)</a>
+                  </li>
+                  <li>
                     <a href="#af9709123a" class="toc-h2 toc-link" data-title="编辑仓库信息">编辑仓库信息</a>
                   </li>
                   <li>
@@ -388,6 +391,9 @@
                   </li>
                   <li>
                     <a href="#1091eafea0" class="toc-h2 toc-link" data-title="获取仓库成员列表">获取仓库成员列表</a>
+                  </li>
+                  <li>
+                    <a href="#59943eacca" class="toc-h2 toc-link" data-title="获取仓库所有文件">获取仓库所有文件</a>
                   </li>
                   <li>
                     <a href="#0c98b4c01b" class="toc-h2 toc-link" data-title="获取仓库代码目录">获取仓库代码目录</a>
@@ -1590,16 +1596,16 @@ http://localhost:3000/api/projects/migrate.json
   </span><span class="nl">"repo_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">75073</span><span class="p">,</span><span class="w">
   </span><span class="nl">"repo_identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mirror_demo"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h2 id='af9709123a'>编辑仓库信息</h2>
-<p>编辑仓库信息</p>
+</span></code></pre></div><h2 id='ba8983357c'>仓库详情(新版)</h2>
+<p>仓库详情</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/jasder/jasder_test/edit.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/edit.json</span><span class="dl">'</span><span class="p">)</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/yystopf/ceshi/detail.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/detail.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-3'>HTTP 请求</h3>
-<p><code>GET /api/:owner/:repo/edit.json</code></p>
+<p><code>GET /api/:owner/:repo/detail</code></p>
 <h3 id='2eb6f47757-3'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -1626,6 +1632,379 @@ http://localhost:3000/api/projects/migrate.json
 </tr>
 </tbody></table>
 <h3 id='7447e4874e-3'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>content</td>
+<td>string</td>
+<td>仓库简介</td>
+</tr>
+<tr>
+<td>website</td>
+<td>string</td>
+<td>仓库网址</td>
+</tr>
+<tr>
+<td>readme</td>
+<td>string</td>
+<td>readme文件｜</td>
+</tr>
+<tr>
+<td>identifier</td>
+<td>string</td>
+<td>项目标识</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>项目名称</td>
+</tr>
+<tr>
+<td>issues_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>pull_requests_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>project_identifier</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>praises_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>forked_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>watchers_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>versions_count</td>
+<td>int</td>
+<td>项目里程碑数量</td>
+</tr>
+<tr>
+<td>version_releases_count</td>
+<td>int</td>
+<td>项目发行版数量</td>
+</tr>
+<tr>
+<td>version_releasesed_count</td>
+<td>int</td>
+<td>项目发行版已发行数量</td>
+</tr>
+<tr>
+<td>permission</td>
+<td>string</td>
+<td>项目权限</td>
+</tr>
+<tr>
+<td>mirror_url</td>
+<td>string</td>
+<td>镜像地址</td>
+</tr>
+<tr>
+<td>mirror</td>
+<td>bool</td>
+<td>是否为镜像项目</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>项目类型 0 普通项目 1 普通镜像项目 2 同步镜像项目</td>
+</tr>
+<tr>
+<td>open_devops</td>
+<td>int</td>
+<td>是否开启devops</td>
+</tr>
+<tr>
+<td>watched</td>
+<td>bool</td>
+<td>是否关注</td>
+</tr>
+<tr>
+<td>praised</td>
+<td>bool</td>
+<td>是否点赞</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>项目状态</td>
+</tr>
+<tr>
+<td>forked_from_project_id</td>
+<td>int</td>
+<td>fork项目id</td>
+</tr>
+<tr>
+<td>fork_info</td>
+<td>object</td>
+<td>fork项目信息</td>
+</tr>
+<tr>
+<td>size</td>
+<td>string</td>
+<td>仓库大小</td>
+</tr>
+<tr>
+<td>ssh_url</td>
+<td>string</td>
+<td>项目ssh地址</td>
+</tr>
+<tr>
+<td>clone_url</td>
+<td>string</td>
+<td>项目克隆地址</td>
+</tr>
+<tr>
+<td>default_branch</td>
+<td>string</td>
+<td>仓库默认分支</td>
+</tr>
+<tr>
+<td>empty</td>
+<td>bool</td>
+<td>仓库是否为空</td>
+</tr>
+<tr>
+<td>full_name</td>
+<td>string</td>
+<td>仓库全称</td>
+</tr>
+<tr>
+<td>private</td>
+<td>bool</td>
+<td>仓库是否为私有项目</td>
+</tr>
+<tr>
+<td>license_name</td>
+<td>string</td>
+<td>许可证名称</td>
+</tr>
+<tr>
+<td>release_versions.list.name</td>
+<td>string</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>release_versions.list.tag_name</td>
+<td>string</td>
+<td>发行版标签名称</td>
+</tr>
+<tr>
+<td>release_versions.list.created_at</td>
+<td>string</td>
+<td>发行版创建时间</td>
+</tr>
+<tr>
+<td>release_versions.total_count</td>
+<td>int</td>
+<td>发行版数量</td>
+</tr>
+<tr>
+<td>branches.list.name</td>
+<td>string</td>
+<td>分支名称</td>
+</tr>
+<tr>
+<td>branches.total_count</td>
+<td>int</td>
+<td>分支数量</td>
+</tr>
+<tr>
+<td>tags.list.name</td>
+<td>string</td>
+<td>标签名称</td>
+</tr>
+<tr>
+<td>tags.total_count</td>
+<td>int</td>
+<td>标签数量</td>
+</tr>
+<tr>
+<td>contributors.list.contributions</td>
+<td>int</td>
+<td>贡献数量</td>
+</tr>
+<tr>
+<td>contributors.list.login</td>
+<td>string</td>
+<td>贡献者登录名</td>
+</tr>
+<tr>
+<td>contributors.list.name</td>
+<td>string</td>
+<td>贡献者用户名称</td>
+</tr>
+<tr>
+<td>contributors.list.image_url</td>
+<td>string</td>
+<td>贡献者头像</td>
+</tr>
+<tr>
+<td>languages</td>
+<td>object</td>
+<td>项目语言占比</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"仓库简介"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"website"</span><span class="p">:</span><span class="w"> </span><span class="s2">"仓库网址"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"readme"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"encoding"</span><span class="p">:</span><span class="w"> </span><span class="s2">"base64"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"README.md"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"README.md"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"# ceshi</span><span class="se">\n\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试项目"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"repo_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pull_requests_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"project_identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"praises_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"forked_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"watchers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"versions_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"version_releases_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"version_releasesed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"permission"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reporter"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mirror_url"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"mirror"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"open_devops"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"watched"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"praised"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"forked_from_project_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fork_info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"fork_form_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试项目"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"fork_project_user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"fork_project_identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"fork_project_user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="s2">"25.0 KB"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ssh_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virus@localhost:yystopf/ceshi.git"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"clone_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshi.git"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"empty"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf/ceshi"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"license_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gnu-javamail-exception"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"release_versions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vvvv"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.1"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-07-18 10:16"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"branches"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.1"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"contributors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"gid"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"avatars/User/b"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"HTML"</span><span class="p">:</span><span class="w"> </span><span class="s2">"50.9%"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Ruby"</span><span class="p">:</span><span class="w"> </span><span class="s2">"25.6%"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"JavaScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21.4%"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"CSS"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.3%"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"CoffeeScript"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.7%"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"Shell"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.1%"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='af9709123a'>编辑仓库信息</h2>
+<p>编辑仓库信息</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/jasder/jasder_test/edit.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/edit.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+<p><code>GET /api/:owner/:repo/edit.json</code></p>
+<h3 id='2eb6f47757-4'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-4'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1702,9 +2081,9 @@ http://localhost:3000/api/projects/migrate.json
 <span class="nt">-d</span> <span class="s2">"private=true"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH /api/jasder/jasder_test.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
 <p><code>PATCH /api/:owner/:repo</code></p>
-<h3 id='2eb6f47757-4'>请求参数:</h3>
+<h3 id='2eb6f47757-5'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1764,7 +2143,7 @@ http://localhost:3000/api/jasder/jasder_test.json
 <td>项目是否私有, true：为私有，false: 公开，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-4'>返回字段说明:</h3>
+<h3 id='7447e4874e-5'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1829,9 +2208,9 @@ http://localhost:3000/api/jasder/jasder_test.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE http://localhost:3000/api/jasder/jasder_test.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/jasder/jasder_test.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>PATCH /api/:owner/:repo</code></p>
-<h3 id='2eb6f47757-5'>请求参数:</h3>
+<h3 id='2eb6f47757-6'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1856,7 +2235,7 @@ http://localhost:3000/api/jasder/jasder_test.json
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<h3 id='7447e4874e-6'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1897,83 +2276,8 @@ http://localhost:3000/api/jasder/jasder_test.json
 <span class="nt">-d</span> <span class="s2">"user_id=12"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test/collaborators.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
-<p><code>POST /api/:owner/:repo/collaborators.json</code></p>
-<h3 id='2eb6f47757-6'>请求参数:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>必选</th>
-<th>默认</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>owner</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>用户登录名</td>
-</tr>
-<tr>
-<td>repo</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>项目标识identifier</td>
-</tr>
-<tr>
-<td>user_id</td>
-<td>是</td>
-<td>int</td>
-<td></td>
-<td>用户id</td>
-</tr>
-</tbody></table>
-<h3 id='7447e4874e-6'>返回字段说明:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>status</td>
-<td>int</td>
-<td>返回状态， 0: 表示操作成功</td>
-</tr>
-<tr>
-<td>message</td>
-<td>string</td>
-<td>返回信息说明</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>返回的JSON示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<aside class="warning">
-  只有平台管理员和项目管理员才能添加仓库成员.
-</aside>
-<h2 id='c25af9423c'>删除仓库成员</h2>
-<p>仓库中删除成员操作</p>
-
-<blockquote>
-<p>示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
-<span class="nt">-d</span> <span class="s2">"user_id=12"</span> <span class="se">\</span>
-http://localhost:3000/api/jasder/jasder_test/collaborators.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-7'>HTTP 请求</h3>
-<p><code>DELETE /api/:owner/:repo/collaborators.json</code></p>
+<p><code>POST /api/:owner/:repo/collaborators.json</code></p>
 <h3 id='2eb6f47757-7'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -2035,6 +2339,81 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <aside class="warning">
+  只有平台管理员和项目管理员才能添加仓库成员.
+</aside>
+<h2 id='c25af9423c'>删除仓库成员</h2>
+<p>仓库中删除成员操作</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+<span class="nt">-d</span> <span class="s2">"user_id=12"</span> <span class="se">\</span>
+http://localhost:3000/api/jasder/jasder_test/collaborators.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+<p><code>DELETE /api/:owner/:repo/collaborators.json</code></p>
+<h3 id='2eb6f47757-8'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>是</td>
+<td>int</td>
+<td></td>
+<td>用户id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-8'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>返回状态， 0: 表示操作成功</td>
+</tr>
+<tr>
+<td>message</td>
+<td>string</td>
+<td>返回信息说明</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="warning">
   只有平台管理员和项目管理员才能删除仓库成员.
 </aside>
 <h2 id='d4fbcddc09'>更改仓库成员角色(权限)</h2>
@@ -2048,9 +2427,9 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <span class="nt">-d</span> <span class="s2">"role=Developer"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test/change_role.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PUT /api/jasder/jasder_test/change_role.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
 <p><code>PUT /api/:owner/:repo/change_role.json</code></p>
-<h3 id='2eb6f47757-8'>请求参数:</h3>
+<h3 id='2eb6f47757-9'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2089,7 +2468,7 @@ http://localhost:3000/api/jasder/jasder_test/change_role.json
 <td>取值范围：&quot;Manager&quot;, &quot;Developer&quot;, &quot;Reporter&quot;；分别为项目管理人员(拥有所有操作权限)、项目开发人员(只拥有读写权限)、项目报告人员(只拥有读权限)</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-8'>返回字段说明:</h3>
+<h3 id='7447e4874e-9'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2131,9 +2510,9 @@ http://localhost:3000/api/jasder/jasder_test/change_role.json
 <span class="nt">-d</span> <span class="s2">"limit=5"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test/collaborators.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/collaborators.json</code></p>
-<h3 id='2eb6f47757-9'>请求参数:</h3>
+<h3 id='2eb6f47757-10'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2172,7 +2551,7 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <td>每页多少条数据，默认15条</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-9'>返回字段说明:</h3>
+<h3 id='7447e4874e-10'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2250,7 +2629,114 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='0c98b4c01b'>获取仓库代码目录</h2>
+<h2 id='59943eacca'>获取仓库所有文件</h2>
+<p>获取仓库所有文件</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/yystopf/ceshi/files.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/files.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+<p><code>GET /api/:owner/:repo/files</code></p>
+<h3 id='2eb6f47757-11'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-11'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>文件名称</td>
+</tr>
+<tr>
+<td>path</td>
+<td>string</td>
+<td>文件路径</td>
+</tr>
+<tr>
+<td>sha</td>
+<td>string</td>
+<td>文件标识</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>文件类型</td>
+</tr>
+<tr>
+<td>size</td>
+<td>int</td>
+<td>文件大小</td>
+</tr>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>文件地址</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">".gitignore"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">".gitignore"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f83922d01ae60f6e637a1a2b9f08871b4f87dfc8"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">63</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/ceshi/contents/.gitignore?ref=master"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"html_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshi/src/branch/master/.gitignore"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LICENSE"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LICENSE"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f3b9ab0d08afd3a624d822e3971a2f42b3bc2b9"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">341</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/ceshi/contents/LICENSE?ref=master"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"html_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshi/src/branch/master/LICENSE"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"README.md"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"README.md"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1bc8a60ac6ddc876ebc4b60fc68991435bfad93e"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/ceshi/contents/README.md?ref=master"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"html_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshi/src/branch/master/README.md"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div><h2 id='0c98b4c01b'>获取仓库代码目录</h2>
 <p>获取仓库代码目录</p>
 
 <blockquote>
@@ -2260,9 +2746,9 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <span class="nt">-d</span> <span class="s2">"ref=develop"</span> <span class="se">\</span>
 http://localhost:3000//api/jasder/jasder_test/entries.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/entries.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/entries.json</code></p>
-<h3 id='2eb6f47757-10'>请求参数:</h3>
+<h3 id='2eb6f47757-12'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2294,7 +2780,7 @@ http://localhost:3000//api/jasder/jasder_test/entries.json
 <td>分支名称、tag名称或是提交记录id，默认为master分支</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-10'>返回字段说明:</h3>
+<h3 id='7447e4874e-12'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2408,9 +2894,9 @@ http://localhost:3000//api/jasder/jasder_test/entries.json
 <span class="nt">-d</span> <span class="s2">"filepath=file"</span> <span class="se">\</span>
 http://localhost:3000//api/jasder/jasder_test/sub_entries.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/sub_entries.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/sub_entries.json</code></p>
-<h3 id='2eb6f47757-11'>请求参数:</h3>
+<h3 id='2eb6f47757-13'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2449,7 +2935,7 @@ http://localhost:3000//api/jasder/jasder_test/sub_entries.json
 <td>分支名称、tag名称或是提交记录id，默认为master分支</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-11'>返回字段说明:</h3>
+<h3 id='7447e4874e-13'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
