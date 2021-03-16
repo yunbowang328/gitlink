@@ -7,9 +7,16 @@ class RepositoriesController < ApplicationController
   before_action :load_repository
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries top_counts]
+  before_action :get_ref, only: %i[entries sub_entries top_counts file]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
+
+  
+
+  def files
+    result = @project.educoder? ? nil : Gitea::Repository::Files::GetService.call(@project.owner, @project.identifier, @ref)
+    render json: result
+  end
 
   # 新版项目详情
   def detail 

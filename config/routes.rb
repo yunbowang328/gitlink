@@ -378,8 +378,9 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :repositories, path: '/', only: [:show, :create, :edit] do
+      resource :repositories, path: '/', only: [:show, :create, :edit] do 
         member do
+          get :files
           get :detail
           get :archive
           get :top_counts
