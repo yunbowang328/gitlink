@@ -369,6 +369,7 @@ Rails.application.routes.draw do
 
       resource :projects, path: '/', except: [:show, :edit] do
         member do
+          get :menu_list
           get :branches
           get :simple
           get :watchers, to: 'projects#watch_users'
@@ -528,6 +529,7 @@ Rails.application.routes.draw do
 
       scope module: :projects do
         resources :teams, only: [:index, :create, :destroy]
+        resources :project_units, only: [:create]
         scope do
           get(
             '/blob/*id/diff',

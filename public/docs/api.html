@@ -343,7 +343,13 @@
                     <a href="#43137706c6" class="toc-h2 toc-link" data-title="推荐项目">推荐项目</a>
                   </li>
                   <li>
+                    <a href="#42ee1e960d" class="toc-h2 toc-link" data-title="项目导航">项目导航</a>
+                  </li>
+                  <li>
                     <a href="#144f9deebe" class="toc-h2 toc-link" data-title="项目主页">项目主页</a>
+                  </li>
+                  <li>
+                    <a href="#870a1a6092" class="toc-h2 toc-link" data-title="更改项目导航">更改项目导航</a>
                   </li>
                   <li>
                     <a href="#80f5dfd187" class="toc-h2 toc-link" data-title="创建项目">创建项目</a>
@@ -972,17 +978,17 @@ http://localhost:3000/api/projects/recommend  | jq
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
-<h2 id='144f9deebe'>项目主页</h2>
-<p>获取项目主页信息</p>
+<h2 id='42ee1e960d'>项目导航</h2>
+<p>获取项目导航信息</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
-http://localhost:3000/api/jasder/forgeplus/about  | jq
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/forgeplus/about</span><span class="dl">'</span><span class="p">)</span>
+http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/menu_list</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-3'>HTTP 请求</h3>
-<p><code>GET api/:owner/:repo/about</code></p>
+<p><code>GET api/:owner/:repo/menu_list</code></p>
 <h3 id='1f9ac54b15-2'>请求参数</h3>
 <table><thead>
 <tr>
@@ -1009,6 +1015,74 @@ http://localhost:3000/api/jasder/forgeplus/about  | jq
 </tr>
 </tbody></table>
 <h3 id='b302a98fa6-3'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>menu_name</td>
+<td>string</td>
+<td>导航名称， home:主页,code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑,activity:动态,setting:仓库设置</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"menu_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"home"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"menu_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"code"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"menu_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pulls"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"menu_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"activity"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div><h2 id='144f9deebe'>项目主页</h2>
+<p>获取项目主页信息</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
+http://localhost:3000/api/jasder/forgeplus/about  | jq
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/forgeplus/about</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+<p><code>GET api/:owner/:repo/about</code></p>
+<h3 id='1f9ac54b15-3'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+</tbody></table>
+<h3 id='b302a98fa6-4'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1045,7 +1119,66 @@ http://localhost:3000/api/jasder/forgeplus/about  | jq
 <aside class="success">
 Remember — a happy kitten is an authenticated kitten!
 </aside>
-<h2 id='80f5dfd187'>创建项目</h2>
+<h2 id='870a1a6092'>更改项目导航</h2>
+<p>更改项目导航信息</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+<span class="nt">-H</span>  <span class="s2">"accept: application/json"</span> <span class="se">\</span>
+<span class="nt">-H</span>  <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+<span class="nt">-d</span> <span class="s2">"{ </span><span class="se">\"</span><span class="s2">unit_typs</span><span class="se">\"</span><span class="s2">: [</span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">pulls</span><span class="se">\"</span><span class="s2">]}"</span> <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/project_units.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/project_units</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+<p><code>POST /api/yystopf/ceshi/project_units</code></p>
+<h3 id='1f9ac54b15-4'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>unit_types</td>
+<td>是</td>
+<td></td>
+<td>array</td>
+<td>项目模块内容， 支持以下参数:code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>返回状态， 0: 表示操作成功</td>
+</tr>
+<tr>
+<td>message</td>
+<td>string</td>
+<td>返回信息说明</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='80f5dfd187'>创建项目</h2>
 <p>创建项目</p>
 
 <blockquote>
@@ -1062,9 +1195,9 @@ Remember — a happy kitten is an authenticated kitten!
 <span class="nt">-d</span> <span class="s2">"license_id=1"</span> <span class="se">\</span>
 http://localhost:3000/api/projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>POST api/projects</code></p>
-<h3 id='1f9ac54b15-3'>请求参数</h3>
+<h3 id='1f9ac54b15-5'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1138,7 +1271,7 @@ http://localhost:3000/api/projects.json
 <td>项目是否私有, true：为私有，false: 公开，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-4'>返回字段说明</h3>
+<h3 id='b302a98fa6-5'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1180,9 +1313,9 @@ http://localhost:3000/api/projects.json
 <span class="nt">-d</span> <span class="s2">"project_language_id=2"</span> <span class="se">\</span>
 http://localhost:3000/api/projects/migrate.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects/migrate.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
 <p><code>POST api/projects/migrate.json</code></p>
-<h3 id='1f9ac54b15-4'>请求参数</h3>
+<h3 id='1f9ac54b15-6'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1270,7 +1403,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>项目是否私有, true：为私有，false: 非私有，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-5'>返回字段说明</h3>
+<h3 id='b302a98fa6-6'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1305,9 +1438,9 @@ http://localhost:3000/api/projects/migrate.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/repositories/1244/sync_mirror.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/repositories/1244/sync_mirror.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
 <p><code>POST api/repositories/:id/sync_mirror.json</code></p>
-<h3 id='1f9ac54b15-5'>请求参数</h3>
+<h3 id='1f9ac54b15-7'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1325,7 +1458,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>仓库id</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-6'>返回字段说明</h3>
+<h3 id='b302a98fa6-7'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1360,9 +1493,9 @@ http://localhost:3000/api/projects/migrate.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/jasder/forgeplus/forks.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/jaser/jasder_test/forks.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
 <p><code>POST api/:owner/:repo/forks.json</code></p>
-<h3 id='1f9ac54b15-6'>请求参数</h3>
+<h3 id='1f9ac54b15-8'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1387,7 +1520,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-7'>返回字段说明</h3>
+<h3 id='b302a98fa6-8'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1672,27 +1805,27 @@ http://localhost:3000/api/projects/migrate.json
 <tr>
 <td>pull_requests_count</td>
 <td>int</td>
-<td>项目issue数量</td>
+<td>项目合并请求数量</td>
 </tr>
 <tr>
 <td>project_identifier</td>
 <td>int</td>
-<td>项目issue数量</td>
+<td>项目标识</td>
 </tr>
 <tr>
 <td>praises_count</td>
 <td>int</td>
-<td>项目issue数量</td>
+<td>项目点赞数量</td>
 </tr>
 <tr>
 <td>forked_count</td>
 <td>int</td>
-<td>项目issue数量</td>
+<td>项目复刻数量</td>
 </tr>
 <tr>
 <td>watchers_count</td>
 <td>int</td>
-<td>项目issue数量</td>
+<td>项目关注数量</td>
 </tr>
 <tr>
 <td>versions_count</td>
@@ -2635,7 +2768,9 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/yystopf/ceshi/files.json
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
+<span class="nt">-d</span> <span class="s2">"ref=develop"</span> <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/files.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/files.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-11'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/files</code></p>
@@ -2662,6 +2797,20 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <td></td>
 <td>string</td>
 <td>项目标识identifier</td>
+</tr>
+<tr>
+<td>search</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>文件搜索关键词</td>
+</tr>
+<tr>
+<td>ref</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>分支名，默认为仓库默认分支</td>
 </tr>
 </tbody></table>
 <h3 id='7447e4874e-11'>返回字段说明:</h3>

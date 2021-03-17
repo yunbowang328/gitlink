@@ -129,11 +129,11 @@ await octokit.request('GET /api/yystopf/ceshi/detail.json')
 |identifier                       |string   |项目标识   |
 |name                             |string   |项目名称   |
 |issues_count                     |int      |项目issue数量|
-|pull_requests_count              |int      |项目issue数量|
-|project_identifier               |int      |项目issue数量|
-|praises_count                    |int      |项目issue数量|
-|forked_count                     |int      |项目issue数量|
-|watchers_count                   |int      |项目issue数量|
+|pull_requests_count              |int      |项目合并请求数量|
+|project_identifier               |int      |项目标识|
+|praises_count                    |int      |项目点赞数量|
+|forked_count                     |int      |项目复刻数量|
+|watchers_count                   |int      |项目关注数量|
 |versions_count                   |int      |项目里程碑数量|
 |version_releases_count           |int      |项目发行版数量|
 |version_releasesed_count         |int      |项目发行版已发行数量|
@@ -645,7 +645,9 @@ await octokit.request('GET /api/jasder/jasder_test/collaborators.json')
 > 示例:
 
 ```shell
-curl -X GET http://localhost:3000/api/yystopf/ceshi/files.json
+curl -X GET \
+-d "ref=develop" \
+http://localhost:3000/api/yystopf/ceshi/files.json
 ```
 
 ```javascript
@@ -658,8 +660,10 @@ await octokit.request('GET /api/yystopf/ceshi/files.json')
 ### 请求参数:
 参数    | 必选 | 默认 | 类型 | 字段说明
 --------- | ------- | ------- | -------- | ----------
-|owner             |是| |string |用户登录名  |
-|repo             |是| |string |项目标识identifier  |
+|owner    |是|      |string |用户登录名  |
+|repo     |是|      |string |项目标识identifier  |
+|search   |否|      |string |文件搜索关键词  |
+|ref      |是|      |string |分支名，默认为仓库默认分支  |
 
 
 ### 返回字段说明:

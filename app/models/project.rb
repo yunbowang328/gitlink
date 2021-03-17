@@ -113,6 +113,7 @@ class Project < ApplicationRecord
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
   has_many :team_projects, dependent: :destroy
+  has_many :project_units, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}

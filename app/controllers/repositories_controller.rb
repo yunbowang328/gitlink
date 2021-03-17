@@ -11,10 +11,8 @@ class RepositoriesController < ApplicationController
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
 
-  
-
   def files
-    result = @project.educoder? ? nil : Gitea::Repository::Files::GetService.call(@project.owner, @project.identifier, @ref)
+    result = @project.educoder? ? nil : Gitea::Repository::Files::GetService.call(@owner, @project.identifier, @ref, params[:search], @owner.gitea_token)
     render json: result
   end
 

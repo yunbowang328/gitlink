@@ -2,10 +2,25 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about]
+  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :load_project, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
+
+  def menu_list
+    menu = []
+
+    menu.append(menu_hash_by_name("home"))
+    menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
+    menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
+    menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
+    menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
+    menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
+    menu.append(menu_hash_by_name("activity"))
+    menu.append(menu_hash_by_name("setting")) if current_user.admin? ||  @project.owner?(current_user)
+    
+    render json: menu
+  end
 
   def index
     scope = Projects::ListQuery.call(params)
