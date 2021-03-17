@@ -529,7 +529,7 @@ Rails.application.routes.draw do
 
       scope module: :projects do
         resources :teams, only: [:index, :create, :destroy]
-        resources :project_units, only: [:create]
+        resources :project_units, only: [:index, :create]
         scope do
           get(
             '/blob/*id/diff',

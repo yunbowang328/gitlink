@@ -261,8 +261,46 @@ attachments     |array|附件
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
-## 更改项目导航
-更改项目导航信息
+## 项目模块信息
+项目模块信息
+
+> 示例:
+
+```shell
+curl -X GET \
+http://localhost:3000/api/yystopf/ceshi/project_units.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/ceshi/project_units')
+```
+
+### HTTP 请求
+`GET /api/yystopf/ceshi/project_units`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type          |string|模块名称 |
+
+> 返回的JSON示例:
+
+```json
+[
+    {
+        "type": "code"
+    },
+    {
+        "type": "pulls"
+    },
+    {
+        "type": "issues"
+    }
+]
+```
+
+## 更改项目模块展示
+更改项目模块展示
 
 > 示例:
 

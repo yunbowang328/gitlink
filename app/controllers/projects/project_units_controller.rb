@@ -1,4 +1,8 @@
 class Projects::ProjectUnitsController < Projects::BaseController
+  def index 
+    @project_units = @project.project_units
+  end
+
   def create 
     if current_user.admin? ||  @project.owner?(current_user)
       ActiveRecord::Base.transaction do 
