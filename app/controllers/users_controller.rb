@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list]
+  before_action :require_login, only: %i[me list change_password change_email]
   before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
 
@@ -231,6 +231,64 @@ class UsersController < ApplicationController
     return if user.blank?
     user.update_column(:salt, params[:salt])
     render_ok
+  end
+
+  # TODO: For Educoder
+  def change_password
+    user = User.find_by_login params[:login]
+    return render_error("用户 #{rq_params[:login]} 不存在.") unless user === current_user
+
+    form_params= {
+      login: params[:login],
+      email: user&.mail,
+      password: params[:password],
+      old_password: params[:old_password],
+      user: user
+    }
+    Gitea::User::ChangePasswordForm.new(form_params).validate!
+
+    sync_params = {
+      email: user&.mail,
+      password: params[:password]
+    }
+
+    if sync_params.present?
+      interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
+      if interactor.success?
+        user.update!(password: params[:password])
+        render_ok
+      else
+        render_error(interactor.error)
+      end
+    end
+  end
+
+  # TODO: For Educoder
+  def change_email
+    user = User.find_by_login params[:login]
+    return render_error("用户 #{rq_params[:login]} 不存在.") unless user === current_user
+
+    form_params= {
+      login: params[:login],
+      email: user&.mail,
+      user: user
+    }
+
+    Gitea::User::ChangeEmailForm.new(form_params).validate!
+
+    sync_params = {
+      email: params[:email]
+    }
+
+    if sync_params.present?
+      interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
+      if interactor.success?
+        user.update!(mail: params[:email])
+        render_ok
+      else
+        render_error(interactor.error)
+      end
+    end
   end
 
   private
