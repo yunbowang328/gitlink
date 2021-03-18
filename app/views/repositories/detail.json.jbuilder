@@ -51,7 +51,7 @@ json.license_name @project.license_name
 json.release_versions do 
   json.list @result[:release].each do |release|
     forge_version = VersionRelease.find_by(version_gid: release["id"])
-    json.id forge_version.id
+    json.id forge_version&.id
     json.name release["name"]
     json.tag_name release["tag_name"]
     json.created_at format_time(release["created_at"].to_time)
