@@ -389,6 +389,7 @@ Rails.application.routes.draw do
           match :sub_entries, :via => [:get, :put]
           get :commits
           get :tags
+          get :contributors
           post :create_file
           put :update_file
           delete :delete_file

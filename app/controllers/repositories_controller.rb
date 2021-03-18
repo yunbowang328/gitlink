@@ -106,6 +106,10 @@ class RepositoriesController < ApplicationController
     @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
   end
 
+  def contributors
+    @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
+  end
+
   def edit
     return render_forbidden if !@project.manager?(current_user) && !current_user.admin?
   end
