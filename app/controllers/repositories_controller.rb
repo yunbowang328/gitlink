@@ -7,9 +7,28 @@ class RepositoriesController < ApplicationController
   before_action :load_repository
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries top_counts]
+  before_action :get_ref, only: %i[entries sub_entries top_counts file]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
+
+  def files
+    result = @project.educoder? ? nil : Gitea::Repository::Files::GetService.call(@owner, @project.identifier, @ref, params[:search], @owner.gitea_token)
+    render json: result
+  end
+
+  # 新版项目详情
+  def detail 
+    @user = current_user  
+    @result = Repositories::DetailService.call(@owner, @repository, @user)
+    @project_fork_id = @project.try(:forked_from_project_id)
+    if @project_fork_id.present?
+      @fork_project = Project.find_by(id: @project_fork_id)
+      @fork_project_user = @fork_project.owner
+    end
+  rescue Exception => e 
+    uid_logger_error(e.message)
+    tip_exception(e.message)
+  end
 
   def show
     @user = current_user
@@ -85,6 +104,10 @@ class RepositoriesController < ApplicationController
 
   def tags
     @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
+  end
+
+  def contributors
+    @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
   end
 
   def edit
@@ -187,7 +210,7 @@ class RepositoriesController < ApplicationController
   end
 
   def get_ref
-    @ref = params[:ref] || "master"
+    @ref = params[:ref] || @project.default_branch
   end
 
   def get_latest_commit

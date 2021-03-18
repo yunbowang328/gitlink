@@ -18,7 +18,8 @@ class Gitea::Versions::CreateService < Gitea::ClientService
   end
 
   def call
-    post(url, request_params)
+    response = post(url, request_params)
+    render_status(response)
   end
 
   private

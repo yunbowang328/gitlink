@@ -1,4 +1,9 @@
 module ProjectsHelper
+  def menu_hash_by_name(name)
+    {
+      menu_name: name
+    }
+  end
 
   def render_zh_project_type(project_type)
     case project_type

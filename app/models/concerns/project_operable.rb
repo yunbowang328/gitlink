@@ -89,4 +89,7 @@ module ProjectOperable
     member.member_roles.create!(role: role)
   end
 
+  def has_menu_permission(unit_type)
+    self.project_units.where(unit_type: unit_type).exists?
+  end
 end
