@@ -45,7 +45,7 @@ class Repositories::DetailService < ApplicationService
   end
 
   def tag_suitable
-    Gitea::Repository::Tags::ListService.call(@user&.gitea_token, @owner.login, @repo.identifier)
+    Gitea::Repository::Tags::ListService.call(@owner&.gitea_token, @owner.login, @repo.identifier)
   end
   
   def contributor_suitable 
