@@ -62,6 +62,7 @@ class Repositories::CreateService < ApplicationService
       project.update_columns(
         gpid: gitea_repository["id"],
         identifier: repository.identifier,
+        default_branch: gitea_repository["default_branch"],
         forked_count: gitea_repository["forks_count"])
     end
   end

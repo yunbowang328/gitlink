@@ -41,7 +41,7 @@ if @project.forge?
   end
   #json.tags_count @tags_count
   #json.branches_count @branches_count
-  #json.commits_count @commits_count
+  json.commits_count @commits_count
   json.zip_url render_zip_url(@project, @ref)
   json.tar_url render_tar_url(@project, @ref)
   json.entries do

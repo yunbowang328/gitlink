@@ -168,6 +168,55 @@ Remember — a happy kitten is an authenticated kitten!
 </aside>
 
 
+## 项目导航
+获取项目导航信息
+
+> 示例:
+
+```shell
+curl -X GET \
+http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/ceshi/menu_list')
+```
+
+### HTTP 请求
+`GET api/:owner/:repo/menu_list`
+
+### 请求参数
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+owner             |是| |string |用户登录名
+repo             |是| |string |项目标识identifier
+
+### 返回字段说明
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+menu_name     |string|导航名称， home:主页,code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑,activity:动态,setting:仓库设置
+
+
+> 返回的JSON示例:
+
+```json
+[
+    {
+        "menu_name": "home"
+    },
+    {
+        "menu_name": "code"
+    },
+    {
+        "menu_name": "pulls"
+    },
+    {
+        "menu_name": "activity"
+    }
+]
+```
+
+
 ## 项目主页
 获取项目主页信息
 
@@ -212,6 +261,84 @@ attachments     |array|附件
 Remember — a happy kitten is an authenticated kitten!
 </aside>
 
+## 项目模块信息
+项目模块信息
+
+> 示例:
+
+```shell
+curl -X GET \
+http://localhost:3000/api/yystopf/ceshi/project_units.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/ceshi/project_units')
+```
+
+### HTTP 请求
+`GET /api/yystopf/ceshi/project_units`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type          |string|模块名称 |
+
+> 返回的JSON示例:
+
+```json
+[
+    {
+        "type": "code"
+    },
+    {
+        "type": "pulls"
+    },
+    {
+        "type": "issues"
+    }
+]
+```
+
+## 更改项目模块展示
+更改项目模块展示
+
+> 示例:
+
+```shell
+curl -X POST \
+-H  "accept: application/json" \
+-H  "Content-Type: application/json" \
+-d "{ \"unit_typs\": [\"code\", \"pulls\"]}" \
+http://localhost:3000/api/yystopf/ceshi/project_units.json
+```
+
+```javascript
+await octokit.request('POST /api/yystopf/ceshi/project_units')
+```
+
+### HTTP 请求
+`POST /api/yystopf/ceshi/project_units`
+
+### 请求参数
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|unit_types |是| |array    | 项目模块内容， 支持以下参数:code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑 |
+
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|status          |int|返回状态， 0: 表示操作成功 |
+|message         |string|返回信息说明|
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
 
 ## 创建项目
 创建项目
