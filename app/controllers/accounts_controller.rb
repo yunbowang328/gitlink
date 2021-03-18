@@ -6,6 +6,28 @@ class AccountsController < ApplicationController
     render json: session
   end
 
+  # 为了同步平台上未注册gitea的用户
+  def gitea_register
+    Users::SyncGiteaForm.new(sync_gitea_params).validate!
+    user = User.find_by(login: sync_gitea_params[:login])
+    return render_error("该用户已同步协作平台") if user.gitea_token.present? && user.gitea_uid.present?
+    user.mail = sync_gitea_params[:email]
+    interactor = Gitea::RegisterInteractor.call({username: sync_gitea_params[:login], email: sync_gitea_params[:email], password: sync_gitea_params[:password]})
+    if interactor.success?
+      gitea_user = interactor.result
+      result = Gitea::User::GenerateTokenService.call(sync_gitea_params[:login], sync_gitea_params[:password])
+      user.gitea_token = result['sha1']
+      user.gitea_uid = gitea_user[:body]['id']
+      user.save!
+      render_ok
+    else
+      render_error(interactor.error)
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(-1, e.message)
+  end
+
   # 其他平台同步注册的用户
   def remote_register
     username = params[:username]&.gsub(/\s+/, "")
@@ -339,6 +361,10 @@ class AccountsController < ApplicationController
     code = generate_identifier User, 8, pre
 
     { login: pre + code, email: email, phone: phone }
+  end
+
+  def sync_gitea_params 
+    params.permit(:login, :email, :password)
   end
 
   def user_params
