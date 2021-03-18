@@ -186,6 +186,7 @@ Rails.application.routes.draw do
         get :logout
         get :get_verification_code
         get :valid_email_and_phone
+        post :gitea_register
         post :remote_register
         post :remote_update
         post :remote_login

@@ -5,11 +5,12 @@ json.user_id @user.id
 json.image_url url_to_avatar(@user)
 json.admin @user.admin?
 json.is_teacher @user.user_extension&.teacher?
+json.has_gitea_user @user.gitea_token.present? && @user.gitea_uid.present?
 json.user_identity @user.identity
 json.tidding_count 0
 json.user_phone_binded @user.phone.present?
 # json.phone @user.phone
-# json.email @user.mail
+json.email @user.mail
 json.profile_completed @user.profile_completed?
 json.professional_certification @user.professional_certification
 json.devops_step @user.devops_step
