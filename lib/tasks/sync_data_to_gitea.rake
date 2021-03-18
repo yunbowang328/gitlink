@@ -15,15 +15,27 @@ namespace :sync_data_to_gitea do
         next unless regx.match user.mail
 
         tmp_password = set_password
-        user_params = {
-          username: user.login,
-          email: user.mail,
-          password: tmp_password
-        }
 
-        gitea_user = Gitea::User::RegisterService.new(user_params).call
-        result = Gitea::User::GenerateTokenService.new(user.login, tmp_password).call
-        user.update_columns(gitea_token: result['sha1'], gitea_uid: gitea_user['id'])
+        # TODO: Educoder sync
+        interactor = Gitea::RegisterInteractor.call({username: user.login, email: user.mail, password: tmp_password})
+        if interactor.success?
+          gitea_user = interactor.result
+          result = Gitea::User::GenerateTokenService.call(user.login, tmp_password)
+          user.update_columns(gitea_token: result['sha1'], gitea_uid: gitea_user[:body]['id'])
+        else
+          puts "#################【Gitea: 用户同步失败: #{interactor.error}  #################"
+        end
+
+        # TODO: Trustie sync
+        # user_params = {
+        #   username: user.login,
+        #   email: user.mail,
+        #   password: tmp_password
+        # }
+        #
+        # gitea_user = Gitea::User::RegisterService.new(user_params).call
+        # result = Gitea::User::GenerateTokenService.new(user.login, tmp_password).call
+        # user.update_columns(gitea_token: result['sha1'], gitea_uid: gitea_user['id'])
       rescue Exception => e
         Rails.logger.error e
         next
