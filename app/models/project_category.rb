@@ -12,6 +12,6 @@
 
 class ProjectCategory < ApplicationRecord
   include Projectable
-  # has_ancestry
+  has_ancestry
 
 end
