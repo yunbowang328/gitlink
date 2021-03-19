@@ -52,6 +52,8 @@
 #  platform               :integer          default("0")
 #  license_id             :integer
 #  ignore_id              :integer
+#  default_branch         :string(255)      default("master")
+#  website                :string(255)
 #
 # Indexes
 #
@@ -67,6 +69,7 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
 
 class Project < ApplicationRecord
   include Matchable

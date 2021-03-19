@@ -236,13 +236,12 @@ class UsersController < ApplicationController
   # TODO: For Educoder
   def change_password
     user = User.find_by_login params[:login]
-    return render_error("用户 #{rq_params[:login]} 不存在.") unless user === current_user
+    return render_error("用户 #{params[:login]} 不存在.") unless user === current_user
 
     form_params= {
       login: params[:login],
       email: user&.mail,
       password: params[:password],
-      old_password: params[:old_password],
       user: user
     }
     Gitea::User::ChangePasswordForm.new(form_params).validate!
