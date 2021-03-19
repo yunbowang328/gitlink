@@ -1,4 +1,6 @@
-class Users::SyncGiteaForm < BaseForm
+class Users::SyncGiteaForm 
+  include ActiveModel::Model
+  
   attr_accessor :login, :password, :email, :user
 
   validates :login, :password, :email, presence: true
