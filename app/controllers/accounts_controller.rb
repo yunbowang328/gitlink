@@ -11,7 +11,6 @@ class AccountsController < ApplicationController
     Users::SyncGiteaForm.new(sync_gitea_params).validate!
     user = User.find_by(login: sync_gitea_params[:login])
     return render_error("该用户已同步协作平台") if user.gitea_token.present? && user.gitea_uid.present?
-    user.mail = sync_gitea_params[:email]
     interactor = Gitea::RegisterInteractor.call({username: sync_gitea_params[:login], email: sync_gitea_params[:email], password: sync_gitea_params[:password]})
     if interactor.success?
       gitea_user = interactor.result
@@ -363,7 +362,7 @@ class AccountsController < ApplicationController
     { login: pre + code, email: email, phone: phone }
   end
 
-  def sync_gitea_params 
+  def sync_gitea_params
     params.permit(:login, :email, :password)
   end
 
