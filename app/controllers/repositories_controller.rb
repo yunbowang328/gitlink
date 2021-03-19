@@ -18,6 +18,7 @@ class RepositoriesController < ApplicationController
 
   # 新版项目详情
   def detail 
+    return render_not_found unless @project.has_menu_permission("code")
     @user = current_user  
     @result = Repositories::DetailService.call(@owner, @repository, @user)
     @project_fork_id = @project.try(:forked_from_project_id)

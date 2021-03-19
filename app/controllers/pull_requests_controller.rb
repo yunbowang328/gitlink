@@ -8,6 +8,7 @@ class PullRequestsController < ApplicationController
 
 
   def index
+    return render_not_found unless @project.has_menu_permission("pulls")
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
     issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
