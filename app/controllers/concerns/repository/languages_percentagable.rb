@@ -14,6 +14,6 @@ module Repository::LanguagesPercentagable
     hash.transform_values { |v|
       ActionController::Base.helpers
         .number_to_percentage((v * 100.0 / total_byte_size), precision: 1)
-    }
+    }.select{|k,v| v != "0.0%"}
   end
 end

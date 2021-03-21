@@ -12,6 +12,7 @@ class IssuesController < ApplicationController
   include TagChosenHelper
 
   def index
+    return render_not_found unless @project.has_menu_permission("issues")
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
