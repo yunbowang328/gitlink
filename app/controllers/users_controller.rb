@@ -254,7 +254,7 @@ class UsersController < ApplicationController
     if sync_params.present?
       interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
       if interactor.success?
-        user.update!(password: params[:password])
+        user.update!(password: params[:password], is_sync_pwd: true)
         render_ok
       else
         render_error(interactor.error)
