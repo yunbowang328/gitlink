@@ -47,5 +47,12 @@ json.setting do
   json.new_course default_course_links
   json.old_projects_url @old_projects_url
 
+  json.add do
+    json.array! @add, :name, :url, :key
+  end
+  
+  json.personal do
+    json.array! @personal, :name, :url, :key
+  end
 
 end
