@@ -11,7 +11,7 @@ class ProjectsController < ApplicationController
     menu = []
 
     menu.append(menu_hash_by_name("home"))
-    menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
+    menu.append(menu_hash_by_name("code")) 
     menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
     menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
     menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
@@ -26,7 +26,7 @@ class ProjectsController < ApplicationController
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
 
     category_id = params[:category_id]
     @total_count =
