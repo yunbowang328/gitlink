@@ -93,26 +93,26 @@ http://localhost:3000/
 
 - 代码库
 
-![](docs/figs/code.png)
+![](docs/figs/code.png?raw=true)
 
 
 - 任务管理
-![](docs/figs/issue_manage.png)
+![](docs/figs/issue_manage.png?raw=true)
 
 - 任务查看
 
-![](docs/figs/issue_view.png)
+![](docs/figs/issue_view.png?raw=true)
 
 - 任务指派
 
-![](docs/figs/issue_assign2.png)
+![](docs/figs/issue_assign2.png?raw=true)
 
 - 里程碑
 
-![](docs/figs/milestone.png)
+![](docs/figs/milestone.png?raw=true)
 
 ### API
-- [API](api_document.md)
+- [API文档](https://forgeplus.trustie.net/docs/api)
 - [API](showdoc.com.cn)
   账号：forgeplus@admin.com 密码：forge123
 
