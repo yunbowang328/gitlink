@@ -46,7 +46,6 @@ class Projects::CreateService < ApplicationService
     {
       hidden: !repo_is_public,
       user_id: params[:user_id],
-      website: params[:website],
       identifier: params[:repository_name]
     }
   end
