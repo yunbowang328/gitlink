@@ -1,7 +1,7 @@
 json.content @project.content
 json.website @project.website
 if @result[:readme].blank?
-  json.readme nil!
+  json.readme nil
 else
   json.readme @result[:readme].merge(content: readme_render_decode64_content(@result[:readme]["content"], nil))
 end
