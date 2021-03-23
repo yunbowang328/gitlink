@@ -99,6 +99,7 @@ class Project < ApplicationRecord
   has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
+  has_many :project_infos, :dependent => :destroy 
   has_one :repository, dependent: :destroy
   has_many :pull_requests, dependent: :destroy
   has_many :issue_tags, -> { order("issue_tags.created_at DESC") }, dependent: :destroy
