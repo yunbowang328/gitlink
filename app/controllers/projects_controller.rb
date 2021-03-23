@@ -11,14 +11,14 @@ class ProjectsController < ApplicationController
     menu = []
 
     menu.append(menu_hash_by_name("home"))
-    menu.append(menu_hash_by_name("code")) 
+    menu.append(menu_hash_by_name("code"))
     menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
     menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
     menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
     menu.append(menu_hash_by_name("activity"))
     menu.append(menu_hash_by_name("setting")) if current_user.admin? ||  @project.owner?(current_user)
-    
+
     render json: menu
   end
 
@@ -44,6 +44,13 @@ class ProjectsController < ApplicationController
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 
+      # TODO: fix Educoder shixun
+      if @project.persisted?
+        ProjectScore.create(:project_id => @project.id, :score => 0) if @project.project_score.nil?
+
+        project_info = ProjectInfo.new(:user_id => current_user.id, :project_id => @project.id)
+        @project.project_infos << project_info
+      end
     end
   rescue Exception => e
     uid_logger_error(e.message)
