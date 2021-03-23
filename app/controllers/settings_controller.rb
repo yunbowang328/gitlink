@@ -20,9 +20,9 @@ class SettingsController < ApplicationController
 
     @common = []
     Site.common.select(:id, :name, :url, :key).to_a.map(&:serializable_hash).each do |site|
+      next if site["url"].to_s.include?("current_user") && !User.current.logged?
       hash = {}
       site.each {|k, v|
-        next if v.to_s.include?("current_user") && !User.current_user.logged?
         hash.merge!("#{k}":  v.to_s.include?("current_user") ? v.split('current_user').join(current_user&.login) : v)
       }
       @common << hash
