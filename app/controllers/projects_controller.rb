@@ -85,18 +85,19 @@ class ProjectsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       # Projects::CreateForm.new(project_params).validate!
-      private = params[:private]
+      private = params[:private] || false
+   
+      new_project_params = project_params.except(:private).merge(is_public: !private)
+      @project.update_attributes!(new_project_params)
       gitea_params = {
         private: private,
-        default_branch: params[:default_branch],
-        website: params[:website]
+        default_branch: @project.default_branch,
+        website: @project.website
       }
       if [true, false].include? private
-        new_project_params = project_params.except(:private).merge(is_public: !private)
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
         @project.repository.update_column(:hidden, private)
       end
-      @project.update_attributes!(new_project_params)
     end
   rescue Exception => e
     uid_logger_error(e.message)
