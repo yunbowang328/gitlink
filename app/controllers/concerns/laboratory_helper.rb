@@ -35,12 +35,12 @@ module LaboratoryHelper
     # my_projects: "/users/#{current_user.try(:login)}/projects",
     #       my_projects: "https://www.trustie.net/users/#{current_user.try(:login)}/user_projectlist",
     {
-      new_syllabuses: "https://forgeplus.educoder.net/syllabuses/new",
-      new_course: "https://forgeplus.educoder.net/courses/new",
-      edit_account: "https://forgeplus.educoder.net/my/account",
-      my_courses: "https://forgeplus.educoder.net/users/#{current_user.try(:login)}/user_courselist",
+      new_syllabuses: "https://forge.educoder.net/syllabuses/new",
+      new_course: "https://forge.educoder.net/courses/new",
+      edit_account: "https://forge.educoder.net/my/account",
+      my_courses: "https://forge.educoder.net/users/#{current_user.try(:login)}/user_courselist",
       my_projects: "/users/#{current_user.try(:login)}/projects",
-      my_organ: "https://forgeplus.educoder.net/users/#{current_user.try(:login)}/user_organizations",
+      my_organ: "https://forge.educoder.net/users/#{current_user.try(:login)}/user_organizations",
       default_url: "https://www.educoder.net/",
       tiding_url: "https://www.educoder.net/users/#{current_user.try(:login)}/user_tidings",
       register_url: "https://www.educoder.net/user/register"
