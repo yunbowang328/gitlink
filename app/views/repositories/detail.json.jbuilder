@@ -1,12 +1,13 @@
 json.content @project.content
 json.website @project.website
 if @result[:readme].blank?
-  json.readme nil!
+  json.readme nil
 else
   json.readme @result[:readme].merge(content: readme_render_decode64_content(@result[:readme]["content"], nil))
 end
 json.identifier render_identifier(@project)
 json.name @project.name
+json.description  @project.description
 json.project_id @project.id
 json.repo_id @repository.id
 json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
