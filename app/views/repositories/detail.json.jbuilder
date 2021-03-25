@@ -7,6 +7,7 @@ else
 end
 json.identifier render_identifier(@project)
 json.name @project.name
+json.description  @project.description
 json.project_id @project.id
 json.repo_id @repository.id
 json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
