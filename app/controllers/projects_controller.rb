@@ -11,14 +11,14 @@ class ProjectsController < ApplicationController
     menu = []
 
     menu.append(menu_hash_by_name("home"))
-    menu.append(menu_hash_by_name("code")) 
+    menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
     menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
     menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
     menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
     menu.append(menu_hash_by_name("activity"))
     menu.append(menu_hash_by_name("setting")) if current_user.admin? ||  @project.owner?(current_user)
-    
+
     render json: menu
   end
 
@@ -59,7 +59,10 @@ class ProjectsController < ApplicationController
   end
 
   def branches
-    @branches = @project.forge? ? Gitea::Repository::Branches::ListService.new(@owner, @project.identifier).call : []
+    return @branches = [] unless @project.forge?
+
+    result = Gitea::Repository::Branches::ListService.call(@owner, @project.identifier)
+    @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
   end
 
   def group_type_list
@@ -86,7 +89,7 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       # Projects::CreateForm.new(project_params).validate!
       private = params[:private] || false
-   
+
       new_project_params = project_params.except(:private).merge(is_public: !private)
       @project.update_attributes!(new_project_params)
       gitea_params = {
