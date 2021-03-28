@@ -37,7 +37,8 @@ class Repositories::DetailService < ApplicationService
   end
 
   def release_suitable
-    Gitea::Versions::ListService.call(@owner.gitea_token, @owner.try(:login), @repo.try(:identifier))
+    releases = Gitea::Versions::ListService.call(@owner.gitea_token, @owner.try(:login), @repo.try(:identifier))
+    releases.is_a?(Hash) && releases[:status] == -1 ? [] : releases
   end
 
   def branch_suitable
@@ -51,7 +52,8 @@ class Repositories::DetailService < ApplicationService
   end
 
   def contributor_suitable
-    Gitea::Repository::Contributors::GetService.call(@owner, @repo.identifier)
+    contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repo.identifier)
+    contributors.is_a?(Hash) && contributors.key?(:status) ? [] : contributors
   end
 
   def language_suitable
