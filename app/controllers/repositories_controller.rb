@@ -103,7 +103,9 @@ class RepositoriesController < ApplicationController
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
+    result = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
+
+    @tags = result.is_a?(Hash) && result.key?(:status) ? [] : result
   end
 
   def contributors
