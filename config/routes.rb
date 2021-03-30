@@ -23,7 +23,6 @@ Rails.application.routes.draw do
 
   resources :edu_settings
 
-  resources :edu_settings
   scope '/api' do
     namespace :ci  do
       resources :languages, only: [:index, :show] do
@@ -379,7 +378,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resource :repositories, path: '/', only: [:show, :create, :edit] do 
+      resource :repositories, path: '/', only: [:show, :create, :edit] do
         member do
           get :files
           get :detail
