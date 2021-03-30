@@ -61,7 +61,7 @@ json.release_versions do
     json.tag_name release["tag_name"]
     json.created_at format_time(release["created_at"].to_time)
   end
-  json.total_count @result[:release].size
+  json.total_count @repository&.version_releases.size
 end
 json.branches do
   json.list @result[:branch].each do |branch|
@@ -93,3 +93,5 @@ json.contributors do
   json.total_count total_count
 end
 json.languages @result[:language]
+
+json.partial! 'author', locals: { user: @project.owner }
