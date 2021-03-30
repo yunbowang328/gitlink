@@ -16,13 +16,18 @@
 
 ## Steps
 
-### 1. 安装依赖包
+### 1. 克隆稳定版本仓库
+```
+git clone -b standalone https://git.trustie.net/jasder/forgeplus.git
+```
+
+### 2. 安装依赖包
 
 ```bash
 bundle install
 ```
 
-### 2. 配置初始化文件
+### 3. 配置初始化文件
 进入项目根目录执行一下命令：
 
 ```bash
@@ -74,7 +79,7 @@ rails db:migrate RAILS_ENV=development
 ### 8. clone前端代码
 **将前端代码克隆到public/react目录下，目录结构应该是: public/react/build**
 ```bash
-git clone -b dev_trustie https://git.trustie.net/jasder/build.git
+git clone -b standalone https://git.trustie.net/jasder/build.git
 ```
 
 ### 9. 启动redis(此处已mac系统为例)
@@ -88,7 +93,7 @@ redis-server&
 bundle exec sidekiq -C config/sidekiq.yml -e production -d
 ```
 
-### 1`. 启动rails服务
+### 11. 启动rails服务
 ```bash
 rails s
 ```

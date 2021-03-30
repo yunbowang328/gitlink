@@ -11,13 +11,32 @@ Trustie （确实）是一个以大众化协同开发、开放式资源共享、
 ## 部署
 
 
-### 1. 安装依赖包
+### Depends Versions
 
-```bash
-bundle install
+* Ruby 2.4.5
+
+* Rails ~> 5.2
+
+* MySql ~> 5.6
+
+* Redis 5+
+
+* NodeJS > 13.0.0
+
+### Steps
+
+#### 1. 克隆稳定版本
+```
+git clone -b standalone https://git.trustie.net/jasder/forgeplus.git
 ```
 
-### 2. 配置初始化文件
+#### 2. 安装依赖包
+
+```bash
+cd forgeplus && bundle install
+```
+
+#### 3. 配置初始化文件
 进入项目根目录执行一下命令：
 
 ```bash
@@ -27,10 +46,10 @@ touch config/redis.yml
 touch config/elasticsearch.yml
 ```
 
-### 3. 配置gitea服务(可选)
+#### 3. 配置gitea服务(可选)
 **如需要部署自己的gitea平台，请参考gitea官方平台：https://docs.gitea.io/zh-cn/install-from-binary/**
 
-**因目前gitea平台api受限，暂时推荐从forge平台获取gitea部署文件进行部署：https://forgeplus.trustie.net/projects/jasder/gitea-binary
+**因目前gitea平台api受限，暂时推荐从forge平台获取gitea部署文件进行部署：https://forgeplus.trustie.net/projects/jasder/gitea-binary**
 
 #### 配置gitea服务步骤
 1. 部署gitea服务，并注册root账户
@@ -44,45 +63,51 @@ gitea:
   base_url: '/api/v1'
 ```
 
-### 4. 安装redis环境
+#### 4. 安装redis环境
 **请自行搜索各平台如何安装部署redis环境**
 
 
-### 5. 创建数据库
+#### 5. 创建数据库
 
 ```bash
 rails db:create
 ```
 
-### 6. 导入数据表结构
+#### 6. 导入数据表结构
 
 ```bash
 bundle exec rake sync_table_structure:import_csv
 ```
 
-### 7. 执行migrate迁移文件
+#### 7. 执行migrate迁移文件
 **开发环境为development， 生成环境为production**
 ```bash
 rails db:migrate RAILS_ENV=development
 ```
 
-### 8. 启动redis(此处已mac系统为例)
+#### 8. clone前端代码
+**将前端代码克隆到public/react目录下，目录结构应该是: public/react/build**
+```bash
+git clone -b standalone https://git.trustie.net/jasder/build.git
+```
+
+#### 9. 启动redis(此处已mac系统为例)
 ```bash
 redis-server&
 ```
 
-### 9. 启动sidekiq
+#### 10. 启动sidekiq
 **开发环境为development， 生成环境为production**
 ```bash
 bundle exec sidekiq -C config/sidekiq.yml -e production -d
 ```
 
-### 10. 启动rails服务
+#### 11. 启动rails服务
 ```bash
 rails s
 ```
 
-### 11. 浏览器访问
+#### 12. 浏览器访问
 在浏览器中输入如下地址访问：
 ```bash
 http://localhost:3000/
