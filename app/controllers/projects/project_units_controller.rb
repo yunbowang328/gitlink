@@ -4,7 +4,7 @@ class Projects::ProjectUnitsController < Projects::BaseController
   end
 
   def create 
-    if current_user.admin? ||  @project.owner?(current_user)
+    if current_user.admin? || @project.manager?(current_user)
       ActiveRecord::Base.transaction do 
         ProjectUnit.update_by_unit_types!(@project, unit_types)
         render_ok

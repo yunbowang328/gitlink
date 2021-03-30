@@ -111,7 +111,7 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    if  current_user.admin? ||  @project.owner?(current_user)
+    if current_user.admin? || @project.manager?(current_user)
       ActiveRecord::Base.transaction do
         Gitea::Repository::DeleteService.new(@project.owner, @project.identifier).call
         @project.destroy!
