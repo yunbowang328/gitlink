@@ -121,12 +121,20 @@ bundle exec sidekiq -C config/sidekiq.yml -e production -d
 rails s
 ```
 
-#### 12. 浏览器访问
+#### 14. 浏览器访问
 在浏览器中输入如下地址访问：
 ```bash
 http://localhost:3000/
 ```
 
+#### 15. 浏览器访问
+在浏览器中输入如下地址访问：
+```bash
+http://localhost:3000/
+```
+
+#### 15. 其他说明
+通过页面注册都第一个用户为平台管理员用户
 
 ## 页面展示
 
