@@ -8,5 +8,7 @@ class CreateSites < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    Site.set_default_menu
   end
 end
