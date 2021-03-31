@@ -5,7 +5,6 @@ class SettingsController < ApplicationController
     get_common_menu
     get_personal_menu
 
-    puts @com
   end
 
   private
