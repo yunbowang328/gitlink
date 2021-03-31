@@ -4,6 +4,8 @@ class SettingsController < ApplicationController
     get_add_menu
     get_common_menu
     get_personal_menu
+
+    puts @com
   end
 
   private
@@ -12,21 +14,17 @@ class SettingsController < ApplicationController
       Site.add.select(:id, :name, :url, :key).to_a.map(&:serializable_hash).each do |site|
         hash = {}
         site.each {|k, v|
-          hash.merge!("#{k}":  set_site_url(k, v))
+          hash.merge!("#{k}":  get_site_url(k, v))
         }
         @add << hash
       end
     end
 
     def get_common_menu
-      @common = []
-      Site.common.select(:id, :name, :url, :key).to_a.map(&:serializable_hash).each do |site|
+      @common = {}
+      Site.common.select(:url, :key).to_a.map(&:serializable_hash).each do |site|
         next if site["url"].to_s.include?("current_user") && !User.current.logged?
-        hash = {}
-        site.each {|k, v|
-          hash.merge!("#{k}":  set_site_url(k, v))
-        }
-        @common << hash
+        @common.merge!("#{site["key"]}": reset_site_url(site['url']))
       end
     end
 
@@ -36,22 +34,22 @@ class SettingsController < ApplicationController
         Site.personal.select(:id, :name, :url, :key).to_a.map(&:serializable_hash).each do |site|
           hash = {}
           site.each {|k, v|
-            hash.merge!("#{k}": set_site_url(k, v))
+            hash.merge!("#{k}": get_site_url(k, v))
           }
           @personal << hash
         end
       end
     end
 
-    def set_site_url(key, value)
-      value =
-        if value.to_s.include?("current_user")
-          split_arr = value.split('current_user')
-          split_arr.length > 1 ? split_arr.join(current_user&.login) : (split_arr << current_user&.login).join('')
-        else
-          value
-        end
+    def get_site_url(key, value)
+      url = reset_site_url(value)
+      key.to_s === "url" && !value.to_s.start_with?("http") ? [request.protocol, request.host_with_port, value].join('') : url
+   end
 
-      key.to_s === "url" && !value.to_s.start_with?("http") ? [request.protocol, request.host_with_port, value].join('') : value
+   def reset_site_url(url)
+     return url unless url.to_s.include?("current_user")
+
+     split_arr = url.split('current_user')
+     split_arr.length > 1 ? split_arr.join(current_user&.login) : (split_arr << current_user&.login).join('')
    end
 end
