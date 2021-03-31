@@ -1,5 +1,6 @@
 json.author do
   if @project.forge?
+    json.id user.id
     json.login user.login
     json.type user&.type
     json.name user.real_name
