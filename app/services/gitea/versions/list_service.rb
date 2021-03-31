@@ -1,12 +1,13 @@
 # Get a list of all commits from a repository
 class Gitea::Versions::ListService < Gitea::ClientService
-  attr_reader :token, :user_name, :repo
+  attr_reader :token, :user_name, :repo, :args
 
   # sha: SHA or branch to start listing commits from (usually 'master')
-  def initialize(token, user_name, repo)
+  def initialize(token, user_name, repo, args={})
     @token = token
     @user_name = user_name
     @repo = repo
+    @args = args
   end
 
   def call
@@ -16,7 +17,7 @@ class Gitea::Versions::ListService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: token)
+    args.merge(token: token)
   end
 
   def url

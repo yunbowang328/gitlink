@@ -28,7 +28,7 @@ module RepositoriesHelper
 
   def render_commit_author(author_json)
     return nil if author_json.blank?
-    find_user_by_login author_json['login']
+    find_user_by_login author_json['name']
   end
 
   def readme_render_decode64_content(str, path)

@@ -54,7 +54,7 @@ default: &default
 ### 4. 配置gitea服务(可选)
 **如需要部署自己的gitea平台，请参考gitea官方平台：https://docs.gitea.io/zh-cn/install-from-binary/**
 
-**因目前gitea平台api受限，暂时推荐从forge平台获取gitea部署文件进行部署：https://forgeplus.trustie.net/projects/jasder/gitea-binary**
+**因目前gitea平台api受限，暂时推荐从forge平台获取gitea部署文件进行部署：https://forgeplus.trustie.net/projects/Trustie/gitea-binary**
 
 #### 配置gitea服务步骤
 1. 部署gitea服务，并注册root账户

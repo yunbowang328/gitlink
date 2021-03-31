@@ -5,6 +5,7 @@ else
   json.total_count @hash_commit[:total_count]
   json.commits do
     json.array! @hash_commit[:body] do |commit|
+      json.commit1 commit
       commiter = commit['committer']
       if commiter.present? 
         commit_user_id = commiter['id']
@@ -17,7 +18,13 @@ else
       if forge_user 
         json.partial! 'author', user: forge_user 
       else 
-        json.author nil
+        json.author do
+          json.id nil 
+          json.login commit['commit']['author']['name']
+          json.type nil
+          json.name commit['commit']['author']['name']
+          json.image_url File.join("avatars/User","b")
+        end
       end
     end
   end
