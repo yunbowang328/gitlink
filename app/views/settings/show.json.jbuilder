@@ -48,7 +48,6 @@ json.setting do
 
 
   json.add do
-    # json.array! @add, :name, :url, :key
     json.array! @add
   end
 
@@ -56,7 +55,5 @@ json.setting do
     json.array! @personal
   end
 
-  json.common do
-    json.array! @common
-  end
+  json.common @common
 end
