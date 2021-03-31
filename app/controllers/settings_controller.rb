@@ -22,9 +22,9 @@ class SettingsController < ApplicationController
 
     def get_common_menu
       @common = {}
-      Site.common.select(:url, :key).to_a.map(&:serializable_hash).each do |site|
+      Site.common.select(:url, :key).each do |site|
         next if site["url"].to_s.include?("current_user") && !User.current.logged?
-        @common.merge!("#{site["key"]}": reset_site_url(site['url']))
+        @common.merge!("#{site["key"]}": append_http(reset_site_url(site["url"])))
       end
     end
 
@@ -51,5 +51,9 @@ class SettingsController < ApplicationController
 
      split_arr = url.split('current_user')
      split_arr.length > 1 ? split_arr.join(current_user&.login) : (split_arr << current_user&.login).join('')
+   end
+
+   def append_http(url)
+     url.to_s.start_with?("http") ? url : [request.protocol, request.host_with_port, url].join('')
    end
 end
