@@ -82,9 +82,9 @@ gitea:
 
 
 #### 7. 创建数据库
-
+**开发环境为development， 生成环境为production**
 ```bash
-rails db:create
+rails db:create  RAILS_ENV=development
 ```
 
 #### 8. 导入数据表结构
