@@ -31,7 +31,7 @@
 
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
 
-    <li>
+    <!-- <li>
       <%= sidebar_item_group('#setting-submenu', '网站建设', icon: 'cogs') do %>
         <li><%= sidebar_item(edit_admins_about_path, '关于我们', icon: 'smile-o', controller: 'admins-abouts') %></li>
         <li><%= sidebar_item(edit_admins_contact_us_path, '联系我们', icon: 'commenting-o', controller: 'admins-contact_us') %></li>
@@ -39,7 +39,7 @@
         <li><%= sidebar_item(edit_admins_agreement_path, '服务协议', icon: 'file-text-o', controller: 'admins-agreements') %></li>
         <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
       <% end %>
-    </li>
+    </li> -->
     <li>
     <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>

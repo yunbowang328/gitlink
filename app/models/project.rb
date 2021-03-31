@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  name                   :string(255)      default(""), not null
-#  description            :text(4294967295)
+#  description            :text(65535)
 #  homepage               :string(255)      default("")
 #  is_public              :boolean          default("1"), not null
 #  parent_id              :integer
@@ -43,17 +43,6 @@
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
 #  pull_requests_count    :integer          default("0")
-#  language               :string(255)
-#  versions_count         :integer          default("0")
-#  issue_tags_count       :integer          default("0")
-#  closed_issues_count    :integer          default("0")
-#  open_devops            :boolean          default("0")
-#  gitea_webhook_id       :integer
-#  open_devops_count      :integer          default("0")
-#  recommend              :boolean          default("0")
-#  platform               :integer          default("0")
-#  default_branch         :string(255)      default("master")
-#  website                :string(255)
 #
 # Indexes
 #
