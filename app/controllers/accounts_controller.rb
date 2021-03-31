@@ -141,7 +141,9 @@ class AccountsController < ApplicationController
 
       code = generate_identifier User, 8, pre
       login = pre + code
-      @user = User.new(admin: false, login: login, mail: email, phone: phone, type: "User")
+
+      is_admin = !User.exists?(type: 'User')
+      @user = User.new(admin: is_admin, login: login, mail: email, phone: phone, type: "User")
       @user.password = params[:password]
       # 现在因为是验证码，所以在注册的时候就可以激活
       @user.activate
@@ -154,6 +156,11 @@ class AccountsController < ApplicationController
         @user.gitea_token = result['sha1']
         @user.gitea_uid = gitea_user[:body]['id']
         if @user.save!
+          # set user for admin role
+          if @user.admin?
+            sync_params = { email: @user.mail, admin: true }
+            Gitea::User::UpdateInteractor.call(@user.login, sync_params)
+          end
           UserExtension.create!(user_id: @user.id)
           successful_authentication(@user)
           normal_status("注册成功")
