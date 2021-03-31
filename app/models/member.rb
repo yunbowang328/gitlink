@@ -11,7 +11,6 @@
 #  course_group_id     :integer          default("0")
 #  is_collect          :integer          default("1")
 #  graduation_group_id :integer          default("0")
-#  is_apply_signature  :boolean          default("0")
 #
 # Indexes
 #
