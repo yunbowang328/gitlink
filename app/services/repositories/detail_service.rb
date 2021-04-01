@@ -37,7 +37,7 @@ class Repositories::DetailService < ApplicationService
   end
 
   def release_suitable
-    releases = Gitea::Versions::ListService.call(@owner.gitea_token, @owner.try(:login), @repo.try(:identifier))
+    releases = Gitea::Versions::ListService.call(@owner.gitea_token, @owner.try(:login), @repo.try(:identifier), {page: 1, limit: 1})
     releases.is_a?(Hash) && releases[:status] == -1 ? [] : releases
   end
 

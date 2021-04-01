@@ -45,18 +45,15 @@ json.setting do
 
   json.main_site current_laboratory.main_site?
   json.new_course default_course_links
-  json.old_projects_url @old_projects_url
 
 
   json.add do
-    json.array! @add, :name, :url, :key
+    json.array! @add
   end
 
   json.personal do
     json.array! @personal
   end
 
-  json.common do
-    json.array! @common
-  end
+  json.common @common
 end
