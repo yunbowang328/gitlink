@@ -312,6 +312,7 @@ Rails.application.routes.draw do
 
     get '/auth/qq/callback', to: 'oauth/qq#create'
     get '/auth/wechat/callback', to: 'oauth/wechat#create'
+    get '/auth/educoder/callback', to: 'oauth/educoder#create'
     resource :bind_user, only: [:create]
 
     resources :hot_keywords, only: [:index]

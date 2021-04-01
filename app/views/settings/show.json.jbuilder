@@ -56,4 +56,5 @@ json.setting do
   end
 
   json.common @common
+  json.third_party @third_party
 end
