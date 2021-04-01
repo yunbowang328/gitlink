@@ -37,6 +37,8 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
+#  license_id             :integer
+#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
@@ -50,8 +52,6 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
-#  license_id             :integer
-#  ignore_id              :integer
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
 #
@@ -69,7 +69,6 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
-
 
 class Project < ApplicationRecord
   include Matchable
@@ -99,7 +98,7 @@ class Project < ApplicationRecord
   has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
-  has_many :project_infos, :dependent => :destroy 
+  has_many :project_infos, :dependent => :destroy
   has_one :repository, dependent: :destroy
   has_many :pull_requests, dependent: :destroy
   has_many :issue_tags, -> { order("issue_tags.created_at DESC") }, dependent: :destroy

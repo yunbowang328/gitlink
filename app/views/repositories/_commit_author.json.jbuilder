@@ -4,5 +4,8 @@ if user
   json.name user.real_name
   json.image_url url_to_avatar(user)
 else
-  json.nil!
+  json.id nil
+  json.login name 
+  json.name name 
+  json.image_url File.join("avatars/User","b")
 end
