@@ -41,18 +41,17 @@ class SettingsController < ApplicationController
     end
 
     def get_site_url(key, value)
-      url = reset_site_url(value)
-      key.to_s === "url" && !value.to_s.start_with?("http") ? [request.protocol, request.host_with_port, value].join('') : url
-   end
+      key.to_s === "url" ? append_http(reset_site_url(value)) : reset_site_url(value)
+    end
 
-   def reset_site_url(url)
-     return url unless url.to_s.include?("current_user")
+    def reset_site_url(url)
+      return url unless url.to_s.include?("current_user")
 
-     split_arr = url.split('current_user')
-     split_arr.length > 1 ? split_arr.join(current_user&.login) : (split_arr << current_user&.login).join('')
-   end
+      split_arr = url.split('current_user')
+      split_arr.length > 1 ? split_arr.join(current_user&.login) : (split_arr << current_user&.login).join('')
+    end
 
-   def append_http(url)
-     url.to_s.start_with?("http") ? url : [request.protocol, request.host_with_port, url].join('')
-   end
+    def append_http(url)
+      url.to_s.start_with?("http") ? url : [request.protocol, request.host_with_port, url].join('')
+    end
 end
