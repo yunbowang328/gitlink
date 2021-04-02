@@ -242,7 +242,7 @@ class UsersController < ApplicationController
       password: params[:password]
     }
 
-    Users::UpdateInfoForm.new(sync_params).validate!
+    Users::UpdateInfoForm.new(sync_params.merge(login: params[:login])).validate!
 
     interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
     if interactor.success?
