@@ -38,7 +38,7 @@ module RegisterHelper
 
     return if api_host.blank?
 
-    url = "#{api_host}/api/v1/users"
+    url = "#{api_host}/api/v1/users/common"
     sync_json = {
       "mail": email,
       "password": password,
