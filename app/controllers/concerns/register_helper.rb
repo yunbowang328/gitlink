@@ -1,14 +1,14 @@
 module RegisterHelper
   extend ActiveSupport::Concern
 
-  def autologin_register(username, email, password, platform= 'forge', need_edit_password = false)
+  def autologin_register(username, email, password, platform= 'forge', need_edit_info = false)
     result = {message: nil, user: nil}
 
     user = User.new(admin: false, login: username, mail: email, type: "User")
     user.password = password
     user.platform = platform
-    if need_edit_password
-      user.need_edit_password
+    if need_edit_info
+      user.need_edit_info
     else 
       user.activate
     end
@@ -29,6 +29,32 @@ module RegisterHelper
       result[:message] = interactor.error
     end
     result
+  end
+
+  def autosync_register_trustie(username, password, email)
+    config = Rails.application.config_for(:configuration).symbolize_keys!
+
+    api_host = config[:sync_url]
+
+    return if api_host.blank?
+
+    url = "#{api_host}/api/v1/users"
+    sync_json = {
+      "mail": email,
+      "password": password,
+      "login": username
+    }
+    uri = URI.parse(url)
+
+    if api_host
+      http = Net::HTTP.new(uri.hostname, uri.port)
+
+      if api_host.include?("https://")
+        http.use_ssl = true
+      end
+
+      http.send_request('POST', uri.path, sync_json.to_json, {'Content-Type' => 'application/json'})
+    end
   end
 
 end

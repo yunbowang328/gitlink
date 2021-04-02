@@ -76,7 +76,7 @@ class Token < ActiveRecord::Base
   # Returns the active user who owns the key for the given action
   def self.find_active_user(action, key, validity_days=nil)
     user = find_user(action, key, validity_days)
-    if user && user.active?
+    if user && (user.active? || user.need_edit_info?)
       user
     end
   end
