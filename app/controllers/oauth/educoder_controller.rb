@@ -1,4 +1,6 @@
 class Oauth::EducoderController < Oauth::BaseController
+  include RegisterHelper
+
   def bind
     begin
       login = params[:login]
@@ -38,8 +40,13 @@ class Oauth::EducoderController < Oauth::BaseController
     begin
       code = params['code'].to_s.strip
       tip_exception("code不能为空") if code.blank?
+      redirect_uri = [request.protocol, request.host_with_port, '/api/auth/educoder/callback'].join('')
+      Rails.logger.info redirect_uri
+      redirect_uri = 'https://testforgeplus.trustie.net/api/auth/educoder/callback'
+      Rails.logger.info redirect_uri
+
       new_user = false
-      result = EducoderOauth::Service.access_token(code, [request.protocol, request.host_with_port, '/api/auth/educoder/callback'].join(''))
+      result = EducoderOauth::Service.access_token(code, redirect_uri)
       result = EducoderOauth::Service.user_info(result[:access_token])
 
       # 存在该用户
@@ -49,13 +56,20 @@ class Oauth::EducoderController < Oauth::BaseController
       else
         if current_user.blank? || !current_user.logged?
           new_user = true
-          set_session_edulogin(result['login'])
+          login = User.generate_login('E')
+          reg_result = autologin_register(login,"#{login}@forge.com", "Ec#{login}2021#", 'educoder')
+          if reg_result[:message].blank?
+            open_user = OpenUsers::Educoder.create!(user_id: reg_result[:user][:id], uid: result['login'], extra: result)
+            successful_authentication(open_user.user)
+          else
+            render_error(reg_result[:message])
+          end
         else
           OpenUsers::Educoder.create!(user: current_user, uid: result['login'], extra: result)
         end
       end
 
-      render_ok(new_user: new_user)
+      redirect_to root_path(new_user: new_user)
     rescue Exception => ex
       render_error(ex.message)
     end
