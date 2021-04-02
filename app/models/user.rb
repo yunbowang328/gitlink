@@ -79,6 +79,7 @@ class User < Owner
   STATUS_ACTIVE     = 1
   STATUS_REGISTERED = 2
   STATUS_LOCKED     = 3
+  STATUS_EDIT_INFO   = 4
 
   # tpi tpm权限控制
   EDU_ADMIN = 1       # 超级管理员
@@ -161,7 +162,7 @@ class User < Owner
   has_many :organizations, through: :organization_users
 
   # Groups and active users
-  scope :active, lambda { where(status: STATUS_ACTIVE) }
+  scope :active, lambda { where(status: [STATUS_ACTIVE, STATUS_EDIT_INFO]) }
   scope :like, lambda { |keywords|
     where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
@@ -378,6 +379,10 @@ class User < Owner
     status == STATUS_LOCKED
   end
 
+  def need_edit_info?
+    status == STATUS_EDIT_INFO
+  end
+
   def activate
     self.status = STATUS_ACTIVE
   end
@@ -390,6 +395,10 @@ class User < Owner
     self.status = STATUS_LOCKED
   end
 
+  def need_edit_info 
+    self.status = STATUS_EDIT_INFO
+  end
+
   def activate!
     update_attribute(:status, STATUS_ACTIVE)
   end
@@ -400,6 +409,10 @@ class User < Owner
 
   def lock!
     update_attribute(:status, STATUS_LOCKED)
+  end
+
+  def need_edit_info!
+    update_attribute(:status, STATUS_EDIT_INFO)
   end
 
   # 课程用户身份

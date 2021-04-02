@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list]
+  before_action :require_login, only: %i[me list sync_user_info]
   before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
 
@@ -231,6 +231,26 @@ class UsersController < ApplicationController
     return if user.blank?
     user.update_column(:salt, params[:salt])
     render_ok
+  end
+
+  def sync_user_info
+    user = User.find_by_login params[:login]
+    return render_forbidden unless user === current_user
+
+    sync_params = {
+      email: params[:email],
+      password: params[:password]
+    }
+
+    Users::UpdateInfoForm.new(sync_params).validate!
+
+    interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
+    if interactor.success?
+      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_ACTIVE)
+      render_ok
+    else
+      render_error(interactor.error)
+    end
   end
 
   private
