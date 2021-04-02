@@ -24,8 +24,6 @@ class Projects::ForkService < ApplicationService
       new_repository.identifier = @project.identifier
       new_repository.save!
 
-      ProjectUnit.init_types(clone_project.id)
-
       result = Gitea::Repository::ForkService.new(@project.owner, @target_owner, @project.identifier, @organization).call
 
       @project.update_column('forked_count', @project&.forked_count.to_i + 1)
