@@ -13,3 +13,4 @@ end
 EducoderOauth.client_id = oauth_config['client_id']
 EducoderOauth.client_secret = oauth_config['client_secret']
 EducoderOauth.base_url = oauth_config['base_url']
+EducoderOauth.redirect_uri = oauth_config['redirect_uri']

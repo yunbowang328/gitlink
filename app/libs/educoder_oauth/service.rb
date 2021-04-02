@@ -19,12 +19,12 @@ module EducoderOauth::Service
     end
   end
 
-  def access_token(code, redirect_uri)
+  def access_token(code)
     begin
       Rails.logger.info("[EducoderOauth] [code] #{code} ")
-      Rails.logger.info("[EducoderOauth] [redirect_uri] #{redirect_uri} ")
+      Rails.logger.info("[EducoderOauth] [redirect_uri] #{EducoderOauth.redirect_uri} ")
       client = OAuth2::Client.new(EducoderOauth.client_id, EducoderOauth.client_secret, site: EducoderOauth.base_url)
-      result = client.auth_code.get_token(code, redirect_uri: redirect_uri).to_hash
+      result = client.auth_code.get_token(code, redirect_uri: EducoderOauth.redirect_uri).to_hash
       return result
     rescue Exception => e
       raise Educoder::TipException.new(e.message)

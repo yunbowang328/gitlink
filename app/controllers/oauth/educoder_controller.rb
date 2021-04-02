@@ -40,13 +40,9 @@ class Oauth::EducoderController < Oauth::BaseController
     begin
       code = params['code'].to_s.strip
       tip_exception("code不能为空") if code.blank?
-      redirect_uri = [request.protocol, request.host_with_port, '/api/auth/educoder/callback'].join('')
-      Rails.logger.info redirect_uri
-      redirect_uri = 'https://testforgeplus.trustie.net/api/auth/educoder/callback'
-      Rails.logger.info redirect_uri
 
       new_user = false
-      result = EducoderOauth::Service.access_token(code, redirect_uri)
+      result = EducoderOauth::Service.access_token(code)
       result = EducoderOauth::Service.user_info(result[:access_token])
 
       # 存在该用户

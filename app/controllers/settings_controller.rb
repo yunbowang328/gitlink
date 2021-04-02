@@ -44,7 +44,7 @@ class SettingsController < ApplicationController
       @third_party = []
       @third_party << {
         name: 'educoder',
-        url: EducoderOauth.oauth_url([request.protocol, request.host_with_port, '/api/auth/educoder/callback'].join(''))
+        url: EducoderOauth.oauth_url
       }
     end
 
