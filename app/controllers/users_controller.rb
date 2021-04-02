@@ -234,7 +234,7 @@ class UsersController < ApplicationController
   end
 
   def sync_user_info
-    user = User.find_by_mail params[:email]
+    user = User.find_by_login params[:login]
     return render_forbidden unless user === current_user
 
     sync_params = {
