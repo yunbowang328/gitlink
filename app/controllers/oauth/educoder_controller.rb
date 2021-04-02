@@ -53,7 +53,7 @@ class Oauth::EducoderController < Oauth::BaseController
         if current_user.blank? || !current_user.logged?
           new_user = true
           login = User.generate_login('E')
-          reg_result = autologin_register(login,"#{login}@forge.com", "Ec#{login}2021#", 'educoder')
+          reg_result = autologin_register(login,"#{login}@forge.com", "Ec#{login}2021#", 'educoder', true)
           if reg_result[:message].blank?
             open_user = OpenUsers::Educoder.create!(user_id: reg_result[:user][:id], uid: result['login'], extra: result)
             successful_authentication(open_user.user)

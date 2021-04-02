@@ -329,7 +329,6 @@ class ApplicationController < ActionController::Base
 				User.current = user
 			end
 		end
-
 		# if !User.current.logged? && Rails.env.development?
 		# 	User.current = User.find 1
 		# end
