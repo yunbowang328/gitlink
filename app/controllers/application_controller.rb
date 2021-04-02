@@ -357,10 +357,7 @@ class ApplicationController < ActionController::Base
 		uid_logger("user setup start: session[:user_id] is #{session[:user_id]}")
 		uid_logger("0000000000000user setup start: default_yun_session is #{default_yun_session}, session[:current_user_id] is #{session[:"#{default_yun_session}"]}")
 		current_domain_session = session[:"#{default_yun_session}"]
-		Rails.logger.info "#{session[:user_id]}==============="
-
 		if current_domain_session
-			Rails.logger.info "#{current_domain_session}==============="
 			# existing session
 			User.current = (User.active.find(current_domain_session) rescue nil)
 		elsif autologin_user = try_to_autologin
