@@ -246,7 +246,7 @@ class UsersController < ApplicationController
 
     interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
     if interactor.success?
-      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_EDIT_INFO)
+      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_ACTIVE)
       render_ok
     else
       render_error(interactor.error)
