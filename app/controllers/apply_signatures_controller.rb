@@ -7,7 +7,7 @@ class ApplySignaturesController < ApplicationController
   def index 
     search = params[:search].to_s.downcase
     @apply_signatures = @project.apply_signatures.with_status(status).includes(user: :user_extension)
-    @apply_signatures = @apply_signatures.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    @apply_signatures = @apply_signatures.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
     @apply_signatures = kaminari_paginate(@apply_signatures)
   end
 
