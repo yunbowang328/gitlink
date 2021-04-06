@@ -242,10 +242,12 @@ class Project < ApplicationRecord
   end
 
   def get_premission user
-    permission = "Reporter"
-    member = members.find_by(user: user)
+    return "Owner" if owner?(user)
+    return "Manager" if manager?(user)
+    return "Developer" if develper?(user)
+    return "Reporter" if reporter?(user)
 
-    member&.roles&.last&.name || permission
+    return "Reporter"
   end
 
   def fork_project

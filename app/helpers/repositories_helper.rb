@@ -1,7 +1,6 @@
 module RepositoriesHelper
   def render_permission(user, project)
     return "Admin" if user&.admin?
-    return "Owner" if user === project.owner
     project.get_premission(user)
   end
 
