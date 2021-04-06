@@ -78,8 +78,8 @@ class Organization < Owner
 
   scope :with_visibility, ->(visibility) { joins(:organization_extension).where(organization_extensions: {visibility: visibility}) if visibility.present? }
 
-  def self.build(name, gitea_token=nil)
-    self.create!(login: name, gitea_token: gitea_token)
+  def self.build(name, nickname, gitea_token=nil)
+    self.create!(login: name, nickname: nickname, gitea_token: gitea_token)
   end
 
   def can_create_project?(user_id)
@@ -113,7 +113,9 @@ class Organization < Owner
   end
 
   def real_name
-    login
+    name = lastname + firstname
+    name = name.blank? ? (nickname.blank? ? login : nickname) : name
+    name.gsub(/\s+/, '').strip    #6.11 -hs
   end
 
   def show_real_name
