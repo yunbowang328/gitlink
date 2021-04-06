@@ -247,7 +247,7 @@ class Project < ApplicationRecord
     return "Developer" if develper?(user)
     return "Reporter" if reporter?(user)
 
-    return "Reporter"
+    return ""
   end
 
   def fork_project
