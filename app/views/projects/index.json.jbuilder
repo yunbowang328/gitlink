@@ -25,6 +25,7 @@ json.projects @projects do |project|
       json.image_url render_educoder_avatar_url(project.project_educoder)
     else
       user = project.owner
+      json.type user.type
       json.name user.try(:show_real_name)
       json.login user.login
       json.image_url render_avatar_url(user)

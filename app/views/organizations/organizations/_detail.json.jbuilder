@@ -1,5 +1,6 @@
 json.id organization.id
 json.name organization.login
+json.nickname organization.nickname
 json.description organization.description
 json.website organization.website
 json.location organization.location
