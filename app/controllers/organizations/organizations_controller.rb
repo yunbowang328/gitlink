@@ -36,8 +36,10 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def update
     ActiveRecord::Base.transaction do
       login = @organization.login
-      @organization.update!(login: organization_params[:name]) if organization_params[:name].present?
-      @organization.organization_extension.update_attributes!(organization_params.except(:name))
+      @organization.login = organization_params[:name] if organization_params[:name].present?
+      @organization.nickname = organization_params[:nickname] if organization_params[:nickname].present?
+      @organization.save!
+      @organization.organization_extension.update_attributes!(organization_params.except(:name, :nickname))
       Gitea::Organization::UpdateService.call(@organization.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
@@ -82,7 +84,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def organization_params
     params.permit(:name, :description, :website, :location,
                   :repo_admin_change_team_access, :visibility,
-                  :max_repo_creation)
+                  :max_repo_creation, :nickname)
   end
 
   def password
