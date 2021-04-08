@@ -143,7 +143,7 @@ module ApplicationHelper
   def url_to_avatar(source)
     if File.exist?(disk_filename(source&.class, source&.id))
       ctime = File.ctime(disk_filename(source.class, source.id)).to_i
-      if source.class.to_s == 'User'
+      if %w(User Organization).include?(source.class.to_s)
         File.join(relative_path, ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       else
         File.join("images/avatars", ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
@@ -322,7 +322,15 @@ module ApplicationHelper
   end
 
   def absolute_path(file_path)
-    File.join(edu_setting('attachment_folder'), file_path)
+    file_root_directory + File.join(edu_setting('attachment_folder'), file_path)
+  end
+
+  def file_root_directory
+    Rails.root.to_s
+  end
+
+  def file_storage_directory
+    file_root_directory + edu_setting('attachment_folder')
   end
 
   def local_path(file)

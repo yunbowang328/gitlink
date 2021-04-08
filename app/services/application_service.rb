@@ -14,4 +14,8 @@ class ApplicationService
   def strip(str)
     str.to_s.strip.presence
   end
+
+  def str_to_boolean str
+    ActiveModel::Type::Boolean.new.cast str
+  end
 end

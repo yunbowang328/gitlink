@@ -1,12 +1,23 @@
 class UsersController < ApplicationController
+  include ApplicationHelper
   include Ci::DbConnectable
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list]
-  before_action :connect_to_ci_database, only: :get_user_info, if: -> { current_user && !current_user.is_a?(AnonymousUser) && current_user.devops_certification? }
-
+  before_action :require_login, only: %i[me list sync_user_info]
+  before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
+
+  def connect_to_ci_db(options={})
+    if !(current_user && !current_user.is_a?(AnonymousUser) && current_user.devops_certification?)
+      return
+    end
+    if current_user.ci_cloud_account.server_type == Ci::CloudAccount::SERVER_TYPE_TRUSTIE
+      connect_to_trustie_ci_database(options)
+    else
+      connect_to_ci_database(options)
+    end
+  end
 
   def list
     scope = User.active.recent.like(params[:search]).includes(:user_extension)
@@ -20,6 +31,7 @@ class UsersController < ApplicationController
       #用户的组织数量
       # @user_composes_count =  @user.composes.size
       @user_composes_count = 0
+      @user_org_count = User.current.logged? ? @user.organizations.with_visibility(%w(common limited)).size + @user.organizations.with_visibility("privacy").joins(:organization_users).where(organization_users: {user_id: current_user.id}).size : @user.organizations.with_visibility("common").size
       user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
@@ -73,7 +85,7 @@ class UsersController < ApplicationController
 
   def attachment_show
     file_name = params[:file_name]
-    path = params[:path] || edu_setting('attachment_folder')
+    path = params[:path] || file_storage_directory
     send_file "#{path}/#{file_name}", :filename => "#{file_name}",
               :type => 'game',
               :disposition => 'attachment' #inline can open in browser
@@ -231,6 +243,26 @@ class UsersController < ApplicationController
       render_ok
     else
       render_error
+    end
+  end
+
+  def sync_user_info
+    user = User.find_by_login params[:login]
+    return render_forbidden unless user === current_user
+
+    sync_params = {
+      email: params[:email],
+      password: params[:password]
+    }
+
+    Users::UpdateInfoForm.new(sync_params.merge(login: params[:login])).validate!
+
+    interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
+    if interactor.success?
+      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_ACTIVE)
+      render_ok
+    else
+      render_error(interactor.error)
     end
   end
 

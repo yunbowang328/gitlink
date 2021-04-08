@@ -5,6 +5,7 @@ class VersionsController < ApplicationController
   before_action :set_version, only: [:edit, :update, :destroy, :show,:update_status]
 
   def index
+    return render_not_found unless @project.has_menu_permission("versions")
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
     order_name = params[:order_name] || "created_on"
     order_type = params[:order_type] || "desc"

@@ -52,6 +52,8 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
+#  default_branch         :string(255)      default("master")
+#  website                :string(255)
 #
 # Indexes
 #
@@ -67,6 +69,10 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
+
+
+
 
 class Project < ApplicationRecord
   include Matchable
@@ -85,7 +91,8 @@ class Project < ApplicationRecord
 
   belongs_to :ignore, optional: true
   belongs_to :license, optional: true
-  belongs_to :owner, class_name: 'User', foreign_key: :user_id, optional: true
+  belongs_to :owner, class_name: 'Owner', foreign_key: :user_id, optional: true
+  belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
   has_many :project_trends, dependent: :destroy
@@ -106,12 +113,16 @@ class Project < ApplicationRecord
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
+  has_many :team_projects, dependent: :destroy
+  has_many :project_units, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
 
+  delegate :content, to: :project_detail, allow_nil: true
+  delegate :name, to: :license, prefix: true, allow_nil: true
 
 
   def self.search_project(search)
@@ -123,7 +134,7 @@ class Project < ApplicationRecord
   end
 
   def members_user_infos
-    members.joins(:roles).where("roles.name in ('Manager', 'Developer')").joins("left join users on members.user_id = users.id ").includes(:user).where("users.type = ?", "User")
+    members.joins(:roles).where("roles.name in ('Manager', 'Developer', 'Reporter')").joins("left join users on members.user_id = users.id ").includes(:user).where("users.type = ?", "User")
     # members.joins("left join users on members.user_id = users.id").select("users.id", "users.login","users.firstname","users.lastname")
     #   .pluck("users.id", "users.login","users.lastname", "users.firstname")
   end
@@ -231,10 +242,12 @@ class Project < ApplicationRecord
   end
 
   def get_premission user
-    permission = "Reporter"
-    member = members.find_by(user: user)
+    return "Owner" if owner?(user)
+    return "Manager" if manager?(user)
+    return "Developer" if develper?(user)
+    return "Reporter" if reporter?(user)
 
-    member&.roles&.last&.name || permission
+    return ""
   end
 
   def fork_project
@@ -248,7 +261,7 @@ class Project < ApplicationRecord
   def self.find_with_namespace(namespace_path, identifier)
     logger.info "########namespace_path: #{namespace_path} ########identifier: #{identifier} "
 
-    user = User.find_by_login namespace_path
+    user = Owner.find_by_login namespace_path
     project = user&.projects&.find_by(identifier: identifier) || Project.find_by(identifier: "#{namespace_path}/#{identifier}")
     return nil if project.blank?
 
@@ -277,6 +290,11 @@ class Project < ApplicationRecord
   def self.update_mirror_projects_count!
     ps = ProjectStatistic.first
     ps.increment!(:mirror_projects_count) unless ps.blank?
+  end
+
+  def set_updated_on(time)
+    return if time.blank?
+    update_column(:updated_on, time)
   end
 
 end

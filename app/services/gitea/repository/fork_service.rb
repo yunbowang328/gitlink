@@ -14,7 +14,9 @@ class Gitea::Repository::ForkService < Gitea::ClientService
   end
 
   def call
-    post(url, request_params)
+    response = post(url, request_params)
+    
+    render_202_response(response)
   end
 
   private

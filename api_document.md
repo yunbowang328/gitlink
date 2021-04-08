@@ -1,4 +1,3 @@
----
 
 
 # API文档
@@ -7,7 +6,7 @@
 
 ### 开发API服务地址：
 
-**https://testgitea.trustie.net/**
+****
 
 
 响应状态说明:
@@ -19,14 +18,13 @@
 
 
 ### API接口
----
 
 #### 用户注册(通过其他平台)
 ```
 POST accounts/remote_register
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "email=2456233122@qq.com" \
 -d "password=djs_D_00001" \
@@ -54,7 +52,7 @@ http://localhost:3000/api/accounts/remote_register  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success",
@@ -71,7 +69,7 @@ http://localhost:3000/api/accounts/remote_register  | jq
 GET api/users/me
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/users/me  | jq
 ```
 
@@ -87,7 +85,7 @@ curl -X GET http://localhost:3000/api/users/me  | jq
 
 
 返回值
-```
+```json
 {
   "username": "18816895620",
   "login": "18816895620",
@@ -103,7 +101,7 @@ curl -X GET http://localhost:3000/api/users/me  | jq
 GET api/users/list
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "limit=10" \
 -d "search=18816895620"
@@ -130,7 +128,7 @@ http://localhost:3000/api/users/list  | jq
 |-- image_url   |string|用户头像|
 
 返回值
-```
+```json
 {
   "total_count": 1,
   "users": [
@@ -150,7 +148,7 @@ http://localhost:3000/api/users/list  | jq
 GET api/project_categories
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=大数据" \
 http://localhost:3000/api/project_categories/  | jq
@@ -172,7 +170,7 @@ http://localhost:3000/api/project_categories/  | jq
 
 
 返回值
-```
+```json
 {
   "project_categories": [
     {
@@ -189,7 +187,7 @@ http://localhost:3000/api/project_categories/  | jq
 GET api/project_languages
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=Ruby" \
 http://localhost:3000/api/project_languages/  | jq
@@ -211,7 +209,7 @@ http://localhost:3000/api/project_languages/  | jq
 
 
 返回值
-```
+```json
 {
   "project_languages": [
     {
@@ -228,7 +226,7 @@ http://localhost:3000/api/project_languages/  | jq
 GET api/ignores
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=Ada" \
 http://localhost:3000/api/ignores/  | jq
@@ -250,7 +248,7 @@ http://localhost:3000/api/ignores/  | jq
 
 
 返回值
-```
+```json
 {
   "ignores": [
     {
@@ -267,7 +265,7 @@ http://localhost:3000/api/ignores/  | jq
 GET api/licenses
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "name=AFL" \
 http://localhost:3000/api/licenses/  | jq
@@ -289,7 +287,7 @@ http://localhost:3000/api/licenses/  | jq
 
 
 返回值
-```
+```json
 {
   "licenses": [
     {
@@ -322,7 +320,7 @@ http://localhost:3000/api/licenses/  | jq
 POST api/projects
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "user_id=36401" \
 -d "name=hnfl_demo" \
@@ -358,7 +356,7 @@ http://localhost:3000/api/projects/  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3240,
   "name": "好项目"
@@ -371,7 +369,7 @@ http://localhost:3000/api/projects/  | jq
 POST api/projects/migrate
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "user_id=36408" \
 -d "clone_addr=https://gitea.com/mx8090alex/golden.git" \
@@ -407,7 +405,7 @@ http://localhost:3000/api/projects/migrate.json  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3263,
   "name": "ni项目"
@@ -420,7 +418,7 @@ http://localhost:3000/api/projects/migrate.json  | jq
 POST api/repositories/:id/sync_mirror
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 ```
 *请求参数说明:*
@@ -439,7 +437,7 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -450,18 +448,18 @@ curl -X POST http://localhost:3000/api/repositories/1244/sync_mirror  | jq
 
 #### 项目详情
 ```
-GET /api/:namespace_id/:id
+GET /api/:owner/:repo
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -478,7 +476,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 
 返回值
-```
+```json
 {
   "name": "ni项目",
   "identifier": "mirror_demo",
@@ -492,17 +490,18 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test  | jq
 
 #### 项目详情(简版)
 ```
-GET /api/:namespace_id/:id/simple
+GET /api/:owner/:repo/simple
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id            |是|int    |项目id  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -519,7 +518,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 
 
 返回值
-```
+```json
 {
   "identifier": "jasder_test",
   "name": "jasder的测试项目",
@@ -539,7 +538,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/simple  | jq
 GET  /api/repositories/:id/edit.json
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 ```
 
@@ -558,7 +557,7 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 
 
 返回值
-```
+```json
 {
   "identifier": "mirror_demo",
   "project_id": 3263,
@@ -577,7 +576,7 @@ curl -X GET http://localhost:3000/api/repositories/:id/edit.json | jq
 PATCH api/projects/:id
 ```
 *示例*
-```
+```bash
 curl -X PATCH \
 -d "name=hnfl_demo" \
 -d "description=my first project" \
@@ -613,7 +612,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3263,
   "identifier": "mirror_demo",
@@ -631,7 +630,7 @@ http://localhost:3000/api/projects/3263.json  | jq
 DELETE api/projects/:id
 ```
 *示例*
-```
+```bash
 curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 ```
 
@@ -652,7 +651,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -665,7 +664,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263.json  | jq
 POST api/projects/:id/members
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d "user_id=36406" \
 http://localhost:3000/api/projects/3297/members  | jq
@@ -687,7 +686,7 @@ http://localhost:3000/api/projects/3297/members  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -700,7 +699,7 @@ http://localhost:3000/api/projects/3297/members  | jq
 DELETE api/projects/:id/members/remove
 ```
 *示例*
-```
+```bash
 curl -X DELETE \
 -d "user_id=36400" \
 http://localhost:3000/api/projects/3263/members/remove  | jq
@@ -722,7 +721,7 @@ http://localhost:3000/api/projects/3263/members/remove  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -735,7 +734,7 @@ http://localhost:3000/api/projects/3263/members/remove  | jq
 PUT api/projects/:id/members/change_role
 ```
 *示例*
-```
+```bash
 curl -X PUT \
 -d "user_id=36400" \
 -d "role=Developer" \
@@ -759,7 +758,7 @@ http://localhost:3000/api/projects/3263/members/change_role  | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -773,7 +772,7 @@ http://localhost:3000/api/projects/3263/members/change_role  | jq
 GET api/projects/:id/members
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -803,7 +802,7 @@ http://localhost:3000/api/projects/3263/members  | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 2,
   "members": [
@@ -833,7 +832,7 @@ http://localhost:3000/api/projects/3263/members  | jq
 POST /api/projects/:project_id/forks
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 ```
 *请求参数说明:*
@@ -852,7 +851,7 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 
 返回值
-```
+```json
 {
   "id": 3290,
   "identifier": "newadm"
@@ -862,10 +861,10 @@ curl -X POST http://localhost:3000/api/projects/3297/forks  | jq
 
 #### 获取代码目录列表
 ```
-POST /api/:namespace_id/:project_id/repository/entries
+POST /api/:owner/:repo/repository/entries
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "ref=develop" \
 http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
@@ -874,7 +873,8 @@ http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id           |是|int |项目id  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 |ref             |否|string |分支名称、tag名称或是提交记录id，默认为master分支  |
 
 
@@ -960,7 +960,7 @@ http://localhost:3000//api/jasder/jasder_test/repository/entries  | jq
 GET /api/repositories/:id/sub_entries
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "ref=master" \
 -d "filepath=test1_create_file.rb" \
@@ -1039,7 +1039,7 @@ http://localhost:3000/api/repositories/87/sub_entries.json | jq
 GET api/project_categories/group_list
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 ```
 
@@ -1053,7 +1053,7 @@ curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 
 
 返回值
-```
+```json
 [
   {
     "id": 1,
@@ -1079,7 +1079,7 @@ curl -X GET http://localhost:3000/api/project_categories/group_list | jq
 GET api/projects/group_type_list
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 ```
 
@@ -1093,7 +1093,7 @@ curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 
 
 返回值
-```
+```json
 [
   {
     "project_type": "common",
@@ -1114,7 +1114,7 @@ curl -X GET http://localhost:3000/api/projects/group_type_list | jq
 GET api/projects
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -1159,7 +1159,7 @@ http://localhost:3000/api/projects  | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 3096,
   "projects": [
@@ -1288,7 +1288,7 @@ http://localhost:3000/api/projects  | jq
 GET api/projects/recommend
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/projects/recommend  | jq
 ```
@@ -1318,7 +1318,7 @@ http://localhost:3000/api/projects/recommend  | jq
 
 
 返回值
-```
+```json
 [
   {
     "id": 20,
@@ -1344,11 +1344,11 @@ http://localhost:3000/api/projects/recommend  | jq
 
 #### 项目主页
 ```
-GET api/:namespace_id/:id/about
+GET api/:owner/:repo/about
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/:jason/forgeplus/about  | jq
 ```
@@ -1357,8 +1357,8 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 *返回参数说明:*
 
@@ -1371,7 +1371,7 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 
 返回值
-```
+```json
 {
   "content": "",
   "identifier": "forgeplus",
@@ -1385,23 +1385,23 @@ http://localhost:3000/api/:jason/forgeplus/about  | jq
 
 #### 修改项目主页内容
 ```
-POST api/:namespace_id/:id/about
+POST api/:owner/:repo/about
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 -d "content=内容" \
 -d "attachment_ids=[1, 2, 2]" \
-http://localhost:3000/api/:jasder/forgeplus/about  | jq
+http://localhost:3000/api/jasder/forgeplus/about  | jq
 ```
 
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 |content        |是|string |内容信息  |
 |attachment_ids |是|array |附件id  |
 
@@ -1415,7 +1415,7 @@ http://localhost:3000/api/:jasder/forgeplus/about  | jq
 |-- name         |string|用户名，也是用户标识|
 
 返回值
-```
+```json
 {
   "content": "",
   "identifier": "forgeplus",
@@ -1429,17 +1429,18 @@ http://localhost:3000/api/:jasder/forgeplus/about  | jq
 
 ### 获取分支列表
 ```
-GET /api/:namespace_id/:id/branches
+GET /api/:owner/:repo/branches
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 ```
 *请求参数说明:*
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|id               |是|id |项目id |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -1464,7 +1465,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 
 
 返回值
-```
+```json
 [
   {
     "name": "develop",
@@ -1513,7 +1514,7 @@ curl -X GET http://localhost:3000/api/jasder/jasder_test/branches | jq
 GET  /api/repositories/:id/tags
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "limit=20" \
 -d "page=1" \
@@ -1550,7 +1551,7 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 
 返回值
-```
+```json
 [
   {
     "name": "develop",
@@ -1596,10 +1597,10 @@ http://localhost:3000/api/repositories/5836/tags.json | jq
 
 ## 仓库详情
 ```
-GET /api/:namespace_id/:project_id/repository
+GET /api/:owner/:repo/repository
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 ```
@@ -1607,8 +1608,8 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 
 |参数名|必选|类型|说明|
 |-|-|-|-|
-|namespace_id             |是|string |用户登录名  |
-|project_id             |是|string |项目标识identifier  |
+|owner             |是|string |用户登录名  |
+|repo             |是|string |项目标识identifier  |
 
 
 *返回参数说明:*
@@ -1645,7 +1646,7 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 
 
 返回值
-```
+```json
 {
   "identifier": "mirror_demo",
   "project_id": 3263,
@@ -1683,7 +1684,7 @@ http://192.168.2.230:3000/api/jasder/forgeplus/repository | jq
 GET  /api/repositories/:id/commits
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "sha=develop" \
 -d "page=1" \
@@ -1714,7 +1715,7 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 63,
   "commits": [
@@ -1748,7 +1749,7 @@ http://localhost:3000/api/repositories/89/commits.json | jq
 GET  /api/:owner/:repo/commits/:sha
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/repo/commits/b0c4a4a1487d53acebf2addc544b29938cad12df.json | jq
 ```
@@ -1847,7 +1848,7 @@ http://localhost:3000/api/jasder/repo/commits/b0c4a4a1487d53acebf2addc544b29938c
 POST /api/projects/:id/praise_tread/like
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 ```
 *请求参数说明:*
@@ -1864,7 +1865,7 @@ curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 
 
 返回值
-```
+```json
 {
     "status": 0,
     "message": "success"
@@ -1877,7 +1878,7 @@ curl -X POST http://localhost:3000/api/projects/3263/praise_tread/like | jq
 DELETE /api/projects/:id/praise_tread/unlike
 ```
 *示例*
-```
+```bash
 curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 ```
 *请求参数说明:*
@@ -1895,7 +1896,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -1908,7 +1909,7 @@ curl -X DELETE http://localhost:3000/api/projects/3263/praise_tread/unlike | jq
 GET /api/projects/:id/praise_tread/check_like
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 ```
 *请求参数说明:*
@@ -1926,7 +1927,7 @@ curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -1939,7 +1940,7 @@ curl -X GET http://localhost:3000/api/projects/3263/praise_tread/check_like | jq
 GET /api/projects/:id/praise_tread
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -1967,7 +1968,7 @@ http://localhost:3000/api/projects/3263/praise_tread | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 1,
   "praises": [
@@ -1986,7 +1987,7 @@ http://localhost:3000/api/projects/3263/praise_tread | jq
 POST /api/projects/:id/watchers/follow
 ```
 *示例*
-```
+```bash
 curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 ```
 *请求参数说明:*
@@ -2004,7 +2005,7 @@ curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 
 
 返回值
-```
+```json
 {
     "status": 0,
     "message": "响应成功"
@@ -2017,7 +2018,7 @@ curl -X POST http://localhost:3000/api/projects/3263/watchers/follow | jq
 DELETE /api/projects/:id/watchers/unfollow
 ```
 *示例*
-```
+```bash
 curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 ```
 *请求参数说明:*
@@ -2035,7 +2036,7 @@ curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "响应成功"
@@ -2048,7 +2049,7 @@ curl -X DELETE http://localhost:3000//api/projects/3263/watchers/unfollow | jq
 GET /api/projects/:id/watchers/check_watch
 ```
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 ```
 *请求参数说明:*
@@ -2066,7 +2067,7 @@ curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 
 
 返回值
-```
+```json
 {
   "status": 0,
   "message": "success"
@@ -2079,7 +2080,7 @@ curl -X GET http://localhost:3000/api/projects/3263/watchers/check_watch | jq
 GET /api/projects/:id/watchers
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=5" \
@@ -2106,7 +2107,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 1,
   "watchers": [
@@ -2125,7 +2126,7 @@ http://localhost:3000//api/projects/3263/watchers | jq
 POST /api/repositories/:id/create_file
 ```
 *示例*
-```
+```bash
 curl -X POST \
 -d 'filepath=test1_create_file1.rb' \
 -d 'branch=master' \
@@ -2164,7 +2165,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 
 
 返回值
-```
+```json
 {
   "name": "test1_create_file12.rb",
   "sha": "7b70509105b587e71f5692b9e8ab70851e321f64",
@@ -2193,7 +2194,7 @@ http://localhost:3000/api/18816895620/mirror_demo/contents.json | jq
 PUT /api/repositories/:id/update_file.json
 ```
 *示例*
-```
+```bash
 curl -X PUT \
 -d 'filepath=text1.rb' \
 -d 'branch=master' \
@@ -2235,7 +2236,7 @@ http://localhost:3000/api/repositories/3938/update_file.json | jq
 
 
 返回值
-```
+```json
 {
   "name": "test1_create_file6.rb",
   "sha": "57426eb21e4ceabdf4b206f022257e08077e0040",
@@ -2264,7 +2265,7 @@ http://localhost:3000/api/repositories/3938/update_file.json | jq
 DELETE /api/repositories/:id/delete_file
 ```
 *示例*
-```
+```bash
 curl -X DELETE \
 -d 'filepath=test1_create_file12.rb' \
 -d 'test delete file' \
@@ -2321,7 +2322,7 @@ http://localhost:3000/api//api/repositories/3868/delete_file | jq
 GET /api/:owner/:repo/pulls/:id/files.json
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/test-txt/pulls/1/files.json | jq
 ```
@@ -2439,7 +2440,7 @@ http://localhost:3000/api/Jason/test-txt/pulls/1/files.json | jq
 GET /api/:owner/:repo/pulls/:id/commits.json
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/repo/1/commits.json | jq
 ```
@@ -2504,7 +2505,7 @@ http://localhost:3000/api/Jason/repo/1/commits.json | jq
 GET /api/:owner/:repo/compare/{base}...{head}.json
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/Jason/test-txt/compare/master...develop | jq
 
@@ -2650,6 +2651,489 @@ http://localhost:3000/api/ysfns/test-txt/compare/master...Jason/test-txt:develop
 ```
 ---
 
+### 创建保护分支
+```
+POST /api/:owner/:repo/protected_branches
+```
+*示例*
+```bash
+curl -X POST \
+-d 'branch_name=master' \
+-d 'enable_push=true' \
+-d 'enable_push_whitelist=true' \
+-d 'enable_push_whitelist=["demo1", "demo1"]' \
+-d 'enable_merge_whitelist=true' \
+http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|branch_name       |是|string |保护分支名称  |
+|enable_push             |否|boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |否|boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |否|array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |否|boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |否|array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |否|boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |否|int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |否|boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames     |否|array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |否|boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |否|boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |否|boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |否|boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|branch_name       |string |保护分支名称  |
+|enable_push             |boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+|created_at      |string|创建时间|
+|updated_at      |string|更新时间|
+
+
+返回值
+```
+{
+  "branch_name": "develop",
+  "enable_push": true,
+  "required_approvals": 0,
+  "enable_status_check": true,
+  "enable_push_whitelist": true,
+  "enable_merge_whitelist": true,
+  "enable_approvals_whitelist": false,
+  "dismiss_stale_approvals": false,
+  "block_on_rejected_reviews": false,
+  "block_on_outdated_branch": false,
+  "require_signed_commits": false,
+  "merge_whitelist_usernames": [
+      "jasder"
+  ],
+  "push_whitelist_usernames": [
+      "jasder"
+  ],
+  "approvals_whitelist_usernames": [],
+  "created_at": "2020-12-02 17:40",
+  "updated_at": "2020-12-03 11:29"
+}
+```
+---
+
+### 编辑保护分支参数
+```
+GET /api/:owner/:repo/protected_branches/:branch_name/edit
+```
+*示例*
+```bash
+curl -X GET \
+http://localhost:3000/api/trustie/truesite/protected_branches/master/edit.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|branch_name       |是|string |保护分支名称  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|protected       |boolean |是否为保护分支, true: 是; false: 不是  |
+|branch_name       |string |保护分支名称  |
+|enable_push             |boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames    |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+|created_at      |string|创建时间|
+|updated_at      |string|更新时间|
+
+
+返回值
+```json
+{
+  "branch_name": "master",
+  "protected": true,
+  "protected_branch": {
+    "branch_name": "master",
+    "enable_push": false,
+    "required_approvals": 0,
+    "enable_status_check": true,
+    "enable_push_whitelist": false,
+    "enable_merge_whitelist": true,
+    "enable_approvals_whitelist": false,
+    "dismiss_stale_approvals": false,
+    "block_on_rejected_reviews": false,
+    "block_on_outdated_branch": false,
+    "require_signed_commits": false,
+    "merge_whitelist_usernames": [
+        "jasder"
+    ],
+    "push_whitelist_usernames": [],
+    "approvals_whitelist_usernames": [],
+    "created_at": "2020-12-03 12:00",
+    "updated_at": "2020-12-04 10:50"
+  }
+}
+```
+---
+
+### 修改保护分支参数
+```
+PATCH /api/:owner/:repo/protected_branches/:branch_name
+```
+*示例*
+```bash
+curl -X PATCH \
+-d 'branch_name=master' \
+-d 'enable_push=true' \
+-d 'enable_push_whitelist=true' \
+-d 'enable_push_whitelist=["demo1", "demo1"]' \
+-d 'enable_merge_whitelist=true' \
+http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|branch_name       |是|string |保护分支名称  |
+|enable_push             |否|boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |否|boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |否|array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |否|boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |否|array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |否|boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |否|int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |否|boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames     |否|array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |否|boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |否|boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |否|boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |否|boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|branch_name       |string |保护分支名称  |
+|enable_push             |boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+|created_at      |string|创建时间|
+|updated_at      |string|更新时间|
+
+
+返回值
+```json
+{
+  "branch_name": "develop",
+  "enable_push": true,
+  "required_approvals": 0,
+  "enable_status_check": true,
+  "enable_push_whitelist": true,
+  "enable_merge_whitelist": true,
+  "enable_approvals_whitelist": false,
+  "dismiss_stale_approvals": false,
+  "block_on_rejected_reviews": false,
+  "block_on_outdated_branch": false,
+  "require_signed_commits": false,
+  "merge_whitelist_usernames": [
+      "jasder"
+  ],
+  "push_whitelist_usernames": [
+      "jasder"
+  ],
+  "approvals_whitelist_usernames": [],
+  "created_at": "2020-12-02 17:40",
+  "updated_at": "2020-12-03 11:29"
+}
+```
+---
+
+### 删除保护分支
+```
+DELETE /api/:owner/:repo/protected_branches/:branch_name
+```
+*示例*
+```bash
+curl -X DELETE \
+http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|branch_name       |是|string |保护分支名称  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|status        |int|状态值，0: 请求成功; -1: 请求失败|
+|message         |string|信息说明|
+
+返回值
+```json
+{
+  "status": 0,
+  "message": "success"
+}
+```
+---
+
+### 获取保护分支列表
+```
+GET /api/:owner/:repo/protected_branches/
+```
+*示例*
+```bash
+curl -X GET \
+-d "page=1" \
+-d "limit=5" \
+http://localhost:3000/api/trustie/truesite/protected_branches.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|page          |否|string |页数，第几页  |
+|limit         |否|string |每页多少条数据，默认15条  |
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|total_count       |int | 总记录数 |
+|branch_name       |string |保护分支名称  |
+|enable_push             |boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+|created_at      |string|创建时间|
+|updated_at      |string|更新时间|
+
+
+返回值
+```
+{
+  "total_count": 1,
+  "protected_branches": [
+    {
+      "branch_name": "develop",
+      "enable_push": true,
+      "required_approvals": 0,
+      "enable_status_check": true,
+      "enable_push_whitelist": true,
+      "enable_merge_whitelist": true,
+      "enable_approvals_whitelist": false,
+      "dismiss_stale_approvals": false,
+      "block_on_rejected_reviews": false,
+      "block_on_outdated_branch": false,
+      "require_signed_commits": false,
+      "merge_whitelist_usernames": [
+          "jasder"
+      ],
+      "push_whitelist_usernames": [
+          "jasder"
+      ],
+      "approvals_whitelist_usernames": [],
+      "created_at": "2020-12-02 17:40",
+      "updated_at": "2020-12-03 11:29"
+    }
+  ]
+}
+```
+---
+
+### 获取某个具体的保护分支
+```
+GET /api/:owner/:repo/protected_branches/:branch_name
+```
+*示例*
+```bash
+curl -X GET \
+http://localhost:3000/api/trustie/truesite/protected_branches/master.json | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|owner             |是|string |项目拥有者登录名  |
+|repo              |否|boolean |仓库名称  |
+|branch_name       |是|string |保护分支名称  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|branch_name       |string |保护分支名称  |
+|enable_push             |boolean |是否启用推送, true: 启用; false: 不启用, 默认为false  |
+|enable_push_whitelist   |boolean |是否启用白名单推送, true: 启用; false: 不启用, 默认为false, 该参数与enable_push参数为单选项，只能选择|
+|push_whitelist_usernames        |array |推送白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_push_whitelist参数配合使用  |
+|enable_merge_whitelist        |boolean |是否启用合并白名单, true: 启用, false: 不启用, 默认为false |
+|merge_whitelist_usernames         |array |合并白名单用户(即具有写操作的项目成员名称的数组), 该参数与enable_merge_whitelist配合使用 |
+|enable_status_check     |boolean |是否启用状态检查, true: 启用; false: 不启用, 默认为false |
+|required_approvals     |int |所需的批准数， 默认为0 |
+|enable_approvals_whitelist     |boolean |是否启用批准仅限列入白名单的用户或团队, true: 启用, false: 不启用, 默认为false |
+|approvals_whitelist_usernames     |array |审查者白名单(即具有写操作的项目成员名称的数组), 该参数与enable_approvals_whitelist配合使用 |
+|block_on_rejected_reviews     |boolean |是否启用拒绝审核阻止合并功能, true: 启用, false: 不启用, 默认为false |
+|dismiss_stale_approvals     |boolean |是否启用取消过时的批准, true: 启用, false: 不启用, 默认为false |
+|require_signed_commits     |boolean |是否需要签名提交, true: 是, false: 否, 默认为false |
+|block_on_outdated_branch     |boolean |如果拉取请求已经过时，是否阻止合并, true: 是, false: 否, 默认为false |
+|created_at      |string|创建时间|
+|updated_at      |string|更新时间|
+
+返回值
+```json
+{
+  "branch_name": "develop",
+  "enable_push": true,
+  "required_approvals": 0,
+  "enable_status_check": true,
+  "enable_push_whitelist": true,
+  "enable_merge_whitelist": true,
+  "enable_approvals_whitelist": false,
+  "dismiss_stale_approvals": false,
+  "block_on_rejected_reviews": false,
+  "block_on_outdated_branch": false,
+  "require_signed_commits": false,
+  "merge_whitelist_usernames": [
+      "jasder"
+  ],
+  "push_whitelist_usernames": [
+      "jasder"
+  ],
+  "approvals_whitelist_usernames": [],
+  "created_at": "2020-12-02 17:40",
+  "updated_at": "2020-12-03 11:29"
+}
+```
+---
+
+#### 获取仓库README文件
+```
+GET api/:owner/:repo/readme
+```
+*示例*
+```bash
+curl -X GET http://localhost:3000/api/trusite/trusite/readme | jq
+```
+
+*请求参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|owner |是|string |项目拥有者登录名  |
+|repo  |否|boolean |仓库名称  |
+|ref   |否|string |分支、tag或commit。默认: 仓库的默认分支(通常是master)|
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|name           |string|文件名称|
+|path           |string|文件相对路径|
+|type           |string|文件类型， file:文件|
+|size           |int|文件大小 单位KB|
+|content        |string|文件内容，base64加密|
+
+返回值
+```json
+{
+  "type": "file",
+  "encoding": "base64",
+  "size": 13544,
+  "name": "README.md",
+  "path": "README.md",
+  "content": "Q2hpbmVzZSAmbmJzcDsgfCAmbmJzcDsgW0VuZ7i9yZWFkbWUvaW5kZXgucG5"
+}
+```
+---
+
+#### 获库仓库的语言百分占比
+```
+GET api/:owner/:repo/languages
+```
+*示例*
+```bash
+curl -X GET http://localhost:3000/api/jasder/trusite/languages | jq
+```
+
+*请求参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|owner |是|string |项目拥有者登录名  |
+|repo  |否|boolean |仓库名称  |
+
+
+返回值
+```json
+{
+  "JavaScript": "90.2%",
+  "CSS": "6.1%",
+  "Java": "2.9%",
+  "HTML": "0.8%"
+}
+```
+---
+
+
+
 
 ### DevOps相关api
 ---
@@ -2660,7 +3144,7 @@ GET  /api/:owner/:repo/ci_authorize
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/forgeplus/ci_authorize.json  | jq
 ```
@@ -2704,7 +3188,7 @@ POST  /api/:owner/:repo/cloud_accounts
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 -d "account=xx" \
 -d "secret=xxx" \
@@ -2745,7 +3229,7 @@ https://localhost:3000/api/jasder/forgeplus/cloud_accounts.json  | jq
 GET /api/users/ci/oauth_grant
 ```
 *示例*
-```
+```bash
 curl -X GET \
 -d "password=123456" \
 http://localhost:3000/api/users/ci/oauth_grant.json | jq
@@ -2762,7 +3246,8 @@ http://localhost:3000/api/users/ci/oauth_grant.json | jq
 |-|-|-|
 |status           |int|0:成功， -1: 失败|
 
-```
+返回值
+```json
 {
   "status": 0,
   "message": "success"
@@ -2775,7 +3260,7 @@ http://localhost:3000/api/users/ci/oauth_grant.json | jq
 POST /api/:owner/:repo/activate
 ```
 *示例*
-```
+```bash
 curl -X POST \
 http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 ```
@@ -2792,7 +3277,8 @@ http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 |-|-|-|
 |status           |int|0:成功， -1: 失败|
 
-```
+返回值
+```json
 {
   "status": 0,
   "message": "success"
@@ -2805,7 +3291,7 @@ http://localhost:3000/api/jasder/forgeplus/activate.json | jq
 DELETE /api/:owner/:repo/deactivate
 ```
 *示例*
-```
+```bash
 curl -X POST \
 http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
 ```
@@ -2822,7 +3308,8 @@ http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
 |-|-|-|
 |status           |int|0:成功， -1: 失败|
 
-```
+返回值
+```json
 {
   "status": 0,
   "message": "success"
@@ -2835,7 +3322,7 @@ http://localhost:3000/api/jasder/forgeplus/deactivate.json | jq
 GET /api/:owner/:repo/get_trustie_pipeline
 ```
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 ```
@@ -2856,7 +3343,8 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 |path           |string|文件夹或文件相对路径|
 |content        |string|文件内容，|
 
-```
+返回值
+```json
 {
   "name": ".trustie-pipeline.yml",
   "path": ".trustie-pipeline.yml",
@@ -2871,9 +3359,10 @@ http://localhost:3000/api/jasder/forge/get_trustie_pipeline.json | jq
 PUT /api/:owner/:repo/update_trustie_pipeline
 ```
 *示例*
-```
+
+```bash
 curl -X GET \
-http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json | jq
+http://localhost:3000/api/jasder/forge/update_trustie_pipeline.json?pipeline_id=1 | jq
 ```
 *请求参数说明:*
 
@@ -2913,7 +3402,7 @@ GET  /api/ci/languages
 ```
 
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/ci/languages.json | jq
 ```
 
@@ -2945,7 +3434,7 @@ GET  /api/ci/languages/common
 ```
 
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/ci/languages/common.json | jq
 ```
 
@@ -2977,7 +3466,7 @@ GET  /api/ci/languages/:id
 ```
 
 *示例*
-```
+```bash
 curl -X GET http://localhost:3000/api/ci/languages/114.json | jq
 ```
 
@@ -3011,13 +3500,13 @@ curl -X GET http://localhost:3000/api/ci/languages/114.json | jq
 
 #### 获取构建列表
 ```
-GET  /api/:owner/:repo/builds
+GET  /api/:owner/:repo/builds??branch={branch}
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
-http://localhost:3000/api/Jason/forge/builds | jq
+http://localhost:3000/api/Jason/forge/builds?branch=develop | jq
 ```
 
 *请求参数说明:*
@@ -3029,6 +3518,7 @@ http://localhost:3000/api/Jason/forge/builds | jq
 |page          |否|string |页数，第几页  |
 |limit         |否|string |每页多少条数据，默认20条  |
 |search          |是|string |构建状态条件过滤; 值说明：pending: 准备中，failure: 构建失败，running: 运行中，error：构建失败(.trustie-pipeline.yml文件错误)，success: 构建成功，killed: 撤销构建  |
+|branch |是|string |分支 |
 
 *返回参数说明:*
 
@@ -3081,7 +3571,7 @@ GET  /api/:owner/:repo/builds/:build
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://ocalhost:3000/api/jasder/forge/builds/1 | jq
 ```
@@ -3187,7 +3677,7 @@ POST  /api/:owner/:repo/builds/:build/restart
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 http://localhost:3000/api/jasder/forgeplus/builds/1 | jq
 ```
@@ -3245,7 +3735,7 @@ DELETE  /api/:owner/:repo/builds/:build/stop
 ```
 
 *示例*
-```
+```bash
 curl -X DELETE \
 http://localhost:3000/api/jaser/forge/builds/2 | jq
 ```
@@ -3351,7 +3841,7 @@ GET  /api/:owner/:repo/builds/:build/logs/:stage/:step
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/dev_ops/builds/2/logs/1/1 | jq
 ```
@@ -3425,7 +3915,7 @@ GET  /api/users/ci/cloud_account
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 http://localhost:3000/api/users/ci/cloud_account | jq
 ```
@@ -3450,6 +3940,48 @@ http://localhost:3000/api/users/ci/cloud_account | jq
   }
 }
 ```
+------
+
+#### 绑定CI服务器-Trustie提供服务器
+
+```
+POST  /api/users/ci/cloud_account/trustie_bind
+```
+
+*示例*
+
+```bash
+curl -X POST \
+-d "account=xx" \
+https://localhost:3000/api/users/ci/cloud_account/trustie_bind.json  | jq
+```
+
+*请求参数说明:*
+
+| 参数名  | 必选 | 类型   | 说明       |
+| ------- | ---- | ------ | ---------- |
+| account | 是   | string | 登录用户名 |
+
+*返回参数说明:*
+
+| 参数名       | 类型   | 说明                                    |
+| ------------ | ------ | --------------------------------------- |
+| step         | int    | 0: 未绑定；1: 未认证(已绑定)，2: 已认证 |
+| ip           | string | ci服务器ip                              |
+| redirect_url | string | 认证地址                                |
+
+返回值
+
+```json
+{
+  "step": 0,
+  "cloud_account": {
+    "ip": "xxx.xxx.xxx.x",
+    "redirect_url": "http://localhost:3000/login"
+  }
+}
+```
+
 ---
 
 #### 绑定CI服务器
@@ -3458,7 +3990,7 @@ POST  /api/users/ci/cloud_account/bind
 ```
 
 *示例*
-```
+```bash
 curl -X POST \
 -d "account=xx" \
 -d "secret=xxx" \
@@ -3492,16 +4024,945 @@ https://localhost:3000/api/users/ci/cloud_account/bind.json  | jq
   }
 }
 ```
+------
+
+#### 流水线查询
+
+```
+GET  /api/ci/pipelines/list?identifier={identifier}
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/pipelines/list.json?identifier="xxx" | jq
+```
+
+*返回参数说明:*
+
+| 参数名            | 类型   | 说明         |
+| ----------------- | ------ | ------------ |
+| id                | int    | 流水线id     |
+| pipeline_name     | string | 流水线名称   |
+| file_name         | string | 流水线文件名 |
+| branch            | string | 触发分支     |
+| event             | string | 触发事件     |
+| last_build_time   | string | 上次构建时间 |
+| last_build_status | string | 上次构建状态 |
+
+返回值
+
+```json
+{
+    "pipelines": [
+        {
+            "id": 65,
+            "pipeline_name": "流水线 2021-01-25",
+            "file_name": ".drone.yml",
+            "branch": "develop",
+            "event": "push",
+            "sha": "19fb5eb28603a4a1ec799ad44c1a3ef69d5c2cd0",
+            "identifier": "trustieTest",
+            "last_build_status": "success",
+            "last_build_time": "2021-01-25 15:54:22"
+        }
+    ]
+}
+```
+
 ---
 
+#### 流水线新增
 
-### 解除CI服务器绑定
+```
+POST  /api/ci/pipelines
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines' \
+--header 'Content-Type: application/json' \
+--data-raw ' {
+            "pipeline_name": "流水线 2021-01-12",
+            "file_name": ".trustie.pipeline.yaml",
+            "repo": "xxx",
+            "owner": "xxx",
+            "branch": "master",
+            "event": "push"
+}'
+```
+
+*请求参数说明:*
+
+| 参数名        | 必选 | 类型   | 说明                                           |
+| ------------- | ---- | ------ | ---------------------------------------------- |
+| pipeline_name | 是   | string | 流水线名称                                     |
+| file_name     | 是   | string | 文件名称（默认初始值：.trustie.pipeline.yaml） |
+| repo          | 是   | string | 项目identifier                                 |
+| owner         | 是   | string | 项目的owner                                    |
+| branch        | 是   | string | 分支名称, branch必须存在一个                   |
+| event         | 是   | string | 触发事件，可多选，多个逗号隔开                 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明           |
+| ------- | ------ | -------------- |
+| status  | int    | 状态码 0成功   |
+| message | string | 返回消息       |
+| id      | int    | 新增流水线的id |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success",
+    "id": 18
+}
+```
+
+------
+
+#### 流水线更新
+
+修改流水线名称时调用。
+
+```
+PUT  /api/ci/pipelines/{id}
+```
+
+*示例*
+
+```bash
+curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/3' \
+--header 'Content-Type: application/json' \
+--data-raw ' {
+            "pipeline_name": "2020-01-11 流水线"
+}'
+```
+
+*请求参数说明:*
+
+| 参数名        | 必选 | 类型   | 说明       |
+| ------------- | ---- | ------ | ---------- |
+| id            | 是   | id     | 流水线id   |
+| pipeline_name | 是   | string | 流水线名称 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线删除
+
+```
+DELETE  /api/ci/pipelines/{id}
+```
+
+*示例*
+
+```bash
+curl -X DELETE \
+https://localhost:3000/api/ci/pipelines/1  | jq
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线的阶段查询
+
+```
+GET  /api/ci/pipelines/{id}/stages
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/pipelines/19/stages.json'
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
+
+*返回参数说明:*
+
+| 参数名      | 类型   | 说明     |
+| ----------- | ------ | -------- |
+| stages      | arr    | 阶段数组 |
+| stage_name  | string | 阶段名称 |
+| stage_type  | string | 阶段类型 |
+| pipeline_id | int    | 流水线id |
+| show_index  | int    | 排序     |
+
+返回值
+
+```json
+{
+    "stages": [
+        {
+            "id": 37,
+            "stage_name": "初始化",
+            "stage_type": "init",
+            "pipeline_id": 19,
+            "show_index": 1,
+            "created_at": "2021-01-12T15:18:00.000+08:00",
+            "updated_at": "2021-01-12T15:18:00.000+08:00"
+        },
+        {
+            "id": 38,
+            "stage_name": "编译构建",
+            "stage_type": "build",
+            "pipeline_id": 19,
+            "show_index": 2,
+            "created_at": "2021-01-12T15:18:00.000+08:00",
+            "updated_at": "2021-01-12T15:18:00.000+08:00"
+        }
+    ]
+}
+```
+
+------
+
+#### 确认阶段流水线完整内容查询
+
+```
+GET  /api/ci/pipelines/{id}/content?owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/pipelines/1/content.json?owner=xx&repo=xx | jq
+```
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明             |
+| ------- | ------ | ---------------- |
+| content | String | 流水线内容       |
+| sync    | int    | 同步状态         |
+| owner   | string | 用户登录名       |
+| repo    | string | 项目的identifier |
+
+返回值
+
+```json
+{
+    "content": "#pipeline \nkind: pipeline\r\nname: maven项目-镜像仓库\r\n\r\nplatform:\r\n  os: linux\r\n  arch: arm64\nsteps:\n- name: Maven编译\r\n  image: arm64v8/maven\r\n  commands:\r\n    - mvn install\n- name: 编译镜像-推送到仓库\r\n  image: plugins/docker\r\n  settings:\r\n    username: moshenglv\r\n    password: RL9UB5P7Jtzukka\r\n    repo: docker.io/moshenglv/demo\r\n    tags: latest\n",
+    "sync": 1,
+    "sha":"xxxxx"
+}
+```
+
+------
+
+#### 流水线阶段新增
+
+```
+POST  /api/ci/pipelines/{id}/create_stage
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines/19/create_stage.json' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+            "stage_name": "新阶段2",
+            "show_index": 2
+}'
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明     |
+| ---------- | ---- | ------ | -------- |
+| id         | 是   | int    | 流水线id |
+| show_index | 是   | int    | 阶段排序 |
+| stage_name | 是   | string | 阶段名称 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段更新
+
+```
+PUT  /api/ci/pipelines/{id}/{stage_id}/update_stage
+```
+
+*示例*
+
+```bash
+curl --location --request PUT 'http://localhost:3000/api/ci/pipelines/1/5/update_stage.json' \
+--header 'Content-Type: application/json' \
+--data-raw ' {
+            "stage_name": "新阶段-更新"
+}'
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明                             |
+| ---------- | ---- | ------ | -------------------------------- |
+| id         | 是   | int    | 流水线id                         |
+| stage_name | 是   | string | 阶段名称（默认为 阶段名-模板名） |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段删除
+
+```
+DELETE  /api/ci/pipelines/{id}/{stage_id}/delete_stage?show_index={index}
+```
+
+*示例*
+
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/ci/pipelines/19/42/delete_stage.json?show_index=2' \
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型 | 说明                   |
+| ---------- | ---- | ---- | ---------------------- |
+| id         | 是   | int  | 流水线id               |
+| stage_id   | 是   | int  | 阶段id                 |
+| show_index | 是   | int  | 被删除阶段的show_index |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段步骤查询
+
+```
+GET  /api/ci/pipelines/{id}/{stage_id}/steps.json
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/pipelines/1/2/steps.json | jq
+```
+
+*请求参数说明:*
+
+| 参数名   | 必选 | 类型 | 说明     |
+| -------- | ---- | ---- | -------- |
+| id       | 是   | int  | 流水线id |
+| stage_id | 是   | int  | 阶段id   |
+
+*返回参数说明:*
+
+| 参数名     | 类型   | 说明               |
+| ---------- | ------ | ------------------ |
+| id         | int    | 步骤id             |
+| step_name  | string | 步骤名称           |
+| stage_id   | int    | 所属阶段id         |
+| show_index | int    | 显示顺序           |
+| content    | String | 步骤内容           |
+| template   | Object | 步骤对应的模板对象 |
+
+返回值
+
+```json
+{
+    "steps": [
+        {
+            "id": 1,
+            "step_name": "编译构建-maven",
+            "stage_id": 2,
+            "show_index": 0,
+            "content": "- name: Maven编译\r\n  image: arm64v8/maven\r\n",
+            "created_at": "2021-01-11T09:57:17.000+08:00",
+            "updated_at": "2021-01-11T09:57:17.000+08:00",
+            "template": {
+                "id": 3,
+                "template_name": "maven",
+                "stage_type": "build",
+                "category": "java",
+                "content": "- name: maven\r\n  image: maven:3-jdk-10\r\n",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            }
+        }
+    ]
+}
+```
+
+------
+
+#### 流水线阶段步骤新增/更新
+
+```
+POST  /api/ci/pipelines/{id}/{stage_id}/stage_step
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/pipelines/1/2/stage_step.json' \
+--header 'Content-Type: application/json' \
+--data-raw ' {"steps":[{
+           "id":7,
+            "step_name": "编译构建11-gradle",
+            "show_index": 1,
+            "content": "xxxxxxxxxxx",
+            "template_id":2
+}
+]
+ }'
+```
+
+*请求参数说明:*
+
+| 参数名           | 必选 | 类型   | 说明                             |
+| ---------------- | ---- | ------ | -------------------------------- |
+| steps            | 是   | arr    | 需要更新step数组                 |
+| id               | 是   | int    | 流水线id                         |
+| stage_id         | 是   | int    | 阶段id                           |
+| id（数组中的id） | 否   | int    | 步骤id（存在则更新，不存在新增） |
+| step_name        | 是   | string | 阶段名称（阶段名-模板名）        |
+| content          | 是   | string | 步骤内容                         |
+| template_id      | 是   | int    | 模板id                           |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 流水线阶段步骤删除
+
+```
+DELETE  /api/ci/pipelines/{id}/{stage_id}/{step_id}/delete_step
+```
+
+*示例*
+
+```bash
+curl -X DELETE \
+https://localhost:3000/api/ci/pipelines/1/6/2/delete_stage.json  | jq
+```
+
+*请求参数说明:*
+
+| 参数名   | 必选 | 类型 | 说明     |
+| -------- | ---- | ---- | -------- |
+| id       | 是   | int  | 流水线id |
+| stage_id | 是   | int  | 阶段id   |
+| step_id  | 是   | int  | 步骤id   |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 阶段模板查询
+
+```
+GET  /api/ci/templates/templates_by_stage?stage_type={stage_type}
+```
+
+*示例*
+
+```bash
+curl -X GET \
+http://localhost:3000/api/ci/templates/templates_by_stage.json?stage_type=build | jq
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明                                  |
+| ---------- | ---- | ------ | ------------------------------------- |
+| stage_type | 是   | string | 阶段类型：init/build/deploy/customize |
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明             |
+| ------------- | ------ | ---------------- |
+| category      | string | 分类名称         |
+| templates     | arr    | 分类下的模板列表 |
+| id            | int    | 模板id           |
+| template_name | string | 模板名称         |
+| content       | String | 模板内容         |
+
+返回值
+
+```json
+[
+    {
+        "category": "java",
+        "templates": [
+            {
+                "id": 3,
+                "template_name": "maven",
+                "stage_type": "build",
+                "category": "java",
+                "content": "#maven",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            },
+            {
+                "id": 4,
+                "template_name": "gradle",
+                "stage_type": "build",
+                "category": "java",
+                "content": "#gradle",
+                "created_at": "2021-01-11T17:28:34.000+08:00",
+                "updated_at": "2021-01-11T17:28:36.000+08:00"
+            }
+        ]
+    },
+    {
+        "category": "c++",
+        "templates": [
+            {
+                "id": 5,
+                "template_name": "make",
+                "stage_type": "build",
+                "category": "c++",
+                "content": "#make",
+                "created_at": "2021-01-11T17:29:17.000+08:00",
+                "updated_at": "2021-01-11T17:29:18.000+08:00"
+            }
+        ]
+    }
+]
+```
+
+------
+
+#### 模板列表查询
+
+```
+GET  /api/ci/templates/list.json?limit=10&page=1&name=&stage_type=customize
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/templates/list.json?limit=10&page=1&name=&stage_type=customize' 
+```
+
+*请求参数说明:*
+
+| 参数名     | 必选 | 类型   | 说明                                      |
+| ---------- | ---- | ------ | ----------------------------------------- |
+| stage_type | 是   | string | 阶段类型：init/build/deploy/customize/all |
+| limit      | 是   | int    | 每页条数                                  |
+| page       | 是   | int    | 页码                                      |
+| name       | 否   | string | 模糊查询参数                              |
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明             |
+| ------------- | ------ | ---------------- |
+| category      | string | 分类名称         |
+| templates     | arr    | 分类下的模板列表 |
+| id            | int    | 模板id           |
+| template_name | string | 模板名称         |
+| content       | String | 模板内容         |
+
+返回值
+
+```json
+{
+    "total_count": 1,
+    "templates": [
+        {
+            "id": 19,
+            "template_name": "工具1",
+            "stage_type": "customize",
+            "category": "其他",
+            "content": "xxxxxxxxxxxxxxxxxxxxxx",
+            "login": "victor",
+            "created_at": "2021-01-26T15:51:30.000+08:00",
+            "updated_at": "2021-01-26T15:51:30.000+08:00"
+        }
+    ]
+}
+```
+
+
+
+------
+
+#### 模板详情查询
+
+```
+GET  /api/ci/templates/id
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/templates/17.json' 
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明   |
+| ------ | ---- | ---- | ------ |
+| id     | 是   | int  | 模板id |
+
+*返回参数说明:*
+
+| 参数名        | 类型   | 说明     |
+| ------------- | ------ | -------- |
+| category      | string | 分类名称 |
+| id            | int    | 模板id   |
+| template_name | string | 模板名称 |
+| content       | String | 模板内容 |
+
+返回值
+
+```json
+{
+    "id": 17,
+    "template_name": "win/x86_64",
+    "stage_type": "init",
+    "category": "初始化",
+    "content": "kind: pipeline\r\ntype: docker\r\nname: default\r\nplatform:\r\n  os: linux\r\n  arch: amd64",
+    "login": "victor",
+    "created_at": "2021-01-26T15:29:27.000+08:00",
+    "updated_at": "2021-01-26T15:29:27.000+08:00"
+}
+```
+
+
+
+------
+
+#### 模板新增/更新
+
+```
+POST  /api/ci/templates
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/templates' \
+--data-raw ' {
+            "template_name": "java++",
+            "stage_type": "build",
+            "category": "java",
+            "content": "xxxxxxxxxxxxxxxxxxxxxx",
+            "id": 21
+}' 
+```
+
+*请求参数说明:*
+
+| 参数名        | 必选 | 类型   | 说明             |
+| ------------- | ---- | ------ | ---------------- |
+| template_name | 是   | string | 模板名称         |
+| stage_type    | 是   | string | 阶段类型         |
+| category      | 是   | string | 分类             |
+| content       | 是   | string | 模板内容         |
+| id            | 否   | int    | 模板id，更新时传 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 消息         |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 模板删除
+
+```
+DELETE  /api/ci/templates/{id}
+```
+
+*示例*
+
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/ci/templates/10'
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型 | 说明     |
+| ------ | ---- | ---- | -------- |
+| id     | 是   | int  | 流水线id |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 参数列表查询
+
+```
+GET /api/ci/secrets/secrets?owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl --location --request GET 'http://localhost:3000/api/ci/secrets?owner=test&repo=test'
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型   | 说明       |
+| ------ | ---- | ------ | ---------- |
+| owner  | 是   | string | 仓库所有人 |
+| repo   | 是   | string | 仓库名     |
+
+*返回参数说明:*
+
+| 参数名 | 类型   | 说明   |
+| ------ | ------ | ------ |
+| name   | string | 参数名 |
+| data   | string | 参数值 |
+| repo   | string | 仓库   |
+
+返回值
+
+```json
+ [
+        {
+            "id": 1,
+            "name": "test",
+            "data": "test",
+            "repo": "test"
+        }
+]
+
+```
+
+------
+
+#### 参数新增/更新
+
+```
+POST  /api/ci/secrets?owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl --location --request POST 'http://localhost:3000/api/ci/secrets?owner=test&repo=test' \
+--data-raw ' {
+            "name": "ip",
+            "data": "1.1.1.1",
+            "id": 21
+}' 
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型   | 说明         |
+| ------ | ---- | ------ | ------------ |
+| owner  | 是   | string | 仓库拥有者   |
+| repo   | 是   | string | 仓库名       |
+| name   | 是   | string | 参数名       |
+| data   | 是   | string | 参数值       |
+| id     | 否   | int    | id，更新时传 |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 消息         |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+#### 参数删除
+
+```
+DELETE  /api/ci/secrets/{id}?name={name}&owner={owner}&repo={repo}
+```
+
+*示例*
+
+```bash
+curl --location --request DELETE 'http://localhost:3000/api/ci/secrets/1?name=p1&owner=victor&repo=trustieTest' \
+```
+
+*请求参数说明:*
+
+| 参数名 | 必选 | 类型   | 说明   |
+| ------ | ---- | ------ | ------ |
+| name   | 是   | string | 参数名 |
+| id     | 是   | int    | 参数id |
+
+*返回参数说明:*
+
+| 参数名  | 类型   | 说明         |
+| ------- | ------ | ------------ |
+| status  | int    | 状态码 0成功 |
+| message | string | 返回消息     |
+
+返回值
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+------
+
+
+
+
+#### 解除CI服务器绑定
 ```
 DELETE  /api/users/ci/cloud_account/unbind
 ```
 
 *示例*
-```
+```bash
 curl -X DELETE \
 http://localhost:3000/api/users/ci/cloud_account/unbind.json | jq
 ```
@@ -3528,7 +4989,7 @@ GET  /api/users/:login/projects
 ```
 
 *示例*
-```
+```bash
 curl -X GET \
 -d "page=1" \
 -d "limit=20" \
@@ -3568,7 +5029,7 @@ http://localhost:3000/api/users/Jason/projects.json | jq
 
 
 返回值
-```
+```json
 {
   "total_count": 3096,
   "projects": [

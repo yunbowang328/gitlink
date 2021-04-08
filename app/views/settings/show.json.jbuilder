@@ -45,7 +45,16 @@ json.setting do
 
   json.main_site current_laboratory.main_site?
   json.new_course default_course_links
-  json.old_projects_url @old_projects_url
 
 
+  json.add do
+    json.array! @add
+  end
+
+  json.personal do
+    json.array! @personal
+  end
+
+  json.common @common
+  json.third_party @third_party
 end

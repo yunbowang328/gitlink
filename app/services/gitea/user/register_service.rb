@@ -8,7 +8,10 @@ class Gitea::User::RegisterService < Gitea::ClientService
 
   def call
     params = Hash.new.merge(data: user_params, token: @token)
-    post(API_REST, params)
+
+    response = post(API_REST, params)
+    status, message, body = render_response(response)
+    json_format(status, message, body)
   end
 
   private
@@ -22,6 +25,14 @@ class Gitea::User::RegisterService < Gitea::ClientService
       password: password,
       must_change_password: false #允许不更改秘密就可以登录
     }
+  end
+
+  def json_format(status, message, body)
+    case status
+    when 201 then success(body)
+    else
+      error(message, status)
+    end
   end
 
 end

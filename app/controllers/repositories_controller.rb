@@ -1,14 +1,34 @@
 class RepositoriesController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
+  include Repository::LanguagesPercentagable
 
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :load_repository
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries top_counts]
+  before_action :get_ref, only: %i[entries sub_entries top_counts file]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
+
+  def files
+    result = @project.educoder? ? nil : Gitea::Repository::Files::GetService.call(@owner, @project.identifier, @ref, params[:search], @owner.gitea_token)
+    render json: result
+  end
+
+  # 新版项目详情
+  def detail
+    @user = current_user
+    @result = Repositories::DetailService.call(@owner, @repository, @user)
+    @project_fork_id = @project.try(:forked_from_project_id)
+    if @project_fork_id.present?
+      @fork_project = Project.find_by(id: @project_fork_id)
+      @fork_project_user = @fork_project.owner
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
+  end
 
   def show
     @user = current_user
@@ -83,10 +103,17 @@ class RepositoriesController < ApplicationController
   end
 
   def tags
-    @tags = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
+    result = Gitea::Repository::Tags::ListService.call(current_user&.gitea_token, @owner.login, @project.identifier, {page: params[:page], limit: params[:limit]})
+
+    @tags = result.is_a?(Hash) && result.key?(:status) ? [] : result
+  end
+
+  def contributors
+    @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
   end
 
   def edit
+    return render_forbidden if !@project.manager?(current_user) && !current_user.admin?
   end
 
   def create_file
@@ -94,8 +121,19 @@ class RepositoriesController < ApplicationController
     if interactor.success?
       @file = interactor.result
       # create_new_pr(params)
+      #如果是更新流水线文件
+      if params[:pipeline_id]
+        update_pipeline(params[:pipeline_id])
+      end
     else
       render_error(interactor.error)
+    end
+  end
+
+  def update_pipeline(pipeline_id)
+    pipeline = Ci::Pipeline.find(pipeline_id)
+    if pipeline
+      pipeline.update!(sync: 1)
     end
   end
 
@@ -133,6 +171,17 @@ class RepositoriesController < ApplicationController
     render_ok
   end
 
+  def readme
+    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
+
+    @readme = result[:status] === :success ? result[:body] : nil
+    render json: @readme
+  end
+
+  def languages
+    render json: languages_precentagable
+  end
+
   private
 
   def find_project
@@ -163,7 +212,7 @@ class RepositoriesController < ApplicationController
   end
 
   def get_ref
-    @ref = params[:ref] || "master"
+    @ref = params[:ref] || @project&.default_branch
   end
 
   def get_latest_commit
@@ -243,8 +292,8 @@ class RepositoriesController < ApplicationController
       if @pull_issue.save!
         local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: @pull_issue.id))
         if local_requests.save
-          gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @project.owner, @project.try(:identifier), requests_params).call
-          if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
+          gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @owner.login, @project.try(:identifier), requests_params).call
+          if gitea_request[:status] == :success && local_requests.update_attributes(gpid: gitea_request["body"]["number"])
             local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
           end
         end

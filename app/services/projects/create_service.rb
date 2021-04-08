@@ -13,6 +13,7 @@ class Projects::CreateService < ApplicationService
     ActiveRecord::Base.transaction do
       if @project.save!
         Project.update_common_projects_count!
+        ProjectUnit.init_types(@project.id)
         Repositories::CreateService.new(user, @project, repository_params).call
       else
         Rails.logger.info("#############___________create_project_erros______###########{@project.errors.messages}")
@@ -36,6 +37,7 @@ class Projects::CreateService < ApplicationService
       is_public: repo_is_public,
       ignore_id: params[:ignore_id],
       license_id: params[:license_id],
+      website: params[:website],
       identifier: params[:repository_name]  #新增,hs
     }
   end

@@ -2,16 +2,32 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about]
+  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :load_project, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
+
+  def menu_list
+    menu = []
+
+    menu.append(menu_hash_by_name("home"))
+    menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
+    menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
+    menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
+    menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
+    menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
+    menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources")
+    menu.append(menu_hash_by_name("activity"))
+    menu.append(menu_hash_by_name("setting")) if current_user.admin? || @project.manager?(current_user)
+
+    render json: menu
+  end
 
   def index
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, owner: :user_extension)
+    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
 
     category_id = params[:category_id]
     @total_count =
@@ -44,7 +60,10 @@ class ProjectsController < ApplicationController
   end
 
   def branches
-    @branches = @project.forge? ? Gitea::Repository::Branches::ListService.new(@owner, @project.identifier).call : []
+    return @branches = [] unless @project.forge?
+
+    result = Gitea::Repository::Branches::ListService.call(@owner, @project.identifier)
+    @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
   end
 
   def group_type_list
@@ -70,17 +89,19 @@ class ProjectsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       # Projects::CreateForm.new(project_params).validate!
-      private = params[:private]
+      private = params[:private] || false
+
+      new_project_params = project_params.except(:private).merge(is_public: !private)
+      @project.update_attributes!(new_project_params)
       gitea_params = {
         private: private,
-        default_branch: params[:default_branch]
+        default_branch: @project.default_branch,
+        website: @project.website
       }
       if [true, false].include? private
-        new_project_params = project_params.merge(is_public: !private)
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
         @project.repository.update_column(:hidden, private)
       end
-      @project.update_attributes!(new_project_params)
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -91,7 +112,7 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    if  current_user.admin? ||  @project.owner?(current_user)
+    if current_user.admin? || @project.manager?(current_user)
       ActiveRecord::Base.transaction do
         Gitea::Repository::DeleteService.new(@project.owner, @project.identifier).call
         @project.destroy!
@@ -128,7 +149,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, owner: :user_extension).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
   end
 
   def about
@@ -162,8 +183,8 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name,
-                  :project_category_id, :project_language_id, :license_id, :ignore_id)
+    params.permit(:user_id, :name, :description, :repository_name, :website,
+                  :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 
   def mirror_params

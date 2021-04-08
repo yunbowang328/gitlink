@@ -11,6 +11,7 @@ class PullRequestsController < ApplicationController
 
 
   def index
+    return render_not_found unless @project.has_menu_permission("pulls")
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
     issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
@@ -26,7 +27,7 @@ class PullRequestsController < ApplicationController
   end
 
   def new
-    @all_branches = PullRequests::BranchesService.new(@owner, @project).call
+    @all_branches = Branches::ListService.call(@owner, @project)
     @is_fork = @project.forked_from_project_id.present?
     @projects_names = [{
       project_user_login: @owner.try(:login),
@@ -47,66 +48,20 @@ class PullRequestsController < ApplicationController
   end
 
   def get_branches
-    branch_result = PullRequests::BranchesService.new(@owner, @project).call
+    branch_result = Branches::ListService.call(@owner, @project)
     render json: branch_result
     # return json: branch_result
   end
 
   def create
-    if params[:title].nil?
-      normal_status(-1, "名称不能为空")
-    elsif params[:issue_tag_ids].nil?
-      normal_status(-1, "标签不能为空")
-    else
-      ActiveRecord::Base.transaction do
-        begin
-          merge_params
-          pull_issue = Issue.new(@issue_params)
-          if pull_issue.save!
-            pr_params = {
-              user_id: current_user.try(:id),
-              project_id: @project.id,
-              issue_id: pull_issue.id,
-              fork_project_id: params[:fork_project_id],
-              is_original: params[:is_original],
-              files_count: params[:files_count] || 0,
-              commits_count: params[:commits_count] || 0
-            }
-            local_requests = PullRequest.new(@local_params.merge(pr_params))
-            if local_requests.save
-              remote_pr_params = @local_params
-              remote_pr_params = remote_pr_params.merge(head: "#{params[:merge_user_login]}:#{params[:head]}").compact if local_requests.is_original && params[:merge_user_login]
-              gitea_request = Gitea::PullRequest::CreateService.call(current_user.try(:gitea_token), @project.owner, @repository.try(:identifier), remote_pr_params.except(:milestone))
-              if gitea_request && local_requests.update_attributes(gpid: gitea_request["number"])
-                if params[:issue_tag_ids].present?
-                  params[:issue_tag_ids].each do |tag|
-                    IssueTagsRelate.create!(issue_id: pull_issue.id, issue_tag_id: tag)
-                  end
-                end
-
-                if params[:assigned_to_id].present?
-                  Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
-                                 container_id: local_requests.id, container_type: 'PullRequest',
-                                 parent_container_id: @project.id, parent_container_type: "Project",
-                                 tiding_type: 'pull_request', status: 0)
-                end
-                local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-                if params[:title].to_s.include?("WIP:")
-                  pull_issue.custom_journal_detail("WIP", "", "这个合并请求被标记为尚未完成的工作。完成后请从标题中移除WIP:前缀。", current_user&.id)
-                end
-                # render :json => { status: 0, message: "PullRequest创建成功", id:  pull_issue.id}
-                normal_status(0, "PullRequest创建成功")
-              else
-                normal_status(-1, "PullRequest创建失败")
-              end
-            else
-              normal_status(-1, "PullRequest创建失败")
-            end
-          end
-        rescue => e
-          normal_status(-1, e.message)
-          raise ActiveRecord::Rollback
-        end
+    ActiveRecord::Base.transaction do
+      @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
+      if @gitea_pull_request[:status] == :success
+        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
+        render_ok
+      else
+        render_error("create pull request error: #{@gitea_pull_request[:status]}")
+        raise ActiveRecord::Rollback
       end
     end
   end
@@ -137,17 +92,15 @@ class PullRequestsController < ApplicationController
           old_issue_value = old_value_to_hash(@issue, @issue_params)
           old_pr_value = old_value_to_hash(@pull_request, @local_params.compact)
           old_value = {issue: old_issue_value, pull_request: old_pr_value}
-          puts("------------------------------\nissue = #{@issue.attributes}\n")
-          puts("issue_params = #{@issue_params}\n")
-          puts("pr = #{@pull_request.attributes}\n")
-          puts("local_params = #{@local_params}\n")
-          puts("old_issue = #{old_issue_value}\nold_pr = #{old_pr_value}\nold_value = #{old_value}\n------------------------------\n")
 
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
+
               user_trace_update_log(old_value)
-              gitea_request = Gitea::PullRequest::UpdateService.new(@project.owner, @repository.try(:identifier), @requests_params, @pull_request.try(:gpid)).call
-              if gitea_request
+              gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
+                  @pull_request.gpid, @requests_params, current_user.gitea_token)
+
+              if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
                   params[:issue_tag_ids].each do |tag|
                     IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
@@ -176,9 +129,8 @@ class PullRequestsController < ApplicationController
   def refuse_merge
     ActiveRecord::Base.transaction do
       begin
-        @pull_request.update(status: 2)
-        @pull_request.issue.update(status_id: 5)
-        normal_status(1, "已拒绝")
+        colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
+        colsed === true ? normal_status(1, "已拒绝") : normal_status(-1, '合并失败')
       rescue => e
         normal_status(-1, e.message)
         raise ActiveRecord::Rollback
@@ -204,15 +156,10 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          requests_params = {
-            Do: params[:do],
-            MergeMessageField: params[:body],
-            MergeTitleField: params[:title]
-          }
-          merge_pr = Gitea::PullRequest::MergeService.call(current_user.gitea_token, @project.owner.login,
-            @repository.try(:identifier), @pull_request.try(:gpid), requests_params)
-          if @pull_request.update_attribute(:status, 1) && merge_pr[:status].to_i == 200
-            @pull_request&.project_trends&.update_all(action_type: "close")
+          result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+
+          if result && @pull_request.merge!
+            @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
@@ -250,12 +197,12 @@ class PullRequestsController < ApplicationController
 
 
   def files
-    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
     # render json: @files_result
   end
 
   def commits
-    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid)
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
     # render json: @commits_result
   end
 
@@ -291,7 +238,8 @@ class PullRequestsController < ApplicationController
     }
     @requests_params = @local_params.merge({
       assignee: current_user.try(:login),
-      assignees: ["#{params[:assigned_login].to_s}"],
+      # assignees: ["#{params[:assigned_login].to_s}"],
+      assignees: ["#{current_user.try(:login).to_s}"],
       labels: params[:issue_tag_ids],
       due_date: Time.now
     })

@@ -1,4 +1,9 @@
 module ProjectsHelper
+  def menu_hash_by_name(name)
+    {
+      menu_name: name
+    }
+  end
 
   def render_zh_project_type(project_type)
     case project_type
@@ -61,12 +66,14 @@ module ProjectsHelper
       {
         login: project.project_educoder.owner,
         name: project.project_educoder.owner,
+        type: 'Educoder',
         image_url: project.project_educoder.image_url
       }
     else
       {
         login: @owner.login,
         name: @owner.real_name,
+        type: @owner.type,
         image_url: url_to_avatar(@owner)
       }
     end

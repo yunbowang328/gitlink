@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   require 'sidekiq/web'
+  require 'sidekiq/cron/web'
   require 'admin_constraint'
 
   # mount Sidekiq::Web => '/sidekiq', :constraints => AdminConstraint.new
@@ -22,7 +23,6 @@ Rails.application.routes.draw do
 
   resources :edu_settings
 
-  resources :edu_settings
   scope '/api' do
     get 'wallets/balance'
     get 'wallets/coin_changes'
@@ -49,6 +49,35 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :templates, only: [:list,:templates_by_stage,:create,:update,:destroy,:show] do
+        collection do
+          get :list
+          get :templates_by_stage
+        end
+      end
+
+      resources :secrets do
+      end
+
+      resources :pipelines do
+        collection do
+          get :list
+        end
+        member do
+          get :content
+          get :stages
+          post :create_stage
+          post :create_trustie_pipeline
+          delete :delete_stage, :path => ":stage_id/delete_stage", to: 'pipelines#delete_stage'
+          put :update_stage, :path => ":stage_id/update_stage", to: 'pipelines#update_stage'
+          get :stage_steps, :path => ":stage_id/steps", to: 'pipelines#steps'
+          post :create_stage_step, :path => ":stage_id/create_step", to: 'pipelines#create_stage_step'
+          post :stage_step, :path => ":stage_id/stage_step", to: 'pipelines#stage_step'
+          delete :delete_stage_step, :path => ":stage_id/:step_id/delete_step", to: 'pipelines#delete_stage_step'
+          put :update_stage_step, :path => ":stage_id/update_step", to: 'pipelines#update_stage_step'
+        end
+      end
+
       # resources :repos, only: :index do
       #   collection do
       #     get 'get_trustie_pipeline', to: 'builds#get_trustie_pipeline', as: 'get_trustie_pipeline'
@@ -60,6 +89,14 @@ Rails.application.routes.draw do
       # end
     end
 
+    resources :statistic, only: [:index] do
+      collection do
+        get :platform_profile
+        get :platform_code
+        get :active_project_rank
+        get :active_developer_rank
+      end
+    end
     resources :sync_forge, only: [:create] do
       collection do
         post :sync_users
@@ -85,6 +122,34 @@ Rails.application.routes.draw do
     put    'commons/hidden',      to: 'commons#hidden'
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
+
+    resources :owners, only: [:index]
+
+    scope module: :organizations do
+      resources :organizations, except: [:edit, :new] do
+        resources :organization_users, only: [:index, :destroy] do
+          collection do
+            delete :quit
+          end
+        end
+        resources :teams, except: [:edit, :new] do
+          collection do
+            get :search
+          end
+          resources :team_users, only: [:index, :create, :destroy] do
+            collection do
+              delete :quit
+            end
+          end
+          resources :team_projects, only: [:index, :create, :destroy] do ;end
+        end
+        resources :projects, only: [:index] do
+          collection do
+            get :search
+          end
+        end
+      end
+    end
 
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
       resources :journals, only: [:index, :create, :destroy, :edit, :update] do
@@ -172,6 +237,7 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
+        post :sync_user_info
 
         scope '/ci', module: :ci do
           scope do
@@ -179,6 +245,12 @@ Rails.application.routes.draw do
               '/cloud_account/bind',
               to: 'cloud_accounts#bind',
               as: :bind_cloud_acclount
+            )
+
+            post(
+                '/cloud_account/trustie_bind',
+                to: 'cloud_accounts#trustie_bind',
+                as: :trustie_bind_cloud_acclount
             )
 
             get(
@@ -203,6 +275,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
         resources :project_packages, only: [:index]
@@ -259,6 +332,7 @@ Rails.application.routes.draw do
 
     get '/auth/qq/callback', to: 'oauth/qq#create'
     get '/auth/wechat/callback', to: 'oauth/wechat#create'
+    get '/auth/educoder/callback', to: 'oauth/educoder#create'
     resource :bind_user, only: [:create]
 
     resources :hot_keywords, only: [:index]
@@ -315,6 +389,7 @@ Rails.application.routes.draw do
 
       resource :projects, path: '/', except: [:show, :edit] do
         member do
+          get :menu_list
           get :branches
           get :simple
           get :watchers, to: 'projects#watch_users'
@@ -326,12 +401,15 @@ Rails.application.routes.draw do
 
       resource :repositories, path: '/', only: [:show, :create, :edit] do
         member do
+          get :files
+          get :detail
           get :archive
           get :top_counts
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
           get :tags
+          get :contributors
           post :create_file
           put :update_file
           delete :delete_file
@@ -339,7 +417,37 @@ Rails.application.routes.draw do
           post :sync_mirror
           get :top_counts
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
+          get 'readme'
+          get 'languages'
         end
+      end
+
+      # protected_branches
+      scope do
+        get(
+          '/protected_branches/',
+          to: 'protected_branches#index'
+        )
+        get(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#show'
+        )
+        get(
+          '/protected_branches/:branch_name/edit',
+          to: 'protected_branches#edit'
+        )
+        delete(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#destroy'
+        )
+        post(
+          '/protected_branches',
+          to: 'protected_branches#create'
+        )
+        patch(
+          '/protected_branches/:branch_name',
+          to: 'protected_branches#update'
+        )
       end
 
       resources :issues do
@@ -441,6 +549,8 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
+        resources :teams, only: [:index, :create, :destroy]
+        resources :project_units, only: [:index, :create]
         scope do
           get(
             '/blob/*id/diff',

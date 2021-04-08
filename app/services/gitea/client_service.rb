@@ -21,11 +21,10 @@ class Gitea::ClientService < ApplicationService
   def post(url, params={})
     puts "[gitea] request params: #{params}"
     auth_token = authen_params(params[:token])
-    response = conn(auth_token).post do |req|
+    conn(auth_token).post do |req|
       req.url full_url(url)
       req.body = params[:data].to_json
     end
-    render_status(response)
   end
 
   def get(url, params={})
@@ -133,7 +132,8 @@ class Gitea::ClientService < ApplicationService
     when 204
 
       puts "[gitea] "
-      raise Error, "[gitea] delete ok"
+      # raise Error, "[gitea] delete ok"
+      {status: 204}
     when 409
       message = "创建失败，请检查该分支合并是否已存在"
       raise Error, mark + message
@@ -163,5 +163,105 @@ class Gitea::ClientService < ApplicationService
     else
       nil
     end
+  end
+
+  def render_response(response)
+    status = response.status
+    body = response&.body
+
+    log_error(status, body)
+
+    body, message = get_body_by_status(status, body)
+
+    [status, message, body]
+  end
+
+  def get_body_by_status(status, body)
+    body, message =
+      case status
+      when 401 then [nil, "401"]
+      when 404 then [nil, "404"]
+      when 403 then [nil, "403"]
+      when 500 then [nil, "500"]
+      else
+        if body.present?
+          body = JSON.parse(body)
+          fix_body(body)
+        else
+          nil
+        end
+      end
+
+    [body, message]
+  end
+
+  def log_error(status, body)
+    puts "[gitea] status:  #{status}"
+    puts "[gitea] body:    #{body&.force_encoding('UTF-8')}"
+  end
+
+  def fix_body(body)
+    return [body, nil] if body.is_a?(Array) || body.is_a?(Hash)
+
+    body['message'].blank? ? [body, nil] : [nil, body['message']]
+  end
+
+  def render_json_data(status, message, body, success=true)
+    if success
+      success(body)
+    else
+      error(message, status)
+    end
+  end
+
+  def error(message, http_status = nil)
+    result = {
+      message: message,
+      status: :error
+    }
+
+    result[:http_status] = http_status if http_status
+    result
+  end
+
+  def success(body=nil)
+    {
+      status: :success,
+      body: body
+    }
+  end
+
+  def render_body(body)
+    success(body)[:body]
+  end
+
+  def render_200_response(response)
+    extract_statuses(response)
+  end
+
+  def render_200_no_body(response)
+    response.status
+    case response.status
+    when 200
+      {status: 200}
+    else
+    end
+  end
+
+  def render_201_response(response)
+    extract_statuses(response)
+  end
+
+  def render_202_response(response)
+    extract_statuses(response)
+  end
+
+  def extract_statuses(response)
+    success_statuses = [200, 201, 202, 204]
+    status, message, body = render_response(response)
+
+    return error(message, status) unless success_statuses.include? status
+
+    render_body(body)
   end
 end

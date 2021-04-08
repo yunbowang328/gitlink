@@ -1,0 +1,1 @@
+json.partial! "detail", team_project: @team_project, team: @team, organization: @organization

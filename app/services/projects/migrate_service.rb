@@ -9,6 +9,7 @@ class Projects::MigrateService < ApplicationService
   def call
     @project = Project.new(project_params)
     if @project.save!
+      ProjectUnit.init_types(@project.id)
       Project.update_mirror_projects_count!
       Repositories::MigrateService.new(user, @project, repository_params).call
     else
@@ -44,7 +45,7 @@ class Projects::MigrateService < ApplicationService
       hidden: project_secretion[:hidden],
       identifier: params[:repository_name],
       mirror_url: params[:clone_addr],
-      user_id: user.id,
+      user_id: params[:user_id],
       login: params[:auth_username],
       password: params[:auth_password],
       is_mirror: params[:is_mirror]

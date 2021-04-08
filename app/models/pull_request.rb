@@ -24,7 +24,11 @@
 #
 
 class PullRequest < ApplicationRecord
-  #status 0 默认未合并， 1表示合并, 2表示请求拒绝
+  #status 0 默认未合并， 1表示合并, 2表示请求拒绝(或已关闭)
+  OPEN   = 0
+  MERGED  = 1
+  CLOSED = 2
+
   belongs_to :issue
   belongs_to :user
   belongs_to :project, :counter_cache => true
@@ -36,6 +40,18 @@ class PullRequest < ApplicationRecord
 
   def fork_project
     Project.find_by(id: self.fork_project_id)
+  end
+
+  def bind_gitea_pull_request!(gitea_pull_number)
+    update_column(:gpid, gitea_pull_number)
+  end
+
+  def merge!
+    update_column(:status, PullRequest::MERGED)
+  end
+
+  def project_trend_status!
+    self&.project_trends&.update_all(action_type: ProjectTrend::CLOSE)
   end
 
   # TODO: sync educoder platform repo's for update some statistics count

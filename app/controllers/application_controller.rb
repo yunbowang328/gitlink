@@ -332,7 +332,6 @@ class ApplicationController < ActionController::Base
 				User.current = user
 			end
 		end
-
 		# if !User.current.logged? && Rails.env.development?
 		# 	User.current = User.find 1
 		# end
@@ -694,11 +693,19 @@ class ApplicationController < ActionController::Base
     page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
 
     relation.page(page).per(limit)
-  end
+	end
 
-  def strf_time(time)
-    time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M:%S")
-  end
+	def kaminari_array_paginate(relation)
+		limit = params[:limit] || params[:per_page]
+		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
+
+		Kaminari.paginate_array(relation).page(page).per(limit)
+	end
+
+	def strf_time(time)
+		time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M:%S")
+	end
 
   def strf_date(date)
     date.blank? ? '' : date.to_date.strftime("%Y-%m-%d")

@@ -1,5 +1,7 @@
 json.partial! "commons/success"
 json.project_name @project.name
+json.identifier @project.identifier
+json.project_identifier @project.identifier
 json.pr_time time_from_now(@pull_request.updated_at)
 json.commits_count @pull_request.commits_count
 json.files_count @pull_request.files_count
@@ -9,6 +11,7 @@ json.pull_request do
   json.extract! @pull_request, :id,:base, :head, :status,:fork_project_id, :is_original
   json.pull_request_staus @pull_request.status == 1 ? "merged" : (@pull_request.status == 2 ? "closed" : "open")
   json.fork_project_user @pull_request&.fork_project&.owner.try(:login)
+  json.create_user @pull_request&.user&.login
 end
 
 json.issue do

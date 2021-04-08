@@ -1,0 +1,1 @@
+json.array! @project_units.pluck(:unit_type)

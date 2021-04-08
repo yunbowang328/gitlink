@@ -78,4 +78,31 @@ class Ci::Drone::API < Ci::Drone::Request
   def sync_repos
     post(endpoint, "/api/users/repos", drone_token: drone_token)
   end
+
+  # Creates a user.
+  # POST /api/users
+  def create_user
+    post(endpoint, "/api/users", {login: options[:login], email: options[:email], avatar_url:options[:avatar_url],active:true, drone_token: options[:token]})
+  end
+
+  # Creates a secret.
+  def create_secret
+    post(endpoint, "/api/repos/#{owner}/#{repo}/secrets", {name: options[:name], data: options[:data], pull_request:true, drone_token: drone_token})
+  end
+
+  # Update a secret.
+  def update_secret
+    patch(endpoint, "/api/repos/#{owner}/#{repo}/secrets/#{options[:name]}", { data: options[:data], pull_request:true, drone_token: drone_token})
+  end
+
+  # list of secrets.
+  def secrets
+    get(endpoint, "/api/repos/#{owner}/#{repo}/secrets", drone_token: drone_token)
+  end
+
+  # delete secret.
+  def delete_secret
+    delete(endpoint, "/api/repos/#{owner}/#{repo}/secrets/#{options[:name]}", drone_token: drone_token)
+  end
+
 end

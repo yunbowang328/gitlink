@@ -1,31 +1,32 @@
 class Gitea::Repository::GetByIdService < Gitea::ClientService
-  attr_reader :owner, :repo_id
+  attr_reader :token, :id
 
-  def initialize(owner, repo_id)
-    @owner   = owner
-    @repo_id = repo_id
+  def initialize(id, token=nil)
+    @token = token
+    @id    = id
   end
 
   def call
     response = get(url, params)
-    render_result(response)
+
+    status, message, body = render_response(response)
+    json_format(status, message, body)
   end
 
   private
   def params
-    Hash.new.merge(token: owner.gitea_token)
+    Hash.new.merge(token: token)
   end
 
   def url
-    "/repositories/#{repo_id}".freeze
+    "/repositories/#{id}".freeze
   end
 
-  def render_result(response)
-    case response.status
-    when 200
-      JSON.parse(response.body)
+  def json_format(status, message, body)
+    case status
+    when 200 then success(body)
     else
-      nil
+      error(message, status)
     end
   end
 end
