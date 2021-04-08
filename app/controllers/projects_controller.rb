@@ -183,7 +183,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 
