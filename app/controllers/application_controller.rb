@@ -1,6 +1,7 @@
 require 'oauth2'
 
 class ApplicationController < ActionController::Base
+
 	include CodeExample
 	include RenderExpand
 	include RenderHelper
@@ -10,12 +11,14 @@ class ApplicationController < ActionController::Base
 	include LoggerHelper
 	include LoginHelper
 	include RegisterHelper
+	include UpdateHelper
 
 	protect_from_forgery prepend: true, unless: -> { request.format.json? }
 
 	before_action :check_sign
 	before_action :user_setup
 	#before_action :check_account
+  after_action :user_trace_log
 
 	# TODO
 	# check sql query time
@@ -343,7 +346,8 @@ class ApplicationController < ActionController::Base
 				User.current = User.find 8686
 			elsif params[:debug] == 'admin'
 				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
-				user =  User.find 36480
+				# user =  User.find 36480
+				user = User.find 5
 				User.current = user
 				cookies.signed[:user_id] = user.id
 			end
@@ -366,7 +370,19 @@ class ApplicationController < ActionController::Base
 			# RSS key authentication does not start a session
 			User.find_by_rss_key(params[:key])
 		end
-	end
+  end
+
+  def user_trace_log
+    user = current_user
+    # print("*********************url:", request.url, "****routes", request.request_method)
+    Rails.logger.user_trace.info("{id: #{user.id}, login: #{user.login}, url: #{request.url}, method: #{request.method}, params: #{params}, response_code: #{response.code}, time: #{Time.now}}")
+  end
+
+  def user_trace_update_log(old_value_hash)
+    user = current_user
+    str = "{id: #{user.id}, login: #{user.login}, url: #{request.url}, method: #{request.method}, params: #{params.merge(old_value: old_value_hash)}, response_code: #{response.code}, time: #{Time.now}}"
+    Rails.logger.user_trace.info(str)
+  end
 
 	def try_to_autologin
 		if cookies[autologin_cookie_name]
@@ -392,291 +408,291 @@ class ApplicationController < ActionController::Base
 		respond_to do |format|
       format.json
     end
-	end
+  end
 
-	## 输出错误信息
-	def error_status(message = nil)
-		@status = -1
-		@message = message
-	end
+  ## 输出错误信息
+  def error_status(message = nil)
+    @status = -1
+    @message = message
+  end
 
-	# 实训等对应的仓库地址
-	def repo_ip_url(repo_path)
-		"#{edu_setting('git_address_ip')}/#{repo_path}"
-	end
+  # 实训等对应的仓库地址
+  def repo_ip_url(repo_path)
+    "#{edu_setting('git_address_ip')}/#{repo_path}"
+  end
 
-	def repo_url(repo_path)
-		"#{edu_setting('git_address_domain')}/#{repo_path}"
-	end
+  def repo_url(repo_path)
+    "#{edu_setting('git_address_domain')}/#{repo_path}"
+  end
 
-	# 通关后，把最后一次成功的代码存到数据库
-	# type 0 创始内容， 1 最新内容
-	# def game_passed_code(path, myshixun, game_id)
-	# 	# 如果代码窗口是隐藏的，则不用保存代码
-	# 	return if myshixun.shixun.hide_code || myshixun.shixun.vnc
-	# 	file_content = git_fle_content myshixun.repo_path, path
-	# 	#unless file_content.present?
-	# 	#	raise("获取文件代码异常")
-	# 	#end
-	# 	logger.info("#######game_id:#{game_id}, file_content:#{file_content}")
-	# 	game_code = GameCode.where(:game_id => game_id, :path => path).first
-	# 	if game_code.nil?
-	# 		GameCode.create!(:game_id => game_id, :new_code => file_content, :path => path)
-	# 	else
-	# 		game_code.update_attributes!(:new_code => file_content)
-	# 	end
+  # 通关后，把最后一次成功的代码存到数据库
+  # type 0 创始内容， 1 最新内容
+  # def game_passed_code(path, myshixun, game_id)
+  # 	# 如果代码窗口是隐藏的，则不用保存代码
+  # 	return if myshixun.shixun.hide_code || myshixun.shixun.vnc
+  # 	file_content = git_fle_content myshixun.repo_path, path
+  # 	#unless file_content.present?
+  # 	#	raise("获取文件代码异常")
+  # 	#end
+  # 	logger.info("#######game_id:#{game_id}, file_content:#{file_content}")
+  # 	game_code = GameCode.where(:game_id => game_id, :path => path).first
+  # 	if game_code.nil?
+  # 		GameCode.create!(:game_id => game_id, :new_code => file_content, :path => path)
+  # 	else
+  # 		game_code.update_attributes!(:new_code => file_content)
+  # 	end
   # end
 
-	# Post请求
-	def uri_post(uri, params)
-		begin
-			uid_logger_dubug("--uri_exec: params is #{params}, url is #{uri}")
-			uri = URI.parse(URI.encode(uri.strip))
-			res = Net::HTTP.post_form(uri, params).body
-			uid_logger_dubug("--uri_exec: .....res is #{res}")
-			JSON.parse(res)
-		rescue Exception => e
-			uid_logger_error("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new("实训平台繁忙（繁忙等级：84）")
-		end
-	end
+  # Post请求
+  def uri_post(uri, params)
+    begin
+      uid_logger_dubug("--uri_exec: params is #{params}, url is #{uri}")
+      uri = URI.parse(URI.encode(uri.strip))
+      res = Net::HTTP.post_form(uri, params).body
+      uid_logger_dubug("--uri_exec: .....res is #{res}")
+      JSON.parse(res)
+    rescue Exception => e
+      uid_logger_error("--uri_exec: exception #{e.message}")
+      raise Educoder::TipException.new("实训平台繁忙（繁忙等级：84）")
+    end
+  end
 
-	#　处理返回非０就报错的请求
-	def interface_post(uri, params, status, message)
-		begin
-			uid_logger_dubug("--uri_exec: params is #{params}, url is #{uri}")
-			uri = URI.parse(URI.encode(uri.strip))
-			res = Net::HTTP.post_form(uri, params).body
-			uid_logger_dubug("--uri_exec: .....res is #{res}")
-			res = JSON.parse(res)
-			if (res && res['code'] != 0)
-				tip_exception(status, message)
-			else
-				res
-			end
-		rescue Exception => e
-			uid_logger("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new(message)
-		end
-	end
+  #　处理返回非０就报错的请求
+  def interface_post(uri, params, status, message)
+    begin
+      uid_logger_dubug("--uri_exec: params is #{params}, url is #{uri}")
+      uri = URI.parse(URI.encode(uri.strip))
+      res = Net::HTTP.post_form(uri, params).body
+      uid_logger_dubug("--uri_exec: .....res is #{res}")
+      res = JSON.parse(res)
+      if (res && res['code'] != 0)
+        tip_exception(status, message)
+      else
+        res
+      end
+    rescue Exception => e
+      uid_logger("--uri_exec: exception #{e.message}")
+      raise Educoder::TipException.new(message)
+    end
+  end
 
-	# json格式请求
-	def interface_json_post(uri, params, status, message)
-		begin
-			uid_logger_dubug("--uri_exec: params is #{params}, url is #{uri}")
-			uri = URI.parse(URI.encode(uri.strip))
-			res = Net::HTTP.start(uri.host, uri.port) do |http|
-				req = Net::HTTP::Post.new(uri)
-				req['Content-Type'] = 'application/json'
-				req.body = params.to_json
-				http.request(req)
-			end
-			uid_logger_dubug("--uri_exec: .....res is #{res.body}")
-			res = JSON.parse(res.body)
-			if (res && res['code'] != 0)
-				tip_exception(status, message)
-			else
-				res
-			end
-		rescue Exception => e
-			uid_logger("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new("服务器繁忙")
-		end
-	end
-
-
-	# 适用与已经用url_safe编码后，回调字符串形式
-	def tran_base64_decode64(str)
-		s_size = str.size % 4
-		if s_size != 0
-			str += "=" * (4 - s_size)
-		end
-		if str.blank?
-			str
-		else
-			Base64.decode64(str.tr("-_", "+/")).force_encoding("utf-8")
-		end
-	end
-
-	def sucess_status(message = 'success')
-		render :json => { status: 1, message: message }
-	end
-
-	# 随机生成字符
-	def generate_identifier(container, num, pre='')
-		code = DCODES.sample(num).join
-		if container == User
-			while container.exists?(login: pre+code) do
-				code = DCODES.sample(num).join
-			end
-		else
-			while container.exists?(identifier: code) do
-				code = DCODES.sample(num).join
-			end
-		end
-		code
-	end
+  # json格式请求
+  def interface_json_post(uri, params, status, message)
+    begin
+      uid_logger_dubug("--uri_exec: params is #{params}, url is #{uri}")
+      uri = URI.parse(URI.encode(uri.strip))
+      res = Net::HTTP.start(uri.host, uri.port) do |http|
+        req = Net::HTTP::Post.new(uri)
+        req['Content-Type'] = 'application/json'
+        req.body = params.to_json
+        http.request(req)
+      end
+      uid_logger_dubug("--uri_exec: .....res is #{res.body}")
+      res = JSON.parse(res.body)
+      if (res && res['code'] != 0)
+        tip_exception(status, message)
+      else
+        res
+      end
+    rescue Exception => e
+      uid_logger("--uri_exec: exception #{e.message}")
+      raise Educoder::TipException.new("服务器繁忙")
+    end
+  end
 
 
-	# 实训主类别列表，自带描述
-	def shixun_main_type
-		list = []
-		mirrors = MirrorRepository.select([:id, :type_name, :description, :name]).published_main_mirror
-		mirrors.try(:each) do |mirror|
-			list << {id: mirror.id, type_name: mirror.type_name, description: mirror.try(:description), mirror_name: mirror.name}
-		end
-		list
-	end
+  # 适用与已经用url_safe编码后，回调字符串形式
+  def tran_base64_decode64(str)
+    s_size = str.size % 4
+    if s_size != 0
+      str += "=" * (4 - s_size)
+    end
+    if str.blank?
+      str
+    else
+      Base64.decode64(str.tr("-_", "+/")).force_encoding("utf-8")
+    end
+  end
 
-	# 小类别列表
-	def shixun_small_type
-		list = []
-		mirrors = MirrorRepository.select([:id, :type_name, :description, :name]).published_small_mirror
-		mirrors.try(:each) do |mirror|
-			list << {id: mirror.id, type_name: mirror.type_name, description: mirror.description, mirror_name: mirror.name}
-		end
-		list
-	end
+  def sucess_status(message = 'success')
+    render :json => { status: 1, message: message }
+  end
 
-	def container_limit(mirror_repositories)
-		container = []
-		mirror_repositories.each do |mr|
-			if mr.name.present?
-				container << {:image => mr.name, :cpuLimit => mr.cpu_limit, :memoryLimit =>  "#{mr.memory_limit}M", :type => mr.try(:main_type) == "1" ? "main" : "sub"}
-			end
-		end
-		container.to_json
-	end
+  # 随机生成字符
+  def generate_identifier(container, num, pre='')
+    code = DCODES.sample(num).join
+    if container == User
+      while container.exists?(login: pre+code) do
+        code = DCODES.sample(num).join
+      end
+    else
+      while container.exists?(identifier: code) do
+        code = DCODES.sample(num).join
+      end
+    end
+    code
+  end
 
-	# 实训中间层pod配置
-	def shixun_container_limit shixun
-		container = []
-		shixun.shixun_service_configs.each do |config|
-			mirror = config.mirror_repository
-			if mirror.name.present?
-				# 资源限制没有就传默认值。
-				cpu_limit = config.cpu_limit.presence || 1
-				cpu_request = config.lower_cpu_limit.presence || 0.1
-				memory_limit = config.memory_limit.presence || 1024
-				request_limit = config.request_limit.presence || 10
-				resource_limit = config.resource_limit.presence || 10000
-				container << {:image => mirror.name,
-											:cpuLimit => cpu_limit,
-											:cpuRequest => cpu_request,
-											:memoryLimit => "#{memory_limit}M",
-											:memoryRequest => "#{request_limit}M",
-											:resourceLimit => "#{resource_limit}K",
-											:type => mirror.try(:main_type) == "1" ? "main" : "sub"}
-			end
-		end
-		container.to_json
-	end
 
-	# 毕设任务列表的赛选
-	def course_work(task, **option)
-		logger.info("#############{option}")
-		course = task.course
-		work_list = task.graduation_works.includes(user: [:user_extension])
-		# 教师评阅搜索 0: 未评， 1 已评
-		if option[:teacher_comment]
-			graduation_work_ids = GraduationWorkScore.where(graduation_work_id: work_list.map(&:id)).pluck(:graduation_work_id)
-			if option[:teacher_comment].zero?
-				work_list  = work_list.where.not(id: graduation_work_ids)
-			elsif option[:teacher_comment] == 1
-				work_list = work_list.where(id: graduation_work_ids).where.not(work_status: 0)
-			end
-		end
+  # 实训主类别列表，自带描述
+  def shixun_main_type
+    list = []
+    mirrors = MirrorRepository.select([:id, :type_name, :description, :name]).published_main_mirror
+    mirrors.try(:each) do |mirror|
+      list << {id: mirror.id, type_name: mirror.type_name, description: mirror.try(:description), mirror_name: mirror.name}
+    end
+    list
+  end
 
-		# 作品状态 0： 未提交， 1 按时提交， 2 延迟提交
-		if option[:task_status]
-			work_list = work_list.where(work_status: option[:task_status])
-		end
+  # 小类别列表
+  def shixun_small_type
+    list = []
+    mirrors = MirrorRepository.select([:id, :type_name, :description, :name]).published_small_mirror
+    mirrors.try(:each) do |mirror|
+      list << {id: mirror.id, type_name: mirror.type_name, description: mirror.description, mirror_name: mirror.name}
+    end
+    list
+  end
 
-		# 分班情况
-		if option[:course_group]
-			group_user_ids = course.course_members.where(course_group_id: option[:course_group]).pluck(:user_id)
-			# 有分组只可能是老师身份查看列表
-			work_list = work_list.where(user_id: group_user_ids)
-		end
+  def container_limit(mirror_repositories)
+    container = []
+    mirror_repositories.each do |mr|
+      if mr.name.present?
+        container << {:image => mr.name, :cpuLimit => mr.cpu_limit, :memoryLimit =>  "#{mr.memory_limit}M", :type => mr.try(:main_type) == "1" ? "main" : "sub"}
+      end
+    end
+    container.to_json
+  end
 
-		# 只看我的交叉评阅
-		if option[:cross_comment]
-			graduation_work_id = task.graduation_work_comment_assignations.where(:user_id => current_user.id)
-															 .pluck(:graduation_work_id).uniq if task.graduation_work_comment_assignations
-			work_list = work_list.where(id: graduation_work_id)
-		end
+  # 实训中间层pod配置
+  def shixun_container_limit shixun
+    container = []
+    shixun.shixun_service_configs.each do |config|
+      mirror = config.mirror_repository
+      if mirror.name.present?
+        # 资源限制没有就传默认值。
+        cpu_limit = config.cpu_limit.presence || 1
+        cpu_request = config.lower_cpu_limit.presence || 0.1
+        memory_limit = config.memory_limit.presence || 1024
+        request_limit = config.request_limit.presence || 10
+        resource_limit = config.resource_limit.presence || 10000
+        container << {:image => mirror.name,
+                      :cpuLimit => cpu_limit,
+                      :cpuRequest => cpu_request,
+                      :memoryLimit => "#{memory_limit}M",
+                      :memoryRequest => "#{request_limit}M",
+                      :resourceLimit => "#{resource_limit}K",
+                      :type => mirror.try(:main_type) == "1" ? "main" : "sub"}
+      end
+    end
+    container.to_json
+  end
 
-		# 输入姓名和学号搜索
-		# TODO user_extension 如果修改 请调整
-		if option[:search]
-			work_list = work_list.joins(user: :user_extension).where("concat(lastname, firstname) like ?
+  # 毕设任务列表的赛选
+  def course_work(task, **option)
+    logger.info("#############{option}")
+    course = task.course
+    work_list = task.graduation_works.includes(user: [:user_extension])
+    # 教师评阅搜索 0: 未评， 1 已评
+    if option[:teacher_comment]
+      graduation_work_ids = GraduationWorkScore.where(graduation_work_id: work_list.map(&:id)).pluck(:graduation_work_id)
+      if option[:teacher_comment].zero?
+        work_list  = work_list.where.not(id: graduation_work_ids)
+      elsif option[:teacher_comment] == 1
+        work_list = work_list.where(id: graduation_work_ids).where.not(work_status: 0)
+      end
+    end
+
+    # 作品状态 0： 未提交， 1 按时提交， 2 延迟提交
+    if option[:task_status]
+      work_list = work_list.where(work_status: option[:task_status])
+    end
+
+    # 分班情况
+    if option[:course_group]
+      group_user_ids = course.course_members.where(course_group_id: option[:course_group]).pluck(:user_id)
+      # 有分组只可能是老师身份查看列表
+      work_list = work_list.where(user_id: group_user_ids)
+    end
+
+    # 只看我的交叉评阅
+    if option[:cross_comment]
+      graduation_work_id = task.graduation_work_comment_assignations.where(:user_id => current_user.id)
+                               .pluck(:graduation_work_id).uniq if task.graduation_work_comment_assignations
+      work_list = work_list.where(id: graduation_work_id)
+    end
+
+    # 输入姓名和学号搜索
+    # TODO user_extension 如果修改 请调整
+    if option[:search]
+      work_list = work_list.joins(user: :user_extension).where("concat(lastname, firstname) like ?
                          or student_id like ?", "%#{option[:search]}%", "%#{option[:search]}%")
-		end
+    end
 
-		# 排序
-		rorder = option[:order] || "updated_at"
-		b_order = option[:b_order] || "desc"
-		if rorder == "created_at" || rorder == "work_score"
-			work_list = work_list.order("graduation_works.#{rorder} #{b_order}")
-		elsif rorder == "student_id"
-			work_list = work_list.joins(user: :user_extension).order("user_extensions.#{rorder} #{b_order}")
-		end
-		work_list
-	end
+    # 排序
+    rorder = option[:order] || "updated_at"
+    b_order = option[:b_order] || "desc"
+    if rorder == "created_at" || rorder == "work_score"
+      work_list = work_list.order("graduation_works.#{rorder} #{b_order}")
+    elsif rorder == "student_id"
+      work_list = work_list.joins(user: :user_extension).order("user_extensions.#{rorder} #{b_order}")
+    end
+    work_list
+  end
 
-	def strip_html(text, len=0, endss="...")
-		ss = ""
-		if !text.nil? && text.length>0
-			ss=text.gsub(/<\/?.*?>/, '').strip
-			ss = ss.gsub(/&nbsp;*/, '')
-			ss = ss.gsub(/\r\n/,'')  #新增
-			ss = ss.gsub(/\n/,'')  #新增
-			if len > 0 && ss.length > len
-				ss = ss[0, len] + endss
-			elsif len > 0 && ss.length <= len
-				ss = ss
-				#ss = truncate(ss, :length => len)
-			end
-		end
-		ss
-	end
+  def strip_html(text, len=0, endss="...")
+    ss = ""
+    if !text.nil? && text.length>0
+      ss=text.gsub(/<\/?.*?>/, '').strip
+      ss = ss.gsub(/&nbsp;*/, '')
+      ss = ss.gsub(/\r\n/,'')  #新增
+      ss = ss.gsub(/\n/,'')  #新增
+      if len > 0 && ss.length > len
+        ss = ss[0, len] + endss
+      elsif len > 0 && ss.length <= len
+        ss = ss
+        #ss = truncate(ss, :length => len)
+      end
+    end
+    ss
+  end
 
-	# Returns a string that can be used as filename value in Content-Disposition header
-	def filename_for_content_disposition(name)
-		request.env['HTTP_USER_AGENT'] =~ %r{MSIE|Trident|Edge} ? ERB::Util.url_encode(name) : name
-	end
+  # Returns a string that can be used as filename value in Content-Disposition header
+  def filename_for_content_disposition(name)
+    request.env['HTTP_USER_AGENT'] =~ %r{MSIE|Trident|Edge} ? ERB::Util.url_encode(name) : name
+  end
 
-	def format_time(time)
-		time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M")
-	end
+  def format_time(time)
+    time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M")
+  end
 
-	# 获取Oauth Client
-	def get_client(site)
-		client_id = Rails.configuration.educoder['client_id']
-		client_secret = Rails.configuration.educoder['client_secret']
+  # 获取Oauth Client
+  def get_client(site)
+    client_id = Rails.configuration.educoder['client_id']
+    client_secret = Rails.configuration.educoder['client_secret']
 
-		OAuth2::Client.new(client_id, client_secret, site: site)
-	end
+    OAuth2::Client.new(client_id, client_secret, site: site)
+  end
 
-	def paginate(relation)
-		limit = params[:limit] || params[:per_page]
-		limit  = (limit.to_i.zero? || limit.to_i > 20) ? 20 : limit.to_i
-		page   = params[:page].to_i.zero? ? 1 : params[:page].to_i
-		offset = (page - 1) * limit
+  def paginate(relation)
+    limit = params[:limit] || params[:per_page]
+    limit  = (limit.to_i.zero? || limit.to_i > 20) ? 20 : limit.to_i
+    page   = params[:page].to_i.zero? ? 1 : params[:page].to_i
+    offset = (page - 1) * limit
 
-		if relation.is_a?(Array)
-			relation[offset, limit]
-		else
-			relation.limit(limit).offset(offset)
-		end
-	end
+    if relation.is_a?(Array)
+      relation[offset, limit]
+    else
+      relation.limit(limit).offset(offset)
+    end
+  end
 
-	def kaminari_paginate(relation)
-		limit = params[:limit] || params[:per_page]
-		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
-		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
+  def kaminari_paginate(relation)
+    limit = params[:limit] || params[:per_page]
+    limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+    page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
 
-		relation.page(page).per(limit)
+    relation.page(page).per(limit)
 	end
 
 	def kaminari_array_paginate(relation)
@@ -691,29 +707,30 @@ class ApplicationController < ActionController::Base
 		time.blank? ? '' : time.strftime("%Y-%m-%d %H:%M:%S")
 	end
 
-	def strf_date(date)
-		date.blank? ? '' : date.to_date.strftime("%Y-%m-%d")
-	end
+  def strf_date(date)
+    date.blank? ? '' : date.to_date.strftime("%Y-%m-%d")
+  end
 
-	def logger_error(error)
-		Rails.logger.error(error.message)
-		error.backtrace.each { |msg| Rails.logger.error(msg) }
-	end
+  def logger_error(error)
+    Rails.logger.error(error.message)
+    error.backtrace.each { |msg| Rails.logger.error(msg) }
+  end
 
-	def find_user
-		@user = User.find_by_login params[:login]
+  def find_user
+    @user = User.find_by_login params[:login]
     render_not_found("未找到’#{params[:login]}’相关的用户") unless @user
-	end
+  end
 
-	def find_user_with_id
-		@user = User.find_by_id params[:user_id]
+  def find_user_with_id
+    @user = User.find_by_id params[:user_id]
     # render_not_found("未找到’#{params[:login]}’相关的用户") unless @user
-		render_error("未找到相关的用户") unless @user
-	end
+    render_error("未找到相关的用户") unless @user
+  end
 
-	def find_repository
-		@repo = @user.repositories.find_by_identifier params[:repo_identifier]
+  def find_repository
+    @repo = @user.repositories.find_by_identifier params[:repo_identifier]
     render_not_found("未找到’#{params[:repo_identifier]}’相关的项目") unless @repo
+
 	end
 
 	def find_repository_by_id
@@ -770,55 +787,55 @@ class ApplicationController < ActionController::Base
 	end
 
   private
-	def object_not_found
-		uid_logger("Missing template or cant't find record, responding with 404")
-		render json: {message: "您访问的页面不存在或已被删除", status: 404}
-		false
-	end
+  def object_not_found
+    uid_logger("Missing template or cant't find record, responding with 404")
+    render json: {message: "您访问的页面不存在或已被删除", status: 404}
+    false
+  end
 
-	def tip_show(exception)
-		uid_logger("Tip show status is #{exception.status}, message is #{exception.message}")
-		render json: exception.tip_json
-	end
+  def tip_show(exception)
+    uid_logger("Tip show status is #{exception.status}, message is #{exception.message}")
+    render json: exception.tip_json
+  end
 
-	def render_parameter_missing
-		render json: { status: -1, message: '参数缺失' }
-	end
+  def render_parameter_missing
+    render json: { status: -1, message: '参数缺失' }
+  end
 
-	def set_export_cookies
-		cookies[:fileDownload] = true
-	end
+  def set_export_cookies
+    cookies[:fileDownload] = true
+  end
 
-	# 149课程的评审用户数据创建（包含创建课堂学生）
-	def open_class_user
-		user = User.find_by(login: "OpenClassUser")
-		unless user
-			ActiveRecord::Base.transaction do
-				user_params = {status: 1, login: "OpenClassUser", lastname: "开放课程",
-											 nickname: "开放课程", professional_certification: 1, certification: 1, grade: 0,
-											 password: "12345678", phone: "11122223333", profile_completed: 1}
-				user = User.create!(user_params)
+  # 149课程的评审用户数据创建（包含创建课堂学生）
+  def open_class_user
+    user = User.find_by(login: "OpenClassUser")
+    unless user
+      ActiveRecord::Base.transaction do
+        user_params = {status: 1, login: "OpenClassUser", lastname: "开放课程",
+                       nickname: "开放课程", professional_certification: 1, certification: 1, grade: 0,
+                       password: "12345678", phone: "11122223333", profile_completed: 1}
+        user = User.create!(user_params)
 
-				UserExtension.create!(user_id: user.id, gender: 0, school_id: 3396, :identity => 1, :student_id => "openclassuser") # 3396
+        UserExtension.create!(user_id: user.id, gender: 0, school_id: 3396, :identity => 1, :student_id => "openclassuser") # 3396
 
-				subject = Subject.find_by(id: 149)
-				if subject
-					subject.courses.each do |course|
-						CourseMember.create!(course_id: course.id, role: 3, user_id: user.id) if !course.course_members.exists?(user_id: user.id)
-					end
-				end
-			end
-		end
-		user
-	end
+        subject = Subject.find_by(id: 149)
+        if subject
+          subject.courses.each do |course|
+            CourseMember.create!(course_id: course.id, role: 3, user_id: user.id) if !course.course_members.exists?(user_id: user.id)
+          end
+        end
+      end
+    end
+    user
+  end
 
-	# 记录热门搜索关键字
-	def record_search_keyword
-		keyword = params[:keyword].to_s.strip
-		return if keyword.blank? || keyword.size <= 1
-		return unless HotSearchKeyword.available?
+  # 记录热门搜索关键字
+  def record_search_keyword
+    keyword = params[:keyword].to_s.strip
+    return if keyword.blank? || keyword.size <= 1
+    return unless HotSearchKeyword.available?
 
-		HotSearchKeyword.add(keyword)
-	end
+    HotSearchKeyword.add(keyword)
+  end
 
 end

@@ -1,8 +1,11 @@
 class PullRequestsController < ApplicationController
+
   before_action :require_login, except: [:index, :show, :files, :commits]
   before_action :load_repository
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
   before_action :load_pull_request, only: [:files, :commits]
+
+  skip_after_action :user_trace_log, only: [:update]
   include TagChosenHelper
   include ApplicationHelper
 
@@ -86,8 +89,14 @@ class PullRequestsController < ApplicationController
             end
           end
 
+          old_issue_value = old_value_to_hash(@issue, @issue_params)
+          old_pr_value = old_value_to_hash(@pull_request, @local_params.compact)
+          old_value = {issue: old_issue_value, pull_request: old_pr_value}
+
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
+
+              user_trace_update_log(old_value)
               gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
                   @pull_request.gpid, @requests_params, current_user.gitea_token)
 

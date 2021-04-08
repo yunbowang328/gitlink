@@ -3,6 +3,7 @@ class JournalsController < ApplicationController
   before_action :set_issue
   before_action :check_issue_permission
   before_action :set_journal, only: [:destroy, :edit, :update]
+  skip_after_action :user_trace_log, only: [:update]
 
   def index
     @page  = params[:page]  || 1
@@ -67,7 +68,9 @@ class JournalsController < ApplicationController
   def update
     content = params[:content]
     if content.present?
+      old_value = old_value_to_hash(@journal, params)
       if @journal.update_attribute(:notes, content)
+        user_trace_update_log(old_value)
         normal_status(0, "更新成功")
       else
         normal_status(-1, "更新失败")

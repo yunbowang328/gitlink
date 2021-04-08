@@ -72,6 +72,10 @@ class UsersController < ApplicationController
       @user = current_user
       # TODO 等消息上线再打开注释
       #@tidding_count = unviewed_tiddings(current_user) if current_user.present?
+      #
+      if(@user.logged?)
+        @user.daily_reward
+      end
     rescue Exception => e
       uid_logger_error(e.message)
       missing_template
@@ -231,6 +235,15 @@ class UsersController < ApplicationController
     return if user.blank?
     user.update_column(:salt, params[:salt])
     render_ok
+  end
+
+  def update_description
+    @user = User.find params[:id]
+    if @user.id == User.current.id && @user.update(description: params[:description])
+      render_ok
+    else
+      render_error
+    end
   end
 
   def sync_user_info

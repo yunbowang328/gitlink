@@ -234,6 +234,7 @@ class AccountsController < ApplicationController
 
     set_autologin_cookie(user)
     UserAction.create(:action_id => user.try(:id), :action_type => "Login", :user_id => user.try(:id), :ip => request.remote_ip)
+    # user.daily_reward
     user.update_column(:last_login_on, Time.now)
     session[:"#{default_yun_session}"] = user.id
     Rails.logger.info("#########_____session_default_yun_session__________###############{default_yun_session}")

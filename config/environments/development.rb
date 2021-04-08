@@ -55,6 +55,9 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
+  # config.logger = Logger.new("#{Rails.root}/log/#{Rails.env}#{Date.today.to_s}.log", "daily")
+  # config.logger.level = Logger::INFO
+
   # config.assets.prefix = '/dev-assets'
 
   # Raises error for missing translations

@@ -8,6 +8,8 @@ class IssuesController < ApplicationController
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
   before_action :check_token_enough, only: [:create, :update]
 
+  skip_after_action :user_trace_log, only: [:update]
+
   include ApplicationHelper
   include TagChosenHelper
 
@@ -194,6 +196,7 @@ class IssuesController < ApplicationController
       #     end
       #   end
       # end
+    issue_hash = old_value_to_hash(@issue, params)
 
     if @issue.issue_type.to_s == "2" &&  params[:status_id].to_i == 5 && @issue.author_id != current_user.try(:id)
       normal_status(-1, "不允许修改为关闭状态")
@@ -201,6 +204,7 @@ class IssuesController < ApplicationController
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
 
       if @issue.update_attributes(issue_params)
+        user_trace_update_log(issue_hash)
         if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
           @issue.issue_times.update_all(end_time: Time.now)
           @issue.update_closed_issues_count_in_project!

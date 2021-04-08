@@ -13,5 +13,6 @@ json.need_edit_info @user.need_edit_info?
 json.email @user.mail
 json.profile_completed @user.profile_completed?
 json.professional_certification @user.professional_certification
+json.description @user.description
 json.devops_step @user.devops_step
 json.ci_certification @user.ci_certification?

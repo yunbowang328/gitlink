@@ -3,6 +3,7 @@ class VersionReleasesController < ApplicationController
   before_action :set_user
   before_action :require_login, except: [:index]
   before_action :find_version , only: [:edit, :update, :destroy]
+  skip_after_action :user_trace_log, only: [:update]
 
   def index
     version_releases = Gitea::Versions::ListService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier)).call
@@ -78,14 +79,14 @@ class VersionReleasesController < ApplicationController
       ActiveRecord::Base.transaction do
         begin
           version_params = releases_params
-
+          old_value = old_value_to_hash(@version, version_params)
           if @version.update_attributes!(version_params)
             create_attachments(params[:attachment_ids], @version) if params[:attachment_ids].present?
             git_version_release = Gitea::Versions::UpdateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
             unless git_version_release
               raise Error, "更新失败"
             end
-
+            user_trace_update_log(old_value)
             normal_status(0, "更新成功")
           else
             normal_status(-1, "更新失败")

@@ -5,6 +5,7 @@ class MembersController < ApplicationController
   before_action :operate!, except: %i[index]
   before_action :check_member_exists!, only: %i[create]
   before_action :check_member_not_exists!, only: %i[remove change_role]
+  skip_after_action :user_trace_log, only: [:change_role]
 
   def create
     interactor = Projects::AddMemberInteractor.call(@project.owner, @project, @user)
@@ -34,7 +35,9 @@ class MembersController < ApplicationController
   end
 
   def change_role
+    old_value = @project.members.where(user_id: params[:user_id])[0].roles.last.name
     interactor = Projects::ChangeMemberRoleInteractor.call(@project.owner, @project, @user, params[:role])
+    user_trace_update_log(old_value)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)

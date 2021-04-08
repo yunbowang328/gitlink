@@ -45,7 +45,12 @@
 #  is_shixun_marker           :boolean          default("0")
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
+#  sponsor_certification      :integer          default("0")
+#  sponsor_num                :integer          default("0")
+#  sponsored_num              :integer          default("0")
+#  description                :text(65535)
 #  devops_step                :integer          default("0")
+#  award_time                 :datetime
 #
 # Indexes
 #
@@ -157,6 +162,18 @@ class User < Owner
   # has_many :libraries, dependent: :destroy
   has_many :project_trends, dependent: :destroy
   has_many :oauths , dependent: :destroy
+
+  # sponsor
+  has_many :as_sponsors, class_name: 'Sponsorship', foreign_key: 'sponsor_id', dependent: :destroy
+  has_many :as_sponsored, class_name: 'Sponsorship', foreign_key: 'developer_id', dependent: :destroy
+  has_many :stopped_sponsors, class_name: 'StoppedSponsorship', foreign_key: 'sponsor_id', dependent: :destroy
+  has_many :stopped_sponsored, class_name: 'StoppedSponsorship', foreign_key: 'developer_id', dependent: :destroy
+  has_many :sponsor_tier, dependent: :destroy
+  has_one :wallet, dependent: :destroy
+  has_many :waitlist, class_name: 'Waitlist', foreign_key: 'reviewer_id'
+  has_many :passed_waitlist, class_name: 'PassedWaitlist', foreign_key: 'reviewer_id' #as reviewer
+  has_one :application, class_name: 'Waitlist', foreign_key: 'applicant_id'
+  has_one :passed_application, class_name: 'PassedWaitlist', foreign_key: 'applicant_id'
 
   has_many :organization_users, dependent: :destroy
   has_many :organizations, through: :organization_users
@@ -592,6 +609,7 @@ class User < Owner
   # Returns the user who matches the given autologin +key+ or nil
   def self.try_to_autologin(key)
     user = Token.find_active_user('autologin', key)
+    # user.daily_reward if user
     user.update(last_login_on: Time.now) if user
     user
   end
@@ -736,6 +754,50 @@ class User < Owner
 
   def from_sub_site?
     laboratory_id.present? && laboratory_id != 1
+  end
+
+  def get_wallet
+    if wallet.nil?
+      create_wallet(balance: 100)
+      reason = "系统初始赠送"
+      CoinChange.create(amount: amount, reason: reason, to_wallet_id: wallet.id)
+    end
+    wallet
+  end
+
+  def daily_reward
+    t1 = Time.now
+    t2 = Time.new(t1.year, t1.month, t1.day)
+
+    if(award_time.nil? or t2 > award_time)
+      self.update_column(:award_time, Time.now)
+      amount = 2
+      user_wallet = get_wallet
+      user_wallet.update(balance: user_wallet.balance += amount)
+      reason = "每日登录奖励"
+      CoinChange.create(amount: amount, reason: reason, to_wallet_id: user_wallet.id)
+    end
+=begin
+    award = false
+    if(last_login_on.nil? or t2 > last_login_on)
+      User.transaction(isolation: :serializable) do
+      # User.transaction do
+        if(self.last_login_on.nil? or t2 > self.last_login_on)
+          self.update_column(:last_login_on, Time.now)
+          award = true
+        end
+      end
+      if(award)
+        amount = 2
+        user_wallet = get_wallet
+        user_wallet.update(balance: user_wallet.balance += amount)
+        reason = "每日登录奖励"
+        CoinChange.create(amount: amount, reason: reason, to_wallet_id: user_wallet.id)
+      end
+    else
+      # puts("#################################NOOO DAILY REWARD, #{last_login_on}, #{t2}")
+    end
+=end
   end
 
   protected

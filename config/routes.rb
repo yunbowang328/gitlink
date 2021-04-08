@@ -24,6 +24,24 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    get 'wallets/balance'
+    get 'wallets/coin_changes'
+
+    get 'log/list', to: 'log#list'
+    # post 'log/download', to: 'log#download'
+    match 'log/download/:filename' => 'log#download', :constraints => { filename: /[0-z\.]+/ }, via:[:get]
+
+    resources :sponsor_tiers, only: [:index, :show, :create, :update, :destroy]
+    resources :sponsorships, only: [:index, :show, :create, :update, :destroy] do
+      collection do
+        get :sponsored
+        get :sponsoring
+        get :stopped_sponsored
+        get :stopped_sponsoring
+        get :stopped
+      end
+    end
+
     namespace :ci  do
       resources :languages, only: [:index, :show] do
         collection do
@@ -198,6 +216,7 @@ Rails.application.routes.draw do
         get :projects
         get :watch_users
         get :fan_users
+        put :update_description
       end
       collection do
         post :following

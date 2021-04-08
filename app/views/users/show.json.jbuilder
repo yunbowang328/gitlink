@@ -16,3 +16,4 @@ json.user_org_count @user_org_count
 json.common_projects_count @projects_common_count
 json.mirror_projects_count @projects_mirrior_count
 json.sync_mirror_projects_count @projects_sync_mirrior_count
+json.description @user.description
