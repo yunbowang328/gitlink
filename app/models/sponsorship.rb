@@ -26,14 +26,16 @@ class Sponsorship < ApplicationRecord
     sponsor_wallet = sponsor.get_wallet
     developer_wallet = developer.get_wallet
 
-    return false if sponsor.wallet.balance < amount
+    Wallet.transaction do
+      return false if sponsor.wallet.balance < amount
 
-    reason = "#{sponsor.full_name}向#{developer.full_name}的赞助支付。"
-    coinchange = CoinChange.new(amount: amount, reason: reason, to_wallet_id: developer_wallet.id, from_wallet_id: sponsor_wallet.id)
-    if coinchange.save
       sponsor_wallet.update(balance: sponsor_wallet.balance -= amount)
       developer_wallet.update(balance: developer_wallet.balance += amount)
       update(accumulate: self.accumulate += amount)
+    end
+    reason = "#{sponsor.full_name}向#{developer.full_name}的赞助支付。"
+    coinchange = CoinChange.new(amount: amount, reason: reason, to_wallet_id: developer_wallet.id, from_wallet_id: sponsor_wallet.id)
+    if coinchange.save
       return true
     end
     false

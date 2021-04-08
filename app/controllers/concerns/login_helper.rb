@@ -44,7 +44,7 @@ module LoginHelper
     set_autologin_cookie(user)
 
     UserAction.create(action_id: user&.id, action_type: 'Login', user_id: user&.id, ip: request.remote_ip)
-    user.daily_reward
+    # user.daily_reward
     user.update_column(:last_login_on, Time.now)
     # 注册完成后有一天的试用申请(先去掉)
     # UserDayCertification.create(user_id: user.id, status: 1)

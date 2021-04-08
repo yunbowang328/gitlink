@@ -60,6 +60,10 @@ class UsersController < ApplicationController
       @user = current_user
       # TODO 等消息上线再打开注释
       #@tidding_count = unviewed_tiddings(current_user) if current_user.present?
+      #
+      if(@user.logged?)
+        @user.daily_reward
+      end
     rescue Exception => e
       uid_logger_error(e.message)
       missing_template

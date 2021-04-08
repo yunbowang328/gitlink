@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  name                   :string(255)      default(""), not null
-#  description            :text(65535)
+#  description            :text(4294967295)
 #  homepage               :string(255)      default("")
 #  is_public              :boolean          default("1"), not null
 #  parent_id              :integer
@@ -48,6 +48,10 @@
 #  issue_tags_count       :integer          default("0")
 #  closed_issues_count    :integer          default("0")
 #  open_devops            :boolean          default("0")
+#  gitea_webhook_id       :integer
+#  open_devops_count      :integer          default("0")
+#  recommend              :boolean          default("0")
+#  platform               :integer          default("0")
 #
 # Indexes
 #

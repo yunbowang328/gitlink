@@ -18,6 +18,9 @@
 #  issue_id        :integer
 #  fork_project_id :integer
 #  is_original     :boolean          default("0")
+#  comments_count  :integer          default("0")
+#  commits_count   :integer          default("0")
+#  files_count     :integer          default("0")
 #
 
 class PullRequest < ApplicationRecord

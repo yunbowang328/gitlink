@@ -50,6 +50,7 @@
 #  sponsored_num              :integer          default("0")
 #  description                :text(65535)
 #  devops_step                :integer          default("0")
+#  award_time                 :datetime
 #
 # Indexes
 #

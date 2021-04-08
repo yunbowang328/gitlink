@@ -50,6 +50,7 @@
 #  sponsored_num              :integer          default("0")
 #  description                :text(65535)
 #  devops_step                :integer          default("0")
+#  award_time                 :datetime
 #
 # Indexes
 #
@@ -598,7 +599,7 @@ class User < ApplicationRecord
   # Returns the user who matches the given autologin +key+ or nil
   def self.try_to_autologin(key)
     user = Token.find_active_user('autologin', key)
-    user.daily_reward if user
+    # user.daily_reward if user
     user.update(last_login_on: Time.now) if user
     user
   end
@@ -757,20 +758,36 @@ class User < ApplicationRecord
   def daily_reward
     t1 = Time.now
     t2 = Time.new(t1.year, t1.month, t1.day)
+
+    if(award_time.nil? or t2 > award_time)
+      self.update_column(:award_time, Time.now)
+      amount = 2
+      user_wallet = get_wallet
+      user_wallet.update(balance: user_wallet.balance += amount)
+      reason = "每日登录奖励"
+      CoinChange.create(amount: amount, reason: reason, to_wallet_id: user_wallet.id)
+    end
+=begin
+    award = false
     if(last_login_on.nil? or t2 > last_login_on)
-      User.transaction do
-        if(last_login_on.nil? or t2 > last_login_on)
-          amount = 2
-          user_wallet = get_wallet
-          user_wallet.update(balance: user_wallet.balance += amount)
-          reason = "每日登录奖励"
-          CoinChange.create(amount: amount, reason: reason, to_wallet_id: user_wallet.id)
-          update(last_login_on: Time.now)
+      User.transaction(isolation: :serializable) do
+      # User.transaction do
+        if(self.last_login_on.nil? or t2 > self.last_login_on)
+          self.update_column(:last_login_on, Time.now)
+          award = true
         end
+      end
+      if(award)
+        amount = 2
+        user_wallet = get_wallet
+        user_wallet.update(balance: user_wallet.balance += amount)
+        reason = "每日登录奖励"
+        CoinChange.create(amount: amount, reason: reason, to_wallet_id: user_wallet.id)
       end
     else
       # puts("#################################NOOO DAILY REWARD, #{last_login_on}, #{t2}")
     end
+=end
   end
 
   protected
