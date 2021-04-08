@@ -55,7 +55,8 @@ CREATE TABLE `applied_contests` (
 -- ----------------------------
 -- Table structure for applied_messages
 -- ----------------------------
-DROP TABLE IF /home/qyzh/datadict.txtpplied_messages`;
+-- DROP TABLE IF /home/qyzh/datadict.txtpplied_messages`;
+DROP TABLE IF EXISTS `applied_messages`;
 CREATE TABLE `applied_messages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
