@@ -186,6 +186,7 @@ Rails.application.routes.draw do
         get :logout
         get :get_verification_code
         get :valid_email_and_phone
+        post :gitea_register
         post :remote_register
         post :remote_update
         post :remote_login
@@ -219,7 +220,8 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
-        post :sync_user_info
+        post :change_password
+        post :change_email
 
         scope '/ci', module: :ci do
           scope do

@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list sync_user_info]
+  before_action :require_login, only: %i[me list change_password change_email]
   before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
 
@@ -233,23 +233,60 @@ class UsersController < ApplicationController
     render_ok
   end
 
-  def sync_user_info
+  # TODO: For Educoder
+  def change_password
     user = User.find_by_login params[:login]
-    return render_forbidden unless user === current_user
+    return render_error("用户 #{params[:login]} 不存在.") unless user === current_user
+
+    form_params= {
+      login: params[:login],
+      email: user&.mail,
+      password: params[:password],
+      user: user
+    }
+    Gitea::User::ChangePasswordForm.new(form_params).validate!
 
     sync_params = {
-      email: params[:email],
+      email: user&.mail,
       password: params[:password]
     }
 
-    Users::UpdateInfoForm.new(sync_params.merge(login: params[:login])).validate!
+    if sync_params.present?
+      interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
+      if interactor.success?
+        user.update!(password: params[:password], is_sync_pwd: true)
+        render_ok
+      else
+        render_error(interactor.error)
+      end
+    end
+  end
 
-    interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
-    if interactor.success?
-      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_EDIT_INFO)
-      render_ok
-    else
-      render_error(interactor.error)
+  # TODO: For Educoder
+  def change_email
+    user = User.find_by_login params[:login]
+    return render_error("用户 #{rq_params[:login]} 不存在.") unless user === current_user
+
+    form_params= {
+      login: params[:login],
+      email: user&.mail,
+      user: user
+    }
+
+    Gitea::User::ChangeEmailForm.new(form_params).validate!
+
+    sync_params = {
+      email: params[:email]
+    }
+
+    if sync_params.present?
+      interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
+      if interactor.success?
+        user.update!(mail: params[:email])
+        render_ok
+      else
+        render_error(interactor.error)
+      end
     end
   end
 

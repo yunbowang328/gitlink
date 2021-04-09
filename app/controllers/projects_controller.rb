@@ -45,6 +45,13 @@ class ProjectsController < ApplicationController
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 
+      # TODO: fix Educoder shixun
+      if @project.persisted?
+        ProjectScore.create(:project_id => @project.id, :score => 0) if @project.project_score.nil?
+
+        project_info = ProjectInfo.new(:user_id => current_user.id, :project_id => @project.id)
+        @project.project_infos << project_info
+      end
     end
   rescue Exception => e
     uid_logger_error(e.message)

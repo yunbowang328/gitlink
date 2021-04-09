@@ -5,6 +5,14 @@ class ForksController < ApplicationController
 
   def create
     @new_project = Projects::ForkService.new(current_user, @project, params[:organization]).call
+
+    # TODO: fix Educoder shixun
+    if @new_project.persisted?
+      ProjectScore.create(:project_id => @new_project.id, :score => 0) if @new_project.project_score.nil?
+
+      project_info = ProjectInfo.new(:user_id => current_user.id, :project_id => @new_project.id)
+      @project.project_infos << project_info
+    end
   end
 
   private
