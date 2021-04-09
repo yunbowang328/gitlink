@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       resources :pipelines do
         collection do
           get :list
+          get :ssh_server
         end
         member do
           get :content

@@ -1,6 +1,6 @@
 class Ci::PipelinesController < Ci::BaseController
 
-  before_action :require_login, only: %i[list create content]
+  before_action :require_login, only: %i[list create content ssh_server]
   skip_before_action :connect_to_ci_db, except: %i[list create destroy content]
   before_action :load_project, only: %i[create content]
   before_action :load_repo, only: %i[create content]
@@ -290,5 +290,9 @@ class Ci::PipelinesController < Ci::BaseController
     render_ok
   rescue Exception => ex
     render_error(ex.message)
+  end
+
+  def ssh_server
+    render json: Ci::SSHServer.config
   end
 end
