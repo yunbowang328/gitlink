@@ -79,12 +79,12 @@ class ProjectsController < ApplicationController
     @project_statics_list = [
       {
         project_type: 'common',
-        name: '开源托管项目',
+        name: '托管项目',
         projects_count: project_statics&.common_projects_count || 0
       },
       {
         project_type: 'mirror',
-        name: '开源镜像项目',
+        name: '镜像项目',
         projects_count: project_statics&.mirror_projects_count || 0
       }
     ]
