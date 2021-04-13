@@ -72,12 +72,12 @@ Rails.application.routes.draw do
     end
 
     resources :statistic, only: [:index] do
-      collection do 
+      collection do
         get :platform_profile
         get :platform_code
         get :active_project_rank
         get :active_developer_rank
-      end 
+      end
     end
     resources :sync_forge, only: [:create] do
       collection do
@@ -218,6 +218,7 @@ Rails.application.routes.draw do
         post :sync_salt
         get :trustie_projects
         get :trustie_related_projects
+        post :sync_user_info
 
         scope '/ci', module: :ci do
           scope do

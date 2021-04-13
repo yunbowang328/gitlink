@@ -1,5 +1,6 @@
 json.content @project.content
 json.website @project.website
+json.lesson_url @project.lesson_url
 if @result[:readme].blank?
   json.readme nil
 else

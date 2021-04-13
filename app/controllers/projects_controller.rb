@@ -16,6 +16,7 @@ class ProjectsController < ApplicationController
     menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
     menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
+    menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources")
     menu.append(menu_hash_by_name("activity"))
     menu.append(menu_hash_by_name("setting")) if current_user.admin? || @project.manager?(current_user)
 
@@ -182,7 +183,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 

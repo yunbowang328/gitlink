@@ -47,7 +47,7 @@ class Organizations::CreateService < ApplicationService
   end
 
   def create_org_and_extension
-    @organization = Organization.build(params[:name], user.gitea_token)
+    @organization = Organization.build(params[:name], params[:nickname], user.gitea_token)
     org_extension = OrganizationExtension.build(organization.id, description, website,
                                                 location, repo_admin_change_team_access,
                                                 visibility, max_repo_creation)

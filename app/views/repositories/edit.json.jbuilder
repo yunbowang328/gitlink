@@ -7,3 +7,4 @@ json.project_language_id @project.project_language_id
 json.private !@project.is_public
 json.website @project.website
 json.project_units @project.project_units.pluck(:unit_type)
+json.lesson_url @project.lesson_url

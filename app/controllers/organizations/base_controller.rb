@@ -21,7 +21,7 @@ class Organizations::BaseController < ApplicationController
   end
 
   def team_not_found_condition
-    @team.team_users.where(user_id: current_user.id).blank? && !@organization.is_owner?(current_user.id)
+    !current_user&.admin? && @team.team_users.where(user_id: current_user.id).blank? && !@organization.is_owner?(current_user.id)
   end
 
   def user_mark
