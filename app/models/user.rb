@@ -203,7 +203,7 @@ class User < Owner
   end
 
   def project_manager?(project)
-    project.managers.exists?(user: self) || self.admin?
+    project.manager?(self) || self.admin?
   end
 
   # 学号
