@@ -144,7 +144,7 @@ module ApplicationHelper
     if File.exist?(disk_filename(source&.class, source&.id))
       ctime = File.ctime(disk_filename(source.class, source.id)).to_i
       if %w(User Organization).include?(source.class.to_s)
-        File.join(relative_path, ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
+        File.join("images", relative_path, ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       else
         File.join("images/avatars", ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       end
