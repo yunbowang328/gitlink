@@ -1,3 +1,38 @@
+# == Schema Information
+#
+# Table name: discusses
+#
+#  id              :integer          not null, primary key
+#  user_id         :integer
+#  dis_type        :string(255)
+#  dis_id          :integer
+#  content         :text(65535)
+#  parent_id       :integer
+#  root_id         :integer
+#  praise_count    :integer
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  challenge_id    :integer
+#  reward          :integer
+#  hidden          :boolean          default("0")
+#  last_reply_id   :integer
+#  position        :integer
+#  praises_count   :integer          default("0")
+#  sticky          :boolean          default("0")
+#  course_sticky   :boolean          default("0")
+#  course_hidden   :boolean          default("0")
+#  copy_message_id :integer
+#
+# Indexes
+#
+#  index_discusses_on_challenge_id         (challenge_id)
+#  index_discusses_on_copy_message_id      (copy_message_id)
+#  index_discusses_on_course_hidden        (course_hidden)
+#  index_discusses_on_course_sticky        (course_sticky)
+#  index_discusses_on_dis_id_and_dis_type  (dis_id,dis_type)
+#  index_discusses_on_user_id              (user_id)
+#
+
 class Discuss < ApplicationRecord
   default_scope { order(created_at: :desc) }
 

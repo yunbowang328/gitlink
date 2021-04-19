@@ -26,7 +26,7 @@ json.author do
     json.name user.try(:show_real_name)
     json.type user&.type
     json.login user.login
-    json.image_url render_avatar_url(user)
+    json.image_url url_to_avatar(user)
   end
 end
 

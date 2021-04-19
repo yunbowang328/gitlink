@@ -126,3 +126,5 @@ gem 'request_store'
 gem 'harmonious_dictionary', '~> 0.0.1'
 
 gem 'parallel', '~> 1.19', '>= 1.19.1'
+
+gem 'letter_avatar'
