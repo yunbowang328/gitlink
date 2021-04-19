@@ -33,7 +33,10 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def create
-    @team = Organizations::Teams::CreateService.call(current_user, @organization, team_params)
+    ActiveRecord::Base.transaction do
+      Organizations::CreateTeamForm.new(team_params).validate!
+      @team = Organizations::Teams::CreateService.call(current_user, @organization, team_params)
+    end
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
