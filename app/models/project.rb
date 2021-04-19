@@ -161,7 +161,8 @@ class Project < ApplicationRecord
 
   #创建项目管理员
   def check_project_members
-    unless members.present? && member?(user_id)
+    return if owner.is_a?(Organization)
+    unless members.present? && members.exists?(user_id: self.user_id)
       member_params = {
         user_id: self.user_id,
         project_id: self.id
