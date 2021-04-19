@@ -60,7 +60,7 @@ class Organizations::TeamsController < Organizations::BaseController
 
   private
   def team_params
-    params.permit(:name, :description, :authorize, :includes_all_project, :can_create_org_project, :unit_types => [])
+    params.permit(:name, :nickname, :description, :authorize, :includes_all_project, :can_create_org_project, :unit_types => [])
   end
 
   def load_organization
