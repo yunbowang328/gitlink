@@ -149,7 +149,7 @@ module ApplicationHelper
         File.join("images/avatars", ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       end
     elsif source.class.to_s == 'User'
-      source.letter_avatar_url
+      source.get_letter_avatar_url
     end
   end
 

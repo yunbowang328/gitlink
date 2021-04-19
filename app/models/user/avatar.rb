@@ -1,18 +1,23 @@
 require 'letter_avatar/has_avatar'
+require 'chinese_pinyin'
 
 class User
   module Avatar
     extend ActiveSupport::Concern
     include LetterAvatar::HasAvatar
 
-    def name
-      lastname.blank? ? login : Pinyin.t(lastname)
+    def username
+      self.lastname.blank? ? self.login :  Pinyin.t(self.lastname)
     end
 
-    def letter_avatar_url(size = :lg)
-      avatar_url(avatar_size(size))
+    def get_letter_avatar_url(size = :lg)
+      avatar_path(size).split('public/')&.last
     end
 
+    def avatar_path(size)
+      LetterAvatar.generate self.username, avatar_size(size)
+    end
+    
     # 返回头像尺寸
     # xs: 22px
     # sm: 32px

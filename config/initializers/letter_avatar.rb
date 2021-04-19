@@ -3,5 +3,5 @@ LetterAvatar.setup do |config|
   config.cache_base_path   = 'public/system/lets'     # default is 'public/system'
   config.colors_palette    = :iwanthue                # default is :google
   config.annotate_position = '-0+10'                  # default is -0+5
-  config.letters_count     = 2                        # default is 1
+  # config.letters_count     = 2                        # default is 1
 end
