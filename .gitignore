@@ -36,6 +36,7 @@ public/react/yarn.lock
 /.idea/*
 
 # Ignore react node_modules
+public/system/*
 public/react/*
 /public/react/.cache
 /public/react/node_modules/
@@ -83,3 +84,4 @@ educoder.sql
 redis_data/
 Dockerfile
 dump.rdb
+.tags*

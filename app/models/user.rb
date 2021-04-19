@@ -66,6 +66,7 @@ class User < Owner
   include Likeable
   include BaseModel
   include Droneable
+  include User::Avatar
   # include Searchable::Dependents::User
 
   # devops step
