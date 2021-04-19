@@ -1,3 +1,39 @@
+# == Schema Information
+#
+# Table name: schools
+#
+#  id                 :integer          not null, primary key
+#  name               :string(255)
+#  province           :string(255)
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  logo_link          :string(255)
+#  pinyin             :string(255)
+#  school_type        :integer          default("0")
+#  city               :string(255)
+#  address            :string(255)
+#  auto_users_trial   :boolean          default("0")
+#  shool_code         :string(255)
+#  authorization_time :datetime
+#  ec_auth            :integer          default("0")
+#  identifier         :string(255)
+#  is_online          :boolean          default("0")
+#  video_name         :string(255)
+#  video_desc         :string(255)
+#  course_link        :string(255)
+#  course_name        :string(255)
+#  partner_id         :integer
+#  customer_id        :integer
+#  school_property_id :integer
+#
+# Indexes
+#
+#  index_schools_on_customer_id         (customer_id)
+#  index_schools_on_identifier          (identifier)
+#  index_schools_on_partner_id          (partner_id)
+#  index_schools_on_school_property_id  (school_property_id)
+#
+
 class School < ApplicationRecord
   has_many :departments, dependent: :destroy
 
