@@ -25,6 +25,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def create
     ActiveRecord::Base.transaction do
+      Organizations::CreateForm.new(organization_params).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
