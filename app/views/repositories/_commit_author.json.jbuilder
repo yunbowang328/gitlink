@@ -7,5 +7,5 @@ else
   json.id nil
   json.login name 
   json.name name 
-  json.image_url File.join("avatars/User","b")
+  json.image_url User.get_letter_avatar_url(name)
 end
