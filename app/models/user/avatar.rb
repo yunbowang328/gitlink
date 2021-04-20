@@ -14,9 +14,10 @@ class User
       avatar_path(self.username, size).split('public/')&.last
     end
 
-    def self.get_letter_avatar_url(name, size = :lg)
+    def self.get_letter_avatar_url(name)
       return "" if name.blank?
-      avatar_path(Pinyin.t(name), size).split('public/')&.last
+      avatar = LetterAvatar.generate Pinyin.t(name), 120
+      avatar.split('public/')&.last
     end
     
     def avatar_path(username, size)
