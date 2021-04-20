@@ -1,10 +1,10 @@
 json.author do
-  author = User.find_by(login: commit['Author']['Name'])
+  author = User.find_by(mail: commit['Author']['Email'])
   json.partial! 'repositories/commit_author', locals: { user: author, name: commit['Committer']['Name'] }
 end
 
 json.committer do
-  author = User.find_by(login: commit['Committer']['Name'])
+  author = User.find_by(mail: commit['Committer']['Email'])
   json.partial! 'repositories/commit_author', locals: { user: author, name: commit['Committer']['Name'] }
 end
 json.timestamp render_unix_time(commit['Committer']['When'])
