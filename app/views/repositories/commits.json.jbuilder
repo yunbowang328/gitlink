@@ -26,7 +26,7 @@ else
           json.login commit['commit']['author']['name']
           json.type nil
           json.name commit['commit']['author']['name']
-          json.image_url File.join("avatars/User","b")
+          json.image_url User.get_letter_avatar_url(commit['commit']['author']['name'])
         end
       end
     end
