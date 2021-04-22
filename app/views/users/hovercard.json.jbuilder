@@ -9,7 +9,7 @@ json.projects_count @user.projects_count
 json.is_watch current_user&.watched?(@user)
 json.organizations @user.organizations do |organization|
   json.login organization.login
-  json.name organization.full_name
+  json.name organization.real_name
   json.image_url url_to_avatar(organization)
   json.url "#{request.base_url }/organize/#{organization.login}"
 end
