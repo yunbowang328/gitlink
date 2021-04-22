@@ -198,6 +198,7 @@ Rails.application.routes.draw do
         get :projects
         get :watch_users
         get :fan_users
+        get :hovercard
       end
       collection do
         post :following

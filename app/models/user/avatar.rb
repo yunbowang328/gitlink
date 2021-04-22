@@ -11,11 +11,17 @@ class User
     end
 
     def get_letter_avatar_url(size = :lg)
-      avatar_path(size).split('public/')&.last
+      avatar_path(self.username, size).split('public/')&.last
     end
 
-    def avatar_path(size)
-      LetterAvatar.generate self.username, avatar_size(size)
+    def self.get_letter_avatar_url(name)
+      return "" if name.blank?
+      avatar = LetterAvatar.generate Pinyin.t(name), 120
+      avatar.split('public/')&.last
+    end
+    
+    def avatar_path(username, size)
+      LetterAvatar.generate username, avatar_size(size)
     end
     
     # 返回头像尺寸

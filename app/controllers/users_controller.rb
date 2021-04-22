@@ -2,8 +2,8 @@ class UsersController < ApplicationController
   include ApplicationHelper
   include Ci::DbConnectable
 
-  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
-  before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
+  before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users, :hovercard]
+  before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users, :hovercard]
   before_action :require_login, only: %i[me list sync_user_info]
   before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
@@ -54,6 +54,9 @@ class UsersController < ApplicationController
 
     @watchers_count = watchers.size
     @watchers = paginate(watchers)
+  end
+
+  def hovercard
   end
 
   def update

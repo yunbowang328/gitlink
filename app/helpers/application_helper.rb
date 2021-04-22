@@ -35,12 +35,6 @@ module ApplicationHelper
     course.course_modules.find_by(module_type: "graduation").try(:id)
   end
 
-  # 是否关注
-  # from_user_id为被关注的用户
-  def follow?(from_user_id, user_id)
-    Watcher.where(watchable_type: 'Principal', watchable_id: from_user_id, user_id: user_id).exists?
-  end
-
   # git用户
   # git用户命名规则：login+"@educoder.net"
   def git_username(email)
