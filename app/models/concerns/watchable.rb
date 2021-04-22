@@ -6,7 +6,7 @@ module Watchable
     has_many :watcher_users, through: :watchers, source: :user, validate: false
 
     scope :watched_by, -> (user_id) { includes(:watchers).where(watchers: { user_id: user_id }) }
-    scope :following, -> (user_id) { watched_by }
+    scope :following, -> (user_id) { watched_by(user_id) }
   end
 
   def watched?(watchable)
