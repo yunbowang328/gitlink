@@ -137,10 +137,6 @@ class User < Owner
 
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
 
-  # 关注
-  # has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
-  # has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-
   has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
