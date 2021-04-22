@@ -1,6 +1,7 @@
 json.id @user.id
 json.login @user.login
 json.name @user.full_name
+json.location @user.location
 json.image_url url_to_avatar(@user)
 json.url "#{request.base_url }/users/#{@user.login}"
 json.followers_count @user.followers_count
