@@ -71,6 +71,7 @@
 #  index_projects_on_updated_on              (updated_on)
 #
 
+
 class Project < ApplicationRecord
   include Matchable
   include Publicable

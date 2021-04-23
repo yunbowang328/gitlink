@@ -17,11 +17,6 @@
 #  index_laboratories_on_identifier  (identifier) UNIQUE
 #  index_laboratories_on_school_id   (school_id)
 #
-# Indexes
-#
-#  index_laboratories_on_identifier  (identifier) UNIQUE
-#  index_laboratories_on_school_id   (school_id)
-#
 
 class Laboratory < ApplicationRecord
   belongs_to :school, optional: true
