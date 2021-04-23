@@ -39,13 +39,14 @@
 #  business                   :boolean          default("0")
 #  profile_completed          :boolean          default("0")
 #  laboratory_id              :integer
-#  platform                   :string(255)      default("0")
-#  gitea_token                :string(255)
-#  gitea_uid                  :integer
 #  is_shixun_marker           :boolean          default("0")
+#  admin_visitable            :boolean          default("0")
+#  collaborator               :boolean          default("0")
+#  gitea_uid                  :integer
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
+#  gitea_token                :string(255)
 #
 # Indexes
 #
@@ -53,8 +54,9 @@
 #  index_users_on_homepage_engineer  (homepage_engineer)
 #  index_users_on_homepage_teacher   (homepage_teacher)
 #  index_users_on_laboratory_id      (laboratory_id)
-#  index_users_on_login              (login)
-#  index_users_on_mail               (mail)
+#  index_users_on_login              (login) UNIQUE
+#  index_users_on_mail               (mail) UNIQUE
+#  index_users_on_phone              (phone) UNIQUE
 #  index_users_on_type               (type)
 #
 
@@ -66,6 +68,7 @@ class User < Owner
   include Likeable
   include BaseModel
   include Droneable
+  include User::Avatar
   # include Searchable::Dependents::User
 
   # devops step
@@ -134,10 +137,6 @@ class User < Owner
 
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
 
-  # 关注
-  # has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
-  # has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-
   has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
@@ -189,6 +188,10 @@ class User < Owner
   validate :validate_sensitive_string
   validate :validate_password_length
 
+  def name
+    login
+  end
+  
   # 删除自动登录的token，一旦退出下次会提示需要登录
   def delete_autologin_token(value)
     Token.where(:user_id => id, :action => 'autologin', :value => value).delete_all
@@ -203,7 +206,7 @@ class User < Owner
   end
 
   def project_manager?(project)
-    project.managers.exists?(user: self) || self.admin?
+    project.manager?(self) || self.admin?
   end
 
   # 学号

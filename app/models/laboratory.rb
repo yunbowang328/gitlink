@@ -10,6 +10,12 @@
 #  sync_course  :boolean          default("0")
 #  sync_subject :boolean          default("0")
 #  sync_shixun  :boolean          default("0")
+#  is_local     :boolean          default("0")
+#
+# Indexes
+#
+#  index_laboratories_on_identifier  (identifier) UNIQUE
+#  index_laboratories_on_school_id   (school_id)
 #
 # Indexes
 #

@@ -37,8 +37,6 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
-#  license_id             :integer
-#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
@@ -52,8 +50,11 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
+#  license_id             :integer
+#  ignore_id              :integer
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
+#  lesson_url             :string(255)
 #
 # Indexes
 #
@@ -157,6 +158,7 @@ class Project < ApplicationRecord
 
   #创建项目管理员
   def check_project_members
+    return if owner.is_a?(Organization)
     unless members.present? && members.exists?(user_id: self.user_id)
       member_params = {
         user_id: self.user_id,
