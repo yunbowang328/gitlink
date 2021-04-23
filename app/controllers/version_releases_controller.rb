@@ -8,7 +8,7 @@ class VersionReleasesController < ApplicationController
     version_releases = Gitea::Versions::ListService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier)).call
     @version_releases = version_releases
     @user_permission = current_user.present? && (current_user == @user || current_user.admin?)
-    @forge_releases = @repository.version_releases.select(:id,:version_gid).includes(:attachments)
+    @forge_releases = @repository.version_releases.select(:id,:version_gid, :created_at).includes(:attachments)
   end
 
   def new
