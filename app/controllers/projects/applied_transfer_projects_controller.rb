@@ -6,7 +6,7 @@ class Projects::AppliedTransferProjectsController < Projects::BaseController
   end
 
   def create 
-    @applied_transfer_project = Projects::ApplyTransferService.call(current_user, @project, params[:owner_name])
+    @applied_transfer_project = Projects::ApplyTransferService.call(current_user, @project, params)
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
