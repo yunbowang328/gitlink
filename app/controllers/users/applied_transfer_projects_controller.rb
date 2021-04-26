@@ -7,7 +7,7 @@ class Users::AppliedTransferProjectsController < Users::BaseController
     user_collection_sql = AppliedTransferProject.where(owner_id: @_observed_user.id).to_sql 
     org_collection_sql = AppliedTransferProject.where(owner_id: Organization.joins(team_users: :team).where(team_users: {user_id: @_observed_user.id}, teams: {authorize: %w(admin owner)} )).to_sql 
     @applied_transfer_projects = AppliedTransferProject.from("( #{ user_collection_sql } UNION #{ org_collection_sql } ) AS applied_transfer_projects")
-    @applied_transfer_projects = paginate @applied_transfer_projects
+    @applied_transfer_projects = paginate @applied_transfer_projects.order("created_at desc")
   end
 
   # 接受迁移

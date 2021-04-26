@@ -3,7 +3,7 @@ class SendTransferProjectAppliedMessageJob < ApplicationJob
 
   def perform(applied_transfer_project, applied_user, message_status)
     project = applied_transfer_project.project 
-    owner = applied_transfer_project.owner
+    owner = project.owner
     return unless project.present?
     return unless owner.present?
     if owner.is_a?(Organization)
@@ -12,12 +12,21 @@ class SendTransferProjectAppliedMessageJob < ApplicationJob
       receivers = project.managers
     end
     receivers.each do |rec|
+      next if applied_user.id == rec.user_id # 自己不要给自己发通知
       AppliedMessage.create!(user_id: rec.user_id, 
                              applied: applied_transfer_project,
                              status: message_status,
-                             name: build_name(project.name, owner.real_name, message_status),
+                             name: build_name(project.name, applied_transfer_project&.owner&.real_name, message_status),
                              applied_user_id: applied_user.id, 
                              project_id: project.id)
+    end
+    if message_status == 'successed' # 如果转移成功，给转移发起者发通知已转移成功
+      AppliedMessage.find_or_create_by!(user_id: applied_transfer_project.user_id,
+                                        applied: applied_transfer_project,
+                                        status: message_status,
+                                        name: build_name(project.name, applied_transfer_project&.owner&.real_name, message_status),
+                                        applied_user_id: applied_user.id,
+                                        project_id: project.id)
     end
   end
 

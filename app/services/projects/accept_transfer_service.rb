@@ -1,11 +1,12 @@
 class Projects::AcceptTransferService < ApplicationService
-  attr_accessor :applied_transfer_project
+  attr_accessor :applied_transfer_project, :owner
   attr_reader :user, :project 
 
   def initialize(user, project)
     @user   = user
     @project = project
     @applied_transfer_project = project.applied_transfer_project
+    @owner = @applied_transfer_project.owner
   end
 
   def call 
@@ -26,7 +27,12 @@ class Projects::AcceptTransferService < ApplicationService
   private 
   def validate! 
     raise Error, '该仓库未在迁移' unless @applied_transfer_project.present? && @project.is_transfering
-    raise Error, '未拥有接受转移权限' unless @user.admin? || @project.manager?(@user)
+    raise Error, '未拥有接受转移权限' unless is_permit_operator
+  end
+
+  def is_permit_operator
+    return true if @user == @owner
+    return @owner.is_a?(Organization) && @owner.is_admin?(@user)
   end
 
   def update_apply 
@@ -34,7 +40,7 @@ class Projects::AcceptTransferService < ApplicationService
   end
 
   def operate_project 
-    @project = Projects::TransferService.call(@project, @applied_transfer_project.owner)
+    @project = Projects::TransferService.call(@project, @owner)
   end
 
   def send_apply_message 
