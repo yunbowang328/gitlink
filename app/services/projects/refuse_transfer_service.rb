@@ -21,6 +21,7 @@ class Projects::RefuseTransferService < ApplicationService
   private 
   def validate! 
     raise Error, '该仓库未在迁移' unless @applied_transfer_project.present? && @project.is_transfering
+    raise Error, '未拥有拒绝转移权限' unless @user.admin? || @project.manager?(@user)
   end
 
   def update_apply 
