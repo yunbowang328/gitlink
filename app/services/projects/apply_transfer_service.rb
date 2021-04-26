@@ -22,6 +22,7 @@ class Projects::ApplyTransferService < ApplicationService
   private 
   def validate! 
     raise Error, '仓库标识不正确' if @project.identifier != params[:identifier]
+    raise Error, '新拥有者已经存在同名仓库！' if Project.where(user_id: @owner.id, identifier: params[:identifier]).present?
     raise Error, '该仓库正在迁移' if @project.is_transfering
     raise Error, '新拥有者不存在' unless @owner.present?
     raise Error, '未拥有转移权限' unless is_permit_owner
