@@ -555,7 +555,7 @@ repo             |是| |string |项目标识identifier
 --------- | ----------- | -----------
 name     |string|组织标识
 nickname |string|组织名称
-description｜string｜组织描述
+description|string|组织描述
 avatar_url|string｜组织头像
 
 
@@ -703,9 +703,9 @@ await octokit.request('POST /api/:owner/:repo/applied_transfer_projects/cancel.j
 ### 返回字段说明
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
-|id             |int      |项目id |
-|status         |string   |项目迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝|
-|time_ago       |string   |项目迁移创建的时间 |
+|id             |int      |迁移id |
+|status         |string   |迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |迁移创建的时间 |
 |project.id     |int      |迁移项目的id |
 |project.identifier     |string      |迁移项目的标识 |
 |project.name     |string      |迁移项目的名称 |

@@ -1,12 +1,12 @@
 class Projects::ApplyTransferService < ApplicationService
   attr_accessor :owner, :applied_transfer_project
-  attr_reader :user, :project, :owner_name 
+  attr_reader :user, :project, :params 
 
-  def initialize(user, project, owner_name)
+  def initialize(user, project, params)
     @user   = user
     @project = project
-    @owner_name = owner_name
-    @owner = Owner.find_by(login: owner_name)
+    @params = params
+    @owner = Owner.find_by(login: params[:owner_name])
   end
 
   def call 
@@ -21,6 +21,7 @@ class Projects::ApplyTransferService < ApplicationService
 
   private 
   def validate! 
+    raise Error, '仓库标识不正确' if @project.identifier != params[:identifier]
     raise Error, '该仓库正在迁移' if @project.is_transfering
     raise Error, '新拥有者不存在' unless @owner.present?
     raise Error, '未拥有转移权限' unless is_permit_owner

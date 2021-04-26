@@ -6,7 +6,11 @@ class SendTransferProjectAppliedMessageJob < ApplicationJob
     owner = applied_transfer_project.owner
     return unless project.present?
     return unless owner.present?
-    receivers = project.managers + owner.team_users.joins(:team).where(teams: {authorize: %w(owner admin)})
+    if owner.is_a?(Organization)
+      receivers = project.managers + owner.team_users.joins(:team).where(teams: {authorize: %w(owner admin)})
+    else
+      receivers = project.managers
+    end
     receivers.each do |rec|
       AppliedMessage.create!(user_id: rec.user_id, 
                              applied: applied_transfer_project,
