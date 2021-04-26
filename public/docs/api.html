@@ -366,6 +366,15 @@
                   <li>
                     <a href="#fork" class="toc-h2 toc-link" data-title="Fork项目">Fork项目</a>
                   </li>
+                  <li>
+                    <a href="#da9d632a06" class="toc-h2 toc-link" data-title="用户管理的组织列表">用户管理的组织列表</a>
+                  </li>
+                  <li>
+                    <a href="#ac41ac8cdc" class="toc-h2 toc-link" data-title="迁移项目">迁移项目</a>
+                  </li>
+                  <li>
+                    <a href="#4f8579f6bd" class="toc-h2 toc-link" data-title="取消迁移项目">取消迁移项目</a>
+                  </li>
               </ul>
           </li>
           <li>
@@ -1589,6 +1598,495 @@ http://localhost:3000/api/projects/migrate.json
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3290</span><span class="p">,</span><span class="w">
   </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newadm"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='da9d632a06'>用户管理的组织列表</h2>
+<p>用户管理的组织列表</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
+http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizations.json  | jq
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/:owner/:repo/applied_transfer_projects/organizations</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+<p><code>GET api/:owner/:repo/applied_transfer_projects/organizations</code></p>
+<h3 id='1f9ac54b15-9'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+</tbody></table>
+<h3 id='b302a98fa6-9'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>组织标识</td>
+</tr>
+<tr>
+<td>nickname</td>
+<td>string</td>
+<td>组织名称</td>
+</tr>
+</tbody></table>
+
+<p>description｜string｜组织描述
+avatar_url|string｜组织头像</p>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"organizations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/9?t=1612706073"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">51</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织哈哈哈"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23212312"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/51?t=1618800723"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1231手动阀是的"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='ac41ac8cdc'>迁移项目</h2>
+<p>迁移项目，edit接口is_transfering为true表示正在迁移</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/:owner/:repo/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
+<p><code>POST /api/:owner/:repo/applied_transfer_projects.json</code></p>
+<h3 id='1f9ac54b15-10'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>owner_name</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>迁移对象标识</td>
+</tr>
+</tbody></table>
+<h3 id='b302a98fa6-10'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>项目id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>项目迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>项目迁移创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>迁移项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>迁移项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>迁移项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>迁移项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>迁移项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>迁移项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>迁移项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>迁移项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>迁移项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>迁移项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>迁移创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>迁移创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>迁移创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>迁移创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>迁移创建者头像</td>
+</tr>
+<tr>
+<td>owner.id</td>
+<td>int</td>
+<td>迁移接受者的id</td>
+</tr>
+<tr>
+<td>owner.type</td>
+<td>string</td>
+<td>迁移接受者的类型</td>
+</tr>
+<tr>
+<td>owner.name</td>
+<td>string</td>
+<td>迁移接受者的名称</td>
+</tr>
+<tr>
+<td>owner.login</td>
+<td>string</td>
+<td>迁移接受者的标识</td>
+</tr>
+<tr>
+<td>owner.image_url</td>
+<td>string</td>
+<td>迁移接受者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_repo1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试项目啊1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"二十多"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/9?t=1612706073"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-26 09:54"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='4f8579f6bd'>取消迁移项目</h2>
+<p>迁移项目，edit接口is_transfering为true表示正在迁移</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/cancel.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/:owner/:repo/applied_transfer_projects/cancel.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
+<p><code>POST /api/:owner/:repo/applied_transfer_projects/cancel.json</code></p>
+<h3 id='1f9ac54b15-11'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+</tbody></table>
+<h3 id='b302a98fa6-11'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>项目id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>项目迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>项目迁移创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>迁移项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>迁移项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>迁移项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>迁移项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>迁移项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>迁移项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>迁移项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>迁移项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>迁移项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>迁移项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>迁移创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>迁移创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>迁移创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>迁移创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>迁移创建者头像</td>
+</tr>
+<tr>
+<td>owner.id</td>
+<td>int</td>
+<td>迁移接受者的id</td>
+</tr>
+<tr>
+<td>owner.type</td>
+<td>string</td>
+<td>迁移接受者的类型</td>
+</tr>
+<tr>
+<td>owner.name</td>
+<td>string</td>
+<td>迁移接受者的名称</td>
+</tr>
+<tr>
+<td>owner.login</td>
+<td>string</td>
+<td>迁移接受者的标识</td>
+</tr>
+<tr>
+<td>owner.image_url</td>
+<td>string</td>
+<td>迁移接受者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_repo1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试项目啊1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"二十多"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/9?t=1612706073"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-26 09:54"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><h1 id='repositories'>Repositories</h1><h2 id='0a366f0c25'>仓库详情</h2>
 <p>仓库详情</p>

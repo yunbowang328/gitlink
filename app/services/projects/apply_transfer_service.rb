@@ -1,12 +1,12 @@
 class Projects::ApplyTransferService < ApplicationService
   attr_accessor :owner, :applied_transfer_project
-  attr_reader :user, :project, :owner_id 
+  attr_reader :user, :project, :owner_name 
 
-  def initialize(user, project, owner_id)
+  def initialize(user, project, owner_name)
     @user   = user
     @project = project
-    @owner_id = owner_id
-    @owner = Owner.find_by_id(owner_id)
+    @owner_name = owner_name
+    @owner = Owner.find_by(login: owner_name)
   end
 
   def call 
@@ -32,7 +32,7 @@ class Projects::ApplyTransferService < ApplicationService
   end
 
   def create_apply 
-    @applied_transfer_project = AppliedTransferProject.create!(user_id: user.id, project_id: project.id, owner_id: owner_id)
+    @applied_transfer_project = AppliedTransferProject.create!(user_id: user.id, project_id: project.id, owner_id: @owner.id)
   end
 
   def send_apply_message 
