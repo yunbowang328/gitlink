@@ -10,3 +10,6 @@ json.project_units @project.project_units.pluck(:unit_type)
 json.lesson_url @project.lesson_url
 json.permission render_permission(current_user, @project)
 json.is_transfering @project.is_transfering
+json.transfer do 
+  json.partial! "/users/user_simple", locals: {user: @project&.applied_transfer_project&.owner}
+end
