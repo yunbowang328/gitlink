@@ -23,6 +23,7 @@ class Projects::TransferService < ApplicationService
 
   private
   def update_owner
+    project.members.find_by(user_id: owner.id).destroy! if owner.is_a?(User)
     project.update!(user_id: new_owner.id)
   end
 

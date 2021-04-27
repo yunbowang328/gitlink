@@ -10,6 +10,8 @@ json.user_identity @user.identity
 json.is_watch current_user&.watched?(@user)
 json.watched_count @user.fan_count   #粉丝
 json.watching_count @user.follow_count   #关注数
+json.undo_messages @waiting_applied_messages.size 
+json.undo_transfer_projects @common_applied_transfer_projects.size
 json.undo_events @undo_events
 json.user_composes_count @user_composes_count
 json.user_org_count @user_org_count
