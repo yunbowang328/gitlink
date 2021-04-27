@@ -16,7 +16,7 @@ class SendTransferProjectAppliedMessageJob < ApplicationJob
       AppliedMessage.create!(user_id: rec.user_id, 
                              applied: applied_transfer_project,
                              status: message_status,
-                             name: build_name(project.name, applied_transfer_project&.owner&.real_name, message_status),
+                             name: build_name(project.name, applied_transfer_project&.owner&.real_name, message_status, applied_user&.real_name),
                              applied_user_id: applied_user.id, 
                              project_id: project.id)
     end
@@ -31,7 +31,7 @@ class SendTransferProjectAppliedMessageJob < ApplicationJob
   end
 
   private 
-  def build_name(repo_name, owner_name, message_status)
+  def build_name(repo_name, owner_name, message_status, applied_name="")
     case message_status
     when 'canceled'
       return "取消转移【#{repo_name}】仓库"
@@ -40,7 +40,7 @@ class SendTransferProjectAppliedMessageJob < ApplicationJob
     when 'successed'
       return "【#{repo_name}】仓库成功转移给【#{owner_name}】"
     when 'failure'
-      return "【#{repo_name}】仓库转移失败"
+      return "拒绝转移【#{repo_name}】仓库"
     end
     ""
   end

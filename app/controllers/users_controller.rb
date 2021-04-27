@@ -32,6 +32,8 @@ class UsersController < ApplicationController
         @common_applied_transfer_projects = AppliedTransferProject.where(owner_id: @user.id).common + AppliedTransferProject.where(owner_id: Organization.joins(team_users: :team).where(team_users: {user_id: @user.id}, teams: {authorize: %w(admin owner)} )).common
         @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size
       else 
+        @waiting_applied_messages = AppliedMessage.none
+        @common_applied_transfer_projects = AppliedTransferProject.none
         @undo_events = 0
       end
       #用户的组织数量
