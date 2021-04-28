@@ -215,7 +215,7 @@ class PullRequestsController < ApplicationController
   def get_relatived
     @project_tags = @project.issue_tags&.select(:id,:name, :color).as_json
     @project_versions = @project.versions&.select(:id,:name, :status).as_json
-    @project_members = @project.members_user_infos
+    @project_members = @project.all_collaborators
     @project_priories = IssuePriority&.select(:id,:name, :position).as_json
   end
 
