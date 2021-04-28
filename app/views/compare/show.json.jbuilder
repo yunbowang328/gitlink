@@ -4,7 +4,7 @@ json.commits do
   json.array! @compare_result['Commits'] do |commit|
     json.author do
       # TODO: 获取头像地址待优化
-      forge_user = User.includes(:user_extension).select(:id, :login).find_by(login: commit['Author']['Name'])
+      forge_user = User.includes(:user_extension).find_by(login: commit['Author']['Name'])
       json.login commit['Author']['Name']
       json.name commit['Author']['Name']
       json.image_url forge_user.nil? ? '' : url_to_avatar(forge_user)
@@ -12,7 +12,7 @@ json.commits do
 
     json.committer do
       # TODO: 获取头像地址待优化
-      forge_user = User.includes(:user_extension).select(:id, :login).find_by(login: commit['Committer']['Name'])
+      forge_user = User.includes(:user_extension).find_by(login: commit['Committer']['Name'])
       json.login commit['Committer']['Name']
       json.name commit['Committer']['Name']
       json.image_url forge_user.nil? ? '' : url_to_avatar(forge_user)
