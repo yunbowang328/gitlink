@@ -124,14 +124,13 @@ module TagChosenHelper
   end
 
   def render_cache_collaborators(project)
-    cache_key = "all_collaborators/#{project.members.maximum('created_on')}"
-
+    cache_key = "all_collaborators/#{project.all_collaborators.maximum('created_on')}"
     Rails.cache.fetch(cache_key) do
-      project.members.includes(:user).collect do |event|
+      project.all_collaborators.order(created_on: :desc).collect do |user|
         {
-          id: event.user&.id,
-          name: event.user&.show_real_name,
-          avatar_url: url_to_avatar(event.user),
+          id: user&.id,
+          name: user&.show_real_name,
+          avatar_url: url_to_avatar(user),
           is_chosen: '0'
         }
       end
@@ -171,10 +170,8 @@ module TagChosenHelper
       # depended_issues_id = @depended_issues_id
 
     end
-    project_members = project.members_user_infos
     project_members_info = []  #指派给
-    project_members.includes(user: :user_extension).each do |member|
-      user = member&.user
+    project.all_collaborators.includes(:user_extension).each do |user|
       if user
         real_name = user.try(:show_real_name)
         user_id = user.id
