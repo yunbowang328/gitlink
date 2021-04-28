@@ -98,4 +98,10 @@ module ProjectOperable
     team_user_sql = User.joins(teams: :team_projects).where(team_projects: {project_id: self.id}).to_sql
     return User.from("( #{ member_sql } UNION #{ team_user_sql } ) AS users").distinct
   end
+
+  def all_managers 
+    member_sql = User.joins(members: :roles).where(members: {project_id: self.id}, roles: {name: %w(Manager)}).to_sql 
+    team_user_sql = User.joins(teams: :team_projects).where(teams: {authorize: %w(owner admin)},team_projects: {project_id: self.id}).to_sql 
+    return User.from("( #{ member_sql} UNION #{ team_user_sql } ) AS users").distinct
+  end
 end
