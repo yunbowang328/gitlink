@@ -152,6 +152,9 @@ class User < Owner
   # 项目
   has_many :applied_projects, dependent: :destroy
   has_many :operate_applied_transfer_projects, class_name: 'AppliedTransferProject', dependent: :destroy
+  has_many :members, dependent: :destroy 
+  has_many :team_users, dependent: :destroy
+  has_many :teams, through: :team_users
 
   # 教学案例
   # has_many :libraries, dependent: :destroy
