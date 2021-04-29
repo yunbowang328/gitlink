@@ -84,6 +84,10 @@ module ProjectOperable
     end
   end
 
+  def operator?(user)
+    user.admin? || !reporter?(user) 
+  end
+
   def set_developer_role(member, role_name)
     role = Role.find_by(name: role_name)
     member.member_roles.create!(role: role)
