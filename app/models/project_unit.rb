@@ -27,6 +27,8 @@ class ProjectUnit < ApplicationRecord
   end
 
   def self.update_by_unit_types!(project, types) 
+    # 默认code类型自动创建
+    types << "code"
     project.project_units.where.not(unit_type: types).each(&:destroy!)
     types.each do |type|
       project.project_units.find_or_create_by!(unit_type: type)
