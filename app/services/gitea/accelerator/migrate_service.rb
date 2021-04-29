@@ -121,6 +121,8 @@ class Gitea::Accelerator::MigrateService < ApplicationService
       error('APIForbiddenError')
     when 422
       error('APIValidationError')
+    else
+      error("MigrateError")
     end
   end
 
