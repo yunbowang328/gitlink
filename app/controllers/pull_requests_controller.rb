@@ -140,7 +140,7 @@ class PullRequestsController < ApplicationController
   end
 
   def pr_merge
-    return render_forbidden("你没有权限操作.") unless current_user.project_manager?(@project)
+    return render_forbidden("你没有权限操作.") unless @project.develper?(current_user)
 
     if params[:do].blank?
       normal_status(-1, "请选择合并方式")
@@ -215,7 +215,7 @@ class PullRequestsController < ApplicationController
   def get_relatived
     @project_tags = @project.issue_tags&.select(:id,:name, :color).as_json
     @project_versions = @project.versions&.select(:id,:name, :status).as_json
-    @project_members = @project.all_managers
+    @project_members = @project.all_developers
     @project_priories = IssuePriority&.select(:id,:name, :position).as_json
   end
 
