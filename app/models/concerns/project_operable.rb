@@ -78,7 +78,7 @@ module ProjectOperable
     if owner.is_a?(User)
       reporters.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      reporters.exists?(user_id: user.id) || owner.is_read?(user.id)
+      reporters.exists?(user_id: user.id) || owner.is_only_read?(user.id)
     else
       false
     end
