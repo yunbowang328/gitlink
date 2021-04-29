@@ -11,6 +11,14 @@ module ProjectOperable
     has_many :team_projects, dependent: :destroy
   end
 
+  def set_owner_permission(creator)
+    return unless owner.is_a?(Organization)
+    owner.build_permit_team_projects!(id)
+    # 避免自己创建的项目，却无法拥有访问权，因为该用户所在团队暂未获得项目访问权
+    return if creator.nil? || owner.is_owner?(creator.id)
+    add_member!(creator.id, "Manager")
+  end
+
   def add_member!(user_id, role_name='Developer')
     member = members.create!(user_id: user_id)
     set_developer_role(member, role_name)

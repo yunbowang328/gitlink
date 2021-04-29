@@ -33,9 +33,8 @@ class Projects::TransferService < ApplicationService
 
   def update_visit_teams
     if new_owner.is_a?(Organization)
-      new_owner.teams.where(includes_all_project: true).each do |team|
-        TeamProject.build(new_owner.id, team.id, project.id)
-      end
+      # 为包含组织所有项目的团队创建项目访问权限
+      new_owner.build_permit_team_projects(project.id)
     else
       project.team_projects.each(&:destroy!)
     end
