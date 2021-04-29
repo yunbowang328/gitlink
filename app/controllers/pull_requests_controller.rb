@@ -140,7 +140,7 @@ class PullRequestsController < ApplicationController
   end
 
   def pr_merge
-    return render_forbidden("你没有权限操作.") unless @project.develper?(current_user)
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
 
     if params[:do].blank?
       normal_status(-1, "请选择合并方式")
