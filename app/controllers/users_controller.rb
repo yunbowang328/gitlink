@@ -41,7 +41,10 @@ class UsersController < ApplicationController
       @user_composes_count = 0
       user_organizations =  User.current.logged? ? @user.organizations.with_visibility(%w(common limited)) + @user.organizations.with_visibility("privacy").joins(:team_users).where(team_users: {user_id: current_user.id}) : @user.organizations.with_visibility("common")
       @user_org_count = user_organizations.size
-      user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
+      normal_projects = Project.members_projects(@user.id).to_sql
+      org_projects = Project.joins(team_projects: [team: :team_users]).where(team_users: {user_id: @user.id}).to_sql
+      projects = Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
+      user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? projects : projects.visible
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size
