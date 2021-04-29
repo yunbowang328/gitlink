@@ -22,6 +22,8 @@
 #  version_releases_count :integer          default("0")
 #  fork_url               :string(255)
 #  is_mirror              :boolean          default("0")
+#  accelerator_url        :string(255)      default("")
+#  source_clone_url       :string(255)      default("")
 #
 # Indexes
 #
