@@ -48,7 +48,8 @@ class Projects::MigrateService < ApplicationService
       user_id: params[:user_id],
       login: params[:auth_username],
       password: params[:auth_password],
-      is_mirror: params[:is_mirror]
+      is_mirror: params[:is_mirror],
+      source_clone_url: params[:source_clone_url]
     }
   end
 
