@@ -114,6 +114,13 @@ class Organization < Owner
     owner_team_users.pluck(:user_id).include?(user_id) && owner_team_users.size == 1
   end
 
+  # 为包含组织所有项目的团队创建项目访问权限
+  def build_permit_team_projects!(project_id)
+    teams.where(includes_all_project: true).each do |team|
+      TeamProject.build(id, team.id, project_id)
+    end
+  end
+
   def real_name
     name = lastname + firstname
     name = name.blank? ? (nickname.blank? ? login : nickname) : name

@@ -18,7 +18,9 @@ class Projects::ListMyQuery < ApplicationQuery
     end
 
     if params[:category].blank?
-      projects = projects.members_projects(user.id)
+      normal_projects = projects.members_projects(user.id).to_sql
+      org_projects = projects.joins(team_projects: [team: :team_users]).where(team_users: {user_id: user.id}).to_sql
+      projects = Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
     elsif params[:category].to_s == "join"
       normal_projects = projects.where.not(user_id: user.id).members_projects(user.id).to_sql
       org_projects = projects.joins(team_projects: [team: :team_users]).where(team_users: {user_id: user.id}).to_sql
