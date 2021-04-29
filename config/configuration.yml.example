@@ -50,10 +50,16 @@ default: &default
       redirect_uri: 'https://testforgeplus.trustie.net/api/auth/educoder/callback'
 
   gitea:
-    access_key_id: 'root'
-    access_key_secret: '_Trustie_10010'
-    domain: 'https://testgitea.trustie.net'
+    access_key_id: ''
+    access_key_secret: ''
+    domain: 'https://testgit.trustie.net'
     base_url: '/api/v1'
+    accelerator:
+      access_key_id: ''
+      access_key_secret: ''
+      access_admin_uid: 1
+      domain: 'https://testgit.trustie.net'
+      base_url: '/api/v1'
 
 
 production:
