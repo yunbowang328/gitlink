@@ -1,0 +1,7 @@
+gitea:
+  pull_request:
+    merge_service:
+      405:
+        default: "此合并请求有变更与目标分支冲突。"
+        'User not allowed to merge PR': "用户没有合并请求的权限"
+      403:

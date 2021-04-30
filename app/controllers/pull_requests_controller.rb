@@ -149,12 +149,12 @@ class PullRequestsController < ApplicationController
         begin
           result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
 
-          if result && @pull_request.merge!
+          if result.status == 200 && @pull_request.merge!
             @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
-            normal_status(-1, "合并失败")
+            normal_status(-1, result.message)
           end
         rescue => e
           normal_status(-1, e.message)
