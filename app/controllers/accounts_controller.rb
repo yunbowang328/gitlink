@@ -11,17 +11,10 @@ class AccountsController < ApplicationController
     Users::SyncGiteaForm.new(sync_gitea_params).validate!
     user = User.find_by(login: sync_gitea_params[:login])
     return render_error("该用户已同步协作平台") if user.gitea_token.present? && user.gitea_uid.present?
-    interactor = Gitea::RegisterInteractor.call({username: sync_gitea_params[:login], email: sync_gitea_params[:email], password: sync_gitea_params[:password]})
-    if interactor.success?
-      gitea_user = interactor.result
-      result = Gitea::User::GenerateTokenService.call(sync_gitea_params[:login], sync_gitea_params[:password])
-      user.gitea_token = result['sha1']
-      user.gitea_uid = gitea_user[:body]['id']
-      user.save!
-      render_ok
-    else
-      render_error(interactor.error)
-    end
+    
+    result = create_gitea_user!(user, sync_gitea_params[:login], sync_gitea_params[:email], sync_gitea_params[:password])
+    
+    result[:user] ? render_ok : render_error(result[:message])
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(-1, e.message)

@@ -8,6 +8,7 @@ class Users::SyncGiteaForm
   validate :check_user, :check_password
 
   def check_user 
+    Rails.logger.info " ............ #{login}"
     @user = User.find_by(login: login)
     raise '用户不存在.' unless user.present?
   end
