@@ -1,6 +1,6 @@
 class PullRequests::MergeService < ApplicationService
   attr_reader :owner, :repo, :pull, :current_user, :params
-
+  attr_accessor :status, :message
   # eq:
   # PullRequests::MergeService.call(owner, repo, pull, current_user, params)
   def initialize(owner, repo, pull, current_user, params)
@@ -15,6 +15,7 @@ class PullRequests::MergeService < ApplicationService
     ActiveRecord::Base.transaction do
       gitea_pull_merge!
     end
+    self
   end
 
   private
@@ -22,8 +23,7 @@ class PullRequests::MergeService < ApplicationService
   def gitea_pull_merge!
     result = Gitea::PullRequest::MergeService.call(@current_user.gitea_token, @owner.login,
       @repo.identifier, @pull.gpid, gitea_merge_pull_params)
-
-    result[:status] === 200 ? true : false
+      @status, @message = result
   end
 
   def gitea_merge_pull_params
