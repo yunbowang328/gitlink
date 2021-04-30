@@ -7,7 +7,16 @@ class MembersController < ApplicationController
   before_action :check_member_not_exists!, only: %i[remove change_role]
 
   def create
+    if @user.gitea_token.blank?
+      result = Gitea::User::GetService.call(@user.login)
+      if result[:status] == :error
+        # gitea不存在用户@user,直接注册
+        user_result = create_gitea_user!(@user, @user.login, @user.mail)
+        return render_error(user_result[:message]) if user_result[:message]
+      end
+    end
     interactor = Projects::AddMemberInteractor.call(@project.owner, @project, @user)
+    
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
