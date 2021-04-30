@@ -15,7 +15,7 @@ class Repositories::CreateService < ApplicationService
         create_gitea_repository
         sync_project
         sync_repository
-        set_owner_permission(user)
+        @project.set_owner_permission(user)
         # if project.project_type == "common"
         #   chain_params = {
         #     type: "create",
