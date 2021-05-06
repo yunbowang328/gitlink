@@ -106,7 +106,7 @@ class ProjectsController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      # Projects::CreateForm.new(project_params).validate!
+      Projects::UpdateForm.new(project_params).validate!
       private = params[:private] || false
 
       new_project_params = project_params.except(:private).merge(is_public: !private)
