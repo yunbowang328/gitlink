@@ -1,0 +1,7 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      projects/create_form:
+        name: 项目名称
+        repository_name: 仓库名称
+        description: 项目简介
