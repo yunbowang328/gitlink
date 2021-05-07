@@ -10,7 +10,7 @@ class Projects::MigrateService < ApplicationService
   def call
     @project = Project.new(project_params)
     if @project.save!
-      ProjectUnit.init_types(@project.id)
+      ProjectUnit.init_types(@project.id, project.project_type)
       Project.update_mirror_projects_count!
       @project.set_owner_permission(user)
       Repositories::MigrateService.new(user, @project, repository_params).call
