@@ -102,7 +102,7 @@ class IssuesController < ApplicationController
 
   def create
     issue_params = issue_send_params(params)
-    Issues::CreateForm.new(issue_params).validate!
+    Issues::CreateForm.new({subject:issue_params[:subject]}).validate!
     @issue = Issue.new(issue_params)
     if @issue.save!
       if params[:attachment_ids].present?
@@ -194,7 +194,7 @@ class IssuesController < ApplicationController
       normal_status(-1, "不允许修改为关闭状态")
     else
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
-      Issues::UpdateForm.new(issue_params).validate!
+      Issues::UpdateForm.new({subject:issue_params[:subject]}).validate!
       if @issue.update_attributes(issue_params)
         if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
           @issue.issue_times.update_all(end_time: Time.now)

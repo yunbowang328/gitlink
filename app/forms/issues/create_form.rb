@@ -1,7 +1,7 @@
 class Issues::CreateForm
   include ActiveModel::Model
 
-  attr_accessor :subject,:description,:is_private,:assigned_to_id,:tracker_id,:status_id,:priority_id,:fixed_version_id,:start_date,:due_date,:estimated_hours,:done_ratio,:issue_type,:token,:issue_tags_value,:closed_on,:branch_name,:issue_classify,:author_id,:project_id
+  attr_accessor :subject
 
   validates :subject, presence: { message: "不能为空" }
 
