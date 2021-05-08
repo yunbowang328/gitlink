@@ -106,7 +106,7 @@ class ProjectsController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      # Projects::CreateForm.new(project_params).validate!
+      Projects::UpdateForm.new(project_params).validate!
       private = params[:private] || false
 
       new_project_params = project_params.except(:private).merge(is_public: !private)
@@ -167,7 +167,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc).limit(5)
   end
 
   def about

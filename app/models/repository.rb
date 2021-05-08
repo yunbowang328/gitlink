@@ -78,4 +78,9 @@ class Repository < ApplicationRecord
     end
   end
 
+  def remote_mirror_url
+    source_clone_url.blank? ? mirror_url : source_clone_url
+  end
+  
+
 end

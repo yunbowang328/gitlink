@@ -101,51 +101,46 @@ class IssuesController < ApplicationController
   end
 
   def create
-    if params[:subject].blank?
-      normal_status(-1, "标题不能为空")
-    elsif params[:subject].to_s.size > 255
-      normal_status(-1, "标题不能超过255个字符")
-    else
-      issue_params = issue_send_params(params)
-
-      @issue = Issue.new(issue_params)
-      if @issue.save!
-        if params[:attachment_ids].present?
-          params[:attachment_ids].each do |id|
-            attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
-            unless attachment.blank?
-              attachment.container = @issue
-              attachment.author_id = current_user.id
-              attachment.description = ""
-              attachment.save
-            end
+    issue_params = issue_send_params(params)
+    Issues::CreateForm.new({subject:issue_params[:subject]}).validate!
+    @issue = Issue.new(issue_params)
+    if @issue.save!
+      if params[:attachment_ids].present?
+        params[:attachment_ids].each do |id|
+          attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
+          unless attachment.blank?
+            attachment.container = @issue
+            attachment.author_id = current_user.id
+            attachment.description = ""
+            attachment.save
           end
         end
-        if params[:issue_tag_ids].present?
-          params[:issue_tag_ids].each do |tag|
-            IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
-          end
+      end
+      if params[:issue_tag_ids].present?
+        params[:issue_tag_ids].each do |tag|
+          IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
         end
-        if params[:assigned_to_id].present?
-          Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
-                         container_id: @issue.id, container_type: 'Issue',
-                         parent_container_id: @project.id, parent_container_type: "Project",
-                         tiding_type: 'issue', status: 0)
-        end
-
-        #为悬赏任务时, 扣除当前用户的积分
-        if params[:issue_type].to_s == "2"
-          post_to_chain("minus", params[:token].to_i, current_user.try(:login))
-        end
-
-        @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-        render json: {status: 0, message: "创建成", id: @issue.id}
-      else
-        normal_status(-1, "创建失败")
+      end
+      if params[:assigned_to_id].present?
+        Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
+                       container_id: @issue.id, container_type: 'Issue',
+                       parent_container_id: @project.id, parent_container_type: "Project",
+                       tiding_type: 'issue', status: 0)
       end
 
-    end
+      #为悬赏任务时, 扣除当前用户的积分
+      if params[:issue_type].to_s == "2"
+        post_to_chain("minus", params[:token].to_i, current_user.try(:login))
+      end
 
+      @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
+      render json: {status: 0, message: "创建成", id: @issue.id}
+    else
+      normal_status(-1, "创建失败")
+    end
+  rescue Exception => exception
+    puts exception.message
+    normal_status(-1, exception.message)
   end
 
   def edit
@@ -199,7 +194,7 @@ class IssuesController < ApplicationController
       normal_status(-1, "不允许修改为关闭状态")
     else
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
-
+      Issues::UpdateForm.new({subject:issue_params[:subject]}).validate!
       if @issue.update_attributes(issue_params)
         if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
           @issue.issue_times.update_all(end_time: Time.now)
@@ -225,6 +220,9 @@ class IssuesController < ApplicationController
         normal_status(-1, "更新失败")
       end
     end
+  rescue Exception => exception
+    puts exception.message
+    normal_status(-1, exception.message)
   end
 
   def show

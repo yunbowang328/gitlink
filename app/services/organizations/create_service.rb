@@ -54,7 +54,7 @@ class Organizations::CreateService < ApplicationService
   end
 
   def create_owner_info
-    @owner_team = Team.build(organization.id, "Owners", "", 4, true, true)
+    @owner_team = Team.build(organization.id, "Owners", "Owner团队", "", 4, true, true)
     TeamUnit.unit_types.keys.each do |u_type|
       TeamUnit.build(organization.id, owner_team.id, u_type)
     end

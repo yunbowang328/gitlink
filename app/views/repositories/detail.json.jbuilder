@@ -80,7 +80,7 @@ json.contributors do
   total_count = @result[:contributor].size
   json.list @result[:contributor].each do |contributor|
     user = User.find_by(gitea_uid: contributor["id"])
-    if contributor["login"] == "root"
+    if contributor["login"] == "root" || user.nil?
       total_count -= 1
       next
     end

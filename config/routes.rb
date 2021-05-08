@@ -393,7 +393,6 @@ Rails.application.routes.draw do
           get :files
           get :detail
           get :archive
-          get :top_counts
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
