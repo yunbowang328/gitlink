@@ -1,0 +1,6 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/login_form:
+        login: 用户名 
+        password: 密码

@@ -1,0 +1,7 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      organizations/create_team_form:
+        name: 团队标识
+        nickname: 团队名称
+        description: 团队描述
