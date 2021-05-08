@@ -71,6 +71,7 @@
 #  index_projects_on_updated_on              (updated_on)
 #
 
+
 class Project < ApplicationRecord
   include Matchable
   include Publicable
@@ -112,6 +113,7 @@ class Project < ApplicationRecord
   has_one :project_detail, dependent: :destroy
   has_many :team_projects, dependent: :destroy
   has_many :project_units, dependent: :destroy
+  has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
@@ -295,4 +297,7 @@ class Project < ApplicationRecord
     update_column(:updated_on, time)
   end
 
+  def is_transfering
+    applied_transfer_project&.common? ? true : false
+  end
 end

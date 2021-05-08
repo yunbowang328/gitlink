@@ -43,6 +43,7 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def update
+    Organizations::CreateTeamForm.new(team_params).validate!
     @team = Organizations::Teams::UpdateService.call(current_user, @team, team_params)
   rescue Exception => e
     uid_logger_error(e.message)

@@ -257,6 +257,13 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        resources :applied_messages, only: [:index]
+        resources :applied_transfer_projects, only: [:index] do 
+          member do 
+            post :accept
+            post :refuse
+          end
+        end
         resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
@@ -385,7 +392,6 @@ Rails.application.routes.draw do
           get :files
           get :detail
           get :archive
-          get :top_counts
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
@@ -532,6 +538,12 @@ Rails.application.routes.draw do
       scope module: :projects do
         resources :teams, only: [:index, :create, :destroy]
         resources :project_units, only: [:index, :create]
+        resources :applied_transfer_projects, only: [:create] do 
+          collection do 
+            get :organizations
+            post :cancel
+          end
+        end
         scope do
           get(
             '/blob/*id/diff',

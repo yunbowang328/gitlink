@@ -1,0 +1,9 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      organizations/create_form:
+        name: 组织账号
+        nickname: 组织名称
+        location: 组织所在地区
+        description: 组织简介
+        visibility: 组织可见性

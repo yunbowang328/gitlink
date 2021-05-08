@@ -3,6 +3,9 @@ class Organizations::CreateForm < BaseForm
   attr_accessor :name, :description, :website, :location, :repo_admin_change_team_access, :visibility, :max_repo_creation, :nickname
 
   validates :name, :nickname, :visibility, presence: true
+  validates :name, :nickname, length: { maximum: 100 }
+  validates :location, length: { maximum: 50 }
+  validates :description, length: { maximum: 200 }
   validates :name, format: { with: NAME_REGEX, multiline: true, message: "只能含有数字、字母、下划线且不能以下划线开头和结尾" }
 
 end

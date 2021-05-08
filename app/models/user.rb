@@ -147,9 +147,14 @@ class User < Owner
   has_many :trail_auth_apply_actions, -> { where(container_type: 'TrialAuthorization') }, class_name: 'ApplyAction'
 
   # has_many :attendances
-
+  has_many :applied_messages, dependent: :destroy
+  has_many :operate_applied_messages, class_name: 'AppliedMessage', dependent: :destroy
   # 项目
   has_many :applied_projects, dependent: :destroy
+  has_many :operate_applied_transfer_projects, class_name: 'AppliedTransferProject', dependent: :destroy
+  has_many :members, dependent: :destroy 
+  has_many :team_users, dependent: :destroy
+  has_many :teams, through: :team_users
 
   # 教学案例
   # has_many :libraries, dependent: :destroy

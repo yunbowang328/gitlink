@@ -1,5 +1,6 @@
 class Projects::MigrateService < ApplicationService
   attr_reader :user, :params
+  attr_accessor :project
 
   def initialize(user, params)
     @user    = user
@@ -9,8 +10,9 @@ class Projects::MigrateService < ApplicationService
   def call
     @project = Project.new(project_params)
     if @project.save!
-      ProjectUnit.init_types(@project.id)
+      ProjectUnit.init_types(@project.id, project.project_type)
       Project.update_mirror_projects_count!
+      @project.set_owner_permission(user)
       Repositories::MigrateService.new(user, @project, repository_params).call
     else
       #
@@ -48,7 +50,8 @@ class Projects::MigrateService < ApplicationService
       user_id: params[:user_id],
       login: params[:auth_username],
       password: params[:auth_password],
-      is_mirror: params[:is_mirror]
+      is_mirror: params[:is_mirror],
+      source_clone_url: params[:source_clone_url]
     }
   end
 

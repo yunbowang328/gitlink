@@ -11,6 +11,14 @@ module ProjectOperable
     has_many :team_projects, dependent: :destroy
   end
 
+  def set_owner_permission(creator)
+    return unless owner.is_a?(Organization)
+    owner.build_permit_team_projects!(id)
+    # 避免自己创建的项目，却无法拥有访问权，因为该用户所在团队暂未获得项目访问权
+    return if creator.nil? || owner.is_owner?(creator.id)
+    add_member!(creator.id, "Manager")
+  end
+
   def add_member!(user_id, role_name='Developer')
     member = members.create!(user_id: user_id)
     set_developer_role(member, role_name)
@@ -78,10 +86,14 @@ module ProjectOperable
     if owner.is_a?(User)
       reporters.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      reporters.exists?(user_id: user.id) || owner.is_read?(user.id)
+      reporters.exists?(user_id: user.id) || owner.is_only_read?(user.id)
     else
       false
     end
+  end
+
+  def operator?(user)
+    user.admin? || !reporter?(user) 
   end
 
   def set_developer_role(member, role_name)
@@ -91,5 +103,23 @@ module ProjectOperable
 
   def has_menu_permission(unit_type)
     self.project_units.where(unit_type: unit_type).exists?
+  end
+
+  def all_collaborators 
+    member_sql = User.joins(members: :roles).where(members: {project_id: self.id}, roles: {name: %w(Manager Developer Reporter)}).to_sql 
+    team_user_sql = User.joins(teams: :team_projects).where(team_projects: {project_id: self.id}).to_sql
+    return User.from("( #{ member_sql } UNION #{ team_user_sql } ) AS users").distinct
+  end
+
+  def all_developers
+    member_sql = User.joins(members: :roles).where(members: {project_id: self.id}, roles: {name: %w(Manager Developer)}).to_sql 
+    team_user_sql = User.joins(teams: :team_projects).where(teams: {authorize: %w(owner admin write)}, team_projects: {project_id: self.id}).to_sql
+    return User.from("( #{ member_sql } UNION #{ team_user_sql } ) AS users").distinct
+  end
+
+  def all_managers 
+    member_sql = User.joins(members: :roles).where(members: {project_id: self.id}, roles: {name: %w(Manager)}).to_sql 
+    team_user_sql = User.joins(teams: :team_projects).where(teams: {authorize: %w(owner admin)},team_projects: {project_id: self.id}).to_sql 
+    return User.from("( #{ member_sql} UNION #{ team_user_sql } ) AS users").distinct
   end
 end

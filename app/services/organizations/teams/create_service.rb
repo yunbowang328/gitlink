@@ -28,6 +28,10 @@ class Organizations::Teams::CreateService < ApplicationService
     params[:name]
   end
 
+  def nickname 
+    params[:nickname]
+  end
+
   def description
     params[:description]
   end
@@ -45,7 +49,7 @@ class Organizations::Teams::CreateService < ApplicationService
   end
 
   def create_team
-    @team = Team.build(org.id, name, description, authorize,
+    @team = Team.build(org.id, name, nickname, description, authorize,
                        includes_all_project, can_create_org_project)
   end
 
