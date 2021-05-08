@@ -1,0 +1,7 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      issues/create_form:
+        subject: 标题
+      issues/update_form:
+        subject: 标题
