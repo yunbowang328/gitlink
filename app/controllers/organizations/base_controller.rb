@@ -17,6 +17,7 @@ class Organizations::BaseController < ApplicationController
   end
 
   def org_privacy_condition
+    return false if current_user.admin?
     @organization.organization_extension.privacy? && @organization.organization_users.where(user_id: current_user.id).blank?
   end
 

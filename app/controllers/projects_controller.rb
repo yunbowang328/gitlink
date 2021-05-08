@@ -2,6 +2,8 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
+  include Acceleratorable
+
   before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :load_project, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
@@ -53,7 +55,23 @@ class ProjectsController < ApplicationController
 
   def migrate
     Projects::MigrateForm.new(mirror_params).validate!
-    @project = Projects::MigrateService.new(current_user, mirror_params).call
+
+    @project = 
+      if enable_accelerator?(mirror_params[:clone_addr])
+        source_clone_url = mirror_params[:clone_addr]
+        uid_logger("########## 已动加速器 ##########")
+        result = Gitea::Accelerator::MigrateService.call(mirror_params)
+        if result[:status] == :success
+          Rails.logger.info "########## 加速镜像成功 ########## "
+          Projects::MigrateService.call(current_user, 
+            mirror_params.merge(source_clone_url: source_clone_url, 
+              clone_addr: accelerator_url(mirror_params[:repository_name])))
+        else
+          Projects::MigrateService.call(current_user, mirror_params)
+        end
+      else
+        Projects::MigrateService.call(current_user, mirror_params)
+      end
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
@@ -88,7 +106,7 @@ class ProjectsController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      # Projects::CreateForm.new(project_params).validate!
+      Projects::UpdateForm.new(project_params).validate!
       private = params[:private] || false
 
       new_project_params = project_params.except(:private).merge(is_public: !private)
@@ -149,7 +167,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc).limit(5)
   end
 
   def about

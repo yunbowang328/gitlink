@@ -27,12 +27,24 @@ class UsersController < ApplicationController
 
   def show
       #待办事项，现在未做
-      @undo_events = 0
+      if User.current.login == @user.login 
+        @waiting_applied_messages = @user.applied_messages.waiting
+        @common_applied_transfer_projects = AppliedTransferProject.where(owner_id: @user.id).common + AppliedTransferProject.where(owner_id: Organization.joins(team_users: :team).where(team_users: {user_id: @user.id}, teams: {authorize: %w(admin owner)} )).common
+        @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size
+      else 
+        @waiting_applied_messages = AppliedMessage.none
+        @common_applied_transfer_projects = AppliedTransferProject.none
+        @undo_events = 0
+      end
       #用户的组织数量
       # @user_composes_count =  @user.composes.size
       @user_composes_count = 0
-      @user_org_count = User.current.logged? ? @user.organizations.with_visibility(%w(common limited)).size + @user.organizations.with_visibility("privacy").joins(:organization_users).where(organization_users: {user_id: current_user.id}).size : @user.organizations.with_visibility("common").size
-      user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? @user.projects : @user.projects.visible
+      user_organizations =  User.current.logged? ? @user.organizations.with_visibility(%w(common limited)) + @user.organizations.with_visibility("privacy").joins(:team_users).where(team_users: {user_id: current_user.id}) : @user.organizations.with_visibility("common")
+      @user_org_count = user_organizations.size
+      normal_projects = Project.members_projects(@user.id).to_sql
+      org_projects = Project.joins(team_projects: [team: :team_users]).where(team_users: {user_id: @user.id}).to_sql
+      projects = Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
+      user_projects = User.current.logged? && (User.current.admin? ||  User.current.login == @user.login) ? projects : projects.visible
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size

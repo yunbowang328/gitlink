@@ -176,6 +176,7 @@ class AccountsController < ApplicationController
 
   # 用户登录
   def login
+    Users::LoginForm.new(account_params).validate!
     @user = User.try_to_login(params[:login], params[:password])
 
     return normal_status(-2, "错误的账号或密码") if @user.blank?
@@ -352,4 +353,7 @@ class AccountsController < ApplicationController
     params.require(:user).permit(:login, :email, :phone)
   end
 
+  def account_params 
+    params.require(:account).permit(:login, :password)
+  end
 end

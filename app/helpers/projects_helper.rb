@@ -34,15 +34,14 @@ module ProjectsHelper
   end
 
   def json_response(project, user)
-    # repo = project.repository
-    repo = Repository.includes(:mirror).select(:id, :mirror_url).find_by(project: project)
+    repo = Repository.includes(:mirror).select(:id, :mirror_url, :source_clone_url).find_by(project: project)
 
     tmp_json = {}
     unless project.common?
       tmp_json = tmp_json.merge({
         mirror_status: repo.mirror_status,
         mirror_num: repo.mirror_num,
-        mirror_url: repo.mirror_url,
+        mirror_url: repo.remote_mirror_url,
         first_sync: repo.first_sync?
       })
     end
