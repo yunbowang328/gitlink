@@ -36,6 +36,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def update
     ActiveRecord::Base.transaction do
+      Organizations::CreateForm.new(organization_params).validate!
       login = @organization.login
       @organization.login = organization_params[:name] if organization_params[:name].present?
       @organization.nickname = organization_params[:nickname] if organization_params[:nickname].present?
