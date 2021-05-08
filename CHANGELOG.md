@@ -1,5 +1,22 @@
 # Changelog
 
+## [v3.0.3](https://forgeplus.trustie.net/projects/jasder/forgeplus/releases) - 2021-05-08
+
+* BUGFIXES
+  * Fix 解决易修标题过长导致的排版问题(45469)
+  * Fix 解决合并请求详情页面排版错误的问题(45457)
+  * FIX 解决转移仓库界面专有名词描述错误的问题(45455)
+  * Fix 解决markdown格式文件自动生成数字排序的问题(45454)
+  * Fix 解决镜像项目源地址不显示的问题(45403)
+  * Fix 解决镜像项目导航显示错误问题(45398)
+  * Fix 解决其他相关bug
+
+* ENHANCEMENTS
+  * UPDATE 用户注册时，账号和密码正则匹配调整(45336) (45318) (45290)
+  * ADD 创建组织各属性添加规则匹配功能(45313) (45289)
+  * ADD 创建团建各属性添加规则匹配功能(45334) (45325) (45287)
+  * ADD 仓库转移功能(45017) (45015)
+ 
 ## [v3.0.2](https://forgeplus.trustie.net/projects/jasder/forgeplus/releases) - 2021-04-23
 
 * BUGFIXES
