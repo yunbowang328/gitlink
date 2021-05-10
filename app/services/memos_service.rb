@@ -78,8 +78,8 @@ class MemosService
       memo.author = current_user
       memo.forum_section_id = params[:children_forum_id].present? ? params[:children_forum_id] : params[:forum_id]
     
-      # memo.published_at = Time.now if params[:memo][:published_at].blank?
-      memo.hidden = true
+      memo.published_at = Time.now if params[:memo][:published_at].blank?
+      memo.hidden = false
       # memo.save!
       if memo.save!
         memo.update_attachments(params[:attachments]) if params[:attachments].present?
