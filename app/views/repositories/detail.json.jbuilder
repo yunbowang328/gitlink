@@ -21,7 +21,7 @@ json.versions_count @project.versions_count  #里程碑数量
 json.version_releases_count @project.releases_size(@user.try(:id), "all")
 json.version_releasesed_count @project.releases_size(@user.try(:id), "released")  #已发行的版本
 json.permission render_permission(@user, @project)
-json.mirror_url @project&.repository.source_clone_url
+json.mirror_url @project&.repository.remote_mirror_url
 json.mirror @project&.repository.mirror_url.present?
 json.type @project.numerical_for_project_type
 json.open_devops @project.open_devops?
