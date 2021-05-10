@@ -109,7 +109,8 @@ class MemosService
   #       :author_info 表示当前帖子用户的信息
   def show params, current_user
     memo = Memo.find(params[:id])
-    return { status: 404 } if memo.hidden? && (!current_user || !(current_user.admin? || current_user.id == memo.author_id))
+    return { status: 404 } if memo.hidden? && !(current_user.admin? || current_user.id == memo.author_id)
+    # return { status: 404 } if memo.hidden? && (!current_user || !(current_user.admin? || current_user.id == memo.author_id))
     is_banned = user_is_banned?(current_user)
     forum_section = memo&.forum_section
   
