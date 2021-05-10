@@ -90,24 +90,24 @@ class ForumSectionsService
     user_name = params[:user_name].to_s.strip
     page = params[:page].to_i > 0 ? (params[:page].to_i - 1) : 0
     offset = page * LIMIT
-    # if user_name.blank?
-    #   users_count = 0
-    # else
-    #
-    # end
-    users = User.where("( LOWER(login) LIKE ? or LOWER(concat(lastname, firstname)) LIKE ? or LOWER(mail) LIKE ? )",
+    if user_name.blank?
+      users_count = 0
+    else
+      users = User.where("( LOWER(login) LIKE ? or LOWER(concat(lastname, firstname)) LIKE ? or LOWER(mail) LIKE ? )",
                        "%#{user_name}%","%#{user_name}%","%#{user_name}%")
-    users_count =  users.size
-    users = users.order("created_on desc").limit(LIMIT).offset(offset)
-    users.each do |u|
-      user_item = {
-        id: u.id,
-        login: u.try(:login),
-        username: u.try(:show_real_name),
-        nickname: u.try(:nickname)
-      }
-      search_users.push(user_item)
+      users_count =  users.size
+      users = users.order("created_on desc").limit(LIMIT).offset(offset)
+      users.each do |u|
+        user_item = {
+          id: u.id,
+          login: u.try(:login),
+          username: u.try(:show_real_name),
+          nickname: u.try(:nickname)
+        }
+        search_users.push(user_item)
+      end
     end
+    
     {status:0, user_lists: search_users, users_count: users_count, limit: LIMIT}
 
   end
