@@ -596,7 +596,14 @@ class MemosService
 
     page = params[:page].to_i > 0 ? (params[:page].to_i - 1) : 0
     offset = page * LIMIT
-    all_memos = forum_section.memos.posts
+    all_memos = 
+      if forum_section.is_root?
+        forum_section_ids = forum_section.child_ids << forum_section.id
+        Rails.logger.info "######### forum_section_ids: #{forum_section_ids}"
+        Memo.where(forum_section_id: forum_section_ids)
+      else
+        forum_section.memos.posts
+      end
     select_type = params[:select_type]
     case select_type.to_s
     when "is_fine"
@@ -729,6 +736,7 @@ class MemosService
 
   
   def check_banned_permission current_user, memo_id
+    return true if current_user&.admin?
     forum_id = MemoForum&.where(is_children: false, memo_id: memo_id)&.first.try(:forum_id).to_s
     user_banned_permission current_user, forum_id
   end

@@ -364,7 +364,7 @@ class ForumSectionsService
     return {status: -1, message: "请登录"} unless check_user_permission(current_user, params[:id])
     select_section_ids = [params[:id]]
     unless @forum_section.parent_id.present?
-      children_forums = @forum_section.children_forum.pluck(:id)
+      children_forums = @forum_section.child_ids
       select_section_ids = select_section_ids + children_forums
     end
     select_section_ids.uniq
@@ -389,7 +389,7 @@ class ForumSectionsService
       else
         memo_min_sections = memo.memo_forums.first
       end
-      memo_last_section = memo_min_sections.forum_section
+      memo_last_section = memo_min_sections&.forum_section
 
       memo_list = {
         memo_id: memo.id,
@@ -416,7 +416,7 @@ class ForumSectionsService
 
     select_section_ids = [params[:id]]
     unless @forum_section.parent_id.present?
-      children_forums = @forum_section.children_forum.pluck(:id)
+      children_forums = @forum_section.child_ids
       select_section_ids = select_section_ids + children_forums
     end
     select_section_ids.uniq
@@ -462,7 +462,7 @@ class ForumSectionsService
 
     select_section_ids = [params[:id]]
     unless @forum_section.parent_id.present?
-      children_forums = @forum_section.children_forum.pluck(:id)
+      children_forums = @forum_section.child_ids
       select_section_ids = select_section_ids + children_forums
     end
     select_section_ids.uniq
@@ -473,7 +473,7 @@ class ForumSectionsService
     offset = page * LIMIT
     #全部的父帖子
     memo_forum_section_ids = MemoForum.where(forum_id: select_section_ids).pluck(:memo_id).uniq
-    memos_all = Memo.where(hidden: false,parent_id: nil, id: memo_forum_section_ids).order("created_at desc")
+    memos_all = Memo.where(hidden: false,parent_id: nil, forum_section_id: select_section_ids).order("created_at desc")
     # memos_all = Memo.where(hidden: false, parent_id: nil).joins(:memo_forums).where("memo_forums.forum_id in (#{select_section_ids.join(",")})")
     if params[:type].present?
       if params[:type] == "sticky"
@@ -499,7 +499,7 @@ class ForumSectionsService
       else
         memo_min_sections = memo.memo_forums.first
       end
-      memo_last_section = memo_min_sections.forum_section
+      memo_last_section = memo_min_sections&.forum_section
 
       memo_list = {
         memo_id: memo.id,
