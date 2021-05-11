@@ -363,7 +363,7 @@ class ForumSectionsService
     set_forum_section(params[:id])
     return {status: -1, message: "请登录"} unless check_user_permission(current_user, params[:id])
     select_section_ids = [params[:id]]
-    unless @forum_section.parent_id.present?
+    # unless @forum_section.parent_id.present?
       children_forums = @forum_section.child_ids
       select_section_ids = select_section_ids + children_forums
     #end
@@ -374,7 +374,7 @@ class ForumSectionsService
 
     offset = page * LIMIT
     memo_forum_section_ids = MemoForum.where(forum_id: select_section_ids).pluck(:memo_id).uniq
-    memos_all = Memo.where(hidden:true, published_at: nil, parent_id: nil, id: memo_forum_section_ids).order("created_at desc")
+    memos_all = Memo.where(hidden:true, published_at: nil, parent_id: nil, forum_section_id: select_section_ids).order("created_at desc")
 
     # memos_all = Memo.where(hidden: true, parent_id: nil, id: memo_forum_section_ids).joins(:memo_forums).where("memo_forums.forum_id in (#{select_section_ids.join(",")})").order("created_at desc")
     memos_count =  memos_all.size
