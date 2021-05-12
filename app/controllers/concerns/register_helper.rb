@@ -31,7 +31,7 @@ module RegisterHelper
     result
   end
 
-  def autosync_register_trustie(username, password, email)
+  def autosync_register_trustie(username, password, email, lastname="")
     config = Rails.application.config_for(:configuration).symbolize_keys!
 
     api_host = config[:sync_url]
@@ -42,8 +42,9 @@ module RegisterHelper
     sync_json = {
       "mail": email,
       "password": password,
-      "login": username
-    }
+      "login": username,
+      "lastname": lastname
+    }.compact
     uri = URI.parse(url)
 
     if api_host
