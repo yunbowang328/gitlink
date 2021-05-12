@@ -186,6 +186,7 @@ module ApiIndexHelper
   end
 
   def user_banned_permission current_user, forum_id
+    return true if current_user&.admin?
     if current_user.present?
       if forum_id.present?
         user_forum_moder = ForumModerator.where(forum_section_id: forum_id,user_id: current_user.id).exists?
