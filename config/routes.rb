@@ -130,6 +130,7 @@ Rails.application.routes.draw do
             get :search
           end
         end
+        get :recommend, on: :collection
       end
     end
 

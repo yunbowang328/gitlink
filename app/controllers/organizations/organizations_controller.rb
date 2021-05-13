@@ -1,5 +1,5 @@
 class Organizations::OrganizationsController < Organizations::BaseController
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [:index, :show, :recommend]
   before_action :convert_image!, only: [:create, :update]
   before_action :load_organization, only: [:show, :update, :destroy]
   before_action :check_user_can_edit_org, only: [:update, :destroy]
@@ -60,6 +60,13 @@ class Organizations::OrganizationsController < Organizations::BaseController
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
+  end
+
+  def recommend
+    recommend = %W(xuos Huawei_Technology openatom_foundation pkecosystem TensorLayer)
+    
+    @organizations = Organization.with_visibility(%w(common)
+      .where(nickname: recommend).select(:id, :nickname)
   end
 
   private
