@@ -65,7 +65,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def recommend
     recommend = %W(xuos Huawei_Technology openatom_foundation pkecosystem TensorLayer)
     
-    @organizations = Organization.with_visibility(%w(common)
+    @organizations = Organization.with_visibility(%w(common))
       .where(nickname: recommend).select(:id, :nickname)
   end
 
