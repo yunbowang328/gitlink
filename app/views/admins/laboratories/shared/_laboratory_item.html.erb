@@ -10,7 +10,6 @@
 </td>
 <td>
   <% if school && school.identifier.present? %>
-    <%= link_to school.identifier.to_s, statistics_college_path(school.identifier), target: '_blank' %>
   <% else %>
     --
   <% end %>
