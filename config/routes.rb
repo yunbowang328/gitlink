@@ -604,6 +604,10 @@ Rails.application.routes.draw do
       end
     end
     # Project Area END
+
+    scope module: :helps do
+      resources :faqs, only: [:index]
+    end
   end
 
   namespace :admins do
@@ -780,6 +784,7 @@ Rails.application.routes.draw do
       post :drag, on: :collection
       post :replace_image_url, on: :member
     end
+    resources :faqs
     resources :laboratories, only: [:index, :create, :destroy, :update] do
       member do
         get :shixuns_for_select
