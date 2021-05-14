@@ -167,7 +167,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc)
   end
 
   def about
