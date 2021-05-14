@@ -2,7 +2,7 @@ class Admins::FaqsController < Admins::BaseController
   before_action :find_faq, only: [:edit,:update, :destroy]
 
   def index
-    sort_by = params[:sort_by] ||= 'created_at'
+    sort_by = params[:sort_by] ||= 'updated_at'
     sort_direction = params[:sort_direction] ||= 'desc'
 
     keyword = params[:keyword].to_s.strip
