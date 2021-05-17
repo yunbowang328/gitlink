@@ -19,5 +19,10 @@
 class AppliedMessage < ApplicationRecord
   belongs_to :user
   belongs_to :applied, polymorphic: true
+  belongs_to :project
+  belongs_to :applied_user, class_name: 'User'
+
+  enum viewed: {waiting: 0, viewed: 1}
+  enum status: {canceled: -1, common: 0, successed: 1, failure: 2} # -1 已取消 0 正在操作 1 操作成功 2 操作失败
 
 end

@@ -17,8 +17,8 @@ json.releases do
         json.tarball_url re["tarball_url"]
         json.zipball_url re["zipball_url"]
         json.draft re["draft"] ? "草稿" : (re["prerelease"] ? "预发行" : "稳定")
-        json.created_at format_time(re["created_at"].to_s.to_time)
-        json.published_at format_time(re["published_at"].to_s.to_time)
+        json.created_at format_time(version.created_at.to_s.to_time)
+        json.published_at format_time(version.created_at.to_s.to_time)
         json.user_name user.present? ? user.try(:show_real_name) : ""
         json.image_url user.present? ? url_to_avatar(user) : ""
       else
@@ -33,8 +33,8 @@ json.releases do
           json.tarball_url re["tarball_url"]
           json.zipball_url re["zipball_url"]
           json.draft re["draft"] ? "草稿" : (re["prerelease"] ? "预发行" : "稳定")
-          json.created_at format_time(re["created_at"].to_s.to_time)
-          json.published_at format_time(re["published_at"].to_s.to_time)
+          json.created_at format_time(version.created_at.to_s.to_time)
+          json.published_at format_time(version.created_at.to_s.to_time)
           json.user_name user.present? ? user.try(:show_real_name) : ""
           json.image_url user.present? ? url_to_avatar(user) : ""
         end

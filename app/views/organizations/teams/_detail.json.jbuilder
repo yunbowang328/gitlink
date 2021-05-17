@@ -1,5 +1,6 @@
 json.id team.id
 json.name team.name
+json.nickname team.nickname.blank? ? team.name : team.nickname
 json.description team.description
 json.authorize team.authorize
 json.includes_all_project team.includes_all_project

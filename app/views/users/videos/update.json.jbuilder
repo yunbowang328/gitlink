@@ -1,1 +1,0 @@
-json.partial! 'video', video: current_video

@@ -130,6 +130,7 @@ Rails.application.routes.draw do
             get :search
           end
         end
+        get :recommend, on: :collection
       end
     end
 
@@ -199,6 +200,7 @@ Rails.application.routes.draw do
         get :projects
         get :watch_users
         get :fan_users
+        get :hovercard
       end
       collection do
         post :following
@@ -258,6 +260,13 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        resources :applied_messages, only: [:index]
+        resources :applied_transfer_projects, only: [:index] do 
+          member do 
+            post :accept
+            post :refuse
+          end
+        end
         resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
@@ -386,7 +395,6 @@ Rails.application.routes.draw do
           get :files
           get :detail
           get :archive
-          get :top_counts
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
@@ -533,6 +541,12 @@ Rails.application.routes.draw do
       scope module: :projects do
         resources :teams, only: [:index, :create, :destroy]
         resources :project_units, only: [:index, :create]
+        resources :applied_transfer_projects, only: [:create] do 
+          collection do 
+            get :organizations
+            post :cancel
+          end
+        end
         scope do
           get(
             '/blob/*id/diff',
@@ -592,6 +606,10 @@ Rails.application.routes.draw do
       end
     end
     # Project Area END
+
+    scope module: :helps do
+      resources :faqs, only: [:index]
+    end
   end
 
   namespace :admins do
@@ -768,6 +786,7 @@ Rails.application.routes.draw do
       post :drag, on: :collection
       post :replace_image_url, on: :member
     end
+    resources :faqs
     resources :laboratories, only: [:index, :create, :destroy, :update] do
       member do
         get :shixuns_for_select

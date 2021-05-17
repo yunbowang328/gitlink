@@ -20,7 +20,7 @@ class Gitea::PullRequest::MergeService < Gitea::ClientService
   def call
     response = post(url, request_params)
 
-    render_200_no_body(response)
+    render_gitea_response(response)
   end
 
   private

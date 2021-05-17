@@ -66,4 +66,6 @@ class Owner < ApplicationRecord
 
   has_many :projects, foreign_key: :user_id, dependent: :destroy
   has_many :repositories, foreign_key: :user_id, dependent: :destroy
+  has_many :applied_transfer_projects, dependent: :destroy
+
 end

@@ -33,13 +33,17 @@ class Organizations::TeamsController < Organizations::BaseController
   end
 
   def create
-    @team = Organizations::Teams::CreateService.call(current_user, @organization, team_params)
+    ActiveRecord::Base.transaction do
+      Organizations::CreateTeamForm.new(team_params).validate!
+      @team = Organizations::Teams::CreateService.call(current_user, @organization, team_params)
+    end
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
   end
 
   def update
+    Organizations::CreateTeamForm.new(team_params).validate!
     @team = Organizations::Teams::UpdateService.call(current_user, @team, team_params)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -60,7 +64,7 @@ class Organizations::TeamsController < Organizations::BaseController
 
   private
   def team_params
-    params.permit(:name, :description, :authorize, :includes_all_project, :can_create_org_project, :unit_types => [])
+    params.permit(:name, :nickname, :description, :authorize, :includes_all_project, :can_create_org_project, :unit_types => [])
   end
 
   def load_organization

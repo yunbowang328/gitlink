@@ -1,5 +1,5 @@
 class Organizations::OrganizationsController < Organizations::BaseController
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [:index, :show, :recommend]
   before_action :convert_image!, only: [:create, :update]
   before_action :load_organization, only: [:show, :update, :destroy]
   before_action :check_user_can_edit_org, only: [:update, :destroy]
@@ -25,6 +25,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def create
     ActiveRecord::Base.transaction do
+      Organizations::CreateForm.new(organization_params).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
@@ -35,6 +36,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def update
     ActiveRecord::Base.transaction do
+      Organizations::CreateForm.new(organization_params).validate!
       login = @organization.login
       @organization.login = organization_params[:name] if organization_params[:name].present?
       @organization.nickname = organization_params[:nickname] if organization_params[:nickname].present?
@@ -58,6 +60,13 @@ class Organizations::OrganizationsController < Organizations::BaseController
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
+  end
+
+  def recommend
+    recommend = %W(xuos Huawei_Technology openatom_foundation pkecosystem TensorLayer)
+    
+    @organizations = Organization.with_visibility(%w(common))
+      .where(login: recommend).select(:id, :login, :firstname, :lastname, :nickname)
   end
 
   private

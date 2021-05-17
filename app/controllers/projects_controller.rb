@@ -2,6 +2,8 @@ class ProjectsController < ApplicationController
   include ApplicationHelper
   include OperateProjectAbilityAble
   include ProjectsHelper
+  include Acceleratorable
+
   before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :load_project, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
@@ -60,7 +62,23 @@ class ProjectsController < ApplicationController
 
   def migrate
     Projects::MigrateForm.new(mirror_params).validate!
-    @project = Projects::MigrateService.new(current_user, mirror_params).call
+
+    @project = 
+      if enable_accelerator?(mirror_params[:clone_addr])
+        source_clone_url = mirror_params[:clone_addr]
+        uid_logger("########## 已动加速器 ##########")
+        result = Gitea::Accelerator::MigrateService.call(mirror_params)
+        if result[:status] == :success
+          Rails.logger.info "########## 加速镜像成功 ########## "
+          Projects::MigrateService.call(current_user, 
+            mirror_params.merge(source_clone_url: source_clone_url, 
+              clone_addr: accelerator_url(mirror_params[:repository_name])))
+        else
+          Projects::MigrateService.call(current_user, mirror_params)
+        end
+      else
+        Projects::MigrateService.call(current_user, mirror_params)
+      end
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)
@@ -95,19 +113,29 @@ class ProjectsController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      # Projects::CreateForm.new(project_params).validate!
-      private = params[:private] || false
+      # TODO:
+      # 临时特殊处理修改website、lesson_url操作方法
+      if project_params.has_key?("website")
+        @project.update(project_params)
+      else
+        validate_params = project_params.slice(:name, :description, 
+          :project_category_id, :project_language_id, :private)
+  
+        Projects::UpdateForm.new(validate_params).validate!
+  
+        private = params[:private] || false
 
-      new_project_params = project_params.except(:private).merge(is_public: !private)
-      @project.update_attributes!(new_project_params)
-      gitea_params = {
-        private: private,
-        default_branch: @project.default_branch,
-        website: @project.website
-      }
-      if [true, false].include? private
-        Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
-        @project.repository.update_column(:hidden, private)
+        new_project_params = project_params.except(:private).merge(is_public: !private)
+        @project.update_attributes!(new_project_params)
+        gitea_params = {
+          private: private,
+          default_branch: @project.default_branch,
+          website: @project.website
+        }
+        if [true, false].include? private
+          Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
+          @project.repository.update_column(:hidden, private)
+        end
       end
     end
   rescue Exception => e
@@ -156,7 +184,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, :owner).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc)
   end
 
   def about
@@ -190,7 +218,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 
