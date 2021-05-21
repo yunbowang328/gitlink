@@ -169,7 +169,8 @@ class User < Owner
   # Groups and active users
   scope :active, lambda { where(status: [STATUS_ACTIVE, STATUS_EDIT_INFO]) }
   scope :like, lambda { |keywords|
-    where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
+    sql = "CONCAT(lastname, firstname) LIKE :keyword OR login LIKE :keyword OR mail LIKE :keyword OR nickname LIKE :keyword"
+    where(sql, :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
   scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid, :type)}
