@@ -59,4 +59,5 @@ if @project.forge?
       end
     end
   end
+  json.readme @readme
 end
