@@ -53,6 +53,18 @@ class RepositoriesController < ApplicationController
       @entries = Gitea::Repository::Entries::ListService.new(@owner, @project.identifier, ref: @ref).call
       @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
       @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
+
+      # TODO
+      # 临时处理readme文件问题
+      admin = current_user.blank? ? User.where(admin: true).last : current_user
+
+      result = Gitea::Repository::Readme::GetService.call(@owner.login, @project.identifier, @ref, admin&.gitea_token)
+      @readme = 
+      if result[:status] == :success
+        result[:body]
+      else
+        {}
+      end
     end
   end
 
