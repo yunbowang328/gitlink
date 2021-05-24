@@ -2,7 +2,7 @@ module Acceleratorable
   extend ActiveSupport::Concern
 
   def enable_accelerator?(clone_addr)
-    clone_addr.include?(github_domain) || clone_addr.include?(gitlab_domain)
+    is_foreign_url?(clone_addr) && config_accelerator?
   end
   
   def accelerator_url(repo_name)
@@ -23,6 +23,14 @@ module Acceleratorable
 
   def accelerator_username
     Gitea.gitea_config[:accelerator]["access_key_id"]
+  end
+  
+  def config_accelerator?
+    Gitea.gitea_config[:accelerator].present?
+  end
+  
+  def is_foreign_url?(clone_addr)
+    clone_addr.include?(github_domain) || clone_addr.include?(gitlab_domain)
   end
   
 end

@@ -47,6 +47,7 @@
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
 #  gitea_token                :string(255)
+#  platform                   :string(255)
 #
 # Indexes
 #
@@ -167,7 +168,8 @@ class User < Owner
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
-    where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
+    sql = "CONCAT(lastname, firstname) LIKE :keyword OR login LIKE :keyword OR mail LIKE :keyword OR nickname LIKE :keyword"
+    where(sql, :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
   scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid, :type)}

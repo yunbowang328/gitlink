@@ -1,15 +1,14 @@
 # Get a pull request
 class Gitea::PullRequest::GetService < Gitea::ClientService
-  attr_reader :user, :repo, :pull_request_id
+  attr_reader :owner, :repo, :number, :token
 
-  # user: 用户
-  # repo: 仓库名称/标识
-  # pull_request_id: pull request主键id
-  def initialize(user, repo, pull_request_id)
-    super({token: user.gitea_token})
-    @user   = user
+  #eq:
+  # Gitea::PullRequest::GetService.call(user.login, repository.identifier, pull.gpid, user.gitea_token)
+  def initialize(owner, repo, number, token=nil)
+    @owner  = owner
     @repo   = repo
-    @pull_request_id = pull_request_id
+    @number = number
+    @token  = token
   end
 
   def call
@@ -19,11 +18,11 @@ class Gitea::PullRequest::GetService < Gitea::ClientService
 
   private
   def params
-    Hash.new.merge(token: user.gitea_token)
+    Hash.new.merge(token: token)
   end
 
   def url
-    "/repos/#{user.login}/#{repo}/pulls/#{pull_request_id}".freeze
+    "/repos/#{owner}/#{repo}/pulls/#{number}".freeze
   end
 
   def render_result(response)
@@ -31,7 +30,7 @@ class Gitea::PullRequest::GetService < Gitea::ClientService
     when 200
       JSON.parse(response.body)
     else
-      nil
+      {}
     end
   end
 end

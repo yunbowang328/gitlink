@@ -106,19 +106,29 @@ class ProjectsController < ApplicationController
 
   def update
     ActiveRecord::Base.transaction do
-      Projects::UpdateForm.new(project_params).validate!
-      private = params[:private] || false
+      # TODO:
+      # 临时特殊处理修改website、lesson_url操作方法
+      if project_params.has_key?("website")
+        @project.update(project_params)
+      else
+        validate_params = project_params.slice(:name, :description, 
+          :project_category_id, :project_language_id, :private)
+  
+        Projects::UpdateForm.new(validate_params).validate!
+  
+        private = params[:private] || false
 
-      new_project_params = project_params.except(:private).merge(is_public: !private)
-      @project.update_attributes!(new_project_params)
-      gitea_params = {
-        private: private,
-        default_branch: @project.default_branch,
-        website: @project.website
-      }
-      if [true, false].include? private
-        Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
-        @project.repository.update_column(:hidden, private)
+        new_project_params = project_params.except(:private).merge(is_public: !private)
+        @project.update_attributes!(new_project_params)
+        gitea_params = {
+          private: private,
+          default_branch: @project.default_branch,
+          website: @project.website
+        }
+        if [true, false].include? private
+          Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
+          @project.repository.update_column(:hidden, private)
+        end
       end
     end
   rescue Exception => e
@@ -167,7 +177,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc).limit(5)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc)
   end
 
   def about
