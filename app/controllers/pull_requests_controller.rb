@@ -136,7 +136,8 @@ class PullRequestsController < ApplicationController
   def show
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
-
+    @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, 
+      @repository.identifier, @pull_request.gpid, current_user&.gitea_token)
   end
 
   def pr_merge

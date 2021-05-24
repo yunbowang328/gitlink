@@ -12,6 +12,8 @@ json.pull_request do
   json.pull_request_staus @pull_request.status == 1 ? "merged" : (@pull_request.status == 2 ? "closed" : "open")
   json.fork_project_user @pull_request&.fork_project&.owner.try(:login)
   json.create_user @pull_request&.user&.login
+  json.mergeable @gitea_pull["mergeable"]
+  json.state @gitea_pull["state"]
 end
 
 json.issue do
