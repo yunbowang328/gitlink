@@ -1,5 +1,18 @@
 # Changelog
 
+## [v3.0.4](https://forgeplus.trustie.net/projects/jasder/forgeplus/releases) - 2021-05-24
+
+* BUGFIXES
+  * Fix 在线修改文件，页面文件显不及时的问题(46049)
+  * Fix Fork项目，接口多次调用问题(45052)
+  * FIX 页面置顶功能区域排版问题(45825)
+  * Fix 其他样式显示问题
+
+* ENHANCEMENTS
+  * ADD 合并请求页面显示有冲突文件状态(46016)
+  * ADD 创建组织各属性添加规则匹配功能(45707)
+  * ADD 微信分享功能(45707)
+
 ## [v3.0.3](https://forgeplus.trustie.net/projects/jasder/forgeplus/releases) - 2021-05-08
 
 * BUGFIXES
