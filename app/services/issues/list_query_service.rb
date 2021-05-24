@@ -28,7 +28,7 @@ class Issues::ListQueryService < ApplicationService
     end
 
     if search_name.present?
-      issues = issues.where("subject like ?", "%#{search_name}%")
+      issues = issues.where("subject LIKE ? OR description LIKE ? ", "%#{search_name}%", "%#{search_name}%")
     end
 
     if start_time&.present? || end_time&.present?

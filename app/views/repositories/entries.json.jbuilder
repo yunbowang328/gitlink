@@ -59,4 +59,6 @@ if @project.forge?
       end
     end
   end
+
+  json.readme @readme.merge(content: readme_render_decode64_content(@readme["content"], nil))
 end
