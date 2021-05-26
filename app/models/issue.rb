@@ -50,7 +50,7 @@
 
 class Issue < ApplicationRecord
   #issue_type 1为普通，2为悬赏
-  belongs_to :project, :counter_cache => true
+  belongs_to :project, counter_cache: true, touch: true
   belongs_to :tracker,optional: true
   has_many :project_trends, as: :trend, dependent: :destroy
   has_one :pull_request
