@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-05-27 10:27:14
+ * @LastEditTime: 2021-05-27 14:22:52
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -46,6 +46,135 @@ await octokit.request('GET /api/users/me.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 获取用户星标项目
+获取用户星标项目
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/is_pinned_projects.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/is_pinned_projects.json')
+```
+
+### HTTP 请求
+`GET api/users/:login/is_pinned_projects.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_count       |int   |星标项目数量 |
+|identifier                       |string   |项目标识   |
+|name                             |string   |项目名称   |
+|description                      |string   |项目描述   |
+|visits                           |int      |项目访问数量|
+|praises_count                    |int      |项目点赞数量|
+|watchers_count                   |int      |项目关注数量|
+|issues_count                     |int      |项目issue数量|
+|pull_requests_count              |int      |项目合并请求数量|
+|forked_count                     |int      |项目复刻数量|
+|is_public                        |bool     |项目是否公开|
+|mirror_url                       |string   |镜像地址|
+|type                             |int      |项目类型 0 普通项目 1 普通镜像项目 2 同步镜像项目|
+|time_ago                         |string   |上次更新时间|
+|open_devops                      |int      |是否开启devops|
+|forked_from_project_id           |int      |fork项目id|
+|platform                         |string   |项目平台|
+|author.name                      |string   |项目拥有者名称|
+|author.type                      |string   |项目拥有者类型|
+|author.login                     |string   |项目拥有者用户名|
+|author.image_url                 |string   |项目拥有者头像|
+|category.name                    |string   |项目分类名称|
+|language.name                    |string   |项目语言名称|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_count": 1,
+    "projects": [
+        {
+            "id": 89,
+            "repo_id": 89,
+            "identifier": "monkey",
+            "name": "boke",
+            "description": "dkkd",
+            "visits": 4,
+            "praises_count": 0,
+            "watchers_count": 0,
+            "issues_count": 0,
+            "pull_requests_count": 0,
+            "forked_count": 0,
+            "is_public": true,
+            "mirror_url": "https://github.com/viletyy/monkey.git",
+            "type": 1,
+            "last_update_time": 1619685144,
+            "time_ago": "27天前",
+            "forked_from_project_id": null,
+            "open_devops": false,
+            "platform": "forge",
+            "author": {
+                "name": "测试组织",
+                "type": "Organization",
+                "login": "ceshi_org",
+                "image_url": "images/avatars/Organization/9?t=1612706073"
+            },
+            "category": {
+                "id": 3,
+                "name": "深度学习"
+            },
+            "language": {
+                "id": 2,
+                "name": "C"
+            }
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 用户添加星标项目
+用户添加星标项目
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf/is_pinned_projects/pin.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/is_pinned_projects/pin.json')
+```
+
+### HTTP 请求
+`POST /api/users/:login/is_pinned_projects/pin.json`
+
+### 请求字段说明:
+#### 同时设定多个星标项目
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|is_pinned_project_ids       |array   |设定为星标项目的id |
+
+#### 只设定一个星标项目
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|is_pinned_project_id       |integer   |设定为星标项目的id |
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
 
 ## 获取用户贡献度
 获取用户贡献度

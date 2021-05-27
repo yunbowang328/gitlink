@@ -332,6 +332,12 @@
                     <a href="#1ae74893b1" class="toc-h2 toc-link" data-title="获取当前登陆用户信息">获取当前登陆用户信息</a>
                   </li>
                   <li>
+                    <a href="#16a4666845" class="toc-h2 toc-link" data-title="获取用户星标项目">获取用户星标项目</a>
+                  </li>
+                  <li>
+                    <a href="#3064477f38" class="toc-h2 toc-link" data-title="用户添加星标项目">用户添加星标项目</a>
+                  </li>
+                  <li>
                     <a href="#04cb758654" class="toc-h2 toc-link" data-title="获取用户贡献度">获取用户贡献度</a>
                   </li>
                   <li>
@@ -590,7 +596,7 @@ Success — a happy kitten is an authenticated kitten!
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-05-27 10:27:14
+ * @LastEditTime: 2021-05-27 14:22:52
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 <h1 id='users'>Users</h1><h2 id='1ae74893b1'>获取当前登陆用户信息</h2>
@@ -652,7 +658,235 @@ Success — a happy kitten is an authenticated kitten!
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='04cb758654'>获取用户贡献度</h2>
+<h2 id='16a4666845'>获取用户星标项目</h2>
+<p>获取用户星标项目</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/is_pinned_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+<p><code>GET api/users/:login/is_pinned_projects.json</code></p>
+<h3 id='7447e4874e-2'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_count</td>
+<td>int</td>
+<td>星标项目数量</td>
+</tr>
+<tr>
+<td>identifier</td>
+<td>string</td>
+<td>项目标识</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>项目名称</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>项目描述</td>
+</tr>
+<tr>
+<td>visits</td>
+<td>int</td>
+<td>项目访问数量</td>
+</tr>
+<tr>
+<td>praises_count</td>
+<td>int</td>
+<td>项目点赞数量</td>
+</tr>
+<tr>
+<td>watchers_count</td>
+<td>int</td>
+<td>项目关注数量</td>
+</tr>
+<tr>
+<td>issues_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>pull_requests_count</td>
+<td>int</td>
+<td>项目合并请求数量</td>
+</tr>
+<tr>
+<td>forked_count</td>
+<td>int</td>
+<td>项目复刻数量</td>
+</tr>
+<tr>
+<td>is_public</td>
+<td>bool</td>
+<td>项目是否公开</td>
+</tr>
+<tr>
+<td>mirror_url</td>
+<td>string</td>
+<td>镜像地址</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>项目类型 0 普通项目 1 普通镜像项目 2 同步镜像项目</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>上次更新时间</td>
+</tr>
+<tr>
+<td>open_devops</td>
+<td>int</td>
+<td>是否开启devops</td>
+</tr>
+<tr>
+<td>forked_from_project_id</td>
+<td>int</td>
+<td>fork项目id</td>
+</tr>
+<tr>
+<td>platform</td>
+<td>string</td>
+<td>项目平台</td>
+</tr>
+<tr>
+<td>author.name</td>
+<td>string</td>
+<td>项目拥有者名称</td>
+</tr>
+<tr>
+<td>author.type</td>
+<td>string</td>
+<td>项目拥有者类型</td>
+</tr>
+<tr>
+<td>author.login</td>
+<td>string</td>
+<td>项目拥有者用户名</td>
+</tr>
+<tr>
+<td>author.image_url</td>
+<td>string</td>
+<td>项目拥有者头像</td>
+</tr>
+<tr>
+<td>category.name</td>
+<td>string</td>
+<td>项目分类名称</td>
+</tr>
+<tr>
+<td>language.name</td>
+<td>string</td>
+<td>项目语言名称</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"repo_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monkey"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boke"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dkkd"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"visits"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"praises_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"watchers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"pull_requests_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"forked_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"mirror_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/viletyy/monkey.git"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"last_update_time"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619685144</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"forked_from_project_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"open_devops"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"platform"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forge"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/9?t=1612706073"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"深度学习"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='3064477f38'>用户添加星标项目</h2>
+<p>用户添加星标项目</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/is_pinned_projects/pin.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects/pin.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+<p><code>POST /api/users/:login/is_pinned_projects/pin.json</code></p>
+<h3 id='aa883f5d52'>请求字段说明:</h3><h4 id='0ca7f0efb8'>同时设定多个星标项目</h4>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>is_pinned_project_ids</td>
+<td>array</td>
+<td>设定为星标项目的id</td>
+</tr>
+</tbody></table>
+<h4 id='f4b9f10991'>只设定一个星标项目</h4>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>is_pinned_project_id</td>
+<td>integer</td>
+<td>设定为星标项目的id</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='04cb758654'>获取用户贡献度</h2>
 <p>获取用户贡献度</p>
 
 <blockquote>
@@ -660,9 +894,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/headmaps.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/headmaps.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
 <p><code>GET api/users/:login/headmaps.json</code></p>
-<h3 id='7447e4874e-2'>返回字段说明:</h3>
+<h3 id='7447e4874e-3'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -791,9 +1025,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_messages.json</code></p>
-<h3 id='aa883f5d52'>请求字段说明:</h3>
+<h3 id='aa883f5d52-2'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -807,7 +1041,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-3'>返回字段说明:</h3>
+<h3 id='7447e4874e-4'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1028,9 +1262,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects.json</code></p>
-<h3 id='aa883f5d52-2'>请求字段说明:</h3>
+<h3 id='aa883f5d52-3'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1044,7 +1278,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-4'>返回字段说明:</h3>
+<h3 id='7447e4874e-5'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1220,9 +1454,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/accept.json</code></p>
-<h3 id='aa883f5d52-3'>请求字段说明:</h3>
+<h3 id='aa883f5d52-4'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1241,7 +1475,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>迁移id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<h3 id='7447e4874e-6'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1411,9 +1645,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/refuse.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/refuse.json</code></p>
-<h3 id='aa883f5d52-4'>请求字段说明:</h3>
+<h3 id='aa883f5d52-5'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1432,7 +1666,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>迁移id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-6'>返回字段说明:</h3>
+<h3 id='7447e4874e-7'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
