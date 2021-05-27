@@ -271,6 +271,7 @@ Rails.application.routes.draw do
             post :pin 
           end
         end
+        resources :project_trends, only: [:index]
         resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
