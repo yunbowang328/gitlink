@@ -164,6 +164,9 @@ class User < Owner
 
   has_many :organization_users, dependent: :destroy
   has_many :organizations, through: :organization_users
+  has_many :pinned_projects, dependent: :destroy
+  has_many :is_pinned_projects, through: :pinned_projects, source: :project
+  accepts_nested_attributes_for :is_pinned_projects
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
@@ -194,6 +197,13 @@ class User < Owner
   validates_length_of :mail, maximum: MAIL_LENGTH_LMIT
   validate :validate_sensitive_string
   validate :validate_password_length
+
+  # 用户参与的所有项目
+  def full_member_projects 
+    normal_projects = Project.members_projects(self.id).to_sql
+    org_projects = Project.joins(team_projects: [team: :team_users]).where(team_users: {user_id: self.id}).to_sql
+    return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
+  end
 
   def name
     login

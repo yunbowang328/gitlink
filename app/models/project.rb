@@ -114,6 +114,8 @@ class Project < ApplicationRecord
   has_many :team_projects, dependent: :destroy
   has_many :project_units, dependent: :destroy
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
+  has_many :pinned_projects, dependent: :destroy 
+  has_many :has_pinned_users, through: :pinned_projects, source: :user
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
