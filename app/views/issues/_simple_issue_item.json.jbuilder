@@ -1,4 +1,7 @@
 json.name issue.try(:subject)
+json.issue_type issue.try(:issue_type)
+json.status_id issue.try(:status_id)
+json.priority_id issue.try(:priority_id)
 json.created_at format_time(issue.try(:created_on))
 json.updated_at format_time(issue.try(:updated_on))
 json.assign_user_name issue&.get_assign_user.try(:show_real_name)

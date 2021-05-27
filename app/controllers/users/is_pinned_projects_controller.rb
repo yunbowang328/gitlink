@@ -18,9 +18,10 @@ class Users::IsPinnedProjectsController < Users::BaseController
   private 
   def is_pinned_project_ids 
     if params[:is_pinned_project_ids].present?
-      return params[:is_pinned_project_ids].select{|id| observed_user.full_member_projects.pluck(:id).include?(id.to_i) }
+      return params[:is_pinned_project_ids].select{|id| observed_user.full_member_projects.visible.pluck(:id).include?(id.to_i) }
     end
     if params[:is_pinned_project_id].present?
+      return observed_user.is_pinned_project_ids unless observed_user.full_member_projects.visible.pluck(:id).include?(params[:is_pinned_project_id].to_i)
       return observed_user.is_pinned_project_ids.include?(params[:is_pinned_project_id].to_i) ? observed_user.is_pinned_project_ids : observed_user.is_pinned_project_ids.push(params[:is_pinned_project_id].to_i)
     end
   end
