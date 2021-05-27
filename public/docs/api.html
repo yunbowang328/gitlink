@@ -332,6 +332,9 @@
                     <a href="#1ae74893b1" class="toc-h2 toc-link" data-title="获取当前登陆用户信息">获取当前登陆用户信息</a>
                   </li>
                   <li>
+                    <a href="#04cb758654" class="toc-h2 toc-link" data-title="获取用户贡献度">获取用户贡献度</a>
+                  </li>
+                  <li>
                     <a href="#fcaf20021b" class="toc-h2 toc-link" data-title="待办事项-用户通知信息">待办事项-用户通知信息</a>
                   </li>
                   <li>
@@ -587,7 +590,7 @@ Success — a happy kitten is an authenticated kitten!
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-04-26 10:47:30
+ * @LastEditTime: 2021-05-27 10:27:14
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 <h1 id='users'>Users</h1><h2 id='1ae74893b1'>获取当前登陆用户信息</h2>
@@ -649,6 +652,137 @@ Success — a happy kitten is an authenticated kitten!
 <aside class="success">
   Success Data.
 </aside>
+<h2 id='04cb758654'>获取用户贡献度</h2>
+<p>获取用户贡献度</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/headmaps.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/headmaps.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+<p><code>GET api/users/:login/headmaps.json</code></p>
+<h3 id='7447e4874e-2'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_contributions</td>
+<td>int</td>
+<td>所选时间内的总贡献度</td>
+</tr>
+<tr>
+<td>headmaps.date</td>
+<td>string</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>headmaps.contributions</td>
+<td>int</td>
+<td>贡献度</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">139</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headmaps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1612627200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1613836800</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1614182400</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1614528000</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1614787200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1615737600</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1616342400</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1616515200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1617033600</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1617638400</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1618156800</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1618243200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1618761600</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619107200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">37</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619280000</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619366400</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619539200</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619625600</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619712000</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1620057600</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="mi">1620230400</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
 <h2 id='fcaf20021b'>待办事项-用户通知信息</h2>
 <p>待办事项-用户通知信息</p>
 
@@ -657,7 +791,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_messages.json</code></p>
 <h3 id='aa883f5d52'>请求字段说明:</h3>
 <table><thead>
@@ -673,7 +807,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-2'>返回字段说明:</h3>
+<h3 id='7447e4874e-3'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -894,7 +1028,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects.json</code></p>
 <h3 id='aa883f5d52-2'>请求字段说明:</h3>
 <table><thead>
@@ -910,7 +1044,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-3'>返回字段说明:</h3>
+<h3 id='7447e4874e-4'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1086,7 +1220,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/accept.json</code></p>
 <h3 id='aa883f5d52-3'>请求字段说明:</h3>
 <table><thead>
@@ -1107,7 +1241,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>迁移id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-4'>返回字段说明:</h3>
+<h3 id='7447e4874e-5'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1277,7 +1411,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/refuse.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/refuse.json</code></p>
 <h3 id='aa883f5d52-4'>请求字段说明:</h3>
 <table><thead>
@@ -1298,7 +1432,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>迁移id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<h3 id='7447e4874e-6'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>

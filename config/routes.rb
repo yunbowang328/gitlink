@@ -265,6 +265,7 @@ Rails.application.routes.draw do
             post :refuse
           end
         end
+        resources :headmaps, only: [:index]
         resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]
