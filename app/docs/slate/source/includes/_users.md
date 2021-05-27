@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-04-26 10:47:30
+ * @LastEditTime: 2021-05-27 10:27:14
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -46,6 +46,128 @@ await octokit.request('GET /api/users/me.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 获取用户贡献度
+获取用户贡献度
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/headmaps.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/headmaps.json')
+```
+
+### HTTP 请求
+`GET api/users/:login/headmaps.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_contributions       |int   |所选时间内的总贡献度 |
+|headmaps.date      |string|时间|
+|headmaps.contributions         |int|贡献度|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_contributions": 139,
+    "headmaps": [
+        {
+            "date": 1612627200,
+            "contributions": 1
+        },
+        {
+            "date": 1613836800,
+            "contributions": 13
+        },
+        {
+            "date": 1614182400,
+            "contributions": 5
+        },
+        {
+            "date": 1614528000,
+            "contributions": 2
+        },
+        {
+            "date": 1614787200,
+            "contributions": 1
+        },
+        {
+            "date": 1615737600,
+            "contributions": 9
+        },
+        {
+            "date": 1616342400,
+            "contributions": 14
+        },
+        {
+            "date": 1616515200,
+            "contributions": 1
+        },
+        {
+            "date": 1617033600,
+            "contributions": 11
+        },
+        {
+            "date": 1617638400,
+            "contributions": 1
+        },
+        {
+            "date": 1618156800,
+            "contributions": 1
+        },
+        {
+            "date": 1618243200,
+            "contributions": 2
+        },
+        {
+            "date": 1618761600,
+            "contributions": 3
+        },
+        {
+            "date": 1619107200,
+            "contributions": 37
+        },
+        {
+            "date": 1619280000,
+            "contributions": 2
+        },
+        {
+            "date": 1619366400,
+            "contributions": 6
+        },
+        {
+            "date": 1619539200,
+            "contributions": 1
+        },
+        {
+            "date": 1619625600,
+            "contributions": 18
+        },
+        {
+            "date": 1619712000,
+            "contributions": 9
+        },
+        {
+            "date": 1620057600,
+            "contributions": 1
+        },
+        {
+            "date": 1620230400,
+            "contributions": 1
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
 
 ## 待办事项-用户通知信息
 待办事项-用户通知信息
