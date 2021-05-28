@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-05-27 14:22:52
+ * @LastEditTime: 2021-05-28 16:04:04
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -176,6 +176,82 @@ await octokit.request('GET /api/users/:login/is_pinned_projects/pin.json')
 ```
 
 
+## 用户近期活动统计
+用户近期活动统计, 默认显示近一周的数据
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/statistics/activity.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/statistics/activity.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/statistics/activity.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|dates                  |array   |时间 |
+|issues_count           |array   |易修数量|
+|pull_requests_count    |array   |合并请求数量|
+|commtis_count          |array   |贡献数量|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "dates": [
+        "2021.05.21",
+        "2021.05.22",
+        "2021.05.23",
+        "2021.05.24",
+        "2021.05.25",
+        "2021.05.26",
+        "2021.05.27",
+        "2021.05.28"
+    ],
+    "issues_count": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "pull_requests_count": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "commits_count": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+
 ## 获取用户贡献度
 获取用户贡献度
 
@@ -192,6 +268,12 @@ await octokit.request('GET /api/users/:login/headmaps.json')
 ### HTTP 请求
 `GET api/users/:login/headmaps.json`
 
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|year       |string   |年份 |
+
 ### 返回字段说明:
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
@@ -207,87 +289,87 @@ await octokit.request('GET /api/users/:login/headmaps.json')
     "total_contributions": 139,
     "headmaps": [
         {
-            "date": 1612627200,
+            "date": "2021-02-07",
             "contributions": 1
         },
         {
-            "date": 1613836800,
+            "date": "2021-02-21",
             "contributions": 13
         },
         {
-            "date": 1614182400,
+            "date": "2021-02-25",
             "contributions": 5
         },
         {
-            "date": 1614528000,
+            "date": "2021-03-01",
             "contributions": 2
         },
         {
-            "date": 1614787200,
+            "date": "2021-03-04",
             "contributions": 1
         },
         {
-            "date": 1615737600,
+            "date": "2021-03-15",
             "contributions": 9
         },
         {
-            "date": 1616342400,
+            "date": "2021-03-22",
             "contributions": 14
         },
         {
-            "date": 1616515200,
+            "date": "2021-03-24",
             "contributions": 1
         },
         {
-            "date": 1617033600,
+            "date": "2021-03-30",
             "contributions": 11
         },
         {
-            "date": 1617638400,
+            "date": "2021-04-06",
             "contributions": 1
         },
         {
-            "date": 1618156800,
+            "date": "2021-04-12",
             "contributions": 1
         },
         {
-            "date": 1618243200,
+            "date": "2021-04-13",
             "contributions": 2
         },
         {
-            "date": 1618761600,
+            "date": "2021-04-19",
             "contributions": 3
         },
         {
-            "date": 1619107200,
+            "date": "2021-04-23",
             "contributions": 37
         },
         {
-            "date": 1619280000,
+            "date": "2021-04-25",
             "contributions": 2
         },
         {
-            "date": 1619366400,
+            "date": "2021-04-26",
             "contributions": 6
         },
         {
-            "date": 1619539200,
+            "date": "2021-04-28",
             "contributions": 1
         },
         {
-            "date": 1619625600,
+            "date": "2021-04-29",
             "contributions": 18
         },
         {
-            "date": 1619712000,
+            "date": "2021-04-30",
             "contributions": 9
         },
         {
-            "date": 1620057600,
+            "date": "2021-05-04",
             "contributions": 1
         },
         {
-            "date": 1620230400,
+            "date": "2021-05-06",
             "contributions": 1
         }
     ]
@@ -297,6 +379,489 @@ await octokit.request('GET /api/users/:login/headmaps.json')
   Success Data.
 </aside>
 
+## 获取用户动态
+获取用户动态
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/project_trends.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/project_trends.json')
+```
+
+### HTTP 请求
+`GET api/users/:login/project_trends.json`
+
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|date       |string   |日期，格式: 2021-05-28 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_count                    |int   |所选时间内的总动态数 |
+|project_trends.trend_type      |string|动态类型，Issue：易修，VersionRelease：版本发布，PullRequest：合并请求|
+|project_trends.action_type     |string|操作类型|
+|project_trends.trend_id        |integer|动态id|
+|project_trends.user_name       |string|用户名称|
+|project_trends.user_login      |string|用户用户名|
+|project_trends.user_avatar     |string|用户头像|
+|project_trends.action_time     |string|操作时间|
+|project_trends.name            |string|动态标题|
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_count": 16,
+    "project_trends": [
+        {
+            "id": 27,
+            "trend_type": "Issue",
+            "action_type": "创建了工单",
+            "trend_id": 18,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "21天前",
+            "name": "31213123123",
+            "issue_type": "1",
+            "status_id": 2,
+            "priority_id": 4,
+            "created_at": "2021-05-07 15:39",
+            "updated_at": "2021-05-27 15:42",
+            "assign_user_name": "yystopf",
+            "assign_user_login": "yystopf",
+            "issue_journal_size": 1,
+            "issue_journals": []
+        },
+        {
+            "id": 8,
+            "trend_type": "VersionRelease",
+            "action_type": "创建了版本发布",
+            "trend_id": 8,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "24天前",
+            "name": "heihei1",
+            "tag_name": "v1.0",
+            "target_commitish": "master",
+            "tarball_url": "http://localhost:10080/forgeceshiorg1/ceshi1/archive/v1.0.tar.gz",
+            "zipball_url": "http://localhost:10080/forgeceshiorg1/ceshi1/archive/v1.0.zip",
+            "url": "http://localhost:10080/api/v1/repos/forgeceshiorg1/ceshi1/releases/84",
+            "version_gid": "84",
+            "created_at": "2021-05-04 12:04"
+        },
+        {
+            "id": 25,
+            "trend_type": "PullRequest",
+            "action_type": "关闭了合并请求",
+            "trend_id": 14,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "13",
+            "created_at": "2021-04-30 15:39"
+        },
+        {
+            "id": 24,
+            "trend_type": "PullRequest",
+            "action_type": "创建了合并请求",
+            "trend_id": 13,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "211212",
+            "created_at": "2021-04-30 15:37"
+        },
+        {
+            "id": 23,
+            "trend_type": "PullRequest",
+            "action_type": "创建了合并请求",
+            "trend_id": 12,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "奇偶哦iu",
+            "created_at": "2021-04-30 10:19"
+        },
+        {
+            "id": 22,
+            "trend_type": "PullRequest",
+            "action_type": "创建了合并请求",
+            "trend_id": 11,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "2112123",
+            "created_at": "2021-04-29 18:46"
+        },
+        {
+            "id": 21,
+            "trend_type": "PullRequest",
+            "action_type": "关闭了合并请求",
+            "trend_id": 10,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "23123",
+            "created_at": "2021-04-29 18:45"
+        },
+        {
+            "id": 20,
+            "trend_type": "PullRequest",
+            "action_type": "创建了合并请求",
+            "trend_id": 9,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "33",
+            "created_at": "2021-04-29 18:37"
+        },
+        {
+            "id": 19,
+            "trend_type": "PullRequest",
+            "action_type": "关闭了合并请求",
+            "trend_id": 8,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "28天前",
+            "name": "gggg",
+            "created_at": "2021-04-29 17:51"
+        },
+        {
+            "id": 16,
+            "trend_type": "Issue",
+            "action_type": "创建了工单",
+            "trend_id": 8,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "1个月前",
+            "name": "hjhkj",
+            "issue_type": "1",
+            "status_id": 1,
+            "priority_id": 2,
+            "created_at": "2021-04-19 10:52",
+            "updated_at": "2021-04-19 10:52",
+            "assign_user_name": null,
+            "assign_user_login": null,
+            "issue_journal_size": 0,
+            "issue_journals": []
+        },
+        {
+            "id": 7,
+            "trend_type": "VersionRelease",
+            "action_type": "创建了版本发布",
+            "trend_id": 7,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "1个月前",
+            "name": "v3.0.1",
+            "tag_name": "v3.0.1",
+            "target_commitish": "master",
+            "tarball_url": "http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.1.tar.gz",
+            "zipball_url": "http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.1.zip",
+            "url": "http://localhost:10080/api/v1/repos/yystopf/ceshirepo1/releases/78",
+            "version_gid": "78",
+            "created_at": "2021-03-30 15:51"
+        },
+        {
+            "id": 6,
+            "trend_type": "VersionRelease",
+            "action_type": "创建了版本发布",
+            "trend_id": 6,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "1个月前",
+            "name": "v3.0.0",
+            "tag_name": "v3.0.0",
+            "target_commitish": "master",
+            "tarball_url": "http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.0.tar.gz",
+            "zipball_url": "http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.0.zip",
+            "url": "http://localhost:10080/api/v1/repos/yystopf/ceshirepo1/releases/77",
+            "version_gid": "77",
+            "created_at": "2021-03-30 15:33"
+        },
+        {
+            "id": 5,
+            "trend_type": "VersionRelease",
+            "action_type": "创建了版本发布",
+            "trend_id": 5,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "1个月前",
+            "name": "v1.0.0",
+            "tag_name": "v1.0.0",
+            "target_commitish": "master",
+            "tarball_url": "http://localhost:10080/yystopf/ceshirepo1/archive/v1.0.0.tar.gz",
+            "zipball_url": "http://localhost:10080/yystopf/ceshirepo1/archive/v1.0.0.zip",
+            "url": "http://localhost:10080/api/v1/repos/yystopf/ceshirepo1/releases/76",
+            "version_gid": "76",
+            "created_at": "2021-03-30 15:27"
+        },
+        {
+            "id": 2,
+            "trend_type": "VersionRelease",
+            "action_type": "创建了版本发布",
+            "trend_id": 2,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "2个月前",
+            "name": "vvvv",
+            "tag_name": "v1.1",
+            "target_commitish": "dev",
+            "tarball_url": "http://localhost:10080/yystopf/virus_blog/archive/v1.1.tar.gz",
+            "zipball_url": "http://localhost:10080/yystopf/virus_blog/archive/v1.1.zip",
+            "url": "http://localhost:10080/api/v1/repos/yystopf/virus_blog/releases/6",
+            "version_gid": "6",
+            "created_at": "2021-03-15 14:18"
+        },
+        {
+            "id": 2,
+            "trend_type": "PullRequest",
+            "action_type": "创建了合并请求",
+            "trend_id": 2,
+            "user_name": "yystopf",
+            "user_login": "yystopf",
+            "user_avatar": "system/lets/letter_avatars/2/Y/241_125_89/120.png",
+            "action_time": "3个月前",
+            "name": "444",
+            "created_at": "2021-02-25 17:31"
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 用户开发能力
+用户开发能力， 默认为所有时间下的开发能力
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/statistics/develop.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/statistics/develop.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/statistics/develop.json`
+
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|start_time       |integer   |时间戳，开始时间，格式：1621526400|
+|end_time         |integer   |时间戳，结束时间，格式：1622131200|
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|influence              |int   |影响力 |
+|contribution           |int   |贡献度|
+|activity               |int   |活跃度|
+|experience             |int   |项目经验|
+|language               |int   |语言能力|
+|languages_percent      |float |语言百分比|
+|each_language_score    |int   |各门语言分数|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "platform": {
+        "influence": 61,
+        "contribution": 75,
+        "activity": 66,
+        "experience": 95,
+        "language": 87,
+        "languages_percent": {
+            "CSS": 0.03,
+            "C#": 0.13,
+            "Ruby": 0.04,
+            "Go": 0.05,
+            "C": 0.19,
+            "Java": 0.34,
+            "Python": 0.09,
+            "C+": 0.01,
+            "C++": 0.11,
+            "Scala": 0.01,
+            "HTML": 0.01
+        },
+        "each_language_score": {
+            "CSS": 71,
+            "C#": 86,
+            "Ruby": 75,
+            "Go": 77,
+            "C": 90,
+            "Java": 93,
+            "Python": 83,
+            "C+": 66,
+            "C++": 85,
+            "Scala": 66,
+            "HTML": 66
+        }
+    },
+    "user": {
+        "influence": 60,
+        "contribution": 72,
+        "activity": 65,
+        "experience": 88,
+        "language": 84,
+        "languages_percent": {
+            "C": 0.25,
+            "C#": 0.33,
+            "C++": 0.13,
+            "CSS": 0.08,
+            "Go": 0.04,
+            "HTML": 0.04,
+            "Java": 0.04,
+            "Ruby": 0.08
+        },
+        "each_language_score": {
+            "C": 81,
+            "C#": 84,
+            "C++": 75,
+            "CSS": 71,
+            "Go": 66,
+            "HTML": 66,
+            "Java": 66,
+            "Ruby": 71
+        }
+    }
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 用户角色定位
+用户角色定位，默认显示所有时间下的角色定位数据
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/statistics/role.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/statistics/role.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/statistics/role.json`
+
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|start_time       |integer   |时间戳，开始时间，格式：1621526400|
+|end_time         |integer   |时间戳，结束时间，格式：1622131200|
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_projects_count              |int   |用户所有的项目数量 |
+|role.object.count                 |int   |用户该语言下的项目数量|
+|role.object.percent               |float |用户该语言下的项目占比|
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_projects_count": 27,
+    "role": {
+        "owner": {
+            "count": 24,
+            "percent": 0.89
+        },
+        "manager": {
+            "count": 1,
+            "percent": 0.04
+        },
+        "developer": {
+            "count": 2,
+            "percent": 0.07
+        },
+        "reporter": {
+            "count": 0,
+            "percent": 0.0
+        }
+    }
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 用户专业定位
+用户专业定位，默认显示所有时间下的专业定位数据
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/statistics/major.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/statistics/major.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/statistics/major.json`
+
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|start_time       |integer   |时间戳，开始时间，格式：1621526400|
+|end_time         |integer   |时间戳，结束时间，格式：1622131200|
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|categories              |int   |用户项目分类 |
+
+> 返回的JSON示例:
+
+```json
+{
+    "categories": [
+        "大数据",
+        "机器学习",
+        "深度学习",
+        "人工智能",
+        "智慧医疗",
+        "云计算"
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
 
 ## 待办事项-用户通知信息
 待办事项-用户通知信息
