@@ -17,7 +17,7 @@ json.time_ago time_from_now(project.updated_on)
 json.forked_from_project_id project.forked_from_project_id
 json.open_devops project.open_devops?
 json.platform project.platform
-json.is_pinned @project.has_pinned_users.include?(current_user)
+json.is_pinned project.has_pinned_users.include?(current_user)
 json.author do
   if project.educoder?
     project_educoder = project.project_educoder
