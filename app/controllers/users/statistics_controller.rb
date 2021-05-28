@@ -17,7 +17,7 @@ class Users::StatisticsController < Users::BaseController
       date_commit_data = commit_data.select{|item| item["timestamp"] == date.to_time.to_i}
       @commit_data << (date_commit_data.blank? ? 0 : date_commit_data[0]["contributions"].to_i)
     end
-    render :json => {dates: @date_data, issues_count: @issue_data, pull_requests_count: @pull_request_data, commtis_count: @commit_data}
+    render :json => {dates: @date_data, issues_count: @issue_data, pull_requests_count: @pull_request_data, commits_count: @commit_data}
   end
 
   # 开发能力
