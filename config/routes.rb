@@ -271,6 +271,14 @@ Rails.application.routes.draw do
             post :pin 
           end
         end
+        resources :statistics, only: [:index] do 
+          collection do 
+            get :activity 
+            get :develop 
+            get :role 
+            get :major
+          end
+        end
         resources :project_trends, only: [:index]
         resources :organizations, only: [:index]
         # resources :projects, only: [:index]

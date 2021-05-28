@@ -167,6 +167,8 @@ class User < Owner
   has_many :pinned_projects, dependent: :destroy
   has_many :is_pinned_projects, through: :pinned_projects, source: :project
   accepts_nested_attributes_for :is_pinned_projects
+  has_many :issues, dependent: :destroy, foreign_key: :author_id 
+  has_many :pull_requests, dependent: :destroy
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
@@ -201,7 +203,7 @@ class User < Owner
   # 用户参与的所有项目
   def full_member_projects 
     normal_projects = Project.members_projects(self.id).to_sql
-    org_projects = Project.joins(team_projects: [team: :team_users]).where(team_users: {user_id: self.id}).to_sql
+    org_projects = Project.joins(teams: :team_users).where(team_users: {user_id: self.id}).to_sql
     return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
   end
 
