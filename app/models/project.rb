@@ -111,7 +111,6 @@ class Project < ApplicationRecord
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
-  has_many :team_projects, dependent: :destroy
   has_many :project_units, dependent: :destroy
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
   has_many :pinned_projects, dependent: :destroy 
