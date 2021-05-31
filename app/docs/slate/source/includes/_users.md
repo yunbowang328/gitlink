@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-05-28 16:04:04
+ * @LastEditTime: 2021-05-31 18:39:17
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -47,6 +47,57 @@ await octokit.request('GET /api/users/me.json')
   Success Data.
 </aside>
 
+## 更改用户信息
+更改用户信息
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf.json
+```
+
+```javascript
+await octokit.request('PATCH/PUT /api/users/:login.json')
+```
+
+### HTTP 请求
+`PATCH/PUT /api/users/:login.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|user.nickname                              |string      |用户昵称 |
+|user.user_extension_attributes.gender           |int         |性别， 0男 1女 |
+|user.user_extension_attributes.province         |string      |省份 |
+|user.user_extension_attributes.city             |string      |城市 |
+|user.user_extension_attributes.description      |string      |个性签名 |
+|user.user_extension_attributes.custom_department|string      |单位名称 |
+
+> 请求的JSON示例：
+
+```json
+{
+    "user": {
+        "nickname": "xxx",
+        "user_extension_attributes": {
+            "gender": 0,
+            "province": "湖南",
+            "city": "长沙",
+            "description": "个性签名",
+            "custom_department": "湖南智擎科技有限公司",
+        }
+    }
+}
+```
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
 ## 获取用户星标项目
 获取用户星标项目
 
