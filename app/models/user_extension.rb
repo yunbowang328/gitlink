@@ -22,9 +22,9 @@
 #  school_id          :integer
 #  description        :string(255)      default("")
 #  department_id      :integer
-#  honor              :text(65535)
-#  edu_background     :integer
-#  edu_entry_year     :integer
+#  province           :string(255)
+#  city               :string(255)
+#  custom_department  :string(255)
 #
 # Indexes
 #

@@ -72,9 +72,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[:id]
-    @user.update!(user_params)
-    render_ok
+    return render_not_found unless @user = User.find_by_id(params[:id]) || User.find_by(login: params[:id])
+    @user.attributes = user_params
+    if @user.save
+      render_ok
+    else
+      render_error(@user.errors.full_messages.join(", "))
+    end
   end
 
   def me
@@ -274,11 +278,12 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:nickname, :lastname, :show_realname,:login,:mail,
+    params.require(:user).permit(:nickname,
                                   user_extension_attributes: [
                                   :gender, :location, :location_city,
                                   :occupation, :technical_title,
-                                  :school_id, :department_id,:identity, :student_id, :description]
+                                  :school_id, :department_id, :province, :city,
+                                  :custom_department, :identity, :student_id, :description]
                                 )
   end
 
