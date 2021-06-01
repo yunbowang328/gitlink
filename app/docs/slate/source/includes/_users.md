@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-05-31 18:39:17
+ * @LastEditTime: 2021-06-01 10:06:08
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -67,6 +67,7 @@ await octokit.request('PATCH/PUT /api/users/:login.json')
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
 |user.nickname                              |string      |用户昵称 |
+|user.image                              |string/file |用户头像 |
 |user.user_extension_attributes.gender           |int         |性别， 0男 1女 |
 |user.user_extension_attributes.province         |string      |省份 |
 |user.user_extension_attributes.city             |string      |城市 |
