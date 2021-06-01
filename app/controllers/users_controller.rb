@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users, :hovercard]
   before_action :require_login, only: %i[me list sync_user_info]
   before_action :connect_to_ci_db, only: [:get_user_info]
+  before_action :convert_image!, only: [:update]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def connect_to_ci_db(options={})
@@ -73,7 +74,8 @@ class UsersController < ApplicationController
 
   def update
     return render_not_found unless @user = User.find_by_id(params[:id]) || User.find_by(login: params[:id])
-    @user.attributes = user_params
+    Util.write_file(@image, avatar_path(@user)) if user_params[:image].present?
+    @user.attributes = user_params.except(:image)
     if @user.save
       render_ok
     else
@@ -278,7 +280,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:nickname,
+    params.require(:user).permit(:nickname, :image,
                                   user_extension_attributes: [
                                   :gender, :location, :location_city,
                                   :occupation, :technical_title,
