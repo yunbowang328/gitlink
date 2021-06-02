@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-06-01 10:06:08
+ * @LastEditTime: 2021-06-02 16:40:02
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -53,7 +53,7 @@ await octokit.request('GET /api/users/me.json')
 > 示例:
 
 ```shell
-curl -X POST http://localhost:3000/api/users/yystopf.json
+curl -X PATCH/PUT http://localhost:3000/api/users/yystopf.json
 ```
 
 ```javascript
@@ -141,6 +141,7 @@ await octokit.request('GET /api/users/:login/is_pinned_projects.json')
 |author.image_url                 |string   |项目拥有者头像|
 |category.name                    |string   |项目分类名称|
 |language.name                    |string   |项目语言名称|
+|position                         |int      |项目排序|
 
 
 > 返回的JSON示例:
@@ -228,6 +229,45 @@ await octokit.request('GET /api/users/:login/is_pinned_projects/pin.json')
 ```
 
 
+## 星标项目展示排序
+星标项目展示排序
+
+> 示例:
+
+```shell
+curl -X PATCH http://localhost:3000/api/users/yystopf/is_pinned_projects/11.json
+```
+
+```javascript
+await octokit.request('PATCH/PUT /api/users/:login/is_pinned_projects/:id.json')
+```
+
+### HTTP 请求
+`PATCH/PUT /api/users/:login/is_pinned_projects/:id.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|pinned_projects.position                              |int      |排序,数字越大排名越前 |
+
+> 请求的JSON示例：
+
+```json
+{
+    "pinned_project": {
+        "position": 1
+    }
+}
+```
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
 ## 用户近期活动统计
 用户近期活动统计, 默认显示近一周的数据
 
