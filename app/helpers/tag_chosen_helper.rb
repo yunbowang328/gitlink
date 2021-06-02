@@ -94,7 +94,7 @@ module TagChosenHelper
 
   def render_issue_tags(project)
     # project.issue_tags.last&.cache_key
-    cache_key = "all_issue_tags/#{project.issue_tags.maximum('updated_at')}"
+    cache_key = "project-#{project.id}/all_issue_tags/size-#{project.issue_tags.size}/#{project.issue_tags.maximum('updated_at')}"
 
     Rails.cache.fetch(cache_key) do
       project.issue_tags.select(:id, :name, :color).collect do |event|
@@ -109,7 +109,7 @@ module TagChosenHelper
   end
 
   def render_cache_milestones(project)
-    cache_key = "all_milestones/#{project.versions.maximum('updated_on')}"
+    cache_key = "project-#{project.id}/all_milestones/size-#{project.version}/#{project.versions.maximum('updated_on')}"
 
     Rails.cache.fetch(cache_key) do
       project.versions.select(:id, :name, :status).collect do |event|
@@ -124,7 +124,7 @@ module TagChosenHelper
   end
 
   def render_cache_collaborators(project)
-    cache_key = "all_collaborators/#{project.all_collaborators.maximum('created_on')}"
+    cache_key = "project-#{project.id}/all_collaborators/size-#{project.all_collaborators.size}/#{project.all_collaborators.maximum('updated_on')}"
     Rails.cache.fetch(cache_key) do
       project.all_collaborators.order(created_on: :desc).collect do |user|
         {
