@@ -3,4 +3,5 @@ json.projects @is_pinned_projects.each do |project|
   json.partial! "projects/project_detail", project: project&.project
   json.id project.id
   json.position project.position
+  json.project_id project.project_id
 end
