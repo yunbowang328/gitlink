@@ -266,7 +266,7 @@ Rails.application.routes.draw do
           end
         end
         resources :headmaps, only: [:index]
-        resources :is_pinned_projects, only: [:index] do 
+        resources :is_pinned_projects, only: [:index, :update] do 
           collection do 
             post :pin 
           end
