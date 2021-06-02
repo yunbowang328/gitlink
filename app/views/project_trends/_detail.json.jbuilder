@@ -12,6 +12,6 @@ if trend.trend_type == "Issue"
 elsif trend.trend_type == "VersionRelease"
   json.partial! "version_releases/simple_version_release", locals: {version: trend.trend}
 else
-  json.name trend.trend.title
-  json.created_at format_time(trend.trend.created_at)
+  json.name trend.trend&.title
+  json.created_at format_time(trend.trend&.created_at)
 end
