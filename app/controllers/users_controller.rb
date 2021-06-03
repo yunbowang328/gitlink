@@ -285,7 +285,8 @@ class UsersController < ApplicationController
                                   :gender, :location, :location_city,
                                   :occupation, :technical_title,
                                   :school_id, :department_id, :province, :city,
-                                  :custom_department, :identity, :student_id, :description]
+                                  :custom_department, :identity, :student_id, :description,
+                                  :show_email, :show_location, :show_department]
                                 )
   end
 

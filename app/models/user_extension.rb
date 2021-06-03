@@ -25,6 +25,9 @@
 #  province           :string(255)
 #  city               :string(255)
 #  custom_department  :string(255)
+#  show_email         :boolean          default("0")
+#  show_location      :boolean          default("0")
+#  show_department    :boolean          default("0")
 #
 # Indexes
 #
