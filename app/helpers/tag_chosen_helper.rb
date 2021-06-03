@@ -109,7 +109,7 @@ module TagChosenHelper
   end
 
   def render_cache_milestones(project)
-    cache_key = "project-#{project.id}/all_milestones/size-#{project.version}/#{project.versions.maximum('updated_on')}"
+    cache_key = "project-#{project.id}/all_milestones/size-#{project.versions.size}/#{project.versions.maximum('updated_on')}"
 
     Rails.cache.fetch(cache_key) do
       project.versions.select(:id, :name, :status).collect do |event|
