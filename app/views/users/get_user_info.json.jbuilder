@@ -1,5 +1,6 @@
 json.username @user.full_name
 json.real_name @user.real_name
+json.gender @user.gender
 json.login @user.login
 json.user_id @user.id
 json.image_url url_to_avatar(@user)
