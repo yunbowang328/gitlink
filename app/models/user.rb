@@ -181,7 +181,9 @@ class User < Owner
 
   attr_accessor :password, :password_confirmation
 
-  delegate :description, :gender, :department_id, :school_id, :location, :location_city, :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
+  delegate :description, :gender, :department_id, :school_id, :location, :location_city,
+           :show_email, :show_location, :show_department,
+           :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
   before_save :update_hashed_password
   after_create do

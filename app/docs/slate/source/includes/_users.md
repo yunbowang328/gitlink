@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-06-02 16:40:02
+ * @LastEditTime: 2021-06-03 10:18:53
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -66,13 +66,17 @@ await octokit.request('PATCH/PUT /api/users/:login.json')
 ### 请求字段说明:
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
-|user.nickname                              |string      |用户昵称 |
-|user.image                              |string/file |用户头像 |
+|user.nickname                                   |string      |用户昵称 |
+|user.image                                      |base64/file |用户头像 |
 |user.user_extension_attributes.gender           |int         |性别， 0男 1女 |
 |user.user_extension_attributes.province         |string      |省份 |
 |user.user_extension_attributes.city             |string      |城市 |
-|user.user_extension_attributes.description      |string      |个性签名 |
+|user.user_extension_attributes.description      |string      |简介 |
 |user.user_extension_attributes.custom_department|string      |单位名称 |
+|user.user_extension_attributes.technical_title  |string      |职业 |
+|user.user_extension_attributes.show_email       |bool        |是否展示邮箱 |
+|user.user_extension_attributes.show_location    |bool        |是否展示位置 |
+|user.user_extension_attributes.show_department  |bool        |是否展示公司 |
 
 > 请求的JSON示例：
 
