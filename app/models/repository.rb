@@ -82,5 +82,8 @@ class Repository < ApplicationRecord
     source_clone_url.blank? ? mirror_url : source_clone_url
   end
   
+  def config_accelerator?
+    !source_clone_url.blank?
+  end
 
 end
