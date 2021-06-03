@@ -27,6 +27,7 @@
 #
 # Indexes
 #
+#  index_repositories_on_identifier  (identifier)
 #  index_repositories_on_project_id  (project_id)
 #  index_repositories_on_user_id     (user_id)
 #
