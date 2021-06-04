@@ -10,13 +10,10 @@
 #  updated_at      :datetime         not null
 #  register_status :integer          default("0")
 #  action_status   :integer          default("0")
-#  is_delete       :boolean          default("0")
-#  user_id         :integer
 #
 # Indexes
 #
-#  index_user_agents_on_ip       (ip)
-#  index_user_agents_on_user_id  (user_id)
+#  index_user_agents_on_ip  (ip) UNIQUE
 #
 
 class UserAgent < ApplicationRecord
