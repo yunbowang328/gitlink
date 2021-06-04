@@ -1,5 +1,6 @@
 json.username @user.full_name
 json.real_name @user.real_name
+json.gender @user.gender
 json.login @user.login
 json.user_id @user.id
 json.image_url url_to_avatar(@user)
@@ -15,3 +16,9 @@ json.profile_completed @user.profile_completed?
 json.professional_certification @user.professional_certification
 json.devops_step @user.devops_step
 json.ci_certification @user.ci_certification?
+json.email @user.mail 
+json.province @user.province 
+json.city @user.city
+json.custom_department @user.custom_department
+json.description @user.description
+json.(@user, :show_email, :show_department, :show_location)

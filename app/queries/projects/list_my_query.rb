@@ -53,10 +53,15 @@ class Projects::ListMyQuery < ApplicationQuery
       
     q = projects.ransack(name_or_identifier_cont: params[:search])
 
-    scope = q.result.includes(:project_category, :project_language,:owner, :repository)
+    scope = q.result.includes(:project_category, :project_language,:owner, :repository, :has_pinned_users)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"
-    scope.order("projects.#{sort} #{sort_direction}")
+    
+    if params[:choosed].present? && params[:choosed].is_a?(Array)
+      scope.order("FIELD(id, #{params[:choosed].reverse.join(",")}) desc")
+    else
+      scope.order("projects.#{sort} #{sort_direction}")
+    end
   end
 end
