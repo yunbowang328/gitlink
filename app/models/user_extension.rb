@@ -22,12 +22,15 @@
 #  school_id          :integer
 #  description        :string(255)      default("")
 #  department_id      :integer
+<<<<<<< HEAD
 #  province           :string(255)
 #  city               :string(255)
 #  custom_department  :string(255)
 #  show_email         :boolean          default("0")
 #  show_location      :boolean          default("0")
 #  show_department    :boolean          default("0")
+=======
+>>>>>>> ed8d646d479bdcd84784909a024949bb8e4f093f
 #
 # Indexes
 #

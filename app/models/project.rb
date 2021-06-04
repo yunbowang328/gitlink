@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # == Schema Information
 #
 # Table name: projects
@@ -70,6 +71,70 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
+=======
+# == Schema Information
+#
+# Table name: projects
+#
+#  id                     :integer          not null, primary key
+#  name                   :string(255)      default(""), not null
+#  description            :text(65535)
+#  homepage               :string(255)      default("")
+#  is_public              :boolean          default("1"), not null
+#  parent_id              :integer
+#  created_on             :datetime
+#  updated_on             :datetime
+#  identifier             :string(255)
+#  status                 :integer          default("1"), not null
+#  lft                    :integer
+#  rgt                    :integer
+#  inherit_members        :boolean          default("0"), not null
+#  project_type           :integer          default("0")
+#  hidden_repo            :boolean          default("0"), not null
+#  attachmenttype         :integer          default("1")
+#  user_id                :integer
+#  dts_test               :integer          default("0")
+#  enterprise_name        :string(255)
+#  organization_id        :integer
+#  project_new_type       :integer
+#  gpid                   :integer
+#  forked_from_project_id :integer
+#  forked_count           :integer          default("0")
+#  publish_resource       :integer          default("0")
+#  visits                 :integer          default("0")
+#  hot                    :integer          default("0")
+#  invite_code            :string(255)
+#  qrcode                 :string(255)
+#  qrcode_expiretime      :integer          default("0")
+#  script                 :text(65535)
+#  training_status        :integer          default("0")
+#  rep_identifier         :string(255)
+#  project_category_id    :integer
+#  project_language_id    :integer
+#  license_id             :integer
+#  ignore_id              :integer
+#  praises_count          :integer          default("0")
+#  watchers_count         :integer          default("0")
+#  issues_count           :integer          default("0")
+#  pull_requests_count    :integer          default("0")
+#
+# Indexes
+#
+#  index_projects_on_forked_from_project_id  (forked_from_project_id)
+#  index_projects_on_identifier              (identifier)
+#  index_projects_on_is_public               (is_public)
+#  index_projects_on_lft                     (lft)
+#  index_projects_on_name                    (name)
+#  index_projects_on_platform                (platform)
+#  index_projects_on_project_type            (project_type)
+#  index_projects_on_recommend               (recommend)
+#  index_projects_on_rgt                     (rgt)
+#  index_projects_on_status                  (status)
+#  index_projects_on_updated_on              (updated_on)
+#
+
+>>>>>>> ed8d646d479bdcd84784909a024949bb8e4f093f
 
 
 class Project < ApplicationRecord
