@@ -1,0 +1,14 @@
+'zh-CN':
+  activemodel:
+    attributes:
+      users/admin_create_user_form:
+        login: '登录名'
+        password: '密码'
+        mail: '邮箱'
+        phone: '手机号'
+    errors:
+      models:
+        users/admin_create_user_form:
+          attributes:
+            
+

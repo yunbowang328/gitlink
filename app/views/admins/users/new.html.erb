@@ -1,0 +1,37 @@
+<%
+  define_admin_breadcrumbs do
+    add_admin_breadcrumb('用户管理', admins_users_path)
+    add_admin_breadcrumb('新增用户')
+  end
+%>
+
+<div class="box user-edit-container">
+  <%= simple_form_for([:admins, User.new], url: admins_users_path ) do |f| %>
+     <%= f.error_notification %>
+    <div class="form-group px-2">
+      <div class="form-row">
+        <%= f.input :login, label: '登录名', required: true, wrapper_html: { class: 'col-md-3' }, input_html: {  class: 'col-md-11' } %>
+      </div>
+
+      <div class="form-row">
+        <%= f.input :nickname, label: '昵称', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-md-11' } %>
+      </div>
+
+      <div class="form-row">
+        <%= f.input :mail, as: :email, label: '邮箱地址', required: true, error_html: { id: 'password_error'}, wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11' } %>
+        <%= f.input :phone, as: :tel, label: '手机号', required: true, wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'off' } %>
+      </div>
+      
+    </div>
+
+    <div class="form-row">
+      <%= f.input :password, as: :password, required: true, label: '密码', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'new-password' } %>
+      <%= f.input :password_confirmation, as: :password, required: true, label: '确认密码', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'new-password' } %>
+    </div>
+
+    <div class="form-row mt-4">
+      <%= f.button :submit, value: '保存', class: 'btn-primary mr-3 px-4' %>
+      <%= link_to '取消', admins_users_path, class: 'btn btn-secondary px-4' %>
+    </div>
+  <% end %>
+</div>

@@ -58,11 +58,55 @@ class Admins::UsersController < Admins::BaseController
     render_ok
   end
 
-  private
+  def new
+    @user = User.new
+  end
+  
+  def create
+    logger.info "---validate_create_params: #{validate_create_params}"
+    Users::AdminCreateUserForm.new(validate_create_params).validate!
 
+    user = User.new(create_params)
+    user.type = 'User'
+    ActiveRecord::Base.transaction do
+      if user.save!
+        UserExtension.create!(user_id: user.id)
+        interactor = Gitea::RegisterInteractor.call({username: user.login, email: user.mail, password: create_params[:password]})
+        if interactor.success?
+          gitea_user = interactor.result
+          result = Gitea::User::GenerateTokenService.call(user.login, create_params[:password])
+          user.gitea_token = result['sha1']
+          user.gitea_uid = gitea_user[:body]['id']
+          user.save!
+        end
+      end
+    end
+
+    flash[:success] = '保存成功'
+    redirect_to admins_users_path
+  rescue ActiveRecord::RecordInvalid => e
+    logger.info "------------ #{e.message}"
+    puts e.message
+    flash.now[:danger] = e.message
+    render 'new'
+  rescue Exception => ex
+    flash.now[:danger] = ex.message
+    render 'new'
+  end
+
+
+  private
   def update_params
     params.require(:user).permit(%i[lastname nickname gender identity technical_title student_id is_shixun_marker
                                     mail phone location location_city school_id department_id admin business is_test
                                     password professional_certification authentication])
+  end
+
+  def create_params
+    params.require(:user).permit(%i[login nickname gender mail phone location location_city password professional_certification])
+  end
+
+  def validate_create_params
+    create_params.slice(:login, :mail, :phone, :password)
   end
 end

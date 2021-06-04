@@ -641,7 +641,7 @@ Rails.application.routes.draw do
       get :contrast, on: :collection
     end
 
-    resources :users, only: [:index, :edit, :update, :destroy] do
+    resources :users do
       member do
         post :reward_grade
         post :lock

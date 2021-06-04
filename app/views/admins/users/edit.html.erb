@@ -64,12 +64,12 @@
           <%= f.label :identity, label: '职业' %>
           <%= select_tag('user[identity]', [], class: 'form-control identity-select optional', 'data-value': @user.user_extension&.identity, 'data-first-title': '请选择') %>
         </div>
-        <div class="form-group technical-title-select-wrapper optional col-md-1" style="<%= @user.user_extension.student? ? 'display:none;' : '' %>">
+        <div class="form-group technical-title-select-wrapper optional col-md-1" style="<%= @user.user_extension&.student? ? 'display:none;' : '' %>">
           <%= f.label :technical_title, label: '职称' %>
           <%= select_tag('user[technical_title]', [], class: 'form-control technical-title-select optional', 'data-value': @user.technical_title) %>
         </div>
 
-        <%= f.input :student_id, as: :tel, label: '学号', wrapper_html: { class: 'col-md-2', style: @user.user_extension.student? ? '' : 'display:none;' }, input_html: { class: 'student-id-input' } %>
+        <%= f.input :student_id, as: :tel, label: '学号', wrapper_html: { class: 'col-md-2', style: @user.user_extension&.student? ? '' : 'display:none;' }, input_html: { class: 'student-id-input' } %>
       </div>
 
       <div class="form-row">
