@@ -1,0 +1,21 @@
+<div class="modal fade phenglei-user-create-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">新增</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+       <%= form_for @phenglei_user, url: {controller: "phenglei_users", action: 'create'} do |p| %>
+        <div class="modal-body">
+          <%= p.text_field :phone, class: "form-control input-lg",placeholder: "手机号",required: true, maxlength: 64%>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <%= p.submit "确认", class: "btn btn-primary submit-btn" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

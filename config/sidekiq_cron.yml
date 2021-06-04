@@ -2,3 +2,7 @@ sync_gitea_repo_update_time:
   cron: "0 0 * * *"
   class: "SyncRepoUpdateTimeJob"
   queue: default
+sync_phenglei_user: 
+  cron: "0 23 * * *"
+  class: "SyncPhengleiUserJob"
+  queue: default

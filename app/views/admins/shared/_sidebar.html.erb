@@ -17,6 +17,7 @@
     <li>
       <%= sidebar_item_group('#user-submenu', '用户', icon: 'user') do %>
         <li><%= sidebar_item(admins_users_path, '用户列表', icon: 'user', controller: 'admins-users') %></li>
+        <li><%= sidebar_item(admins_phenglei_users_path, '风雷意向用户列表', icon: 'user', controller: 'admins-phenglei_users') %></li>
       <% end %>
     </li>
     <li>

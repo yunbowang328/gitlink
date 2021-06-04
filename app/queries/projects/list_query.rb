@@ -15,7 +15,7 @@ class Projects::ListQuery < ApplicationQuery
     scope = q
       .with_project_type(params[:project_type])
       .with_project_category(params[:category_id])
-      .with_project_language(params[:language_id])
+      .with_project_language(params[:language_id]).order(order_index: :desc)
 
     sort = params[:sort_by] || "updated_on"
     sort_direction = params[:sort_direction] || "desc"

@@ -650,6 +650,7 @@ Rails.application.routes.draw do
         post :reset_login_times
       end
     end
+    resources :phenglei_users, only: [:index, :new, :create]
     resource :import_disciplines, only: [:create]
     resource :import_users, only: [:create]
     resource :import_course_members, only: [:create]
@@ -827,7 +828,11 @@ Rails.application.routes.draw do
 
     resources :courses, only: [:index, :destroy, :update]
 
-    resources :projects, only: [:index, :destroy]
+    resources :projects, only: [:index, :destroy] do
+      member do
+        get :sync_phenglei_user
+      end
+    end
 
     resources :disciplines, only: [:index, :create, :edit, :update, :destroy] do
       post :adjust_position, on: :member
