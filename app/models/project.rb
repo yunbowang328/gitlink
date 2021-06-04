@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  name                   :string(255)      default(""), not null
-#  description            :text(4294967295)
+#  description            :text(65535)
 #  homepage               :string(255)      default("")
 #  is_public              :boolean          default("1"), not null
 #  parent_id              :integer
@@ -37,24 +37,12 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
+#  license_id             :integer
+#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
 #  pull_requests_count    :integer          default("0")
-#  language               :string(255)
-#  versions_count         :integer          default("0")
-#  issue_tags_count       :integer          default("0")
-#  closed_issues_count    :integer          default("0")
-#  open_devops            :boolean          default("0")
-#  gitea_webhook_id       :integer
-#  open_devops_count      :integer          default("0")
-#  recommend              :boolean          default("0")
-#  platform               :integer          default("0")
-#  license_id             :integer
-#  ignore_id              :integer
-#  default_branch         :string(255)      default("master")
-#  website                :string(255)
-#  lesson_url             :string(255)
 #
 # Indexes
 #
@@ -70,6 +58,7 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
 
 
 class Project < ApplicationRecord
@@ -111,9 +100,10 @@ class Project < ApplicationRecord
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
-  has_many :team_projects, dependent: :destroy
   has_many :project_units, dependent: :destroy
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
+  has_many :pinned_projects, dependent: :destroy 
+  has_many :has_pinned_users, through: :pinned_projects, source: :user
 
   after_save :check_project_members
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}

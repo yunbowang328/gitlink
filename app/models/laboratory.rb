@@ -10,7 +10,6 @@
 #  sync_course  :boolean          default("0")
 #  sync_subject :boolean          default("0")
 #  sync_shixun  :boolean          default("0")
-#  is_local     :boolean          default("0")
 #
 # Indexes
 #
