@@ -162,29 +162,126 @@ class Users::StatisticsController < Users::BaseController
   end
 
   def preload_develop_data
-    # 用户被follow数量
-    @follow_count = time_filter(Watcher.where(watchable: observed_user), 'created_at').count
-    @platform_follow_count = time_filter(Watcher.where(watchable_type: 'User'), 'created_at').count
-    # 用户pr数量
-    @pullrequest_count = time_filter(PullRequest.where(user_id: observed_user.id), 'created_at').count  
-    @platform_pullrequest_count = time_filter(PullRequest, 'created_at').count  
-    # 用户issue数量
-    @issues_count = time_filter(Issue.where(author_id: observed_user.id), 'created_on').count 
-    @platform_issues_count = time_filter(Issue, 'created_on').count
-    # 用户总项目数 @fork_count + @project_watchers_count + @project_praises_count
-    @project_count = filter_member_projects_by_role("Owner").count  
-    @platform_project_count = time_filter(Project, 'created_on').count
-    # 用户项目被fork数量
-    @fork_count = filter_member_projects_by_role("Owner").sum("forked_count")
-    @platform_fork_count = time_filter(Project, 'created_on').sum("forked_count")
-    # 用户项目关注数
-    @project_watchers_count = filter_member_projects_by_role("Owner").sum("watchers_count")
-    @platform_project_watchers_count = time_filter(Project, 'created_on').sum("watchers_count")
-    # 用户项目点赞数
-    @project_praises_count = filter_member_projects_by_role("Owner").sum("praises_count")
-    @platform_project_praises_count = time_filter(Project, 'created_on').sum("praises_count")
-    # 用户不同语言项目数量
-    @project_languages_count = filter_member_projects_by_role("Owner").joins(:project_language).group("project_languages.name").count
-    @platform_project_languages_count = time_filter(Project, 'created_on').joins(:project_language).group("project_languages.name").count
+    if params[:start_time].present? && params[:end_time].present?
+      # 用户被follow数量
+      @follow_count = Rails.cache.fetch("user-follow-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Watcher.where(watchable: observed_user).maximum('created_at').to_i}") do 
+        time_filter(Watcher.where(watchable: observed_user), 'created_at').count
+      end
+      @platform_follow_count = Rails.cache.fetch("platform-follow-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Watcher.where(watchable_type: 'User').maximum('created_at').to_i}") do 
+        time_filter(Watcher.where(watchable_type: 'User'), 'created_at').count
+      end
+      # 用户pr数量
+      @pullrequest_count = Rails.cache.fetch("user-pullrequest-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{PullRequest.where(user_id: observed_user.id).maximum('created_at').to_i}") do 
+        time_filter(PullRequest.where(user_id: observed_user.id), 'created_at').count 
+      end 
+      @platform_pullrequest_count = Rails.cache.fetch("platform-pullrequest-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{PullRequest.maximum('created_at').to_i}") do 
+        time_filter(PullRequest, 'created_at').count  
+      end
+      # 用户issue数量
+      @issues_count = Rails.cache.fetch("user-issue-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Issue.where(author_id: observed_user.id).maximum('created_on').to_i}") do 
+        time_filter(Issue.where(author_id: observed_user.id), 'created_on').count 
+      end
+      @platform_issues_count = Rails.cache.fetch("platform-issue-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Issue.maximum('created_on').to_i}") do 
+        time_filter(Issue, 'created_on').count
+      end
+      # 用户总项目数 
+      @project_count = Rails.cache.fetch("user-project-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Project.where(user_id:observed_user.id).maximum('created_on').to_i}") do
+        time_filter(Project.where(user_id:observed_user.id), 'created_on').count  
+      end
+      @platform_project_count = Rails.cache.fetch("platform-project-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Project.maximum('created_on').to_i}") do 
+        time_filter(Project, 'created_on').count
+      end
+      # 用户项目被fork数量
+      @fork_count = Rails.cache.fetch("user-fork-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{ForkUser.joins(:project).where(projects: {user_id: observed_user.id}).maximum('created_at').to_i}") do
+        time_filter(Project.where(user_id:observed_user.id), 'created_on').sum("forked_count") 
+      end
+      @platform_fork_count = Rails.cache.fetch("platform-fork-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{ForkUser.maximum('created_at').to_i}") do 
+        time_filter(Project, 'created_on').sum("forked_count") 
+      end
+
+      # 用户项目关注数
+      @project_watchers_count = Rails.cache.fetch("user-watchers-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{observed_user.id}-#{Watcher.where(watchable_type: 'Project', watchable_id: observed_user.projects).maximum('created_at').to_i}") do 
+        time_filter(Project.where(user_id: observed_user.id), 'created_on').sum("watchers_count")
+      end
+      @platform_project_watchers_count = Rails.cache.fetch("platform-watchers-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Watcher.where(watchable_type: 'Project').maximum('created_at').to_i}") do 
+        time_filter(Project, 'created_on').sum("watchers_count")
+      end
+
+      # 用户项目点赞数
+      @project_praises_count = Rails.cache.fetch("user-praises-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{PraiseTread.where(praise_tread_object_type: 'Project', praise_tread_object_id: observed_user.projects).maximum('created_at').to_i}") do 
+        time_filter(Project.where(user_id: observed_user.id), 'created_on').sum("praises_count")
+      end
+      @platform_project_praises_count = Rails.cache.fetch("user-praises-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{PraiseTread.where(praise_tread_object_type: 'Project', praise_tread_object_id: observed_user.projects).maximum('created_at').to_i}") do 
+        time_filter(Project, 'created_on').sum("praises_count")
+      end
+
+      # 用户不同语言项目数量
+      @project_languages_count = Rails.cache.fetch("user-languages-count-#{observed_user.id}-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Project.where(user_id:observed_user.id).maximum('created_on').to_i}") do 
+        time_filter(Project.where(user_id: observed_user.id), 'created_on').joins(:project_language).group("project_languages.name").count
+      end
+      @platform_project_languages_count = Rails.cache.fetch("platform-languages-count-start:#{params[:start_time]}-end:#{params[:end_time]}-#{Project.maximum('created_on').to_i}") do 
+        time_filter(Project, 'created_on').joins(:project_language).group("project_languages.name").count
+      end
+    else
+      # 用户被follow数量
+      @follow_count = Rails.cache.fetch("user-follow-count-#{observed_user.id}-#{Watcher.where(watchable: observed_user).maximum('created_at').to_i}") do 
+        time_filter(Watcher.where(watchable: observed_user), 'created_at').count
+      end
+      @platform_follow_count = Rails.cache.fetch("platform-follow-count-#{Watcher.where(watchable_type: 'User').maximum('created_at').to_i}") do 
+        time_filter(Watcher.where(watchable_type: 'User'), 'created_at').count
+      end
+      # 用户pr数量
+      @pullrequest_count = Rails.cache.fetch("user-pullrequest-count-#{observed_user.id}-#{PullRequest.where(user_id: observed_user.id).maximum('created_at').to_i}") do 
+        time_filter(PullRequest.where(user_id: observed_user.id), 'created_at').count 
+      end 
+      @platform_pullrequest_count = Rails.cache.fetch("platform-pullrequest-count-#{PullRequest.maximum('created_at').to_i}") do 
+        time_filter(PullRequest, 'created_at').count  
+      end
+      # 用户issue数量
+      @issues_count = Rails.cache.fetch("user-issue-count-#{observed_user.id}-#{Issue.where(author_id: observed_user.id).maximum('created_on').to_i}") do 
+        time_filter(Issue.where(author_id: observed_user.id), 'created_on').count 
+      end
+      @platform_issues_count = Rails.cache.fetch("platform-issue-count-#{Issue.maximum('created_on').to_i}") do 
+        time_filter(Issue, 'created_on').count
+      end
+      # 用户总项目数 
+      @project_count = Rails.cache.fetch("user-project-count-#{observed_user.id}-#{Project.where(user_id:observed_user.id).maximum('created_on').to_i}") do
+        time_filter(Project.where(user_id:observed_user.id), 'created_on').count  
+      end
+      @platform_project_count = Rails.cache.fetch("platform-project-count-#{Project.maximum('created_on').to_i}") do 
+        time_filter(Project, 'created_on').count
+      end
+      # 用户项目被fork数量
+      @fork_count = Rails.cache.fetch("user-fork-count-#{observed_user.id}-#{ForkUser.joins(:project).where(projects: {user_id: observed_user.id}).maximum('created_at').to_i}") do
+        time_filter(Project.where(user_id:observed_user.id), 'created_on').sum("forked_count") 
+      end
+      @platform_fork_count = Rails.cache.fetch("platform-fork-count-#{ForkUser.maximum('created_at').to_i}") do 
+        time_filter(Project, 'created_on').sum("forked_count") 
+      end
+
+      # 用户项目关注数
+      @project_watchers_count = Rails.cache.fetch("user-watchers-count-#{observed_user.id}-#{Watcher.where(watchable_type: 'Project', watchable_id: observed_user.projects).maximum('created_at').to_i}") do 
+        time_filter(Project.where(user_id: observed_user.id), 'created_on').sum("watchers_count")
+      end
+      @platform_project_watchers_count = Rails.cache.fetch("platform-watchers-count-#{Watcher.where(watchable_type: 'Project').maximum('created_at').to_i}") do 
+        time_filter(Project, 'created_on').sum("watchers_count")
+      end
+
+      # 用户项目点赞数
+      @project_praises_count = Rails.cache.fetch("user-praises-count-#{observed_user.id}-#{PraiseTread.where(praise_tread_object_type: 'Project', praise_tread_object_id: observed_user.projects).maximum('created_at').to_i}") do 
+        time_filter(Project.where(user_id: observed_user.id), 'created_on').sum("praises_count")
+      end
+      @platform_project_praises_count = Rails.cache.fetch("user-praises-count-#{observed_user.id}-#{PraiseTread.where(praise_tread_object_type: 'Project', praise_tread_object_id: observed_user.projects).maximum('created_at').to_i}") do 
+        time_filter(Project, 'created_on').sum("praises_count")
+      end
+
+      # 用户不同语言项目数量
+      @project_languages_count = Rails.cache.fetch("user-languages-count-#{observed_user.id}-#{Project.where(user_id:observed_user.id).maximum('created_on').to_i}") do 
+        time_filter(Project.where(user_id: observed_user.id), 'created_on').joins(:project_language).group("project_languages.name").count
+      end
+      @platform_project_languages_count = Rails.cache.fetch("platform-languages-count-#{Project.maximum('created_on').to_i}") do 
+        time_filter(Project, 'created_on').joins(:project_language).group("project_languages.name").count
+      end
+    end
   end
 end
