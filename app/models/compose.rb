@@ -20,7 +20,6 @@
 
 class Compose < ApplicationRecord
   #组织
-  belongs_to :user
   has_many :compose_projects
   has_many :compose_users
 
