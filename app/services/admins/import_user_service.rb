@@ -84,7 +84,7 @@ class Admins::ImportUserService < ApplicationService
     if data.identity.to_i == 1
       users = users.where(user_extensions: { student_id: data.student_id })
     else
-      users = users.where(user_extensions: { technical_title: data.technical_title }).where('CONCAT(users.lastname,users.firstname) = ?', data.name)
+      users = users.where(user_extensions: { technical_title: data.technical_title }).where('CONCAT_WS(users.lastname,users.firstname,users.nickname) = ?', data.name)
     end
 
     users.first
