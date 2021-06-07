@@ -68,6 +68,7 @@ class Admins::UsersController < Admins::BaseController
 
     user = User.new(create_params)
     user.type = 'User'
+    user.login = User.generate_login("p")
     ActiveRecord::Base.transaction do
       if user.save!
         UserExtension.create!(user_id: user.id)
@@ -103,10 +104,10 @@ class Admins::UsersController < Admins::BaseController
   end
 
   def create_params
-    params.require(:user).permit(%i[login nickname gender mail phone location location_city password professional_certification])
+    params.require(:user).permit(%i[nickname gender mail phone location location_city password professional_certification])
   end
 
   def validate_create_params
-    create_params.slice(:login, :mail, :phone, :password)
+    create_params.slice(:mail, :phone, :password)
   end
 end

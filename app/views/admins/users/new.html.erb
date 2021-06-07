@@ -10,18 +10,9 @@
      <%= f.error_notification %>
     <div class="form-group px-2">
       <div class="form-row">
-        <%= f.input :login, label: '登录名', required: true, wrapper_html: { class: 'col-md-3' }, input_html: {  class: 'col-md-11' } %>
-      </div>
-
-      <div class="form-row">
-        <%= f.input :nickname, label: '昵称', wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-md-11' } %>
-      </div>
-
-      <div class="form-row">
-        <%= f.input :mail, as: :email, label: '邮箱地址', required: true, error_html: { id: 'password_error'}, wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11' } %>
         <%= f.input :phone, as: :tel, label: '手机号', required: true, wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11', autocomplete: 'off' } %>
+        <%= f.input :mail, as: :email, label: '邮箱地址', required: true, error_html: { id: 'password_error'}, wrapper_html: { class: 'col-md-3' }, input_html: { class: 'col-sm-11' } %>
       </div>
-      
     </div>
 
     <div class="form-row">
