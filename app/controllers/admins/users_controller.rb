@@ -63,12 +63,14 @@ class Admins::UsersController < Admins::BaseController
   end
   
   def create
-    logger.info "---validate_create_params: #{validate_create_params}"
     Users::AdminCreateUserForm.new(validate_create_params).validate!
 
-    user = User.new(create_params)
-    user.type = 'User'
-    user.login = User.generate_login("p")
+    user  = User.new(create_params)
+    login = User.generate_login("p")
+
+    user.type  = 'User'
+    user.login = login
+    user.mail  = "#{login}@example.org"
     ActiveRecord::Base.transaction do
       if user.save!
         UserExtension.create!(user_id: user.id)
@@ -108,6 +110,6 @@ class Admins::UsersController < Admins::BaseController
   end
 
   def validate_create_params
-    create_params.slice(:mail, :phone, :password)
+    create_params.slice(:phone, :password)
   end
 end
