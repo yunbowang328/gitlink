@@ -4,8 +4,8 @@ json.platform do
   json.activity @platform_activity
   json.experience @platform_experience
   json.language @platform_language
-  json.languages_percent @platform_languages_percent
-  json.each_language_score @platform_each_language_score
+  # json.languages_percent @platform_languages_percent
+  # json.each_language_score @platform_each_language_score
 end
 
 json.user do 
