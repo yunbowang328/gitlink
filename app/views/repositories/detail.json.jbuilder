@@ -7,6 +7,7 @@ else
   json.readme @result[:readme].merge(content: readme_render_decode64_content(@result[:readme]["content"], nil))
 end
 json.identifier render_identifier(@project)
+json.invite_code @project.invite_code
 json.name @project.name
 json.description  @project.description
 json.project_id @project.id
