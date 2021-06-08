@@ -773,7 +773,26 @@ class ApplicationController < ActionController::Base
 	def base_url
 		request.base_url
 	end
+
+	def convert_image!
+		@image = params[:image] || user_params[:image]
+    return unless @image.present?
+    max_size = EduSetting.get('upload_avatar_max_size') || 2 * 1024 * 1024 # 2M
+    if @image.class == ActionDispatch::Http::UploadedFile
+      render_error('请上传文件') if @image.size.zero?
+      render_error('文件大小超过限制') if @image.size > max_size.to_i
+    else
+      image = @image.to_s.strip
+      return render_error('请上传正确的图片') if image.blank?
+      @image = Util.convert_base64_image(image, max_size: max_size.to_i)
+    end
+  rescue Base64ImageConverter::Error => ex
+    render_error(ex.message)
+	end
 	
+  def avatar_path(object)
+    ApplicationController.helpers.disk_filename(object.class, object.id)
+  end
 
   private
 	def object_not_found
