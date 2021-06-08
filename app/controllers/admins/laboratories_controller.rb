@@ -32,7 +32,7 @@ class Admins::LaboratoriesController < Admins::BaseController
 
     keyword = params[:keyword].to_s.strip
     if keyword.present?
-      like_sql = 'shixuns.name LIKE :keyword OR CONCAT(users.lastname, users.firstname) LIKE :keyword '\
+      like_sql = 'shixuns.name LIKE :keyword OR CONCAT_WS(users.lastname, users.firstname, users.nickname) LIKE :keyword '\
                  'OR mirror_repositories.name LIKE :keyword'
       shixuns = shixuns.joins(:user, :mirror_repositories).where(like_sql, keyword: "%#{keyword}%")
     end
@@ -48,7 +48,7 @@ class Admins::LaboratoriesController < Admins::BaseController
 
     keyword = params[:keyword].to_s.strip
     if keyword.present?
-      like_sql = 'subjects.name LIKE :keyword OR CONCAT(users.lastname, users.firstname) LIKE :keyword'
+      like_sql = 'subjects.name LIKE :keyword OR CONCAT_WS(users.lastname, users.firstname, users.nickname) LIKE :keyword'
       subjects = subjects.joins(:user).where(like_sql, keyword: "%#{keyword}%")
     end
 

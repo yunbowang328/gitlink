@@ -33,6 +33,14 @@ class PullRequest < ApplicationRecord
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
 
+  after_save :reset_cache_data
+  after_destroy :reset_cache_data
+
+  def reset_cache_data 
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.user)
+  end
+
   def fork_project
     Project.find_by(id: self.fork_project_id)
   end

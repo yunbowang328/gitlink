@@ -10,7 +10,7 @@ class UserQuery < ApplicationQuery
 
     # 真实姓名
     if name = strip_param(:name)
-      users = users.where('LOWER(CONCAT(users.lastname, users.firstname)) LIKE ?', "%#{name.downcase}%")
+      users = users.where('LOWER(CONCAT_WS(users.lastname, users.firstname, users.nickname)) LIKE ?', "%#{name.downcase}%")
     end
 
     # 单位名称

@@ -30,14 +30,14 @@ class Admins::UserQuery < ApplicationQuery
     # 关键字检索
     keyword = params[:keyword].to_s.strip.presence
     if keyword
-      sql = 'CONCAT(lastname, firstname) LIKE :keyword OR login LIKE :keyword OR mail LIKE :keyword OR phone LIKE :keyword'
+      sql = 'CONCAT_WS(lastname, firstname, nickname) LIKE :keyword OR login LIKE :keyword OR mail LIKE :keyword OR phone LIKE :keyword'
       users = users.where(sql, keyword: "%#{keyword}%")
     end
 
     # 姓名
     name = params[:name].to_s.strip.presence
     if name.present?
-      users = users.where('CONCAT(lastname, firstname) LIKE :name', name: "%#{name}%")
+      users = users.where('CONCAT_WS(lastname, firstname, nickname) LIKE :name', name: "%#{name}%")
     end
 
     # 单位ID

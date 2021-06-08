@@ -86,7 +86,7 @@ class Weapps::CoursesController < Weapps::BaseController
     end
 
     if search.present?
-      @teacher_list = @teacher_list.joins(:user).where("LOWER(CONCAT(users.lastname, users.firstname)) like ?", "%#{search}%")
+      @teacher_list = @teacher_list.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.nickname)) like ?", "%#{search}%")
     end
 
     @teacher_list_size = @teacher_list.size
@@ -127,7 +127,7 @@ class Weapps::CoursesController < Weapps::BaseController
     @students = CourseMember.students(@course)
 
     if search.present?
-      @students = @students.joins(user: :user_extension).where("LOWER(CONCAT(users.lastname, users.firstname)) like ? or
+      @students = @students.joins(user: :user_extension).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.nickname)) like ? or
                                                         user_extensions.student_id like ?", "%#{search}%", "%#{search}%")
     end
 

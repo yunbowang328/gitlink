@@ -18,7 +18,7 @@ class MembersController < ApplicationController
     scope = @project.members.includes(:roles, user: :user_extension)
     search = params[:search].to_s.downcase
     role = params[:role].to_s
-    scope = scope.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login, users.mail)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    scope = scope.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
     scope = scope.joins(:roles).where("roles.name LIKE ?", "%#{role}%") if role.present?
 
     @total_count = scope.size
