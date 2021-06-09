@@ -13,3 +13,4 @@ json.is_transfering @project.is_transfering
 json.transfer do 
   json.partial! "/users/user_simple", locals: {user: @project&.applied_transfer_project&.owner}
 end
+json.is_pinned @project.has_pinned_users.include?(current_user)

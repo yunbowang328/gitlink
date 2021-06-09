@@ -177,7 +177,7 @@ class ProjectsController < ApplicationController
   end
 
   def recommend
-    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(id: :desc)
+    @projects = Project.recommend.includes(:repository, :project_category, :owner).order(visits: :desc)
   end
 
   def about

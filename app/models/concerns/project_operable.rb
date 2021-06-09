@@ -9,6 +9,7 @@ module ProjectOperable
     has_many :reporters,            -> { joins(:roles).where(roles: { name: 'Reporter' }) }, class_name: 'Member'
     has_many :writable_members,     -> { joins(:roles).where.not(roles: {name: 'Reporter'}) }, class_name: 'Member'
     has_many :team_projects, dependent: :destroy
+    has_many :teams, through: :team_projects, source: :team
   end
 
   def set_owner_permission(creator)

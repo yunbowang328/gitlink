@@ -86,7 +86,7 @@ class ZipsController < ApplicationController
 
           #搜索
           if params[:search].present?
-            @ex_users = @ex_users.joins(user: :user_extension).where("CONCAT(lastname, firstname) like ? OR student_id like ?", "%#{params[:search]}%", "%#{params[:search]}%")
+            @ex_users = @ex_users.joins(user: :user_extension).where("CONCAT_WS(lastname, firstname, nickname) like ? OR student_id like ?", "%#{params[:search]}%", "%#{params[:search]}%")
           end
 
           default_ex_users_size = @ex_users&.size
@@ -130,7 +130,7 @@ class ZipsController < ApplicationController
       end
 
       unless params[:search].blank?
-        @all_student_works = @all_student_works.joins(user: :user_extension).where("concat(lastname, firstname) like ?
+        @all_student_works = @all_student_works.joins(user: :user_extension).where("CONCAT_WS(lastname, firstname, nickname) like ?
                          or student_id like ?", "%#{params[:search]}%", "%#{params[:search]}%")
       end
 
