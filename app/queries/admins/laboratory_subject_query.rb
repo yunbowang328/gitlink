@@ -11,7 +11,7 @@ class Admins::LaboratorySubjectQuery < ApplicationQuery
 
     keyword = params[:keyword].to_s.strip
     if keyword.present?
-      like_sql = 'subjects.name LIKE :keyword OR CONCAT(users.lastname, users.firstname) LIKE :keyword'
+      like_sql = 'subjects.name LIKE :keyword OR CONCAT_WS(users.lastname, users.firstname, users.nickname) LIKE :keyword'
       laboratory_subjects = laboratory_subjects.joins(subject: :user).where(like_sql, keyword: "%#{keyword}%")
     end
 

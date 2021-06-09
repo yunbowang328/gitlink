@@ -27,6 +27,7 @@
 #
 # Indexes
 #
+#  index_repositories_on_identifier  (identifier)
 #  index_repositories_on_project_id  (project_id)
 #  index_repositories_on_user_id     (user_id)
 #
@@ -82,5 +83,8 @@ class Repository < ApplicationRecord
     source_clone_url.blank? ? mirror_url : source_clone_url
   end
   
+  def config_accelerator?
+    !source_clone_url.blank?
+  end
 
 end

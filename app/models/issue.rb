@@ -6,7 +6,7 @@
 #  tracker_id           :integer          not null
 #  project_id           :integer          not null
 #  subject              :string(255)      default(""), not null
-#  description          :text(4294967295)
+#  description          :text(65535)
 #  due_date             :date
 #  category_id          :integer
 #  status_id            :integer          not null
@@ -14,6 +14,7 @@
 #  priority_id          :integer          not null
 #  fixed_version_id     :integer
 #  author_id            :integer          not null
+#  lock_version         :integer          default("0"), not null
 #  created_on           :datetime
 #  updated_on           :datetime
 #  start_date           :date
@@ -27,7 +28,7 @@
 #  closed_on            :datetime
 #  project_issues_index :integer
 #  issue_type           :string(255)
-#  token                :integer          default("0")
+#  token                :string(255)
 #  issue_tags_value     :string(255)
 #  is_lock              :boolean          default("0")
 #  issue_classify       :string(255)
@@ -50,7 +51,7 @@
 
 class Issue < ApplicationRecord
   #issue_type 1为普通，2为悬赏
-  belongs_to :project, :counter_cache => true
+  belongs_to :project, counter_cache: true, touch: true
   belongs_to :tracker,optional: true
   has_many :project_trends, as: :trend, dependent: :destroy
   has_one :pull_request
@@ -75,8 +76,13 @@ class Issue < ApplicationRecord
   scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
 
   after_update :change_versions_count
-  after_destroy :update_closed_issues_count_in_project!
+  after_save :reset_cache_data
+  after_destroy :update_closed_issues_count_in_project!, :reset_cache_data
 
+  def reset_cache_data 
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.user)
+  end
 
   def get_assign_user
     User&.find_by_id(self.assigned_to_id) if self.assigned_to_id.present?

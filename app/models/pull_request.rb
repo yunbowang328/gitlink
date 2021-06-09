@@ -16,11 +16,6 @@
 #  head            :string(255)
 #  base            :string(255)
 #  issue_id        :integer
-#  fork_project_id :integer
-#  is_original     :boolean          default("0")
-#  comments_count  :integer          default("0")
-#  commits_count   :integer          default("0")
-#  files_count     :integer          default("0")
 #
 
 class PullRequest < ApplicationRecord
@@ -31,12 +26,20 @@ class PullRequest < ApplicationRecord
 
   belongs_to :issue
   belongs_to :user
-  belongs_to :project, :counter_cache => true
+  belongs_to :project, counter_cache: true, touch: true
   # belongs_to :fork_project, foreign_key: :fork_project_id
   has_many :pull_request_assigns, foreign_key: :pull_request_id
   has_many :pull_request_tags, foreign_key: :pull_request_id
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
+
+  after_save :reset_cache_data
+  after_destroy :reset_cache_data
+
+  def reset_cache_data 
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.user)
+  end
 
   def fork_project
     Project.find_by(id: self.fork_project_id)

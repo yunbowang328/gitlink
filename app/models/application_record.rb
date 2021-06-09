@@ -16,4 +16,12 @@ class ApplicationRecord < ActiveRecord::Base
   def allow_sync_to_trustie?
     Rails.env.production? && EduSetting.get('host_name') == 'https://www.educoder.net'
   end
+
+  def reset_user_cache_async_job(user)
+    ResetUserCacheJob.perform_later(user)
+  end
+
+  def reset_platform_cache_async_job
+    ResetPlatformCacheJob.perform_later
+  end
 end

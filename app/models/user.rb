@@ -39,15 +39,13 @@
 #  business                   :boolean          default("0")
 #  profile_completed          :boolean          default("0")
 #  laboratory_id              :integer
-#  is_shixun_marker           :boolean          default("0")
-#  admin_visitable            :boolean          default("0")
-#  collaborator               :boolean          default("0")
+#  platform                   :string(255)      default("0")
+#  gitea_token                :string(255)
 #  gitea_uid                  :integer
+#  is_shixun_marker           :boolean          default("0")
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
-#  gitea_token                :string(255)
-#  platform                   :string(255)
 #
 # Indexes
 #
@@ -55,9 +53,8 @@
 #  index_users_on_homepage_engineer  (homepage_engineer)
 #  index_users_on_homepage_teacher   (homepage_teacher)
 #  index_users_on_laboratory_id      (laboratory_id)
-#  index_users_on_login              (login) UNIQUE
-#  index_users_on_mail               (mail) UNIQUE
-#  index_users_on_phone              (phone) UNIQUE
+#  index_users_on_login              (login)
+#  index_users_on_mail               (mail)
 #  index_users_on_type               (type)
 #
 
@@ -164,11 +161,16 @@ class User < Owner
 
   has_many :organization_users, dependent: :destroy
   has_many :organizations, through: :organization_users
+  has_many :pinned_projects, dependent: :destroy
+  has_many :is_pinned_projects, through: :pinned_projects, source: :project
+  accepts_nested_attributes_for :is_pinned_projects
+  has_many :issues, dependent: :destroy, foreign_key: :author_id 
+  has_many :pull_requests, dependent: :destroy
 
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
-    sql = "CONCAT(lastname, firstname) LIKE :keyword OR login LIKE :keyword OR mail LIKE :keyword OR nickname LIKE :keyword"
+    sql = "CONCAT_WS(lastname, firstname, nickname) LIKE :search OR login LIKE :search OR mail LIKE :search OR nickname LIKE :search"
     where(sql, :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
@@ -176,7 +178,9 @@ class User < Owner
 
   attr_accessor :password, :password_confirmation
 
-  delegate :gender, :department_id, :school_id, :location, :location_city, :technical_title, to: :user_extension, allow_nil: true
+  delegate :description, :gender, :department_id, :school_id, :location, :location_city,
+           :show_email, :show_location, :show_department,
+           :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
   before_save :update_hashed_password
   after_create do
@@ -194,6 +198,13 @@ class User < Owner
   validates_length_of :mail, maximum: MAIL_LENGTH_LMIT
   validate :validate_sensitive_string
   validate :validate_password_length
+
+  # 用户参与的所有项目
+  def full_member_projects 
+    normal_projects = Project.members_projects(self.id).to_sql
+    org_projects = Project.joins(teams: :team_users).where(team_users: {user_id: self.id}).to_sql
+    return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
+  end
 
   def name
     login
