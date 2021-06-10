@@ -14,5 +14,6 @@ json.user do
 end
 json.id object.id
 json.status object.status
+json.role object.role
 json.created_at format_time(object.created_at)
 json.time_ago time_from_now(object.created_at)
