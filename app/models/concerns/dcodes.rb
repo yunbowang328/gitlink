@@ -11,4 +11,18 @@ module Dcodes
     code
   end
 
+  def init_project_invite_code
+    while Project.where(invite_code: nil).size > 0 do 
+      projects = Project.where(invite_code: nil).limit(1000)
+      set_sql = ""
+      projects.each do |p|
+        set_sql += "WHEN #{p.id} THEN '#{DCODES.sample(6).join}' "
+      end
+      sql = "UPDATE projects SET invite_code = CASE id "+ set_sql+ "END WHERE id IN(#{projects.ids.join(",")})"
+      Project.connection.execute(sql)
+    end
+    repeat_codes = Project.group(:invite_code).count.select{|k,v| v>1}
+    Project.where(invite_code: repeat_code.keys).update_all(invite_code: nil)
+  end
+
 end
