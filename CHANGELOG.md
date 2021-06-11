@@ -1,6 +1,21 @@
 # Changelog
+## [v3.1.0](https://forgeplus.trustie.net/projects/jasder/forgeplus/releases) - 2021-06-09
 
-## [v3.0.4](https://forgeplus.trustie.net/projects/jasder/forgeplus/releases) - 2021-05-24
+* ENHANCEMENTS
+  * ADD 用户活动统计图表功能
+  * ADD 用户精选项目功能
+  * ADD 用户贡献度统计图表功能
+  * ADD 用户开发能力数据统计工
+  * ADD 用户角色定位展示功能
+  * ADD 用户专业定位标签展示功能
+  * ADD 修改用户基本资料功能
+  * ADD 更改密码功能
+  * ADD 用户个人主页基本现在展示可配置功能
+
+* BUGFIXES
+  * Fix 解决一些bug
+  * Fix 优化美化页面
+
 
 * BUGFIXES
   * Fix 在线修改文件，页面文件显不及时的问题(46049)
