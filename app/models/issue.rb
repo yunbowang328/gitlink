@@ -76,8 +76,13 @@ class Issue < ApplicationRecord
   scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
 
   after_update :change_versions_count
-  after_destroy :update_closed_issues_count_in_project!
+  after_save :reset_cache_data
+  after_destroy :update_closed_issues_count_in_project!, :reset_cache_data
 
+  def reset_cache_data 
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.user)
+  end
 
   def get_assign_user
     User&.find_by_id(self.assigned_to_id) if self.assigned_to_id.present?

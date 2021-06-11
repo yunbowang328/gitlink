@@ -21,4 +21,18 @@ class Watcher < ApplicationRecord
   belongs_to :watchable, polymorphic: true, counter_cache: :watchers_count
 
   scope :watching_users, ->(watchable_id){ where("watchable_type = ? and user_id = ?",'User',watchable_id)}
+
+  after_save :reset_cache_data
+  after_destroy :reset_cache_data
+
+  def reset_cache_data 
+    if self.watchable.is_a?(User)
+      self.reset_user_cache_async_job(self.watchable)
+    end
+    if self.watchable.is_a?(Project)
+      self.reset_user_cache_async_job(self.watchable&.owner)
+    end
+    self.reset_platform_cache_async_job
+  end
+
 end

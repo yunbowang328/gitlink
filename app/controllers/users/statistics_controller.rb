@@ -85,19 +85,19 @@ class Users::StatisticsController < Users::BaseController
       for key in @project_languages_count.keys do
         @languages_percent[key] = (@project_languages_count[key].to_f / @project_languages_count.values.sum).round(2)
       end
-      @platform_languages_percent = Hash.new
-      for key in @platform_project_languages_count.keys do
-        @platform_languages_percent[key] = (@platform_project_languages_count[key].to_f / @platform_project_languages_count.values.sum).round(2)
-      end
+      # @platform_languages_percent = Hash.new
+      # for key in @platform_project_languages_count.keys do
+      #   @platform_languages_percent[key] = (@platform_project_languages_count[key].to_f / @platform_project_languages_count.values.sum).round(2)
+      # end
       # 各门语言分数
       @each_language_score = Hash.new
       for key in @project_languages_count.keys do
         @each_language_score[key] = (60.0 + @project_languages_count[key] / (@project_languages_count[key] + 5.0) * 40.0).to_i
       end
-      @platform_each_language_score = Hash.new
-      for key in @platform_project_languages_count.keys do
-        @platform_each_language_score[key] = (60.0 + @platform_project_languages_count[key] / (@platform_project_languages_count[key] + 5.0) * 40.0).to_i
-      end
+      # @platform_each_language_score = Hash.new
+      # for key in @platform_project_languages_count.keys do
+      #   @platform_each_language_score[key] = (60.0 + @platform_project_languages_count[key] / (@platform_project_languages_count[key] + 5.0) * 40.0).to_i
+      # end
     end
     
   end
@@ -162,29 +162,56 @@ class Users::StatisticsController < Users::BaseController
   end
 
   def preload_develop_data
-    # 用户被follow数量
-    @follow_count = time_filter(Watcher.where(watchable: observed_user), 'created_at').count
-    @platform_follow_count = time_filter(Watcher.where(watchable_type: 'User'), 'created_at').count
-    # 用户pr数量
-    @pullrequest_count = time_filter(PullRequest.where(user_id: observed_user.id), 'created_at').count  
-    @platform_pullrequest_count = time_filter(PullRequest, 'created_at').count  
-    # 用户issue数量
-    @issues_count = time_filter(Issue.where(author_id: observed_user.id), 'created_on').count 
-    @platform_issues_count = time_filter(Issue, 'created_on').count
-    # 用户总项目数 @fork_count + @project_watchers_count + @project_praises_count
-    @project_count = filter_member_projects_by_role("Owner").count  
-    @platform_project_count = time_filter(Project, 'created_on').count
-    # 用户项目被fork数量
-    @fork_count = filter_member_projects_by_role("Owner").sum("forked_count")
-    @platform_fork_count = time_filter(Project, 'created_on').sum("forked_count")
-    # 用户项目关注数
-    @project_watchers_count = filter_member_projects_by_role("Owner").sum("watchers_count")
-    @platform_project_watchers_count = time_filter(Project, 'created_on').sum("watchers_count")
-    # 用户项目点赞数
-    @project_praises_count = filter_member_projects_by_role("Owner").sum("praises_count")
-    @platform_project_praises_count = time_filter(Project, 'created_on').sum("praises_count")
-    # 用户不同语言项目数量
-    @project_languages_count = filter_member_projects_by_role("Owner").joins(:project_language).group("project_languages.name").count
-    @platform_project_languages_count = time_filter(Project, 'created_on').joins(:project_language).group("project_languages.name").count
+    if params[:start_time].present? && params[:end_time].present?
+      # 用户被follow数量
+      @follow_count = time_filter(Watcher.where(watchable: observed_user), 'created_at').count
+      @platform_follow_count = time_filter(Watcher.where(watchable_type: 'User'), 'created_at').count
+      # 用户pr数量
+      @pullrequest_count = time_filter(PullRequest.where(user_id: observed_user.id), 'created_at').count
+      @platform_pullrequest_count = time_filter(PullRequest, 'created_at').count  
+      # 用户issue数量
+      @issues_count = time_filter(Issue.where(author_id: observed_user.id), 'created_on').count 
+      @platform_issues_count = time_filter(Issue, 'created_on').count
+      # 用户总项目数 
+      @project_count = time_filter(Project.where(user_id:observed_user.id), 'created_on').count
+      @platform_project_count = time_filter(Project, 'created_on').count
+      # 用户项目被fork数量
+      @fork_count = time_filter(Project.where(user_id:observed_user.id), 'created_on').sum("forked_count") 
+      @platform_fork_count = time_filter(Project, 'created_on').sum("forked_count") 
+      # 用户项目关注数
+      @project_watchers_count = time_filter(Project.where(user_id: observed_user.id), 'created_on').sum("watchers_count")
+      @platform_project_watchers_count = time_filter(Project, 'created_on').sum("watchers_count")
+      # 用户项目点赞数
+      @project_praises_count = time_filter(Project.where(user_id: observed_user.id), 'created_on').sum("praises_count")
+      @platform_project_praises_count = time_filter(Project, 'created_on').sum("praises_count")
+      # 用户不同语言项目数量
+      @project_languages_count = time_filter(Project.where(user_id: observed_user.id), 'created_on').joins(:project_language).group("project_languages.name").count
+      @platform_project_languages_count = time_filter(Project, 'created_on').joins(:project_language).group("project_languages.name").count
+    else
+      # 用户被follow数量
+      @follow_count = Cache::UserFollowCountService.call(observed_user)
+      @platform_follow_count = Cache::PlatformFollowCountService.call
+      # 用户pr数量
+      @pullrequest_count = Cache::UserPullrequestCountService.call(observed_user)
+      @platform_pullrequest_count = Cache::PlatformPullrequestCountService.call
+      # 用户issue数量
+      @issues_count = Cache::UserIssueCountService.call(observed_user)
+      @platform_issues_count = Cache::PlatformIssueCountService.call
+      # 用户总项目数 
+      @project_count = Cache::UserProjectCountService.call(observed_user)
+      @platform_project_count = Cache::PlatformProjectCountService.call
+      # 用户项目被fork数量
+      @fork_count = Cache::UserProjectForkCountService.call(observed_user)
+      @platform_fork_count = Cache::PlatformProjectForkCountService.call
+      # 用户项目关注数
+      @project_watchers_count = Cache::UserProjectWatchersCountService.call(observed_user)
+      @platform_project_watchers_count = Cache::PlatformProjectWatchersCountService.call 
+      # 用户项目点赞数
+      @project_praises_count = Cache::UserProjectPraisesCountService.call(observed_user)
+      @platform_project_praises_count = Cache::PlatformProjectPraisesCountService.call
+      # 用户不同语言项目数量
+      @project_languages_count = Cache::UserProjectLanguagesCountService.call(observed_user)
+      @platform_project_languages_count = Cache::PlatformProjectLanguagesCountService.call
+    end
   end
 end

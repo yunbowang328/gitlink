@@ -21,6 +21,15 @@ class PraiseTread < ApplicationRecord
   has_many :tidings, :as => :container, :dependent => :destroy
 
   after_create :send_tiding
+  after_save :reset_cache_data
+  after_destroy :reset_cache_data
+
+  def reset_cache_data 
+    self.reset_platform_cache_async_job
+    if self.praise_tread_object.is_a?(Project)
+      self.reset_user_cache_async_job(self.praise_tread_object&.owner)
+    end
+  end
 
   def send_tiding
     case self.praise_tread_object_type
