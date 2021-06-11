@@ -37,6 +37,7 @@
 #  index_attachments_on_quotes                           (quotes)
 #
 
+
 class Attachment < ApplicationRecord
   include BaseModel
   include Publicable
@@ -51,7 +52,7 @@ class Attachment < ApplicationRecord
   # 二级目录
   # belongs_to :course_second_category, optional: true
 
-  scope :by_filename_or_user_name,      -> (keywords) { joins(:author).where("filename like :search or LOWER(concat(users.lastname, users.firstname)) LIKE :search",
+  scope :by_filename_or_user_name,      -> (keywords) { joins(:author).where("filename like :search or LOWER(CONCAT_WS(users.lastname, users.firstname, users.nickname)) LIKE :search",
                                                         :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank? }
   scope :by_keywords,                   -> (keywords) { where("filename LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank? }
   scope :ordered,                       -> (opts = {}) { order("#{opts[:sort_type]} #{opts[:sort] == 1 ? 'asc': 'desc'}") }

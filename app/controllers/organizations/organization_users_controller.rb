@@ -5,7 +5,7 @@ class Organizations::OrganizationUsersController < Organizations::BaseController
   def index
     @organization_users = @organization.organization_users.includes(:user)
     search = params[:search].to_s.downcase
-    @organization_users = @organization_users.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    @organization_users = @organization_users.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
 
     @organization_users = kaminari_paginate(@organization_users)
   end

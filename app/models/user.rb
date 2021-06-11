@@ -46,6 +46,10 @@
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
+#  sponsor_certification      :integer          default("0")
+#  sponsor_num                :integer          default("0")
+#  sponsored_num              :integer          default("0")
+#  award_time                 :datetime
 #
 # Indexes
 #
@@ -171,7 +175,7 @@ class User < Owner
   # Groups and active users
   scope :active, lambda { where(status: [STATUS_ACTIVE, STATUS_EDIT_INFO]) }
   scope :like, lambda { |keywords|
-    sql = "CONCAT(lastname, firstname) LIKE :search OR login LIKE :search OR mail LIKE :search OR nickname LIKE :search"
+    sql = "CONCAT_WS(lastname, firstname, nickname) LIKE :search OR login LIKE :search OR mail LIKE :search OR nickname LIKE :search"
     where(sql, :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
@@ -204,6 +208,13 @@ class User < Owner
   def full_member_projects 
     normal_projects = Project.members_projects(self.id).to_sql
     org_projects = Project.joins(teams: :team_users).where(team_users: {user_id: self.id}).to_sql
+    return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
+  end
+
+  # 用户管理的所有项目
+  def full_admin_projects 
+    normal_projects = Project.joins(members: :roles).where(roles: {name: 'Manager'}, members: {user_id: self.id}).to_sql
+    org_projects = Project.joins(teams: :team_users).where(teams: {authorize: %w(admin owner)}, team_users: {user_id: self.id}).to_sql
     return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
   end
 

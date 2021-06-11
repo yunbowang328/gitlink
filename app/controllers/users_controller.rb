@@ -28,13 +28,15 @@ class UsersController < ApplicationController
 
   def show
       #待办事项，现在未做
-      if User.current.login == @user.login 
+      if User.current.admin? || User.current.login == @user.login 
         @waiting_applied_messages = @user.applied_messages.waiting
         @common_applied_transfer_projects = AppliedTransferProject.where(owner_id: @user.id).common + AppliedTransferProject.where(owner_id: Organization.joins(team_users: :team).where(team_users: {user_id: @user.id}, teams: {authorize: %w(admin owner)} )).common
-        @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size
+        @common_applied_projects = AppliedProject.where(project_id: @user.full_admin_projects).common
+        @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size + @common_applied_projects.size
       else 
         @waiting_applied_messages = AppliedMessage.none
         @common_applied_transfer_projects = AppliedTransferProject.none
+        @common_applied_projects = AppliedProject.none
         @undo_events = 0
       end
       #用户的组织数量
@@ -63,7 +65,7 @@ class UsersController < ApplicationController
 
   def fan_users
     watchers = @user.watchers.includes(:user).order("watchers.created_at desc")
-    watchers = watchers.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
+    watchers = watchers.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.nickname)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
 
     @watchers_count = watchers.size
     @watchers = paginate(watchers)

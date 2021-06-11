@@ -11,7 +11,7 @@ class UsersForPrivateMessagesController < ApplicationController
       return
     end
 
-    users = users.where('LOWER(concat(lastname, firstname, nickname)) LIKE ?', "%#{keyword}%")
+    users = users.where('LOWER(CONCAT_WS(lastname, firstname, nickname)) LIKE ?', "%#{keyword}%")
 
     @users = users.limit(10).includes(:user_extension)
   end

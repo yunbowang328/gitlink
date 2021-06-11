@@ -4,7 +4,7 @@
 #
 #  id                     :integer          not null, primary key
 #  name                   :string(255)      default(""), not null
-#  description            :text(65535)
+#  description            :text(4294967295)
 #  homepage               :string(255)      default("")
 #  is_public              :boolean          default("1"), not null
 #  parent_id              :integer
@@ -43,6 +43,19 @@
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
 #  pull_requests_count    :integer          default("0")
+#  language               :string(255)
+#  versions_count         :integer          default("0")
+#  issue_tags_count       :integer          default("0")
+#  closed_issues_count    :integer          default("0")
+#  open_devops            :boolean          default("0")
+#  gitea_webhook_id       :integer
+#  open_devops_count      :integer          default("0")
+#  recommend              :boolean          default("0")
+#  platform               :integer          default("0")
+#  default_branch         :string(255)      default("master")
+#  website                :string(255)
+#  order_index            :integer          default("0")
+#  lesson_url             :string(255)
 #
 # Indexes
 #
@@ -66,6 +79,7 @@ class Project < ApplicationRecord
   include Publicable
   include Watchable
   include ProjectOperable
+  include Dcodes
 
   # common:开源托管项目
   # mirror:普通镜像项目，没有定时同步功能
@@ -105,7 +119,9 @@ class Project < ApplicationRecord
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
 
-  after_save :check_project_members
+  after_save :check_project_members, :reset_cache_data
+  before_save :set_invite_code
+  after_destroy :reset_cache_data
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
@@ -113,6 +129,20 @@ class Project < ApplicationRecord
   delegate :content, to: :project_detail, allow_nil: true
   delegate :name, to: :license, prefix: true, allow_nil: true
 
+  def reset_cache_data 
+    if changes[:user_id].present?
+      first_owner = Owner.find_by_id(changes[:user_id].first) 
+      self.reset_user_cache_async_job(first_owner)
+    end
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.owner)
+  end
+
+  def set_invite_code
+    if self.invite_code.nil?
+      self.invite_code= self.generate_dcode('invite_code', 6)
+    end
+  end
 
   def self.search_project(search)
     ransack(name_or_identifier_cont: search)

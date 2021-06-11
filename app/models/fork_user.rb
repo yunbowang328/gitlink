@@ -20,4 +20,12 @@ class ForkUser < ApplicationRecord
   belongs_to :user
   belongs_to :fork_project, class_name: 'Project', foreign_key: :fork_project_id
 
+  after_save :reset_cache_data
+  after_destroy :reset_cache_data
+
+  def reset_cache_data 
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.project.owner)
+  end
+
 end

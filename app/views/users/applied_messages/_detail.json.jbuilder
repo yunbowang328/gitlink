@@ -13,7 +13,12 @@
 #   json.partial! "/users/user_simple", locals: {user: object.user}
 # end
 json.applied do 
-  json.partial! "/projects/applied_transfer_projects/detail", locals: {object: object.applied}
+  case object.applied_type 
+  when 'AppliedTransferProject'
+    json.partial! "/projects/applied_transfer_projects/detail", locals: {object: object.applied}
+  when 'AppliedProject'
+    json.partial! "/applied_projects/detail", locals: {object: object.applied}
+  end
 end
 json.applied_user do 
   json.partial! "/users/user_simple", locals: {user: object.applied_user}

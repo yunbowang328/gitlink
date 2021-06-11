@@ -1,5 +1,91 @@
 # Projects
 
+## 申请加入项目
+申请加入项目
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/applied_projects.json
+```
+
+```javascript
+await octokit.request('POST /api/appliedr_projects.json')
+```
+
+### HTTP 请求
+`POST /api/applied_projects.json`
+
+### 请求参数
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|applied_project.code     |是| |string |邀请码  |
+|applied_project.role     |否| |string |项目权限，reporter: 报告者, developer: 开发者，manager：管理员  |
+
+> 请求的JSON示例
+
+```json
+{
+  "applied_project": {
+    "code": "1una34",
+    "role": "developer"
+  }
+}
+```
+
+### 返回字段说明
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int      |申请id |
+|status         |string   |申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |项目申请创建的时间 |
+|project.id     |int      |申请项目的id |
+|project.identifier     |string      |申请项目的标识 |
+|project.name     |string      |申请项目的名称 |
+|project.description     |string      |申请项目的描述 |
+|project.is_public     |bool      |申请项目是否公开 |
+|project.owner.id     |bool      |申请项目拥有者id |
+|project.owner.type     |string      |申请项目拥有者类型 |
+|project.owner.name     |string      |申请项目拥有者昵称 |
+|project.owner.login     |string      |申请项目拥有者标识 |
+|project.owner.image_url     |string      |申请项目拥有者头像 |
+|user.id     |int      |申请创建者的id |
+|user.type     |string      |申请创建者的类型 |
+|user.name     |string      |申请创建者的名称 |
+|user.login     |string      |申请创建者的标识 |
+|user.image_url     |string      |申请创建者头像 |
+> 返回的JSON示例:
+
+```json
+{
+    "project": {
+        "id": 74,
+        "identifier": "hehuisssjssjjsjs",
+        "name": "hehuisssjssjjsjs",
+        "description": "wwww",
+        "is_public": false,
+        "owner": {
+            "id": 10,
+            "type": "User",
+            "name": "testforge1",
+            "login": "testforge1",
+            "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+        }
+    },
+    "user": {
+        "id": 6,
+        "type": "User",
+        "name": "何慧",
+        "login": "yystopf",
+        "image_url": "images/avatars/User/6?t=1622513134"
+    },
+    "id": 7,
+    "status": "common",
+    "created_at": "2021-06-09 16:41",
+    "time_ago": "1分钟前"
+}
+```
+
 ## 获取项目列表
 获取项目列表，也可以更加相关条件过滤搜素
 
