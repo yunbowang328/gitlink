@@ -38,6 +38,8 @@ class PullRequest < ApplicationRecord
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
 
+  scope :closed, ->{where(status: 2)}
+
   after_save :reset_cache_data
   after_destroy :reset_cache_data
 

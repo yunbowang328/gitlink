@@ -73,7 +73,7 @@ class Issue < ApplicationRecord
   scope :issue_issue, ->{where(issue_classify: [nil,"issue"])}
   scope :issue_pull_request, ->{where(issue_classify: "pull_request")}
   scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
-
+  scope :closed, ->{where(status_id: 5)}
   after_update :change_versions_count
   after_save :reset_cache_data
   after_destroy :update_closed_issues_count_in_project!, :reset_cache_data
