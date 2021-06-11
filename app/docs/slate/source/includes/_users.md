@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-06-09 16:51:18
+ * @LastEditTime: 2021-06-11 16:28:51
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -1471,8 +1471,8 @@ await octokit.request('GET /api/users/:login/applied_projects.json')
 }
 ```
 
-## 用户接受迁移
-用户接受迁移
+## 用户接受申请
+用户接受申请
 
 > 示例:
 
@@ -1548,8 +1548,8 @@ await octokit.request('GET /api/users/:login/applied_projects/:id/accept.json')
 }
 ```
 
-## 用户拒绝迁移
-用户拒绝迁移
+## 用户拒绝申请
+用户拒绝申请
 
 > 示例:
 
