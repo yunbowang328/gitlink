@@ -33,7 +33,7 @@ class Projects::ApplyJoinService < ApplicationService
   private
 
   def project
-    @_project ||= Project.find_by(invite_code: params[:code].to_s.strip)
+    @_project ||= Project.find_by('binary(invite_code) = ? ',"#{params[:code].to_s.strip}")
   end
 
   def role_value

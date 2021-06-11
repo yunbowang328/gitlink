@@ -52,7 +52,7 @@ class Projects::AcceptJoinService < ApplicationService
   end
 
   def operate_project_member
-    Projects::AddMemberInteractor.call(@project.owner, @project, @user, permission)
+    Projects::AddMemberInteractor.call(@project.owner, @project, @applied_project.user, permission)
   end
 
   def send_apply_message 
