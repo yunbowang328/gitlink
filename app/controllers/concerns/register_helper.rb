@@ -23,7 +23,7 @@ module RegisterHelper
       forge_user.gitea_uid = gitea_user[:body]['id']
       forge_user.mail = email
       if forge_user.save
-        UserExtension.create!(user_id: forge_user.id) unless forge_user.user_extension.blank?
+        UserExtension.create!(user_id: forge_user.id) if forge_user.user_extension.blank?
         result[:user] = {id: forge_user.id, token: forge_user.gitea_token}
       end
     else
