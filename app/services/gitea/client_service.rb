@@ -176,6 +176,25 @@ class Gitea::ClientService < ApplicationService
     [status, message, body]
   end
 
+  def render_gitea_response(response)
+    status = response.status
+    body = response&.body
+
+    log_error(status, body)
+    message = nil
+    begin
+      translate = YAML.load(File.read('config/gitea_response.yml'))
+
+      self.class.to_s.underscore.split("/").map{|i| translate=translate[i]}
+      message = body.nil? ? translate[status]['default'] : JSON.parse(body)['message']
+      message = translate[status][message].nil? ? message : translate[status][message]
+  
+      return [status, message]
+    rescue
+      return [status, message]
+    end
+  end
+
   def get_body_by_status(status, body)
     body, message =
       case status

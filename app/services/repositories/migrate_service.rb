@@ -21,7 +21,7 @@ class Repositories::MigrateService < ApplicationService
 
   private
   def repository_params
-    params.merge(project_id: project.id, identifier: params[:identifier])
+    params.merge(project_id: project.id)
   end
 
   def gitea_repository_params

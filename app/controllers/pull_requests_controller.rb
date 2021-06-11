@@ -136,11 +136,12 @@ class PullRequestsController < ApplicationController
   def show
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
-
+    @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, 
+      @repository.identifier, @pull_request.gpid, current_user&.gitea_token)
   end
 
   def pr_merge
-    return render_forbidden("你没有权限操作.") if @project.reporter?(current_user)
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
 
     if params[:do].blank?
       normal_status(-1, "请选择合并方式")
@@ -149,12 +150,12 @@ class PullRequestsController < ApplicationController
         begin
           result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
 
-          if result && @pull_request.merge!
+          if result.status == 200 && @pull_request.merge!
             @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
           else
-            normal_status(-1, "合并失败")
+            normal_status(-1, result.message)
           end
         rescue => e
           normal_status(-1, e.message)
@@ -215,7 +216,7 @@ class PullRequestsController < ApplicationController
   def get_relatived
     @project_tags = @project.issue_tags&.select(:id,:name, :color).as_json
     @project_versions = @project.versions&.select(:id,:name, :status).as_json
-    @project_members = @project.members_user_infos
+    @project_members = @project.all_developers
     @project_priories = IssuePriority&.select(:id,:name, :position).as_json
   end
 

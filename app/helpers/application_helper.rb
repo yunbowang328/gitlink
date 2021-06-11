@@ -35,12 +35,6 @@ module ApplicationHelper
     course.course_modules.find_by(module_type: "graduation").try(:id)
   end
 
-  # 是否关注
-  # from_user_id为被关注的用户
-  def follow?(from_user_id, user_id)
-    Watcher.where(watchable_type: 'Principal', watchable_id: from_user_id, user_id: user_id).exists?
-  end
-
   # git用户
   # git用户命名规则：login+"@educoder.net"
   def git_username(email)
@@ -144,17 +138,12 @@ module ApplicationHelper
     if File.exist?(disk_filename(source&.class, source&.id))
       ctime = File.ctime(disk_filename(source.class, source.id)).to_i
       if %w(User Organization).include?(source.class.to_s)
-        File.join(relative_path, ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
+        File.join("images", relative_path, ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       else
         File.join("images/avatars", ["#{source.class}", "#{source.id}"]) + "?t=#{ctime}"
       end
     elsif source.class.to_s == 'User'
-      str = source.user_extension.try(:gender).to_i == 0 ? "b" : "g"
-      File.join(relative_path, "#{source.class}", str)
-    elsif source.class.to_s == 'Subject'
-      File.join("images","educoder", "index", "subject", "subject#{rand(17)}.jpg")
-    elsif source.class.to_s == 'Shixun'
-      File.join("images","educoder", "index", "shixun", "shixun#{rand(23)}.jpg")
+      source.get_letter_avatar_url
     end
   end
 

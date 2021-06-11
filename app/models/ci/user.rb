@@ -47,6 +47,7 @@
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
 #  gitea_token                :string(255)
+#  platform                   :string(255)
 #
 # Indexes
 #

@@ -47,6 +47,7 @@
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
 #  gitea_token                :string(255)
+#  platform                   :string(255)
 #
 # Indexes
 #
@@ -108,10 +109,21 @@ class Organization < Owner
     team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(read write admin owner)}).present?
   end
 
+  def is_only_read?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(read)}).present?
+  end
+
   # 是不是所有者团队的最后一个成员
   def is_owner_team_last_one?(user_id)
     owner_team_users = team_users.joins(:team).where(teams: {authorize: %w(owner)})
     owner_team_users.pluck(:user_id).include?(user_id) && owner_team_users.size == 1
+  end
+
+  # 为包含组织所有项目的团队创建项目访问权限
+  def build_permit_team_projects!(project_id)
+    teams.where(includes_all_project: true).each do |team|
+      TeamProject.build(id, team.id, project_id)
+    end
   end
 
   def real_name

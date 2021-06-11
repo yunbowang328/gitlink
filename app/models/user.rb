@@ -47,6 +47,7 @@
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
 #  gitea_token                :string(255)
+#  platform                   :string(255)
 #
 # Indexes
 #
@@ -68,6 +69,7 @@ class User < Owner
   include Likeable
   include BaseModel
   include Droneable
+  include User::Avatar
   # include Searchable::Dependents::User
 
   # devops step
@@ -136,10 +138,6 @@ class User < Owner
 
   has_many :attachments,foreign_key: :author_id, :dependent => :destroy
 
-  # 关注
-  # has_many :be_watchers, foreign_key: :user_id, dependent: :destroy # 我的关注
-  # has_many :be_watcher_users, through: :be_watchers, dependent: :destroy # 我关注的用户
-
   has_one :ci_cloud_account, class_name: 'Ci::CloudAccount', dependent: :destroy
 
   # 认证
@@ -150,9 +148,14 @@ class User < Owner
   has_many :trail_auth_apply_actions, -> { where(container_type: 'TrialAuthorization') }, class_name: 'ApplyAction'
 
   # has_many :attendances
-
+  has_many :applied_messages, dependent: :destroy
+  has_many :operate_applied_messages, class_name: 'AppliedMessage', dependent: :destroy
   # 项目
   has_many :applied_projects, dependent: :destroy
+  has_many :operate_applied_transfer_projects, class_name: 'AppliedTransferProject', dependent: :destroy
+  has_many :members, dependent: :destroy 
+  has_many :team_users, dependent: :destroy
+  has_many :teams, through: :team_users
 
   # 教学案例
   # has_many :libraries, dependent: :destroy
@@ -165,7 +168,8 @@ class User < Owner
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
-    where("LOWER(concat(lastname, firstname, login, mail)) LIKE ?", "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
+    sql = "CONCAT(lastname, firstname) LIKE :keyword OR login LIKE :keyword OR mail LIKE :keyword OR nickname LIKE :keyword OR phone LIKE :keyword"
+    where(sql, :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
   scope :simple_select, -> {select(:id, :login, :lastname,:firstname, :nickname, :gitea_uid, :type)}
@@ -191,6 +195,10 @@ class User < Owner
   validate :validate_sensitive_string
   validate :validate_password_length
 
+  def name
+    login
+  end
+  
   # 删除自动登录的token，一旦退出下次会提示需要登录
   def delete_autologin_token(value)
     Token.where(:user_id => id, :action => 'autologin', :value => value).delete_all
@@ -205,7 +213,7 @@ class User < Owner
   end
 
   def project_manager?(project)
-    project.managers.exists?(user: self) || self.admin?
+    project.manager?(self) || self.admin?
   end
 
   # 学号

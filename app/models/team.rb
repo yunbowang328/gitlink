@@ -14,6 +14,7 @@
 #  gtid                   :integer
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  nickname               :string(255)
 #
 # Indexes
 #
@@ -32,9 +33,10 @@ class Team < ApplicationRecord
 
   enum authorize: {common: 0, read: 1, write: 2, admin: 3, owner: 4}
 
-  def self.build(organization_id, name, description, authorize, includes_all_project, can_create_org_project)
+  def self.build(organization_id, name, nickname, description, authorize, includes_all_project, can_create_org_project)
     self.create!(organization_id: organization_id,
                  name: name,
+                 nickname: nickname, 
                  description: description,
                  authorize: authorize,
                  includes_all_project: includes_all_project,

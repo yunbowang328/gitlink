@@ -526,3 +526,241 @@ await octokit.request('POST /api/jaser/jasder_test/forks.json')
   "identifier": "newadm"
 }
 ```
+
+## 用户管理的组织列表
+用户管理的组织列表
+
+> 示例:
+
+```shell
+curl -X GET \
+http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizations.json  | jq
+```
+
+```javascript
+await octokit.request('GET /api/:owner/:repo/applied_transfer_projects/organizations')
+```
+
+### HTTP 请求
+`GET api/:owner/:repo/applied_transfer_projects/organizations`
+
+### 请求参数
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+owner             |是| |string |用户登录名
+repo             |是| |string |项目标识identifier
+
+### 返回字段说明
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+name     |string|组织标识
+nickname |string|组织名称
+description|string|组织描述
+avatar_url|string｜组织头像
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_count": 3,
+    "organizations": [
+        {
+            "id": 9,
+            "name": "ceshi_org",
+            "nickname": "测试组织",
+            "description": "测试组织",
+            "avatar_url": "images/avatars/Organization/9?t=1612706073"
+        },
+        {
+            "id": 51,
+            "name": "ceshi",
+            "nickname": "测试组织哈哈哈",
+            "description": "23212312",
+            "avatar_url": "images/avatars/Organization/51?t=1618800723"
+        },
+        {
+            "id": 52,
+            "name": "ceshi1",
+            "nickname": "身份卡手动阀",
+            "description": "1231手动阀是的",
+            "avatar_url": "images/avatars/Organization/52?t=1618805056"
+        }
+    ]
+}
+```
+
+## 迁移项目
+迁移项目，edit接口is_transfering为true表示正在迁移
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects.json
+```
+
+```javascript
+await octokit.request('POST /api/:owner/:repo/applied_transfer_projects.json')
+```
+
+### HTTP 请求
+`POST /api/:owner/:repo/applied_transfer_projects.json`
+
+### 请求参数
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner     |是| |string |用户登录名  |
+|repo      |是| |string |项目标识identifier  |
+|owner_name|是| |string |迁移对象标识  |
+
+### 返回字段说明
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int      |项目id |
+|status         |string   |项目迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |项目迁移创建的时间 |
+|project.id     |int      |迁移项目的id |
+|project.identifier     |string      |迁移项目的标识 |
+|project.name     |string      |迁移项目的名称 |
+|project.description     |string      |迁移项目的描述 |
+|project.is_public     |bool      |迁移项目是否公开 |
+|project.owner.id     |bool      |迁移项目拥有者id |
+|project.owner.type     |string      |迁移项目拥有者类型 |
+|project.owner.name     |string      |迁移项目拥有者昵称 |
+|project.owner.login     |string      |迁移项目拥有者标识 |
+|project.owner.image_url     |string      |迁移项目拥有者头像 |
+|user.id     |int      |迁移创建者的id |
+|user.type     |string      |迁移创建者的类型 |
+|user.name     |string      |迁移创建者的名称 |
+|user.login     |string      |迁移创建者的标识 |
+|user.image_url     |string      |迁移创建者头像 |
+|owner.id     |int      |迁移接受者的id |
+|owner.type     |string      |迁移接受者的类型 |
+|owner.name     |string      |迁移接受者的名称 |
+|owner.login     |string      |迁移接受者的标识 |
+|owner.image_url     |string      |迁移接受者头像 |
+> 返回的JSON示例:
+
+```json
+{
+    "project": {
+        "id": 86,
+        "identifier": "ceshi_repo1",
+        "name": "测试项目啊1",
+        "description": "二十多",
+        "is_public": true,
+        "owner": {
+            "id": 52,
+            "type": "Organization",
+            "name": "身份卡手动阀",
+            "login": "ceshi1",
+            "image_url": "images/avatars/Organization/52?t=1618805056"
+        }
+    },
+    "user": {
+        "id": 6,
+        "type": "User",
+        "name": "yystopf",
+        "login": "yystopf",
+        "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+    },
+    "owner": {
+        "id": 9,
+        "type": "Organization",
+        "name": "测试组织",
+        "login": "ceshi_org",
+        "image_url": "images/avatars/Organization/9?t=1612706073"
+    },
+    "id": 4,
+    "status": "common",
+    "created_at": "2021-04-26 09:54",
+    "time_ago": "1分钟前"
+}
+```
+
+## 取消迁移项目
+迁移项目，edit接口is_transfering为true表示正在迁移
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/cancel.json
+```
+
+```javascript
+await octokit.request('POST /api/:owner/:repo/applied_transfer_projects/cancel.json')
+```
+
+### HTTP 请求
+`POST /api/:owner/:repo/applied_transfer_projects/cancel.json`
+
+### 请求参数
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner     |是| |string |用户登录名  |
+|repo      |是| |string |项目标识identifier  |
+
+### 返回字段说明
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int      |迁移id |
+|status         |string   |迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |迁移创建的时间 |
+|project.id     |int      |迁移项目的id |
+|project.identifier     |string      |迁移项目的标识 |
+|project.name     |string      |迁移项目的名称 |
+|project.description     |string      |迁移项目的描述 |
+|project.is_public     |bool      |迁移项目是否公开 |
+|project.owner.id     |bool      |迁移项目拥有者id |
+|project.owner.type     |string      |迁移项目拥有者类型 |
+|project.owner.name     |string      |迁移项目拥有者昵称 |
+|project.owner.login     |string      |迁移项目拥有者标识 |
+|project.owner.image_url     |string      |迁移项目拥有者头像 |
+|user.id     |int      |迁移创建者的id |
+|user.type     |string      |迁移创建者的类型 |
+|user.name     |string      |迁移创建者的名称 |
+|user.login     |string      |迁移创建者的标识 |
+|user.image_url     |string      |迁移创建者头像 |
+|owner.id     |int      |迁移接受者的id |
+|owner.type     |string      |迁移接受者的类型 |
+|owner.name     |string      |迁移接受者的名称 |
+|owner.login     |string      |迁移接受者的标识 |
+|owner.image_url     |string      |迁移接受者头像 |
+> 返回的JSON示例:
+
+```json
+{
+    "project": {
+        "id": 86,
+        "identifier": "ceshi_repo1",
+        "name": "测试项目啊1",
+        "description": "二十多",
+        "is_public": true,
+        "owner": {
+            "id": 52,
+            "type": "Organization",
+            "name": "身份卡手动阀",
+            "login": "ceshi1",
+            "image_url": "images/avatars/Organization/52?t=1618805056"
+        }
+    },
+    "user": {
+        "id": 6,
+        "type": "User",
+        "name": "yystopf",
+        "login": "yystopf",
+        "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+    },
+    "owner": {
+        "id": 9,
+        "type": "Organization",
+        "name": "测试组织",
+        "login": "ceshi_org",
+        "image_url": "images/avatars/Organization/9?t=1612706073"
+    },
+    "id": 4,
+    "status": "common",
+    "created_at": "2021-04-26 09:54",
+    "time_ago": "1分钟前"
+}
+```
