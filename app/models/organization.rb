@@ -46,6 +46,10 @@
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
+#  sponsor_certification      :integer          default("0")
+#  sponsor_num                :integer          default("0")
+#  sponsored_num              :integer          default("0")
+#  award_time                 :datetime
 #
 # Indexes
 #
@@ -104,6 +108,14 @@ class Organization < Owner
 
   def is_read?(user_id)
     team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(read write admin owner)}).present?
+  end
+
+  def is_only_admin?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(admin)}).present?
+  end
+
+  def is_only_write?(user_id)
+    team_users.joins(:team).where(user_id: user_id, teams: {authorize: %w(write)}).present?
   end
 
   def is_only_read?(user_id)

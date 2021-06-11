@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-06-03 10:18:53
+ * @LastEditTime: 2021-06-11 16:28:51
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -1002,11 +1002,11 @@ await octokit.request('GET /api/users/:login/applied_messages.json')
 |applied.user.name     |string      |通知主体的迁移创建者的名称 |
 |applied.user.login     |string      |通知主体的迁移创建者的标识 |
 |applied.user.image_url     |string      |通知主体的迁移创建者头像 |
-|applied.owner.id     |int      |通知主体的迁移接受者的id |
-|applied.owner.type     |string      |通知主体的迁移接受者的类型 |
-|applied.owner.name     |string      |通知主体的迁移接受者的名称 |
-|applied.owner.login     |string      |通知主体的迁移接受者的标识 |
-|applied.owner.image_url     |string      |通知主体的迁移接受者头像 |
+|applied_user.id     |int      |通知发起者的id |
+|applied_user.type     |string      |通知发起者的类型 |
+|applied_user.name     |string      |通知发起者的名称 |
+|applied_user.login     |string      |通知发起者的标识 |
+|applied_user.image_url     |string      |通知发起者头像 |
 |applied_type       |string   |通知类型 |
 |name       |string   | 通知内容 |
 |viewed         |string|是否已读，waiting:未读,viewed:已读|
@@ -1020,6 +1020,48 @@ await octokit.request('GET /api/users/:login/applied_messages.json')
 {
     "total_count": 5,
     "applied_messages": [
+        {
+            "applied": {
+                "project": {
+                    "id": 74,
+                    "identifier": "hehuisssjssjjsjs",
+                    "name": "hehuisssjssjjsjs",
+                    "description": "wwww",
+                    "is_public": false,
+                    "owner": {
+                        "id": 10,
+                        "type": "User",
+                        "name": "testforge1",
+                        "login": "testforge1",
+                        "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+                    }
+                },
+                "user": {
+                    "id": 6,
+                    "type": "User",
+                    "name": "何慧",
+                    "login": "yystopf",
+                    "image_url": "images/avatars/User/6?t=1622513134"
+                },
+                "id": 6,
+                "status": "accepted",
+                "created_at": "2021-06-09 16:34",
+                "time_ago": "1分钟前"
+            },
+            "applied_user": {
+                "id": 6,
+                "type": "User",
+                "name": "何慧",
+                "login": "yystopf",
+                "image_url": "images/avatars/User/6?t=1622513134"
+            },
+            "applied_type": "AppliedProject",
+            "name": "已通过你加入【hehuisssjssjjsjs】仓库的申请。",
+            "viewed": "waiting",
+            "status": "successed",
+            "created_at": "2021-06-09 16:34",
+            "time_ago": "1分钟前"
+        },
         {
             "applied": {
                 "project": {
@@ -1343,5 +1385,241 @@ await octokit.request('GET /api/users/:login/applied_transfer_projects/:id/refus
     "status": "canceled",
     "created_at": "2021-04-25 18:06",
     "time_ago": "16小时前"
+}
+```
+
+
+## 待办事项-项目申请
+待办事项-项目申请
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/applied_projects.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/applied_projects.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/applied_projects.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|login       |string   |用户标识 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int      |申请id |
+|status         |string   |申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |申请创建的时间 |
+|project.id     |int      |申请项目的id |
+|project.identifier     |string      |申请项目的标识 |
+|project.name     |string      |申请项目的名称 |
+|project.description     |string      |申请项目的描述 |
+|project.is_public     |bool      |申请项目是否公开 |
+|project.owner.id     |bool      |申请项目拥有者id |
+|project.owner.type     |string      |申请项目拥有者类型 |
+|project.owner.name     |string      |申请项目拥有者昵称 |
+|project.owner.login     |string      |申请项目拥有者标识 |
+|project.owner.image_url     |string      |申请项目拥有者头像 |
+|user.id     |int      |申请创建者的id |
+|user.type     |string      |申请创建者的类型 |
+|user.name     |string      |申请创建者的名称 |
+|user.login     |string      |申请创建者的标识 |
+|user.image_url     |string      |申请创建者头像 |
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_count": 4,
+    "applied_transfer_projects": [
+        {
+            "project": {
+                "id": 74,
+                "identifier": "hehuisssjssjjsjs",
+                "name": "hehuisssjssjjsjs",
+                "description": "wwww",
+                "is_public": false,
+                "owner": {
+                    "id": 10,
+                    "type": "User",
+                    "name": "testforge1",
+                    "login": "testforge1",
+                    "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+                }
+            },
+            "user": {
+                "id": 6,
+                "type": "User",
+                "name": "何慧",
+                "login": "yystopf",
+                "image_url": "images/avatars/User/6?t=1622513134"
+            },
+            "id": 7,
+            "status": "common",
+            "created_at": "2021-06-09 16:41",
+            "time_ago": "7分钟前"
+        },
+        ...
+    ]
+}
+```
+
+## 用户接受申请
+用户接受申请
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf/applied_projects/2/accept.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/applied_projects/:id/accept.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/applied_projects/:id/accept.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|login       |string   |用户标识 |
+|id          |int      |申请id |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int      |申请id |
+|status         |string   |申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |申请创建的时间 |
+|project.id     |int      |申请项目的id |
+|project.identifier     |string      |申请项目的标识 |
+|project.name     |string      |申请项目的名称 |
+|project.description     |string      |申请项目的描述 |
+|project.is_public     |bool      |申请项目是否公开 |
+|project.owner.id     |bool      |申请项目拥有者id |
+|project.owner.type     |string      |申请项目拥有者类型 |
+|project.owner.name     |string      |申请项目拥有者昵称 |
+|project.owner.login     |string      |申请项目拥有者标识 |
+|project.owner.image_url     |string      |申请项目拥有者头像 |
+|user.id     |int      |申请创建者的id |
+|user.type     |string      |申请创建者的类型 |
+|user.name     |string      |申请创建者的名称 |
+|user.login     |string      |申请创建者的标识 |
+|user.image_url     |string      |申请创建者头像 |
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "project": {
+        "id": 74,
+        "identifier": "hehuisssjssjjsjs",
+        "name": "hehuisssjssjjsjs",
+        "description": "wwww",
+        "is_public": false,
+        "owner": {
+            "id": 10,
+            "type": "User",
+            "name": "testforge1",
+            "login": "testforge1",
+            "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+        }
+    },
+    "user": {
+        "id": 6,
+        "type": "User",
+        "name": "何慧",
+        "login": "yystopf",
+        "image_url": "images/avatars/User/6?t=1622513134"
+    },
+    "id": 7,
+    "status": "accept",
+    "created_at": "2021-06-09 16:41",
+    "time_ago": "7分钟前"
+}
+```
+
+## 用户拒绝申请
+用户拒绝申请
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf/applied_projects/2/refuse.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/applied_projects/:id/refuse.json')
+```
+
+### HTTP 请求
+`GET /api/users/:login/applied_projects/:id/refuse.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|login       |string   |用户标识 |
+|id          |int      |申请id |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int      |申请id |
+|status         |string   |申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝|
+|time_ago       |string   |申请创建的时间 |
+|project.id     |int      |申请项目的id |
+|project.identifier     |string      |申请项目的标识 |
+|project.name     |string      |申请项目的名称 |
+|project.description     |string      |申请项目的描述 |
+|project.is_public     |bool      |申请项目是否公开 |
+|project.owner.id     |bool      |申请项目拥有者id |
+|project.owner.type     |string      |申请项目拥有者类型 |
+|project.owner.name     |string      |申请项目拥有者昵称 |
+|project.owner.login     |string      |申请项目拥有者标识 |
+|project.owner.image_url     |string      |申请项目拥有者头像 |
+|user.id     |int      |申请创建者的id |
+|user.type     |string      |申请创建者的类型 |
+|user.name     |string      |申请创建者的名称 |
+|user.login     |string      |申请创建者的标识 |
+|user.image_url     |string      |申请创建者头像 |
+
+> 返回的JSON示例:
+
+```json
+{
+    "project": {
+        "id": 74,
+        "identifier": "hehuisssjssjjsjs",
+        "name": "hehuisssjssjjsjs",
+        "description": "wwww",
+        "is_public": false,
+        "owner": {
+            "id": 10,
+            "type": "User",
+            "name": "testforge1",
+            "login": "testforge1",
+            "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+        }
+    },
+    "user": {
+        "id": 6,
+        "type": "User",
+        "name": "何慧",
+        "login": "yystopf",
+        "image_url": "images/avatars/User/6?t=1622513134"
+    },
+    "id": 7,
+    "status": "accept",
+    "created_at": "2021-06-09 16:41",
+    "time_ago": "7分钟前"
 }
 ```

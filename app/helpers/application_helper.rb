@@ -438,4 +438,14 @@ module ApplicationHelper
     return nil if str.blank?
     Base64.decode64 str
   end
+
+  def render_admin_statistics_item
+    url = Rails.application.config_for(:configuration)["admin_statistics_url"]
+
+    return if url.blank?
+    content_tag(:li) do
+      sidebar_item(url, "数据统计", icon: 'bar-chart', controller: 'root')
+    end
+  end
+  
 end

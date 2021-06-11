@@ -37,6 +37,7 @@
 #  index_attachments_on_quotes                           (quotes)
 #
 
+
 class Attachment < ApplicationRecord
   include BaseModel
   include Publicable
