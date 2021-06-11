@@ -23,7 +23,7 @@ module Projects
       ActiveRecord::Base.transaction do
         gitea_result = Gitea::Repository::Members::AddService.new(owner, project.identifier, collaborator.login, permission).call
         if gitea_result.status == 204
-          project.add_member!(collaborator.id)
+          project.add_member!(collaborator.id, role_name)
         end
         fail!(nil)
       end
@@ -36,6 +36,21 @@ module Projects
 
     def fail!(error)
       @error = error
+    end
+
+    def role_name
+      case permission 
+      when 'read'
+        'Reporter'
+      when 'write'
+        'Developer'
+      when 'admin'
+        'Manager'
+      when 'owner'
+        'Manager'
+      else 
+        'Reporter'
+      end
     end
 
   end

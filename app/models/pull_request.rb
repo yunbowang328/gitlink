@@ -16,6 +16,11 @@
 #  head            :string(255)
 #  base            :string(255)
 #  issue_id        :integer
+#  fork_project_id :integer
+#  is_original     :boolean          default("0")
+#  comments_count  :integer          default("0")
+#  commits_count   :integer          default("0")
+#  files_count     :integer          default("0")
 #
 
 class PullRequest < ApplicationRecord
@@ -32,6 +37,8 @@ class PullRequest < ApplicationRecord
   has_many :pull_request_tags, foreign_key: :pull_request_id
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
+
+  scope :merged_and_closed, ->{where.not(status: 1)}
 
   after_save :reset_cache_data
   after_destroy :reset_cache_data

@@ -7,12 +7,13 @@ else
   json.readme @result[:readme].merge(content: readme_render_decode64_content(@result[:readme]["content"], nil))
 end
 json.identifier render_identifier(@project)
+json.invite_code @project.invite_code
 json.name @project.name
 json.description  @project.description
 json.project_id @project.id
 json.repo_id @repository.id
 json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
-json.pull_requests_count @project.pull_requests_count
+json.pull_requests_count @project.pull_requests_count 
 json.project_identifier render_identifier(@project)
 json.praises_count @project.praises_count.to_i
 json.forked_count @project.forked_count.to_i
