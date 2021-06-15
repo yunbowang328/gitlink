@@ -26,7 +26,7 @@ class Admins::ApplyItemBankQuery < ApplicationQuery
     keyword = params[:keyword].to_s.strip
     if keyword.present?
       applies = applies.joins(user: { user_extension: :school })
-                  .where('CONCAT_WS(lastname,firstname, nickname) LIKE :keyword OR schools.name LIKE :keyword', keyword: "%#{keyword}%")
+                  .where('CONCAT(lastname,firstname) LIKE :keyword OR users.nickname LIKE :keyword OR schools.name LIKE :keyword', keyword: "%#{keyword}%")
     end
 
     custom_sort(applies, params[:sort_by], params[:sort_direction])

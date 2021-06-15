@@ -174,7 +174,7 @@ class User < Owner
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
-    sql = "CONCAT_WS(lastname, firstname, nickname) LIKE :search OR login LIKE :search OR mail LIKE :search OR nickname LIKE :search"
+    sql = "CONCAT(lastname, firstname) LIKE :search OR nickname LIKE :search OR login LIKE :search OR mail LIKE :search OR nickname LIKE :search"
     where(sql, :search => "%#{keywords.split(" ").join('|')}%") unless keywords.blank?
   }
 
