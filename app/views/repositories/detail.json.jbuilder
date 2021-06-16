@@ -12,7 +12,7 @@ json.name @project.name
 json.description  @project.description
 json.project_id @project.id
 json.repo_id @repository.id
-json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i - @project.issues.issue_issue.closed.size
+json.issues_count @project.issues.issue_issue.size - @project.issues.issue_issue.closed.size
 json.pull_requests_count @project.pull_requests.opening.size
 json.project_identifier render_identifier(@project)
 json.praises_count @project.praises_count.to_i
