@@ -37,6 +37,8 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
+#  license_id             :integer
+#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
@@ -50,10 +52,9 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
-#  license_id             :integer
-#  ignore_id              :integer
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
+#  order_index            :integer          default("0")
 #  lesson_url             :string(255)
 #
 # Indexes
@@ -72,11 +73,13 @@
 #
 
 
+
 class Project < ApplicationRecord
   include Matchable
   include Publicable
   include Watchable
   include ProjectOperable
+  include Dcodes
 
   # common:开源托管项目
   # mirror:普通镜像项目，没有定时同步功能
@@ -112,11 +115,14 @@ class Project < ApplicationRecord
   has_many :praise_treads, as: :praise_tread_object, dependent: :destroy
   has_and_belongs_to_many :trackers, :order => "#{Tracker.table_name}.position"
   has_one :project_detail, dependent: :destroy
-  has_many :team_projects, dependent: :destroy
   has_many :project_units, dependent: :destroy
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
+  has_many :pinned_projects, dependent: :destroy 
+  has_many :has_pinned_users, through: :pinned_projects, source: :user
 
-  after_save :check_project_members
+  after_save :check_project_members, :reset_cache_data
+  before_save :set_invite_code
+  after_destroy :reset_cache_data
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
@@ -124,6 +130,20 @@ class Project < ApplicationRecord
   delegate :content, to: :project_detail, allow_nil: true
   delegate :name, to: :license, prefix: true, allow_nil: true
 
+  def reset_cache_data 
+    if changes[:user_id].present?
+      first_owner = Owner.find_by_id(changes[:user_id].first) 
+      self.reset_user_cache_async_job(first_owner)
+    end
+    self.reset_platform_cache_async_job
+    self.reset_user_cache_async_job(self.owner)
+  end
+
+  def set_invite_code
+    if self.invite_code.nil?
+      self.invite_code= self.generate_dcode('invite_code', 6)
+    end
+  end
 
   def self.search_project(search)
     ransack(name_or_identifier_cont: search)

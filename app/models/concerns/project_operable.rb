@@ -9,6 +9,7 @@ module ProjectOperable
     has_many :reporters,            -> { joins(:roles).where(roles: { name: 'Reporter' }) }, class_name: 'Member'
     has_many :writable_members,     -> { joins(:roles).where.not(roles: {name: 'Reporter'}) }, class_name: 'Member'
     has_many :team_projects, dependent: :destroy
+    has_many :teams, through: :team_projects, source: :team
   end
 
   def set_owner_permission(creator)
@@ -64,7 +65,7 @@ module ProjectOperable
     if owner.is_a?(User)
       managers.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      managers.exists?(user_id: user.id) || owner.is_admin?(user.id)
+      managers.exists?(user_id: user.id) || owner.is_only_admin?(user.id)
     else
       false
     end
@@ -75,7 +76,7 @@ module ProjectOperable
     if owner.is_a?(User)
       developers.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      developers.exists?(user_id: user.id) || owner.is_write?(user.id)
+      developers.exists?(user_id: user.id) || owner.is_only_write?(user.id)
     else
       false
     end

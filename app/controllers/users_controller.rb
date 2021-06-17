@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users, :hovercard]
   before_action :require_login, only: %i[me list change_password change_email]
   before_action :connect_to_ci_db, only: [:get_user_info]
+  before_action :convert_image!, only: [:update]
   skip_before_action :check_sign, only: [:attachment_show]
 
   def connect_to_ci_db(options={})
@@ -27,13 +28,15 @@ class UsersController < ApplicationController
 
   def show
       #待办事项，现在未做
-      if User.current.login == @user.login 
+      if User.current.admin? || User.current.login == @user.login 
         @waiting_applied_messages = @user.applied_messages.waiting
         @common_applied_transfer_projects = AppliedTransferProject.where(owner_id: @user.id).common + AppliedTransferProject.where(owner_id: Organization.joins(team_users: :team).where(team_users: {user_id: @user.id}, teams: {authorize: %w(admin owner)} )).common
-        @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size
+        @common_applied_projects = AppliedProject.where(project_id: @user.full_admin_projects).common
+        @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size + @common_applied_projects.size
       else 
         @waiting_applied_messages = AppliedMessage.none
         @common_applied_transfer_projects = AppliedTransferProject.none
+        @common_applied_projects = AppliedProject.none
         @undo_events = 0
       end
       #用户的组织数量
@@ -62,7 +65,7 @@ class UsersController < ApplicationController
 
   def fan_users
     watchers = @user.watchers.includes(:user).order("watchers.created_at desc")
-    watchers = watchers.joins(:user).where("LOWER(concat(users.lastname, users.firstname, users.login)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
+    watchers = watchers.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.nickname)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
 
     @watchers_count = watchers.size
     @watchers = paginate(watchers)
@@ -72,9 +75,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[:id]
-    @user.update!(user_params)
-    render_ok
+    return render_not_found unless @user = User.find_by_id(params[:id]) || User.find_by(login: params[:id])
+    return render_forbidden unless User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
+    Util.write_file(@image, avatar_path(@user)) if user_params[:image].present?
+    @user.attributes = user_params.except(:image)
+    unless @user.save
+      render_error(@user.errors.full_messages.join(", "))
+    end
   end
 
   def me
@@ -311,11 +318,13 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:nickname, :lastname, :show_realname,:login,:mail,
+    params.require(:user).permit(:nickname, :image,
                                   user_extension_attributes: [
                                   :gender, :location, :location_city,
                                   :occupation, :technical_title,
-                                  :school_id, :department_id,:identity, :student_id, :description]
+                                  :school_id, :department_id, :province, :city,
+                                  :custom_department, :identity, :student_id, :description,
+                                  :show_email, :show_location, :show_department]
                                 )
   end
 

@@ -332,6 +332,36 @@
                     <a href="#1ae74893b1" class="toc-h2 toc-link" data-title="获取当前登陆用户信息">获取当前登陆用户信息</a>
                   </li>
                   <li>
+                    <a href="#c6da6881ac" class="toc-h2 toc-link" data-title="更改用户信息">更改用户信息</a>
+                  </li>
+                  <li>
+                    <a href="#16a4666845" class="toc-h2 toc-link" data-title="获取用户星标项目">获取用户星标项目</a>
+                  </li>
+                  <li>
+                    <a href="#3064477f38" class="toc-h2 toc-link" data-title="用户添加星标项目">用户添加星标项目</a>
+                  </li>
+                  <li>
+                    <a href="#3f31dec5ae" class="toc-h2 toc-link" data-title="星标项目展示排序">星标项目展示排序</a>
+                  </li>
+                  <li>
+                    <a href="#4a39412749" class="toc-h2 toc-link" data-title="用户近期活动统计">用户近期活动统计</a>
+                  </li>
+                  <li>
+                    <a href="#04cb758654" class="toc-h2 toc-link" data-title="获取用户贡献度">获取用户贡献度</a>
+                  </li>
+                  <li>
+                    <a href="#7931751284" class="toc-h2 toc-link" data-title="获取用户动态">获取用户动态</a>
+                  </li>
+                  <li>
+                    <a href="#02488a20d5" class="toc-h2 toc-link" data-title="用户开发能力">用户开发能力</a>
+                  </li>
+                  <li>
+                    <a href="#aa848a4fa0" class="toc-h2 toc-link" data-title="用户角色定位">用户角色定位</a>
+                  </li>
+                  <li>
+                    <a href="#ae21e852b6" class="toc-h2 toc-link" data-title="用户专业定位">用户专业定位</a>
+                  </li>
+                  <li>
                     <a href="#fcaf20021b" class="toc-h2 toc-link" data-title="待办事项-用户通知信息">待办事项-用户通知信息</a>
                   </li>
                   <li>
@@ -343,11 +373,23 @@
                   <li>
                     <a href="#5e6ed41015" class="toc-h2 toc-link" data-title="用户拒绝迁移">用户拒绝迁移</a>
                   </li>
+                  <li>
+                    <a href="#ba97e431b8" class="toc-h2 toc-link" data-title="待办事项-项目申请">待办事项-项目申请</a>
+                  </li>
+                  <li>
+                    <a href="#e8ec937c34" class="toc-h2 toc-link" data-title="用户接受申请">用户接受申请</a>
+                  </li>
+                  <li>
+                    <a href="#f2ee84ecf7" class="toc-h2 toc-link" data-title="用户拒绝申请">用户拒绝申请</a>
+                  </li>
               </ul>
           </li>
           <li>
             <a href="#projects" class="toc-h1 toc-link" data-title="Projects">Projects</a>
               <ul class="toc-list-h2">
+                  <li>
+                    <a href="#ac55469b06" class="toc-h2 toc-link" data-title="申请加入项目">申请加入项目</a>
+                  </li>
                   <li>
                     <a href="#bfdfb34952" class="toc-h2 toc-link" data-title="获取项目列表">获取项目列表</a>
                   </li>
@@ -587,7 +629,7 @@ Success — a happy kitten is an authenticated kitten!
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-04-26 10:47:30
+ * @LastEditTime: 2021-06-11 16:28:51
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 <h1 id='users'>Users</h1><h2 id='1ae74893b1'>获取当前登陆用户信息</h2>
@@ -649,6 +691,1215 @@ Success — a happy kitten is an authenticated kitten!
 <aside class="success">
   Success Data.
 </aside>
+<h2 id='c6da6881ac'>更改用户信息</h2>
+<p>更改用户信息</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH/PUT http://localhost:3000/api/users/yystopf.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH/PUT /api/users/:login.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+<p><code>PATCH/PUT /api/users/:login.json</code></p>
+<h3 id='aa883f5d52'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>user.nickname</td>
+<td>string</td>
+<td>用户昵称</td>
+</tr>
+<tr>
+<td>user.image</td>
+<td>base64/file</td>
+<td>用户头像</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.gender</td>
+<td>int</td>
+<td>性别， 0男 1女</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.province</td>
+<td>string</td>
+<td>省份</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.city</td>
+<td>string</td>
+<td>城市</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.description</td>
+<td>string</td>
+<td>简介</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.custom_department</td>
+<td>string</td>
+<td>单位名称</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.technical_title</td>
+<td>string</td>
+<td>职业</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.show_email</td>
+<td>bool</td>
+<td>是否展示邮箱</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.show_location</td>
+<td>bool</td>
+<td>是否展示位置</td>
+</tr>
+<tr>
+<td>user.user_extension_attributes.show_department</td>
+<td>bool</td>
+<td>是否展示公司</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例：</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxx"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"user_extension_attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"gender"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"province"</span><span class="p">:</span><span class="w"> </span><span class="s2">"湖南"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"长沙"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"个性签名"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"custom_department"</span><span class="p">:</span><span class="w"> </span><span class="s2">"湖南智擎科技有限公司"</span><span class="p">,</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='16a4666845'>获取用户星标项目</h2>
+<p>获取用户星标项目</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/is_pinned_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+<p><code>GET api/users/:login/is_pinned_projects.json</code></p>
+<h3 id='7447e4874e-2'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_count</td>
+<td>int</td>
+<td>星标项目数量</td>
+</tr>
+<tr>
+<td>identifier</td>
+<td>string</td>
+<td>项目标识</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>项目名称</td>
+</tr>
+<tr>
+<td>description</td>
+<td>string</td>
+<td>项目描述</td>
+</tr>
+<tr>
+<td>visits</td>
+<td>int</td>
+<td>项目访问数量</td>
+</tr>
+<tr>
+<td>praises_count</td>
+<td>int</td>
+<td>项目点赞数量</td>
+</tr>
+<tr>
+<td>watchers_count</td>
+<td>int</td>
+<td>项目关注数量</td>
+</tr>
+<tr>
+<td>issues_count</td>
+<td>int</td>
+<td>项目issue数量</td>
+</tr>
+<tr>
+<td>pull_requests_count</td>
+<td>int</td>
+<td>项目合并请求数量</td>
+</tr>
+<tr>
+<td>forked_count</td>
+<td>int</td>
+<td>项目复刻数量</td>
+</tr>
+<tr>
+<td>is_public</td>
+<td>bool</td>
+<td>项目是否公开</td>
+</tr>
+<tr>
+<td>mirror_url</td>
+<td>string</td>
+<td>镜像地址</td>
+</tr>
+<tr>
+<td>type</td>
+<td>int</td>
+<td>项目类型 0 普通项目 1 普通镜像项目 2 同步镜像项目</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>上次更新时间</td>
+</tr>
+<tr>
+<td>open_devops</td>
+<td>int</td>
+<td>是否开启devops</td>
+</tr>
+<tr>
+<td>forked_from_project_id</td>
+<td>int</td>
+<td>fork项目id</td>
+</tr>
+<tr>
+<td>platform</td>
+<td>string</td>
+<td>项目平台</td>
+</tr>
+<tr>
+<td>author.name</td>
+<td>string</td>
+<td>项目拥有者名称</td>
+</tr>
+<tr>
+<td>author.type</td>
+<td>string</td>
+<td>项目拥有者类型</td>
+</tr>
+<tr>
+<td>author.login</td>
+<td>string</td>
+<td>项目拥有者用户名</td>
+</tr>
+<tr>
+<td>author.image_url</td>
+<td>string</td>
+<td>项目拥有者头像</td>
+</tr>
+<tr>
+<td>category.name</td>
+<td>string</td>
+<td>项目分类名称</td>
+</tr>
+<tr>
+<td>language.name</td>
+<td>string</td>
+<td>项目语言名称</td>
+</tr>
+<tr>
+<td>position</td>
+<td>int</td>
+<td>项目排序</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"repo_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"monkey"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"boke"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dkkd"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"visits"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"praises_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"watchers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"pull_requests_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"forked_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"mirror_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://github.com/viletyy/monkey.git"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"last_update_time"</span><span class="p">:</span><span class="w"> </span><span class="mi">1619685144</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"forked_from_project_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"open_devops"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"platform"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forge"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试组织"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_org"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/9?t=1612706073"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"深度学习"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='3064477f38'>用户添加星标项目</h2>
+<p>用户添加星标项目</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/is_pinned_projects/pin.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects/pin.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+<p><code>POST /api/users/:login/is_pinned_projects/pin.json</code></p>
+<h3 id='aa883f5d52-2'>请求字段说明:</h3><h4 id='0ca7f0efb8'>同时设定多个星标项目</h4>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>is_pinned_project_ids</td>
+<td>array</td>
+<td>设定为星标项目的id</td>
+</tr>
+</tbody></table>
+<h4 id='f4b9f10991'>只设定一个星标项目</h4>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>is_pinned_project_id</td>
+<td>integer</td>
+<td>设定为星标项目的id</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='3f31dec5ae'>星标项目展示排序</h2>
+<p>星标项目展示排序</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH http://localhost:3000/api/users/yystopf/is_pinned_projects/11.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH/PUT /api/users/:login/is_pinned_projects/:id.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+<p><code>PATCH/PUT /api/users/:login/is_pinned_projects/:id.json</code></p>
+<h3 id='aa883f5d52-3'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>pinned_projects.position</td>
+<td>int</td>
+<td>排序,数字越大排名越前</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例：</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"pinned_project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"position"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='4a39412749'>用户近期活动统计</h2>
+<p>用户近期活动统计, 默认显示近一周的数据</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/activity.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/activity.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/statistics/activity.json</code></p>
+<h3 id='7447e4874e-3'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dates</td>
+<td>array</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>issues_count</td>
+<td>array</td>
+<td>易修数量</td>
+</tr>
+<tr>
+<td>pull_requests_count</td>
+<td>array</td>
+<td>合并请求数量</td>
+</tr>
+<tr>
+<td>commtis_count</td>
+<td>array</td>
+<td>贡献数量</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"dates"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"2021.05.21"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.22"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.23"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.24"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.25"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.26"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.27"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"2021.05.28"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"issues_count"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"pull_requests_count"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"commits_count"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="mi">0</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='04cb758654'>获取用户贡献度</h2>
+<p>获取用户贡献度</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/headmaps.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/headmaps.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+<p><code>GET api/users/:login/headmaps.json</code></p>
+<h3 id='aa883f5d52-4'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>year</td>
+<td>string</td>
+<td>年份</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-4'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_contributions</td>
+<td>int</td>
+<td>所选时间内的总贡献度</td>
+</tr>
+<tr>
+<td>headmaps.date</td>
+<td>string</td>
+<td>时间</td>
+</tr>
+<tr>
+<td>headmaps.contributions</td>
+<td>int</td>
+<td>贡献度</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">139</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"headmaps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-07"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-21"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-25"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-01"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-04"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-15"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-22"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-24"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-30"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-06"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-12"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-13"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-19"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-23"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">37</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-25"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-26"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-28"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-29"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-30"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-05-04"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-05-06"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"contributions"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='7931751284'>获取用户动态</h2>
+<p>获取用户动态</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/project_trends.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/project_trends.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+<p><code>GET api/users/:login/project_trends.json</code></p>
+<h3 id='aa883f5d52-5'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>date</td>
+<td>string</td>
+<td>日期，格式: 2021-05-28</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_count</td>
+<td>int</td>
+<td>所选时间内的总动态数</td>
+</tr>
+<tr>
+<td>project_trends.trend_type</td>
+<td>string</td>
+<td>动态类型，Issue：易修，VersionRelease：版本发布，PullRequest：合并请求</td>
+</tr>
+<tr>
+<td>project_trends.action_type</td>
+<td>string</td>
+<td>操作类型</td>
+</tr>
+<tr>
+<td>project_trends.trend_id</td>
+<td>integer</td>
+<td>动态id</td>
+</tr>
+<tr>
+<td>project_trends.user_name</td>
+<td>string</td>
+<td>用户名称</td>
+</tr>
+<tr>
+<td>project_trends.user_login</td>
+<td>string</td>
+<td>用户用户名</td>
+</tr>
+<tr>
+<td>project_trends.user_avatar</td>
+<td>string</td>
+<td>用户头像</td>
+</tr>
+<tr>
+<td>project_trends.action_time</td>
+<td>string</td>
+<td>操作时间</td>
+</tr>
+<tr>
+<td>project_trends.name</td>
+<td>string</td>
+<td>动态标题</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"project_trends"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了工单"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31213123123"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issue_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"priority_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-05-07 15:39"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-05-27 15:42"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"assign_user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"assign_user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issue_journal_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issue_journals"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VersionRelease"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了版本发布"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"24天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heihei1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"target_commitish"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/forgeceshiorg1/ceshi1/archive/v1.0.tar.gz"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/forgeceshiorg1/ceshi1/archive/v1.0.zip"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/forgeceshiorg1/ceshi1/releases/84"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"version_gid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"84"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-05-04 12:04"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"关闭了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"13"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-30 15:39"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">13</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"211212"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-30 15:37"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"奇偶哦iu"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-30 10:19"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2112123"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-29 18:46"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"关闭了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23123"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-29 18:45"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"33"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-29 18:37"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">19</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"关闭了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"28天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gggg"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-29 17:51"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了工单"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1个月前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hjhkj"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issue_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"priority_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-19 10:52"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-19 10:52"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"assign_user_name"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"assign_user_login"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issue_journal_size"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"issue_journals"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VersionRelease"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了版本发布"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1个月前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v3.0.1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v3.0.1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"target_commitish"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.1.tar.gz"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.1.zip"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/ceshirepo1/releases/78"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"version_gid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"78"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-30 15:51"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VersionRelease"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了版本发布"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1个月前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v3.0.0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v3.0.0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"target_commitish"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.0.tar.gz"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshirepo1/archive/v3.0.0.zip"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/ceshirepo1/releases/77"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"version_gid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"77"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-30 15:33"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VersionRelease"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了版本发布"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1个月前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0.0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0.0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"target_commitish"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshirepo1/archive/v1.0.0.tar.gz"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/ceshirepo1/archive/v1.0.0.zip"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/ceshirepo1/releases/76"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"version_gid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"76"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-30 15:27"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VersionRelease"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了版本发布"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2个月前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vvvv"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tag_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"target_commitish"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dev"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/virus_blog/archive/v1.1.tar.gz"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/yystopf/virus_blog/archive/v1.1.zip"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10080/api/v1/repos/yystopf/virus_blog/releases/6"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"version_gid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-15 14:18"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequest"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"创建了合并请求"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"trend_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_avatar"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3个月前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"444"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-02-25 17:31"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='02488a20d5'>用户开发能力</h2>
+<p>用户开发能力， 默认为所有时间下的开发能力</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/develop.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/develop.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/statistics/develop.json</code></p>
+<h3 id='aa883f5d52-6'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start_time</td>
+<td>integer</td>
+<td>时间戳，开始时间，格式：1621526400</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>integer</td>
+<td>时间戳，结束时间，格式：1622131200</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-6'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>influence</td>
+<td>int</td>
+<td>影响力</td>
+</tr>
+<tr>
+<td>contribution</td>
+<td>int</td>
+<td>贡献度</td>
+</tr>
+<tr>
+<td>activity</td>
+<td>int</td>
+<td>活跃度</td>
+</tr>
+<tr>
+<td>experience</td>
+<td>int</td>
+<td>项目经验</td>
+</tr>
+<tr>
+<td>language</td>
+<td>int</td>
+<td>语言能力</td>
+</tr>
+<tr>
+<td>languages_percent</td>
+<td>float</td>
+<td>语言百分比</td>
+</tr>
+<tr>
+<td>each_language_score</td>
+<td>int</td>
+<td>各门语言分数</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"platform"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"contribution"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"activity"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"experience"</span><span class="p">:</span><span class="w"> </span><span class="mi">95</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"languages_percent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"CSS"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C#"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Ruby"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Go"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.19</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Java"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.34</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Python"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.09</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C+"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C++"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.11</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Scala"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"HTML"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"each_language_score"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"CSS"</span><span class="p">:</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C#"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Ruby"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Go"</span><span class="p">:</span><span class="w"> </span><span class="mi">77</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C"</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Java"</span><span class="p">:</span><span class="w"> </span><span class="mi">93</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Python"</span><span class="p">:</span><span class="w"> </span><span class="mi">83</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C+"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C++"</span><span class="p">:</span><span class="w"> </span><span class="mi">85</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Scala"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"HTML"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"contribution"</span><span class="p">:</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"activity"</span><span class="p">:</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"experience"</span><span class="p">:</span><span class="w"> </span><span class="mi">88</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"languages_percent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"C"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.25</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C#"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.33</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C++"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"CSS"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.08</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Go"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"HTML"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Java"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Ruby"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.08</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"each_language_score"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"C"</span><span class="p">:</span><span class="w"> </span><span class="mi">81</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C#"</span><span class="p">:</span><span class="w"> </span><span class="mi">84</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"C++"</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"CSS"</span><span class="p">:</span><span class="w"> </span><span class="mi">71</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Go"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"HTML"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Java"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Ruby"</span><span class="p">:</span><span class="w"> </span><span class="mi">71</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='aa848a4fa0'>用户角色定位</h2>
+<p>用户角色定位，默认显示所有时间下的角色定位数据</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/role.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/role.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/statistics/role.json</code></p>
+<h3 id='aa883f5d52-7'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start_time</td>
+<td>integer</td>
+<td>时间戳，开始时间，格式：1621526400</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>integer</td>
+<td>时间戳，结束时间，格式：1622131200</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-7'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_projects_count</td>
+<td>int</td>
+<td>用户所有的项目数量</td>
+</tr>
+<tr>
+<td>role.object.count</td>
+<td>int</td>
+<td>用户该语言下的项目数量</td>
+</tr>
+<tr>
+<td>role.object.percent</td>
+<td>float</td>
+<td>用户该语言下的项目占比</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_projects_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">27</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"percent"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.89</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"manager"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"percent"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"developer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"percent"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.07</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"reporter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"percent"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='ae21e852b6'>用户专业定位</h2>
+<p>用户专业定位，默认显示所有时间下的专业定位数据</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/major.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/major.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/statistics/major.json</code></p>
+<h3 id='aa883f5d52-8'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>start_time</td>
+<td>integer</td>
+<td>时间戳，开始时间，格式：1621526400</td>
+</tr>
+<tr>
+<td>end_time</td>
+<td>integer</td>
+<td>时间戳，结束时间，格式：1622131200</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-8'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>categories</td>
+<td>int</td>
+<td>用户项目分类</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"categories"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"大数据"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"机器学习"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"深度学习"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"人工智能"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"智慧医疗"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"云计算"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
 <h2 id='fcaf20021b'>待办事项-用户通知信息</h2>
 <p>待办事项-用户通知信息</p>
 
@@ -657,9 +1908,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_messages.json</code></p>
-<h3 id='aa883f5d52'>请求字段说明:</h3>
+<h3 id='aa883f5d52-9'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -673,7 +1924,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-2'>返回字段说明:</h3>
+<h3 id='7447e4874e-9'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -777,29 +2028,29 @@ Success — a happy kitten is an authenticated kitten!
 <td>通知主体的迁移创建者头像</td>
 </tr>
 <tr>
-<td>applied.owner.id</td>
+<td>applied_user.id</td>
 <td>int</td>
-<td>通知主体的迁移接受者的id</td>
+<td>通知发起者的id</td>
 </tr>
 <tr>
-<td>applied.owner.type</td>
+<td>applied_user.type</td>
 <td>string</td>
-<td>通知主体的迁移接受者的类型</td>
+<td>通知发起者的类型</td>
 </tr>
 <tr>
-<td>applied.owner.name</td>
+<td>applied_user.name</td>
 <td>string</td>
-<td>通知主体的迁移接受者的名称</td>
+<td>通知发起者的名称</td>
 </tr>
 <tr>
-<td>applied.owner.login</td>
+<td>applied_user.login</td>
 <td>string</td>
-<td>通知主体的迁移接受者的标识</td>
+<td>通知发起者的标识</td>
 </tr>
 <tr>
-<td>applied.owner.image_url</td>
+<td>applied_user.image_url</td>
 <td>string</td>
-<td>通知主体的迁移接受者头像</td>
+<td>通知发起者头像</td>
 </tr>
 <tr>
 <td>applied_type</td>
@@ -834,6 +2085,48 @@ Success — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
     </span><span class="nl">"applied_messages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"applied"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:34"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"applied_user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"applied_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AppliedProject"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"已通过你加入【hehuisssjssjjsjs】仓库的申请。"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"viewed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"waiting"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"successed"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:34"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
         </span><span class="p">{</span><span class="w">
             </span><span class="nl">"applied"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
                 </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -894,9 +2187,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects.json</code></p>
-<h3 id='aa883f5d52-2'>请求字段说明:</h3>
+<h3 id='aa883f5d52-10'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -910,7 +2203,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-3'>返回字段说明:</h3>
+<h3 id='7447e4874e-10'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1086,9 +2379,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/accept.json</code></p>
-<h3 id='aa883f5d52-3'>请求字段说明:</h3>
+<h3 id='aa883f5d52-11'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1107,7 +2400,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>迁移id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-4'>返回字段说明:</h3>
+<h3 id='7447e4874e-11'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1277,9 +2570,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/refuse.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/refuse.json</code></p>
-<h3 id='aa883f5d52-4'>请求字段说明:</h3>
+<h3 id='aa883f5d52-12'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1298,7 +2591,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>迁移id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<h3 id='7447e4874e-12'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1460,7 +2753,660 @@ Success — a happy kitten is an authenticated kitten!
     </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-25 18:06"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16小时前"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h1 id='projects'>Projects</h1><h2 id='bfdfb34952'>获取项目列表</h2>
+</span></code></pre></div><h2 id='ba97e431b8'>待办事项-项目申请</h2>
+<p>待办事项-项目申请</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_projects.json</code></p>
+<h3 id='aa883f5d52-13'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-13'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"applied_transfer_projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7分钟前"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='e8ec937c34'>用户接受申请</h2>
+<p>用户接受申请</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/accept.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_projects/:id/accept.json</code></p>
+<h3 id='aa883f5d52-14'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-14'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accept"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='f2ee84ecf7'>用户拒绝申请</h2>
+<p>用户拒绝申请</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/refuse.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_projects/:id/refuse.json</code></p>
+<h3 id='aa883f5d52-15'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-15'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accept"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h1 id='projects'>Projects</h1><h2 id='ac55469b06'>申请加入项目</h2>
+<p>申请加入项目</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/applied_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/appliedr_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http'>HTTP 请求</h3>
+<p><code>POST /api/applied_projects.json</code></p>
+<h3 id='1f9ac54b15'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>applied_project.code</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>邀请码</td>
+</tr>
+<tr>
+<td>applied_project.role</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>项目权限，reporter: 报告者, developer: 开发者，manager：管理员</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"applied_project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1una34"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"developer"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='b302a98fa6'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>项目申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='bfdfb34952'>获取项目列表</h2>
 <p>获取项目列表，也可以更加相关条件过滤搜素</p>
 
 <blockquote>
@@ -1471,9 +3417,9 @@ Success — a happy kitten is an authenticated kitten!
 <span class="nt">-d</span> <span class="s2">"limit=5"</span> <span class="se">\</span>
 http://localhost:3000/api/projects  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
 <p><code>GET api/projects</code></p>
-<h3 id='1f9ac54b15'>请求参数</h3>
+<h3 id='1f9ac54b15-2'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1540,7 +3486,7 @@ http://localhost:3000/api/projects  | jq
 <td>项目类型， 取值为：common、mirror; common:开源托管项目, mirror:开源镜像项目</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6'>返回字段说明</h3>
+<h3 id='b302a98fa6-2'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1692,9 +3638,9 @@ Remember — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/projects/recommend  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects/recommend.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
 <p><code>GET api/projects/recommend</code></p>
-<h3 id='b302a98fa6-2'>返回字段说明</h3>
+<h3 id='b302a98fa6-3'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1828,9 +3774,9 @@ Remember — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/menu_list</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
 <p><code>GET api/:owner/:repo/menu_list</code></p>
-<h3 id='1f9ac54b15-2'>请求参数</h3>
+<h3 id='1f9ac54b15-3'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1855,7 +3801,7 @@ http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-3'>返回字段说明</h3>
+<h3 id='b302a98fa6-4'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1896,9 +3842,9 @@ http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/jasder/forgeplus/about  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/forgeplus/about</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
 <p><code>GET api/:owner/:repo/about</code></p>
-<h3 id='1f9ac54b15-3'>请求参数</h3>
+<h3 id='1f9ac54b15-4'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1923,7 +3869,7 @@ http://localhost:3000/api/jasder/forgeplus/about  | jq
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-4'>返回字段说明</h3>
+<h3 id='b302a98fa6-5'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1969,7 +3915,7 @@ Remember — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/project_units.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/project_units</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>GET /api/yystopf/ceshi/project_units</code></p>
 <h3 id='7447e4874e'>返回字段说明:</h3>
 <table><thead>
@@ -2012,9 +3958,9 @@ http://localhost:3000/api/yystopf/ceshi/project_units.json
 <span class="nt">-d</span> <span class="s2">"{ </span><span class="se">\"</span><span class="s2">unit_typs</span><span class="se">\"</span><span class="s2">: [</span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">pulls</span><span class="se">\"</span><span class="s2">]}"</span> <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/project_units.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/project_units</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
 <p><code>POST /api/yystopf/ceshi/project_units</code></p>
-<h3 id='1f9ac54b15-4'>请求参数</h3>
+<h3 id='1f9ac54b15-5'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2076,9 +4022,9 @@ http://localhost:3000/api/yystopf/ceshi/project_units.json
 <span class="nt">-d</span> <span class="s2">"license_id=1"</span> <span class="se">\</span>
 http://localhost:3000/api/projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
 <p><code>POST api/projects</code></p>
-<h3 id='1f9ac54b15-5'>请求参数</h3>
+<h3 id='1f9ac54b15-6'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2152,7 +4098,7 @@ http://localhost:3000/api/projects.json
 <td>项目是否私有, true：为私有，false: 公开，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-5'>返回字段说明</h3>
+<h3 id='b302a98fa6-6'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2194,9 +4140,9 @@ http://localhost:3000/api/projects.json
 <span class="nt">-d</span> <span class="s2">"project_language_id=2"</span> <span class="se">\</span>
 http://localhost:3000/api/projects/migrate.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects/migrate.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
 <p><code>POST api/projects/migrate.json</code></p>
-<h3 id='1f9ac54b15-6'>请求参数</h3>
+<h3 id='1f9ac54b15-7'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2284,7 +4230,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>项目是否私有, true：为私有，false: 非私有，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-6'>返回字段说明</h3>
+<h3 id='b302a98fa6-7'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2319,9 +4265,9 @@ http://localhost:3000/api/projects/migrate.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/repositories/1244/sync_mirror.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/repositories/1244/sync_mirror.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
 <p><code>POST api/repositories/:id/sync_mirror.json</code></p>
-<h3 id='1f9ac54b15-7'>请求参数</h3>
+<h3 id='1f9ac54b15-8'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2339,7 +4285,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>仓库id</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-7'>返回字段说明</h3>
+<h3 id='b302a98fa6-8'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2374,9 +4320,9 @@ http://localhost:3000/api/projects/migrate.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/jasder/forgeplus/forks.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/jaser/jasder_test/forks.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
 <p><code>POST api/:owner/:repo/forks.json</code></p>
-<h3 id='1f9ac54b15-8'>请求参数</h3>
+<h3 id='1f9ac54b15-9'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2401,7 +4347,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-8'>返回字段说明</h3>
+<h3 id='b302a98fa6-9'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2437,9 +4383,9 @@ http://localhost:3000/api/projects/migrate.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizations.json  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/:owner/:repo/applied_transfer_projects/organizations</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET api/:owner/:repo/applied_transfer_projects/organizations</code></p>
-<h3 id='1f9ac54b15-9'>请求参数</h3>
+<h3 id='1f9ac54b15-10'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2464,7 +4410,7 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-9'>返回字段说明</h3>
+<h3 id='b302a98fa6-10'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2531,9 +4477,9 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/:owner/:repo/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>POST /api/:owner/:repo/applied_transfer_projects.json</code></p>
-<h3 id='1f9ac54b15-10'>请求参数</h3>
+<h3 id='1f9ac54b15-11'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2565,7 +4511,7 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>迁移对象标识</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-10'>返回字段说明</h3>
+<h3 id='b302a98fa6-11'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2735,9 +4681,9 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/cancel.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/:owner/:repo/applied_transfer_projects/cancel.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
 <p><code>POST /api/:owner/:repo/applied_transfer_projects/cancel.json</code></p>
-<h3 id='1f9ac54b15-11'>请求参数</h3>
+<h3 id='1f9ac54b15-12'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2762,7 +4708,7 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-11'>返回字段说明</h3>
+<h3 id='b302a98fa6-12'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>

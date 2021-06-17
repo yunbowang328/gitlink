@@ -40,7 +40,7 @@ class Admins::SubjectQuery < ApplicationQuery
     # 关键字
     keyword = params[:keyword].to_s.strip
     if keyword
-      sql = 'CONCAT(lastname, firstname) LIKE :keyword OR subjects.name LIKE :keyword'
+      sql = 'CONCAT_WS(lastname, firstname, nickname) LIKE :keyword OR subjects.name LIKE :keyword'
       subjects = subjects.joins(:user).where(sql, keyword: "%#{keyword}%")
     end
 

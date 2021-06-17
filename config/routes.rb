@@ -148,6 +148,8 @@ Rails.application.routes.draw do
       resources :issue_depends, only: [:create, :destroy]
     end
 
+    resources :applied_projects, only: [:create]
+
     resources :project_categories, only: [:index, :show] do
       get :group_list, on: :collection
     end
@@ -191,6 +193,7 @@ Rails.application.routes.draw do
         post :remote_update
         post :remote_login
         post :remote_password
+        post :change_password
       end
     end
 
@@ -267,6 +270,27 @@ Rails.application.routes.draw do
             post :refuse
           end
         end
+        resources :applied_projects, only: [:index] do 
+          member do 
+            post :accept
+            post :refuse
+          end
+        end
+        resources :headmaps, only: [:index]
+        resources :is_pinned_projects, only: [:index, :update] do 
+          collection do 
+            post :pin 
+          end
+        end
+        resources :statistics, only: [:index] do 
+          collection do 
+            get :activity 
+            get :develop 
+            get :role 
+            get :major
+          end
+        end
+        resources :project_trends, only: [:index]
         resources :organizations, only: [:index]
         # resources :projects, only: [:index]
         # resources :subjects, only: [:index]

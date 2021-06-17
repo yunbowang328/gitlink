@@ -210,6 +210,25 @@ class AccountsController < ApplicationController
     # session[:user_id] = @user.id
   end
 
+  def change_password 
+    @user = User.find_by(login: params[:login])
+    return render_error("未找到相关用户!") if @user.blank?
+    return render_error("旧密码不正确") unless @user.check_password?(params[:old_password])
+
+    sync_params = {
+      password: params[:password].to_s,
+      email: @user.mail
+    }
+
+    interactor = Gitea::User::UpdateInteractor.call(@user.login, sync_params)
+    if interactor.success?
+      @user.update_attribute(:password, params[:password])
+      render_ok
+    else
+      render_error(interactor.error)
+    end
+  end
+
   # 忘记密码
   def reset_password
     begin
