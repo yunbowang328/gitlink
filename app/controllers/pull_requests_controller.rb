@@ -12,14 +12,16 @@ class PullRequestsController < ApplicationController
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
     issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
-    @all_issues_size = issues.size
-    @open_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 0}).size
-    @close_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 2}).size
-    @merged_issues_size = issues.joins(:pull_request).where(pull_requests: {status: 1}).size
+    @all_issues = issues.distinct
+    @filter_issues = @all_issues
+    @filter_issues = @filter_issues.where("subject LIKE ? OR description LIKE ? ", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
+    @open_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: 0})
+    @close_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: 2})
+    @merged_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: 1})
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
     scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "PullRequest")
-    @issues_size = scopes.size
+    @issues_size = @filter_issues.size
     @issues = paginate(scopes)
   end
 

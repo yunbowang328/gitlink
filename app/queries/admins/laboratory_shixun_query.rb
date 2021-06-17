@@ -11,7 +11,7 @@ class Admins::LaboratoryShixunQuery < ApplicationQuery
 
     keyword = params[:keyword].to_s.strip
     if keyword.present?
-      like_sql = 'shixuns.name LIKE :keyword OR CONCAT_WS(users.lastname, users.firstname, users.nickname) LIKE :keyword'
+      like_sql = 'shixuns.name LIKE :keyword OR CONCAT(users.lastname, users.firstname) LIKE :keyword OR users.nickname LIKE :keyword'
       laboratory_shixuns = laboratory_shixuns.joins(shixun: :user).where(like_sql, keyword: "%#{keyword}%")
     end
 

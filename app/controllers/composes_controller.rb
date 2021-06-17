@@ -3,13 +3,12 @@ class ComposesController < ApplicationController
   before_action :find_compose, except: [:index, :new,:create]
 
   def index
-    @order_type = params[:order] || "created_at"
     @search_name = params[:search]
     composes = Compose.compose_includes
     if @search_name.present?
       composes = composes.where("title like ?", "%#{@search_name}%")
     end
-    composes = composes.order("#{@order_type} desc")
+    composes = composes.order("#{order_type} desc")
     @page  = params[:page]  || 1
     @limit = params[:limit] || 15
     @composes_size = composes.size
@@ -94,6 +93,10 @@ class ComposesController < ApplicationController
     unless @compose.present?
       normal_status(-1, "组织不存在")
     end
+  end
+
+  def order_type 
+    Compose.column_names.include?(params[:order_type]) ? params[:order_type] : 'created_at'
   end
 
 end

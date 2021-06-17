@@ -65,8 +65,7 @@ class UsersController < ApplicationController
 
   def fan_users
     watchers = @user.watchers.includes(:user).order("watchers.created_at desc")
-    watchers = watchers.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.nickname)) LIKE ?", "%#{params[:search].split(" ").join('|')}%") if params[:search].present?
-
+    watchers = watchers.joins(:user).merge(User.like(params[:search]))
     @watchers_count = watchers.size
     @watchers = paginate(watchers)
   end
