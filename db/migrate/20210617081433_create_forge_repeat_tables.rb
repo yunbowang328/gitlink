@@ -1,6 +1,6 @@
 class CreateForgeRepeatTables < ActiveRecord::Migration[5.2]
   def change
-    create_table :forge_applied_message do |t|
+    create_table :forge_applied_messages do |t|
       t.references :user
       t.references :applied, polymorphic: true
       t.integer :viewed, default: 0
