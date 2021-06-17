@@ -38,7 +38,8 @@ class PullRequest < ApplicationRecord
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
 
-  scope :merged_and_closed, ->{where.not(status: 1)}
+  scope :merged_and_closed, ->{where.not(status: 0)}
+  scope :opening, -> {where(status: 0)}
 
   after_save :reset_cache_data
   after_destroy :reset_cache_data

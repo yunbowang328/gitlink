@@ -61,6 +61,7 @@
 #
 #  index_projects_on_forked_from_project_id  (forked_from_project_id)
 #  index_projects_on_identifier              (identifier)
+#  index_projects_on_invite_code             (invite_code)
 #  index_projects_on_is_public               (is_public)
 #  index_projects_on_lft                     (lft)
 #  index_projects_on_name                    (name)
@@ -71,6 +72,7 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
 
 
 

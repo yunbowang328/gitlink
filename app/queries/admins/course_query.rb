@@ -35,7 +35,7 @@ class Admins::CourseQuery < ApplicationQuery
     # 关键字
     keyword = params[:keyword].to_s.strip
     if keyword
-      sql = 'CONCAT_WS(lastname, firstname, nickname) LIKE :keyword OR courses.name LIKE :keyword OR course_lists.name LIKE :keyword'
+      sql = 'CONCAT(lastname, firstname) LIKE :keyword OR users.nickname LIKE :keyword OR courses.name LIKE :keyword OR course_lists.name LIKE :keyword'
       courses = courses.joins(:teacher, :course_list).where(sql, keyword: "%#{keyword}%")
     end
 

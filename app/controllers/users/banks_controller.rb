@@ -1,8 +1,8 @@
 class Users::BanksController < Users::BaseController
   before_action :params_filter
   def index
-    order = params[:order] || "updated_at"
-    sort = params[:sort] || "desc"
+    order = CourseList.column_names.include?(params[:order]) ? params[:order] : "updated_at"
+    sort = %w(desc asc).includes?(params[:sort]) ? params[:sort] : "desc"
     @banks = @object_type.classify.constantize.where(@object_filter)
     @course_lists = CourseList.where(id: @banks.pluck(:course_list_id))
     @banks = @banks.where(course_list_id: params[:tag_id]) unless params[:tag_id].blank?

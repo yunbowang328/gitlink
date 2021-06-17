@@ -28,10 +28,10 @@ class Weapps::SubjectQuery < ApplicationQuery
   private
 
   def order_type
-    params[:order] || "updated_at"
+    Subject.column_names.include?(params[:order]) ? params[:order] : 'updated_at'
   end
 
   def sort_type
-    params[:sort] || "desc"
+    %w(desc asc).include?(params[:sort]) ? params[:sort] : "desc"
   end
 end

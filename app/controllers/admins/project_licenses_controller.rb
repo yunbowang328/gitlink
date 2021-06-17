@@ -3,8 +3,8 @@ class Admins::ProjectLicensesController < Admins::BaseController
   before_action :validate_params, only: [:create, :update]
 
   def index
-    sort_by = params[:sort_by] ||= 'created_at'
-    sort_direction = params[:sort_direction] ||= 'desc'
+    sort_by = License.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
+    sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
     q = License.ransack(name_cont: params[:search])
     project_licenses = q.result(distinct: true).order("#{sort_by} #{sort_direction}")
     @project_licenses = paginate(project_licenses)

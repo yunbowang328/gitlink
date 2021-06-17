@@ -32,7 +32,7 @@ class Admins::AuthSchoolsController < Admins::BaseController
   def search_manager
     school = School.find_by(id: params[:school_id])
     user_ids = school&.ec_school_users&.pluck(:user_id)
-    @users = User.where.not(id: user_ids).where("CONCAT_WS(lastname, firstname, nickname) like ?", "%#{params[:name].strip.to_s}%").limit(10)
+    @users = User.where.not(id: user_ids).where("CONCAT(lastname, firstname) like ? OR nickname like ?", "%#{params[:name].strip.to_s}%",  "%#{params[:name].strip.to_s}%").limit(10)
   end
 
   # 添加认证学校管理员
