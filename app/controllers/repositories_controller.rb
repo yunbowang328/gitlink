@@ -56,9 +56,7 @@ class RepositoriesController < ApplicationController
 
       # TODO
       # 临时处理readme文件问题
-      admin = current_user.blank? ? User.where(admin: true).last : current_user
-
-      result = Gitea::Repository::Readme::GetService.call(@owner.login, @project.identifier, @ref, admin&.gitea_token)
+      result = Gitea::Repository::Readme::GetService.call(@owner.login, @project.identifier, @ref, @owner&.gitea_token)
       @readme = 
       if result[:status] == :success
         result[:body]
