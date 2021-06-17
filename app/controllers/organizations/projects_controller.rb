@@ -36,10 +36,10 @@ class Organizations::ProjectsController < Organizations::BaseController
   end
 
   def sort
-    params.fetch(:sort_by, "updated_on")
+    Project.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'updated_on'
   end
 
   def sort_direction
-    params.fetch(:sort_direction, "desc")
+    %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
   end
 end
