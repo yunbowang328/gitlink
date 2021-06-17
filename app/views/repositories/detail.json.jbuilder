@@ -43,6 +43,7 @@ json.fork_info do
     json.fork_project_user_login @fork_project_user.try(:login)
     json.fork_project_identifier @fork_project.identifier
     json.fork_project_user_name @fork_project_user.try(:show_real_name)
+    json.fork_project_user_type @fork_project_user.try(:type)
   end
 end
 if @result[:repo]
