@@ -12,6 +12,7 @@
 #
 
 class AppliedProject < ApplicationRecord
+  self.table_name = "forge_applied_projects"
   belongs_to :user
   belongs_to :project
 
