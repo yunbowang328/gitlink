@@ -8,7 +8,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
     @team_users = @team.team_users.includes(:user)
 
     search = params[:search].to_s.downcase
-    @team_users = @team_users.joins(:user).where("LOWER(CONCAT_WS(users.lastname, users.firstname, users.login, users.mail, users.nickname)) LIKE ?", "%#{search.split(" ").join('|')}%") if search.present?
+    @team_users = @team_users.joins(:user).merge(User.like(search))
 
     @team_users = kaminari_paginate(@team_users)
   end

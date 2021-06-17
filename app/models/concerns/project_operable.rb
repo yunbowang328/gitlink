@@ -65,7 +65,7 @@ module ProjectOperable
     if owner.is_a?(User)
       managers.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      managers.exists?(user_id: user.id) || owner.is_admin?(user.id)
+      managers.exists?(user_id: user.id) || owner.is_only_admin?(user.id)
     else
       false
     end
@@ -76,7 +76,7 @@ module ProjectOperable
     if owner.is_a?(User)
       developers.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      developers.exists?(user_id: user.id) || owner.is_write?(user.id)
+      developers.exists?(user_id: user.id) || owner.is_only_write?(user.id)
     else
       false
     end

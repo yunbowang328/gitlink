@@ -7,8 +7,6 @@ class VersionsController < ApplicationController
   def index
     return render_not_found unless @project.has_menu_permission("versions")
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
-    order_name = params[:order_name] || "created_on"
-    order_type = params[:order_type] || "desc"
     status = params[:status]
     versions = @project.versions.version_includes
     @open_versions_size = versions.where(status: "open")&.size
@@ -27,9 +25,6 @@ class VersionsController < ApplicationController
   end
 
   def show
-    order_name = params[:order_name] || "created_on"
-    order_type = params[:order_type] || "desc"
-
     version_issues = @version.issues.issue_includes
 
     status_type = params[:status_type] || "1"
@@ -166,5 +161,13 @@ class VersionsController < ApplicationController
       normal_status(-1, "里程碑不存在")
     end
   end
+
+   def order_name
+    Version.column_names.include?(params[:order_name]) ? params[:order_name] : 'created_on'
+   end
+
+   def order_type
+    %w(desc asc).include?(params[:order_type]) ? params[:order_type] : 'desc'
+   end
 
 end

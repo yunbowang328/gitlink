@@ -16,10 +16,10 @@ class Users::OrganizationsController < Users::BaseController
 
   private
   def sort_by
-    params.fetch(:sort_by, "created_at")
+    OrganizationExtension.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at' 
   end
 
   def sort_direction
-    params.fetch(:sort_direction, "desc")
+    %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'  
   end
 end

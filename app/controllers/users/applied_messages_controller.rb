@@ -9,7 +9,7 @@ class Users::AppliedMessagesController < Users::BaseController
 
   private 
   def check_auth 
-    return render_forbidden unless observed_logged_user?
+    return render_forbidden unless current_user.admin? || observed_logged_user?
   end
 
   def view_messages

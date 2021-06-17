@@ -373,11 +373,23 @@
                   <li>
                     <a href="#5e6ed41015" class="toc-h2 toc-link" data-title="用户拒绝迁移">用户拒绝迁移</a>
                   </li>
+                  <li>
+                    <a href="#ba97e431b8" class="toc-h2 toc-link" data-title="待办事项-项目申请">待办事项-项目申请</a>
+                  </li>
+                  <li>
+                    <a href="#e8ec937c34" class="toc-h2 toc-link" data-title="用户接受申请">用户接受申请</a>
+                  </li>
+                  <li>
+                    <a href="#f2ee84ecf7" class="toc-h2 toc-link" data-title="用户拒绝申请">用户拒绝申请</a>
+                  </li>
               </ul>
           </li>
           <li>
             <a href="#projects" class="toc-h1 toc-link" data-title="Projects">Projects</a>
               <ul class="toc-list-h2">
+                  <li>
+                    <a href="#ac55469b06" class="toc-h2 toc-link" data-title="申请加入项目">申请加入项目</a>
+                  </li>
                   <li>
                     <a href="#bfdfb34952" class="toc-h2 toc-link" data-title="获取项目列表">获取项目列表</a>
                   </li>
@@ -617,7 +629,7 @@ Success — a happy kitten is an authenticated kitten!
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-06-03 10:18:53
+ * @LastEditTime: 2021-06-11 16:28:51
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 <h1 id='users'>Users</h1><h2 id='1ae74893b1'>获取当前登陆用户信息</h2>
@@ -2016,29 +2028,29 @@ Success — a happy kitten is an authenticated kitten!
 <td>通知主体的迁移创建者头像</td>
 </tr>
 <tr>
-<td>applied.owner.id</td>
+<td>applied_user.id</td>
 <td>int</td>
-<td>通知主体的迁移接受者的id</td>
+<td>通知发起者的id</td>
 </tr>
 <tr>
-<td>applied.owner.type</td>
+<td>applied_user.type</td>
 <td>string</td>
-<td>通知主体的迁移接受者的类型</td>
+<td>通知发起者的类型</td>
 </tr>
 <tr>
-<td>applied.owner.name</td>
+<td>applied_user.name</td>
 <td>string</td>
-<td>通知主体的迁移接受者的名称</td>
+<td>通知发起者的名称</td>
 </tr>
 <tr>
-<td>applied.owner.login</td>
+<td>applied_user.login</td>
 <td>string</td>
-<td>通知主体的迁移接受者的标识</td>
+<td>通知发起者的标识</td>
 </tr>
 <tr>
-<td>applied.owner.image_url</td>
+<td>applied_user.image_url</td>
 <td>string</td>
-<td>通知主体的迁移接受者头像</td>
+<td>通知发起者头像</td>
 </tr>
 <tr>
 <td>applied_type</td>
@@ -2073,6 +2085,48 @@ Success — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
     </span><span class="nl">"applied_messages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"applied"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:34"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"applied_user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"applied_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AppliedProject"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"已通过你加入【hehuisssjssjjsjs】仓库的申请。"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"viewed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"waiting"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"successed"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:34"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
         </span><span class="p">{</span><span class="w">
             </span><span class="nl">"applied"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
                 </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -2699,7 +2753,660 @@ Success — a happy kitten is an authenticated kitten!
     </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-25 18:06"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16小时前"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h1 id='projects'>Projects</h1><h2 id='bfdfb34952'>获取项目列表</h2>
+</span></code></pre></div><h2 id='ba97e431b8'>待办事项-项目申请</h2>
+<p>待办事项-项目申请</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_projects.json</code></p>
+<h3 id='aa883f5d52-13'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-13'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"applied_transfer_projects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7分钟前"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='e8ec937c34'>用户接受申请</h2>
+<p>用户接受申请</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/accept.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_projects/:id/accept.json</code></p>
+<h3 id='aa883f5d52-14'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-14'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accept"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='f2ee84ecf7'>用户拒绝申请</h2>
+<p>用户拒绝申请</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/refuse.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_projects/:id/refuse.json</code></p>
+<h3 id='aa883f5d52-15'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-15'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accept"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h1 id='projects'>Projects</h1><h2 id='ac55469b06'>申请加入项目</h2>
+<p>申请加入项目</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/applied_projects.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/appliedr_projects.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http'>HTTP 请求</h3>
+<p><code>POST /api/applied_projects.json</code></p>
+<h3 id='1f9ac54b15'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>applied_project.code</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>邀请码</td>
+</tr>
+<tr>
+<td>applied_project.role</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>项目权限，reporter: 报告者, developer: 开发者，manager：管理员</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"applied_project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1una34"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"developer"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='b302a98fa6'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>申请id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>申请状态，canceled:取消,common:正在申请, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>项目申请创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>申请项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>申请项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>申请项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>申请项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>申请项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>申请项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>申请项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>申请项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>申请项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>申请项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>申请创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>申请创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>申请创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>申请创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>申请创建者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">74</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hehuisssjssjjsjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wwww"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"何慧"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/User/6?t=1622513134"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"common"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-09 16:41"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1分钟前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='bfdfb34952'>获取项目列表</h2>
 <p>获取项目列表，也可以更加相关条件过滤搜素</p>
 
 <blockquote>
@@ -2710,9 +3417,9 @@ Success — a happy kitten is an authenticated kitten!
 <span class="nt">-d</span> <span class="s2">"limit=5"</span> <span class="se">\</span>
 http://localhost:3000/api/projects  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
 <p><code>GET api/projects</code></p>
-<h3 id='1f9ac54b15'>请求参数</h3>
+<h3 id='1f9ac54b15-2'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2779,7 +3486,7 @@ http://localhost:3000/api/projects  | jq
 <td>项目类型， 取值为：common、mirror; common:开源托管项目, mirror:开源镜像项目</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6'>返回字段说明</h3>
+<h3 id='b302a98fa6-2'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2931,9 +3638,9 @@ Remember — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/projects/recommend  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects/recommend.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
 <p><code>GET api/projects/recommend</code></p>
-<h3 id='b302a98fa6-2'>返回字段说明</h3>
+<h3 id='b302a98fa6-3'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3067,9 +3774,9 @@ Remember — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/menu_list</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
 <p><code>GET api/:owner/:repo/menu_list</code></p>
-<h3 id='1f9ac54b15-2'>请求参数</h3>
+<h3 id='1f9ac54b15-3'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3094,7 +3801,7 @@ http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-3'>返回字段说明</h3>
+<h3 id='b302a98fa6-4'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3135,9 +3842,9 @@ http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/jasder/forgeplus/about  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/forgeplus/about</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
 <p><code>GET api/:owner/:repo/about</code></p>
-<h3 id='1f9ac54b15-3'>请求参数</h3>
+<h3 id='1f9ac54b15-4'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3162,7 +3869,7 @@ http://localhost:3000/api/jasder/forgeplus/about  | jq
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-4'>返回字段说明</h3>
+<h3 id='b302a98fa6-5'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3208,7 +3915,7 @@ Remember — a happy kitten is an authenticated kitten!
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/project_units.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/project_units</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>GET /api/yystopf/ceshi/project_units</code></p>
 <h3 id='7447e4874e'>返回字段说明:</h3>
 <table><thead>
@@ -3251,9 +3958,9 @@ http://localhost:3000/api/yystopf/ceshi/project_units.json
 <span class="nt">-d</span> <span class="s2">"{ </span><span class="se">\"</span><span class="s2">unit_typs</span><span class="se">\"</span><span class="s2">: [</span><span class="se">\"</span><span class="s2">code</span><span class="se">\"</span><span class="s2">, </span><span class="se">\"</span><span class="s2">pulls</span><span class="se">\"</span><span class="s2">]}"</span> <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/project_units.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/project_units</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
 <p><code>POST /api/yystopf/ceshi/project_units</code></p>
-<h3 id='1f9ac54b15-4'>请求参数</h3>
+<h3 id='1f9ac54b15-5'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3315,9 +4022,9 @@ http://localhost:3000/api/yystopf/ceshi/project_units.json
 <span class="nt">-d</span> <span class="s2">"license_id=1"</span> <span class="se">\</span>
 http://localhost:3000/api/projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
 <p><code>POST api/projects</code></p>
-<h3 id='1f9ac54b15-5'>请求参数</h3>
+<h3 id='1f9ac54b15-6'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3391,7 +4098,7 @@ http://localhost:3000/api/projects.json
 <td>项目是否私有, true：为私有，false: 公开，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-5'>返回字段说明</h3>
+<h3 id='b302a98fa6-6'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3433,9 +4140,9 @@ http://localhost:3000/api/projects.json
 <span class="nt">-d</span> <span class="s2">"project_language_id=2"</span> <span class="se">\</span>
 http://localhost:3000/api/projects/migrate.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/projects/migrate.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
 <p><code>POST api/projects/migrate.json</code></p>
-<h3 id='1f9ac54b15-6'>请求参数</h3>
+<h3 id='1f9ac54b15-7'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3523,7 +4230,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>项目是否私有, true：为私有，false: 非私有，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-6'>返回字段说明</h3>
+<h3 id='b302a98fa6-7'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3558,9 +4265,9 @@ http://localhost:3000/api/projects/migrate.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/repositories/1244/sync_mirror.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/repositories/1244/sync_mirror.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
 <p><code>POST api/repositories/:id/sync_mirror.json</code></p>
-<h3 id='1f9ac54b15-7'>请求参数</h3>
+<h3 id='1f9ac54b15-8'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3578,7 +4285,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>仓库id</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-7'>返回字段说明</h3>
+<h3 id='b302a98fa6-8'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3613,9 +4320,9 @@ http://localhost:3000/api/projects/migrate.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/jasder/forgeplus/forks.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/jaser/jasder_test/forks.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
 <p><code>POST api/:owner/:repo/forks.json</code></p>
-<h3 id='1f9ac54b15-8'>请求参数</h3>
+<h3 id='1f9ac54b15-9'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3640,7 +4347,7 @@ http://localhost:3000/api/projects/migrate.json
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-8'>返回字段说明</h3>
+<h3 id='b302a98fa6-9'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3676,9 +4383,9 @@ http://localhost:3000/api/projects/migrate.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizations.json  | jq
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/:owner/:repo/applied_transfer_projects/organizations</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET api/:owner/:repo/applied_transfer_projects/organizations</code></p>
-<h3 id='1f9ac54b15-9'>请求参数</h3>
+<h3 id='1f9ac54b15-10'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3703,7 +4410,7 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-9'>返回字段说明</h3>
+<h3 id='b302a98fa6-10'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3770,9 +4477,9 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/:owner/:repo/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>POST /api/:owner/:repo/applied_transfer_projects.json</code></p>
-<h3 id='1f9ac54b15-10'>请求参数</h3>
+<h3 id='1f9ac54b15-11'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3804,7 +4511,7 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>迁移对象标识</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-10'>返回字段说明</h3>
+<h3 id='b302a98fa6-11'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3974,9 +4681,9 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/cancel.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/:owner/:repo/applied_transfer_projects/cancel.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
 <p><code>POST /api/:owner/:repo/applied_transfer_projects/cancel.json</code></p>
-<h3 id='1f9ac54b15-11'>请求参数</h3>
+<h3 id='1f9ac54b15-12'>请求参数</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -4001,7 +4708,7 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='b302a98fa6-11'>返回字段说明</h3>
+<h3 id='b302a98fa6-12'>返回字段说明</h3>
 <table><thead>
 <tr>
 <th>参数</th>
