@@ -3,8 +3,8 @@ class Admins::ProjectLanguagesController < Admins::BaseController
   before_action :validate_names, only: [:create, :update]
 
   def index 
-    sort_by = params[:sort_by] ||= 'created_at'
-    sort_direction = params[:sort_direction] ||= 'desc'
+    sort_by = ProjectLanguage.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
+    sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
     q = ProjectLanguage.ransack(name_cont: params[:search])
     project_languages = q.result(distinct: true).order("#{sort_by} #{sort_direction}")
     @project_languages = paginate(project_languages)

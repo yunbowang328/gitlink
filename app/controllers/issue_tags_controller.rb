@@ -7,9 +7,6 @@ class IssueTagsController < ApplicationController
 
 
   def index
-    order_name = params[:order_name] || "created_at"
-    order_type = params[:order_type] || "desc"
-
     issue_tags = @project.issue_tags.order("#{order_name} #{order_type}")
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
     @page  = params[:page]  || 1
@@ -136,6 +133,16 @@ class IssueTagsController < ApplicationController
     unless @issue_tag.present?
       normal_status(-1, "标签不存在")
     end
+  end
+
+  private 
+
+  def order_name
+    IssueTag.column_names.include?(params[:order_name]) ? params[:order_name] : 'created_at'
+  end
+
+  def order_type 
+    %w(desc asc).include?(params[:order_type]) ? params[:order_type] : 'desc'
   end
 
 end

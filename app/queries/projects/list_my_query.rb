@@ -55,8 +55,8 @@ class Projects::ListMyQuery < ApplicationQuery
 
     scope = q.result.includes(:project_category, :project_language,:owner, :repository, :has_pinned_users)
 
-    sort = params[:sort_by] || "updated_on"
-    sort_direction = params[:sort_direction] || "desc"
+    sort = Project.column_names.include?(params[:sort_by]) ? params[:sort_by] : "updated_on"
+    sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : "desc"
     
     if params[:choosed].present? && params[:choosed].is_a?(Array)
       scope.order("FIELD(id, #{params[:choosed].reverse.join(",")}) desc")

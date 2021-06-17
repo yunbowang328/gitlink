@@ -614,8 +614,8 @@ class ApplicationController < ActionController::Base
 		end
 
 		# 排序
-		rorder = option[:order] || "updated_at"
-		b_order = option[:b_order] || "desc"
+		rorder = UserExtension.column_names.include?(option[:order]) ? option[:order] : "updated_at"
+		b_order = %w(desc asc).include?(option[:b_order]) ? option[:b_order] : "desc"
 		if rorder == "created_at" || rorder == "work_score"
 			work_list = work_list.order("graduation_works.#{rorder} #{b_order}")
 		elsif rorder == "student_id"

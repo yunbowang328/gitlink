@@ -1,9 +1,9 @@
 json.partial! "commons/success"
-json.all_count @all_issues_size
-json.open_count @open_issues_size
-json.close_count @close_issues_size
-json.assign_me_count @assign_to_me_size
-json.my_published_count @my_published_size
+json.all_count @all_issues.size
+json.open_count @open_issues.size
+json.close_count @close_issues.size
+json.assign_me_count @assign_to_me.size
+json.my_published_count @my_published.size
 json.search_count @issues_size
 json.limit @limit
 json.user_admin_or_member @user_admin_or_member

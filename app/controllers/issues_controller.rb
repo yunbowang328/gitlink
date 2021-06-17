@@ -17,13 +17,17 @@ class IssuesController < ApplicationController
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
 
-    @all_issues_size = issues.size
-    @open_issues_size = issues.where.not(status_id: 5).size
-    @close_issues_size = issues.where(status_id: 5).size
-    @assign_to_me_size = issues.where(assigned_to_id: current_user&.id).size
-    @my_published_size = issues.where(author_id: current_user&.id).size
+    @all_issues = issues
+    @filter_issues = @all_issues
+    @filter_issues = @filter_issues.where.not(status_id: 5) if params[:status_type].to_i == 1
+    @filter_issues = @filter_issues.where(status_id: 5) if params[:status_type].to_i == 2
+    @filter_issues = @filter_issues.where("subject LIKE ? OR description LIKE ? ", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
+    @open_issues = @all_issues.where.not(status_id: 5)
+    @close_issues = @all_issues.where(status_id: 5)
+    @assign_to_me = @filter_issues.where(assigned_to_id: current_user&.id)
+    @my_published = @filter_issues.where(author_id: current_user&.id)
     scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "Issue")
-    @issues_size = scopes.size
+    @issues_size = @filter_issues.size
     @issues = paginate(scopes)
 
     respond_to do |format|
