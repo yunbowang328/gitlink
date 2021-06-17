@@ -17,6 +17,7 @@
 #
 
 class AppliedMessage < ApplicationRecord
+  self.table_name = 'forge_applied_messages'
   belongs_to :user
   belongs_to :applied, polymorphic: true
   belongs_to :project
