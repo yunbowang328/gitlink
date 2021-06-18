@@ -19,15 +19,15 @@ class IssuesController < ApplicationController
 
     @all_issues = issues
     @filter_issues = @all_issues
-    @filter_issues = @filter_issues.where.not(status_id: 5) if params[:status_type].to_i == 1
-    @filter_issues = @filter_issues.where(status_id: 5) if params[:status_type].to_i == 2
+    @filter_issues = @filter_issues.where.not(status_id: IssueStatus::CLOSED) if params[:status_type].to_i == IssueStatus::ADD
+    @filter_issues = @filter_issues.where(status_id: IssueStatus::CLOSED) if params[:status_type].to_i == IssueStatus::SOLVING
     @filter_issues = @filter_issues.where("subject LIKE ? OR description LIKE ? ", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
-    @open_issues = @all_issues.where.not(status_id: 5)
-    @close_issues = @all_issues.where(status_id: 5)
+    @open_issues = @all_issues.where.not(status_id: IssueStatus::CLOSED)
+    @close_issues = @all_issues.where(status_id: IssueStatus::CLOSED)
     @assign_to_me = @filter_issues.where(assigned_to_id: current_user&.id)
     @my_published = @filter_issues.where(author_id: current_user&.id)
     scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "Issue")
-    @issues_size = @filter_issues.size
+    @issues_size = scopes.size
     @issues = paginate(scopes)
 
     respond_to do |format|

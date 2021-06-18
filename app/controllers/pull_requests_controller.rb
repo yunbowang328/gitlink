@@ -15,13 +15,13 @@ class PullRequestsController < ApplicationController
     @all_issues = issues.distinct
     @filter_issues = @all_issues
     @filter_issues = @filter_issues.where("subject LIKE ? OR description LIKE ? ", "%#{params[:search]}%", "%#{params[:search]}%") if params[:search].present?
-    @open_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: 0})
-    @close_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: 2})
-    @merged_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: 1})
+    @open_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::OPEN})
+    @close_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::CLOSED})
+    @merged_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::MERGED})
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
 
     scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "PullRequest")
-    @issues_size = @filter_issues.size
+    @issues_size = scopes.size
     @issues = paginate(scopes)
   end
 
