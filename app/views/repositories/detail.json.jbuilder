@@ -12,13 +12,13 @@ json.name @project.name
 json.description  @project.description
 json.project_id @project.id
 json.repo_id @repository.id
-json.issues_count @project.issues_count.to_i - @project.pull_requests_count.to_i
-json.pull_requests_count @project.pull_requests_count 
+json.issues_count @project.issues.issue_issue.size - @project.issues.issue_issue.closed.size
+json.pull_requests_count @project.pull_requests.opening.size
 json.project_identifier render_identifier(@project)
 json.praises_count @project.praises_count.to_i
 json.forked_count @project.forked_count.to_i
 json.watchers_count @project.watchers_count.to_i
-json.versions_count @project.versions_count  #里程碑数量
+json.versions_count @project.versions.opening.size #里程碑数量
 json.version_releases_count @project.releases_size(@user.try(:id), "all")
 json.version_releasesed_count @project.releases_size(@user.try(:id), "released")  #已发行的版本
 json.permission render_permission(@user, @project)
@@ -43,6 +43,7 @@ json.fork_info do
     json.fork_project_user_login @fork_project_user.try(:login)
     json.fork_project_identifier @fork_project.identifier
     json.fork_project_user_name @fork_project_user.try(:show_real_name)
+    json.fork_project_user_type @fork_project_user.try(:type)
   end
 end
 if @result[:repo]

@@ -45,9 +45,17 @@ class Issues::ListQueryService < ApplicationService
     issues = issues.where(issue_type: params[:issue_type].to_s) if params[:issue_type].present? && params[:issue_type].to_s != "all"
     issues = issues.joins(:issue_tags).where(issue_tags: {id: params[:issue_tag_id].to_i}) if params[:issue_tag_id].present? && params[:issue_tag_id].to_s != "all"
 
-    order_type = params[:order_type] || "desc"   #或者"asc"
-    order_name = params[:order_name] || "updated_on"   #或者"updated_on"
     issues.reorder("issues.#{order_name} #{order_type}")
+  end
+
+  private 
+
+  def order_name
+    Issue.column_names.include?(params[:order_name]) ? params[:order_name] : 'updated_on'
+  end
+
+  def order_type 
+    %w(desc asc).include?(params[:order_type]) ? params[:order_type] : 'desc'
   end
 
 end
