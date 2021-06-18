@@ -29,6 +29,8 @@ class Version < ApplicationRecord
   belongs_to :user, optional: true
 
   scope :version_includes, ->{includes(:issues, :user)}
+  scope :closed, ->{where(status: 'closed')}
+  scope :opening, ->{where(status: 'open')}
 
   # def open_issues_count
   #   issues.select(:id,:status_id).where(status_id: [1,2,3,4,6]).size

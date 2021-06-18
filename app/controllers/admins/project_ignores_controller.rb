@@ -3,8 +3,8 @@ class Admins::ProjectIgnoresController < Admins::BaseController
   before_action :validate_params, only: [:create, :update]
 
   def index
-    sort_by = params[:sort_by] ||= 'created_at'
-    sort_direction = params[:sort_direction] ||= 'desc'
+    sort_by = Ignore.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
+    sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
     q = Ignore.ransack(name_cont: params[:search])
     project_ignores = q.result(distinct: true).order("#{sort_by} #{sort_direction}")
     @project_ignores = paginate(project_ignores)
