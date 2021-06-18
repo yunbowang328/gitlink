@@ -24,8 +24,14 @@ module Gitea
 
     def run
       Contents::CreateForm.new(valid_params).validate!
-      response = Gitea::Repository::Entries::CreateService.new(token, owner, @params[:identifier], @params[:filepath], file_params).call
-      render_result(response)
+      result = Gitea::Repository::Entries::CreateService.call(token, 
+        owner, @params[:identifier], @params[:filepath], file_params)
+
+      if result[:status] == :success
+        @result = result[:body]
+      else
+        fail!(result[:message])
+      end
     rescue Exception => exception
       Rails.logger.info "Exception ===========> #{exception.message}"
       fail!(exception.message)
