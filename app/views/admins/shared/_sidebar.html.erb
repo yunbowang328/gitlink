@@ -42,8 +42,11 @@
       <% end %>
     </li> -->
     <li>
-    <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
+      <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>
+    
+    <%= render_admin_statistics_item %>
+
     <li><%= sidebar_item('/', '返回主站', icon: 'sign-out', controller: 'root') %></li>
   </ul>
 </nav>

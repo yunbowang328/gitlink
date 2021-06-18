@@ -28,7 +28,7 @@ class Users::AppliedTransferProjectsController < Users::BaseController
 
   private 
   def check_auth 
-    return render_forbidden unless observed_logged_user?
+    return render_forbidden unless current_user.admin? || observed_logged_user?
   end
 
   def find_applied_transfer_project 

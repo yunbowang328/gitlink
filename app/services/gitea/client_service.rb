@@ -214,6 +214,14 @@ class Gitea::ClientService < ApplicationService
     [body, message]
   end
 
+  def json_parse!(body)
+    return nil unless body.present?
+
+    body = JSON.parse(body)
+    body, message = fix_body(body)
+    body
+  end
+
   def log_error(status, body)
     puts "[gitea] status:  #{status}"
     puts "[gitea] body:    #{body&.force_encoding('UTF-8')}"

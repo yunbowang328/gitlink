@@ -24,8 +24,14 @@ module Gitea
 
     def run
       Contents::CreateForm.new(valid_params).validate!
-      response = Gitea::Repository::Entries::CreateService.new(token, owner, @params[:identifier], @params[:filepath], file_params).call
-      render_result(response)
+      result = Gitea::Repository::Entries::CreateService.call(token, 
+        owner, @params[:identifier], @params[:filepath], file_params)
+
+      if result[:status] == :success
+        @result = result[:body]
+      else
+        fail!(result[:message])
+      end
     rescue Exception => exception
       Rails.logger.info "Exception ===========> #{exception.message}"
       fail!(exception.message)
@@ -56,7 +62,7 @@ module Gitea
       file_params = {}
       file_params = file_params.merge(branch: @params[:branch]) unless @params[:branch].blank?
       file_params = file_params.merge(new_branch: @params[:new_branch]) unless @params[:new_branch].blank?
-      file_params = file_params.merge(content: Base64.encode64(@params[:content]))
+      file_params = file_params.merge(content: Base64.encode64(@params[:content] || ""))
       file_params = file_params.merge(message: @params[:message]) unless @params[:message].blank?
       file_params = file_params.merge(committer: @params[:committer])
       file_params

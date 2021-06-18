@@ -19,7 +19,7 @@ class Admins::CourseListQuery < ApplicationQuery
       case search_type
       when "0"
         course_lists = course_lists.joins(:user)
-                      .where('CONCAT_WS(lastname, firstname, nickname) like :keyword', keyword: "%#{keyword}%")
+                      .where('CONCAT(lastname, firstname) like :keyword OR users.nickname like :keyword', keyword: "%#{keyword}%")
       when "1"
         course_lists = course_lists.where('name like :keyword', keyword: "%#{keyword}%")
       end

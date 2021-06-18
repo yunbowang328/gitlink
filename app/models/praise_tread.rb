@@ -15,6 +15,7 @@
 #  praise_tread  (praise_tread_object_id,praise_tread_object_type)
 #
 
+
 class PraiseTread < ApplicationRecord
   belongs_to :user
   belongs_to :praise_tread_object, polymorphic: true, counter_cache: :praises_count

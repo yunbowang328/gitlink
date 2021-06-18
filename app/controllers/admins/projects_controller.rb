@@ -1,9 +1,8 @@
 class Admins::ProjectsController < Admins::BaseController
 
   def index
-    sort_by = params[:sort_by] ||= 'created_on'
-    sort_direction = params[:sort_direction] ||= 'desc'
-
+    sort_by = Project.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_on'
+    sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
     search = params[:search].to_s.strip
     projects = Project.where("name like ?", "%#{search}%").order("#{sort_by} #{sort_direction}")
     @projects = paginate projects.includes(:owner, :members, :issues, :versions, :attachments, :project_score)

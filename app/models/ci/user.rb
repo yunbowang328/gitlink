@@ -46,6 +46,10 @@
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
+#  sponsor_certification      :integer          default("0")
+#  sponsor_num                :integer          default("0")
+#  sponsored_num              :integer          default("0")
+#  award_time                 :datetime
 #
 # Indexes
 #

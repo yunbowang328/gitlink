@@ -148,6 +148,8 @@ Rails.application.routes.draw do
       resources :issue_depends, only: [:create, :destroy]
     end
 
+    resources :applied_projects, only: [:create]
+
     resources :project_categories, only: [:index, :show] do
       get :group_list, on: :collection
     end
@@ -261,6 +263,12 @@ Rails.application.routes.draw do
       scope module: :users do
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
+          member do 
+            post :accept
+            post :refuse
+          end
+        end
+        resources :applied_projects, only: [:index] do 
           member do 
             post :accept
             post :refuse

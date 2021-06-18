@@ -6,7 +6,7 @@
 #  tracker_id           :integer          not null
 #  project_id           :integer          not null
 #  subject              :string(255)      default(""), not null
-#  description          :text(65535)
+#  description          :text(4294967295)
 #  due_date             :date
 #  category_id          :integer
 #  status_id            :integer          not null
@@ -14,7 +14,6 @@
 #  priority_id          :integer          not null
 #  fixed_version_id     :integer
 #  author_id            :integer          not null
-#  lock_version         :integer          default("0"), not null
 #  created_on           :datetime
 #  updated_on           :datetime
 #  start_date           :date
@@ -28,7 +27,7 @@
 #  closed_on            :datetime
 #  project_issues_index :integer
 #  issue_type           :string(255)
-#  token                :string(255)
+#  token                :integer          default("0")
 #  issue_tags_value     :string(255)
 #  is_lock              :boolean          default("0")
 #  issue_classify       :string(255)
@@ -74,7 +73,7 @@ class Issue < ApplicationRecord
   scope :issue_issue, ->{where(issue_classify: [nil,"issue"])}
   scope :issue_pull_request, ->{where(issue_classify: "pull_request")}
   scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
-
+  scope :closed, ->{where(status_id: 5)}
   after_update :change_versions_count
   after_save :reset_cache_data
   after_destroy :update_closed_issues_count_in_project!, :reset_cache_data
