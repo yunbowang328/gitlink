@@ -63,7 +63,7 @@ module Gitea
       file_params = {}
       file_params = file_params.merge(branch: @params[:branch]) unless @params[:branch].blank?
       file_params = file_params.merge(new_branch: @params[:new_branch]) unless @params[:new_branch].blank?
-      file_params = file_params.merge(content: Base64.encode64(@params[:content]))
+      file_params = file_params.merge(content: Base64.encode64(@params[:content] || ""))
       file_params = file_params.merge(message: @params[:message]) unless @params[:message].blank?
       file_params = file_params.merge(committer: @params[:committer])
       file_params
