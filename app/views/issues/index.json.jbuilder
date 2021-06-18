@@ -1,4 +1,5 @@
 json.partial! "commons/success"
+json.all_count @all_issues.size
 json.open_count @open_issues.size
 json.close_count @close_issues.size
 json.assign_me_count @assign_to_me.size
