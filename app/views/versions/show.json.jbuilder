@@ -1,7 +1,7 @@
 json.partial! "commons/success"
-json.issues_count @version.issues_count
-json.open_issues_count @version.issues_count - @version.closed_issues_count
-json.close_issues_count @version.closed_issues_count
+json.issues_count @version_issues_size
+json.open_issues_count @version_issues_size - @version_close_issues_size
+json.close_issues_count @version_close_issues_size
 json.limit @limit
 json.user_name @version.version_user.try(:show_real_name)
 json.user_login @version.version_user.try(:login)
