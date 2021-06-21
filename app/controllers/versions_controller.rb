@@ -52,16 +52,14 @@ class VersionsController < ApplicationController
                         (params[:done_ratio].present? && params[:done_ratio].to_s != "all") || 
                         (params[:issue_type].present? && params[:issue_type].to_s != "all") || 
                         (params[:issue_tag_id].present? && params[:issue_tag_id].to_s != "all")
-    puts has_filter_params
     @version_close_issues_size = has_filter_params ? version_issues.closed.size : @version.issues.issue_includes.closed.size
     @version_issues_size = has_filter_params ? version_issues.size : @version.issues.issue_includes.size
-    puts @version_close_issues_size
-    puts @version_issues_size
     if status_type.to_s == "1"  #表示开启中的
       version_issues = version_issues.where.not(status_id: 5)
     else
       version_issues = version_issues.where(status_id: 5)
     end
+    puts cookies.to_json
 
     @page  = params[:page]  || 1
     @limit = params[:limit] || 15
