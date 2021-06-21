@@ -303,7 +303,7 @@ class IssuesController < ApplicationController
     if issue_ids.present?
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids).update_all(update_hash)
+      elsif Issue.where(id: issue_ids)&.update(update_hash)
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")

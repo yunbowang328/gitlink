@@ -7,8 +7,8 @@ json.versions do
 
   json.array! @versions.each.to_a do |version|
     json.extract! version, :id, :name, :description, :effective_date,:status,:percent
-    json.open_issues_count (version.issues_count - version.issues.closed.size)
-    json.close_issues_count version.issues.closed.size
+    json.open_issues_count (version.issues.issue_issue.size - version.issues.issue_issue.closed.size)
+    json.close_issues_count version.issues.issue_issue.closed.size
     json.created_at format_time(version.created_on)
     json.updated_at format_time(version.updated_on)
     json.user_name version.version_user.try(:show_real_name)
