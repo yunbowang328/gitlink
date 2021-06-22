@@ -42,8 +42,8 @@ if @project.forge?
   #json.tags_count @tags_count
   #json.branches_count @branches_count
   #json.commits_count @commits_count
-  json.zip_url render_zip_url(@project, @ref)
-  json.tar_url render_tar_url(@project, @ref)
+  json.zip_url render_zip_url(@owner, @repository, @ref)
+  json.tar_url render_tar_url(@owner, @repository, @ref)
   json.entries do
     json.array! @entries do |entry|
       json.name entry['name']

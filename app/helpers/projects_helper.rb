@@ -8,12 +8,12 @@ module ProjectsHelper
     end
   end
 
-  def render_zip_url(project, archive_name)
-    [gitea_domain, project.owner.login, project.identifier, "archive", "#{archive_name}.zip"].join('/')
+  def render_zip_url(owner, repository, archive)
+    [base_url, archive_repositories_path(owner&.login, repository, "#{archive}.zip")].join
   end
 
-  def render_tar_url(project, archive_name)
-    [gitea_domain, project.owner.login, project.identifier, "archive", "#{archive_name}.tar.gz"].join('/')
+  def render_tar_url(owner, repository, archive)
+    [base_url, archive_repositories_path(owner&.login, repository, "#{archive}.tar.gz")].join
   end
 
   def render_http_url(project)

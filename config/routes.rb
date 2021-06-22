@@ -385,7 +385,6 @@ Rails.application.routes.draw do
 
       resource :repositories, path: '/', only: [:show, :create, :edit] do
         member do
-          get :archive
           get :top_counts
           get :entries
           match :sub_entries, :via => [:get, :put]
@@ -400,6 +399,7 @@ Rails.application.routes.draw do
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
           get 'readme'
           get 'languages'
+          get 'archive/:archive', to: 'repositories#archive', as: "archive", constraints: { archive: /.+/, format: /(zip|gzip)/ }
         end
       end
 
