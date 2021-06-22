@@ -1,6 +1,7 @@
 default: &default
   # 用户登入的时候设置/登出的时候清空
   autologin_cookie_name: 'autologin_trustie'
+  platform_url: 'http://localhost:3000'
 
 
   #附件上传路径
