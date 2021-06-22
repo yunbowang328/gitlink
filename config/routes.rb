@@ -416,7 +416,6 @@ Rails.application.routes.draw do
         member do
           get :files
           get :detail
-          get :archive
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
@@ -431,6 +430,7 @@ Rails.application.routes.draw do
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
           get 'readme'
           get 'languages'
+          get 'archive/:archive', to: 'repositories#archive', as: "archive", constraints: { archive: /.+/, format: /(zip|gzip)/ }
         end
       end
 
