@@ -37,6 +37,9 @@ public/react/yarn.lock
 
 # Ignore react node_modules
 public/react/*
+public/react
+public/system
+/public/react/*
 /public/react/.cache
 /public/react/node_modules/
 /public/react/config/stats.json
