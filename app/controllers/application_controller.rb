@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
 	DCODES = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z)
 	OPENKEY = "79e33abd4b6588941ab7622aed1e67e8"
 
-	helper_method :current_user
+	helper_method :current_user, :base_url
 
 	# 所有请求必须合法签名
 	def check_sign
@@ -768,6 +768,10 @@ class ApplicationController < ActionController::Base
 
 	def load_repository
 		@repository ||= load_project&.repository
+	end
+
+	def base_url
+		Rails.application.config_for(:configuration)['platform_url'] || request.base_url
 	end
 
   private
