@@ -23,6 +23,14 @@ development:
   host: 127.0.0.1
   database: forge_development
 
+gitea_db:
+  adapter: mysql2
+  database: gitea_development
+  host: 127.0.0.1
+  username: root
+  password: "123456"
+  encoding: utf8
+
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.

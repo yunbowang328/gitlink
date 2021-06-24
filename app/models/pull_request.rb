@@ -37,6 +37,7 @@ class PullRequest < ApplicationRecord
   has_many :pull_request_tags, foreign_key: :pull_request_id
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
+  has_one :gitea_pull, foreign_key: :id, primary_key: :gpid, class_name: 'Gitea::Pull'
 
   scope :merged_and_closed, ->{where.not(status: 0)}
   scope :opening, -> {where(status: 0)}
@@ -81,5 +82,12 @@ class PullRequest < ApplicationRecord
       commits_result = Gitea::PullRequest::CommitsService.call(user.login, project.identifier, pr.gpid)
       pr.update_column(:commits_count, commits_result.size) unless commits_result.blank?
     end
+  end
+
+  def conflict_files
+    file_names = self&.gitea_pull&.conflicted_files
+    return [] if file_names.blank?
+
+    JSON.parse file_names
   end
 end
