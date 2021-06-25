@@ -46,11 +46,11 @@ class Cache::PlatformProjectLanguagesCountService < ApplicationService
 
   def reset_platform_project_language_count_by_key
     return if key.nil?
-    $redis_cache.hset(platform_project_language_count_key, key, Project.joins(:project_language).where(project_languages: {name: key}).count) 
+    $redis_cache.hset(platform_project_language_count_key, key, ProjectLanguage.where(name: key).projects_count) 
   end
 
   def reset_platform_project_language_count
-    Project.joins(:project_language).group("project_languages.name").count.each do |k, v|
+    ProjectLanguage.where.not(projects_count: 0).group("project_languages.name").sum(:projects_count).each do |k, v|
       $redis_cache.hset(platform_project_language_count_key, k, v)
     end
   end

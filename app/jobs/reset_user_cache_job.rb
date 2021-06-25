@@ -2,6 +2,7 @@ class ResetUserCacheJob < ApplicationJob
   queue_as :cache
 
   def perform(user)
+    return if user.nil?
     Cache::UserFollowCountService.new(user).reset
     Cache::UserIssueCountService.new(user).reset 
     Cache::UserProjectCountService.new(user).reset 
