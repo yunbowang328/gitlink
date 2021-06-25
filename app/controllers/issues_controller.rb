@@ -231,7 +231,7 @@ class IssuesController < ApplicationController
   end
 
   def show
-    @user_permission = current_user.present? && current_user.logged? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
+    @user_permission = current_user.present? && current_user.logged? && (@project.member?(current_user) || current_user.admin? || @issue.user == current_user)
     @issue_attachments = @issue.attachments
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
@@ -416,7 +416,7 @@ class IssuesController < ApplicationController
   def operate_issue_permission
     return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.member?(current_user)
   end
-  
+
   def export_issues(issues)
     @table_columns = %w(ID 类型 标题	描述	状态	指派给	优先级 标签 发布人 创建时间 里程碑 开始时间 截止时间 完成度 分类 金额 属于)
     @export_issues = []
