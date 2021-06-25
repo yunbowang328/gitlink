@@ -8,11 +8,6 @@
 #  projects_count :integer          default("0")
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  ancestry       :string(255)
-#
-# Indexes
-#
-#  index_project_categories_on_ancestry  (ancestry)
 #
 
 class ProjectCategory < ApplicationRecord
