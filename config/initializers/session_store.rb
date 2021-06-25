@@ -4,5 +4,5 @@
 # Rails.application.config.session_store :active_record_store
 
 # Be sure to restart your server when you modify this file.
-Rails.application.config.session_store :cache_store, :expire_after => 24.hours, :httponly => false, :secure => false, key: '_educoder_session', domain: :all
+Rails.application.config.session_store :cache_store, :expire_after => 24.hours, :httponly => true, :secure => false, key: '_educoder_session', domain: :all
 
