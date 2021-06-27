@@ -94,7 +94,7 @@ module ProjectOperable
   end
 
   def operator?(user)
-    user.admin? || !reporter?(user) 
+    user.admin? || (member?(user.id) && !reporter?(user))
   end
 
   def set_developer_role(member, role_name)

@@ -4,8 +4,8 @@ json.array! @branches do |branch|
   json.user_can_merge branch['user_can_merge']
   json.protected branch['protected']
   json.http_url render_http_url(@project)
-  json.zip_url render_zip_url(@project, branch['name'])
-  json.tar_url render_tar_url(@project, branch['name'])
+  json.zip_url render_zip_url(@owner, @repository, branch['name'])
+  json.tar_url render_tar_url(@owner, @repository, branch['name'])
   json.last_commit do
     json.sha branch['commit']['id']
     json.message branch['commit']['message']

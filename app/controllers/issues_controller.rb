@@ -3,6 +3,7 @@ class IssuesController < ApplicationController
   before_action :load_project
   before_action :set_user
   before_action :check_issue_permission
+  before_action :operate_issue_permission, only:[:create, :update, :destroy, :clean, :series_update]
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
@@ -303,7 +304,7 @@ class IssuesController < ApplicationController
     if issue_ids.present?
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids).update_all(update_hash)
+      elsif Issue.where(id: issue_ids)&.update(update_hash)
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")
@@ -412,6 +413,10 @@ class IssuesController < ApplicationController
     end
   end
 
+  def operate_issue_permission
+    return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.member?(current_user)
+  end
+  
   def export_issues(issues)
     @table_columns = %w(ID 类型 标题	描述	状态	指派给	优先级 标签 发布人 创建时间 里程碑 开始时间 截止时间 完成度 分类 金额 属于)
     @export_issues = []
