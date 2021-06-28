@@ -23,7 +23,7 @@ class PullRequests::CloseService < ApplicationService
 
   def close_gitea_pull
     Gitea::PullRequest::CloseService.call(@owner.login, @repo.identifier,
-      @pull.gpid, @pull.base, current_user.gitea_token)
+      @pull.gitea_number, @pull.base, current_user.gitea_token)
   end
 
   def update_pull_status!

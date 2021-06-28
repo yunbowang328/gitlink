@@ -22,7 +22,7 @@ class PullRequests::MergeService < ApplicationService
 
   def gitea_pull_merge!
     result = Gitea::PullRequest::MergeService.call(@current_user.gitea_token, @owner.login,
-      @repo.identifier, @pull.gpid, gitea_merge_pull_params)
+      @repo.identifier, @pull.gitea_number, gitea_merge_pull_params)
       @status, @message = result
   end
 
