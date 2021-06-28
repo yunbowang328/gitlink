@@ -37,8 +37,6 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
-#  license_id             :integer
-#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
@@ -52,9 +50,10 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
+#  license_id             :integer
+#  ignore_id              :integer
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
-#  order_index            :integer          default("0")
 #  lesson_url             :string(255)
 #
 # Indexes
@@ -64,8 +63,11 @@
 #  index_projects_on_invite_code             (invite_code)
 #  index_projects_on_is_public               (is_public)
 #  index_projects_on_lft                     (lft)
+#  index_projects_on_license_id              (license_id)
 #  index_projects_on_name                    (name)
 #  index_projects_on_platform                (platform)
+#  index_projects_on_project_category_id     (project_category_id)
+#  index_projects_on_project_language_id     (project_language_id)
 #  index_projects_on_project_type            (project_type)
 #  index_projects_on_recommend               (recommend)
 #  index_projects_on_rgt                     (rgt)

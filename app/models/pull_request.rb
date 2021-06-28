@@ -37,6 +37,7 @@ class PullRequest < ApplicationRecord
   has_many :pull_request_tags, foreign_key: :pull_request_id
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
+  has_one :gitea_pull, foreign_key: :id, primary_key: :gitea_id, class_name: 'Gitea::Pull'
 
   scope :merged_and_closed, ->{where.not(status: 0)}
   scope :opening, -> {where(status: 0)}
@@ -53,8 +54,10 @@ class PullRequest < ApplicationRecord
     Project.find_by(id: self.fork_project_id)
   end
 
-  def bind_gitea_pull_request!(gitea_pull_number)
-    update_column(:gpid, gitea_pull_number)
+  def bind_gitea_pull_request!(gitea_pull_number, gitea_pull_id)
+    update_columns(
+      gitea_number: gitea_pull_number,
+      gitea_id: gitea_pull_id)
   end
 
   def merge!
@@ -67,19 +70,26 @@ class PullRequest < ApplicationRecord
 
   # TODO: sync educoder platform repo's for update some statistics count
   def self.update_some_count
-    PullRequest.includes(:user, :project).select(:id, :user_id, :gpid, :project_id, :fork_project_id).each do |pr|
+    PullRequest.includes(:user, :project).select(:id, :user_id, :gitea_number, :project_id, :fork_project_id).each do |pr|
       puts pr.id
-      next if pr.gpid.blank?
+      next if pr.gitea_number.blank?
       project = pr.project
 
       next if project.blank?
       user = project.owner
-      next  if pr.gpid === 6 || pr.gpid === 7
-      files_result = Gitea::PullRequest::FilesService.call(user.login, project.identifier, pr.gpid)
+      next  if pr.gitea_number === 6 || pr.gitea_number === 7
+      files_result = Gitea::PullRequest::FilesService.call(user.login, project.identifier, pr.gitea_number)
       pr.update_column(:files_count, files_result['NumFiles']) unless files_result.blank?
 
-      commits_result = Gitea::PullRequest::CommitsService.call(user.login, project.identifier, pr.gpid)
+      commits_result = Gitea::PullRequest::CommitsService.call(user.login, project.identifier, pr.gitea_number)
       pr.update_column(:commits_count, commits_result.size) unless commits_result.blank?
     end
+  end
+
+  def conflict_files
+    file_names = self&.gitea_pull&.conflicted_files
+    return [] if file_names.blank?
+
+    JSON.parse file_names
   end
 end

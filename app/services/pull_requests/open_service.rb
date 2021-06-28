@@ -23,7 +23,7 @@ class PullRequests::OpenService < ApplicationService
 
   def open_gitea_pull
     Gitea::PullRequest::OpenService.call(@owner.login, @repo.identifier,
-      @pull.gpid, @pull.base, @current_user.gitea_token)
+      @pull.gitea_number, @pull.base, @current_user.gitea_token)
   end
 
   def update_pull_status!
