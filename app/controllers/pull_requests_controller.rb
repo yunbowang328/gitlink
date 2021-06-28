@@ -56,7 +56,7 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
-        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
+        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
         render_ok
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")

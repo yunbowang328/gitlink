@@ -39,6 +39,6 @@ class Gitea::Pull < Gitea::Base
 
   serialize :conflicted_files, Array
 
-  belongs_to :pull_request, class_name: '::PullRequest', foreign_key: :id, primary_key: :gitea_number, optional: true
+  belongs_to :pull_request, class_name: '::PullRequest', foreign_key: :id, primary_key: :gitea_id, optional: true
 
 end

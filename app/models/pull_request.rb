@@ -37,7 +37,7 @@ class PullRequest < ApplicationRecord
   has_many :pull_request_tags, foreign_key: :pull_request_id
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
-  has_one :gitea_pull, foreign_key: :id, primary_key: :gitea_number, class_name: 'Gitea::Pull'
+  has_one :gitea_pull, foreign_key: :id, primary_key: :gitea_id, class_name: 'Gitea::Pull'
 
   scope :merged_and_closed, ->{where.not(status: 0)}
   scope :opening, -> {where(status: 0)}
@@ -54,8 +54,10 @@ class PullRequest < ApplicationRecord
     Project.find_by(id: self.fork_project_id)
   end
 
-  def bind_gitea_pull_request!(gitea_pull_number)
-    update_column(:gitea_number, gitea_pull_number)
+  def bind_gitea_pull_request!(gitea_pull_number, gitea_pull_id)
+    update_columns(
+      gitea_number: gitea_pull_number,
+      gitea_id: gitea_pull_id)
   end
 
   def merge!
