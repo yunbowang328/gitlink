@@ -186,7 +186,7 @@ class User < Owner
            :show_email, :show_location, :show_department,
            :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
-  before_save :update_hashed_password
+  before_save :update_hashed_password, :set_lastname
   after_create do
     SyncTrustieJob.perform_later("user", 1) if allow_sync_to_trustie?
   end
@@ -778,6 +778,10 @@ class User < Owner
     return unless new_record?
 
     self.laboratory = Laboratory.current if laboratory_id.blank?
+  end
+
+  def set_lastname
+    self.lastname = self.nickname if changes[:nickname].present?
   end
 end
 
