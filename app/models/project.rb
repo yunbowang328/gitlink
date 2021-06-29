@@ -100,10 +100,12 @@ class Project < ApplicationRecord
   belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
+  belongs_to :forked_from_project, class_name: 'Project', optional: true, foreign_key: :forked_from_project_id
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
   has_many :forked_users, class_name: 'ForkUser', foreign_key: :fork_project_id, dependent: :destroy
+  has_many :forked_projects, class_name: 'Project', foreign_key: :forked_from_project_id
   has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
