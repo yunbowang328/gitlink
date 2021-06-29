@@ -116,10 +116,11 @@ class ProjectsController < ApplicationController
   
         Projects::UpdateForm.new(validate_params).validate!
   
-        private = params[:private] || false
+        private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
         new_project_params = project_params.except(:private).merge(is_public: !private)
         @project.update_attributes!(new_project_params)
+        @project.forked_projects&.update(is_public: @project.is_public)
         gitea_params = {
           private: private,
           default_branch: @project.default_branch,
@@ -144,6 +145,7 @@ class ProjectsController < ApplicationController
       ActiveRecord::Base.transaction do
         Gitea::Repository::DeleteService.new(@project.owner, @project.identifier).call
         @project.destroy!
+        @project.forked_projects&.update(forked_from_project_id: nil)
         render_ok
       end
     else
