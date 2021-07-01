@@ -65,7 +65,7 @@ module ProjectOperable
     if owner.is_a?(User)
       managers.exists?(user_id: user.id)
     elsif owner.is_a?(Organization)
-      managers.exists?(user_id: user.id) || owner.is_only_admin?(user.id)
+      managers.exists?(user_id: user.id) || owner.is_owner?(user.id) || owner.is_only_admin?(user.id)
     else
       false
     end
