@@ -14,8 +14,8 @@ json.releases do
         json.name re["name"]
         json.body re["body"]
         json.url re["url"]
-        json.tarball_url re["tarball_url"]
-        json.zipball_url re["zipball_url"]
+        json.tarball_url render_tar_url(@owner, @repository, re["tag_name"])
+        json.zipball_url render_zip_url(@owner, @repository, re["tag_name"])
         json.draft re["draft"] ? "草稿" : (re["prerelease"] ? "预发行" : "稳定")
         json.created_at format_time(version.created_at.to_s.to_time)
         json.published_at format_time(version.created_at.to_s.to_time)
@@ -30,8 +30,8 @@ json.releases do
           json.name re["name"]
           json.body re["body"]
           json.url re["url"]
-          json.tarball_url re["tarball_url"]
-          json.zipball_url re["zipball_url"]
+          json.tarball_url render_tar_url(@owner, @repository, re["tag_name"])
+          json.zipball_url render_zip_url(@owner, @repository, re["tag_name"])
           json.draft re["draft"] ? "草稿" : (re["prerelease"] ? "预发行" : "稳定")
           json.created_at format_time(version.created_at.to_s.to_time)
           json.published_at format_time(version.created_at.to_s.to_time)
