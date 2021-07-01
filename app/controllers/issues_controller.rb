@@ -3,7 +3,7 @@ class IssuesController < ApplicationController
   before_action :load_project
   before_action :set_user
   before_action :check_issue_permission
-  before_action :operate_issue_permission, only:[:create, :update, :destroy, :clean, :series_update]
+  before_action :operate_issue_permission, only:[:create, :update, :destroy, :clean, :series_update, :copy]
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
