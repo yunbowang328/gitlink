@@ -316,6 +316,7 @@ class IssuesController < ApplicationController
 
   def copy
     @new_issue = @issue.dup
+    @new_issue.author_id = current_user.id
     if @new_issue.save
       issue_tags = @issue.issue_tags.pluck(:id)
       if issue_tags.present?
