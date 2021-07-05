@@ -10,8 +10,7 @@ class Gitea::User::RegisterService < Gitea::ClientService
     params = Hash.new.merge(data: user_params, token: @token)
 
     response = post(API_REST, params)
-    status, message, body = render_response(response)
-    json_format(status, message, body)
+    response_payload(response)
   end
 
   private
@@ -32,6 +31,33 @@ class Gitea::User::RegisterService < Gitea::ClientService
     when 201 then success(body)
     else
       error(message, status)
+    end
+  end
+
+  def response_payload(response)
+    status = response.status
+    body = response&.body
+
+    log_error(status, body)
+    status_payload(status, body)
+  end
+
+  def status_payload(status, body)
+    case status
+    when 201 then success(body)
+    when 403 then error("你没有权限操作!")
+    when 400 then error("服务器开小差了")
+    when 422 
+      body = json_parse!(body)
+      message = body['message']
+      puts "422 。。。。。 #{body}"
+      puts "body messge : 00000000000 #{body['message']}"
+      if message.include?('email')
+        error("邮箱#{email}已被注册")
+      elsif message.include?('name')
+        error("用户名#{username}已被注册")
+      end
+    else error("系统错误!")
     end
   end
 

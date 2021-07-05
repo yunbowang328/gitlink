@@ -23,12 +23,16 @@ module Gitea
     def run
       Gitea::UserForm.new(params).validate!
       response = Gitea::User::RegisterService.call(params.merge(token: token))
-      render_result(response)
+
+      if response[:status] == :success
+        @result = response
+      else
+        fail!(response[:message])
+      end
     rescue Exception => exception
       Rails.logger.info "Exception ===========> #{exception.message}"
       fail!(exception.message)
     end
-
 
     private
 
@@ -36,10 +40,6 @@ module Gitea
 
     def fail!(error)
       @error = error
-    end
-
-    def render_result(response)
-      @result = response
     end
 
     def token

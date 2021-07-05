@@ -3,8 +3,8 @@
 # Table name: pull_requests
 #
 #  id              :integer          not null, primary key
-#  pull_request_id :integer
-#  gpid            :integer
+#  gitea_id        :integer
+#  gitea_number    :integer
 #  user_id         :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
