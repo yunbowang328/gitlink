@@ -21,6 +21,14 @@ class MainController < ApplicationController
       uid_logger("main start is #{cookies[:_educoder_session]}")
     end
 
+    if params[:path] && params[:path].start_with?('projects/')
+      project_id = params[:path].split("/")[1]
+      project = Project.find_by_id(project_id)
+      if project.present?
+        return redirect_to("/projects/#{project.owner.login}/#{project.identifier}", status: 301)
+      end
+    end
+
     # TODO: 这块之后需要整合，者架构重新变化，统一跳转到index后再路由分发
     if params[:path] && params[:path]&.include?("h5educoderbuild") && params[:path].split("/").first == "h5educoderbuild"
       render file: 'public/h5educoderbuild/index.html', :layout => false
