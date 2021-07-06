@@ -18,6 +18,7 @@ module RegisterHelper
     interactor = Gitea::RegisterInteractor.call({username: username, email: email, password: password})
     if interactor.success?
       gitea_user = interactor.result
+      Rails.logger.info "##### [gitea] create_gitea_user result: #{gitea_user}"
       result = Gitea::User::GenerateTokenService.call(username, password)
       forge_user.gitea_token = result['sha1']
       forge_user.gitea_uid = gitea_user[:body]['id']
@@ -27,6 +28,7 @@ module RegisterHelper
         result[:user] = {id: forge_user.id, token: forge_user.gitea_token}
       end
     else
+      Rails.logger.info "##### [gitea] create_gitea_user result: #{interactor.error}"
       result[:message] = interactor.error
     end
     result
