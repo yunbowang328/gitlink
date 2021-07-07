@@ -30,21 +30,6 @@
   </div>
 </td>
 <td><%= laboratory.created_at.strftime('%Y-%m-%d %H:%M') %></td>
-<td>
-  <% if school.present? && laboratory.id != 1 %>
-    <%= check_box_tag :sync_course,!laboratory.sync_course,laboratory.sync_course,remote:true,data:{id:laboratory.id},class:"laboratory-sync-form" %>
-  <% end %>
-</td>
-<td>
-  <% if school.present? && laboratory.id != 1 %>
-    <%= check_box_tag :sync_subject,!laboratory.sync_subject,laboratory.sync_subject,remote:true,data:{id:laboratory.id},class:"laboratory-sync-form" %>
-  <% end %>
-</td>
-<td>
-  <% if school.present? && laboratory.id != 1 %>
-    <%= check_box_tag :sync_shixun,!laboratory.sync_shixun,laboratory.sync_shixun,remote:true,data:{id:laboratory.id},class:"laboratory-sync-form" %>
-  <% end %>
-</td>
 <td class="action-container">
   <%= link_to '定制', admins_laboratory_laboratory_setting_path(laboratory), class: 'action' %>
 
