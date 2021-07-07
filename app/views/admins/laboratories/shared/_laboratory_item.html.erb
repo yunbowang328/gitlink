@@ -52,18 +52,4 @@
     <%= javascript_void_link '添加管理员', class: 'action', data: { laboratory_id: laboratory.id, toggle: 'modal', target: '.admin-add-laboratory-user-modal' } %>
     <%= link_to '同步用户', synchronize_user_admins_laboratory_path(laboratory), remote: true, data: { confirm: '确认同步该单位下的所有用户到云上实验室吗？' }, class: 'action' %>
 <% end %>
-
-  <div class="d-inline">
-    <%= javascript_void_link('更多', class: 'action dropdown-toggle', 'data-toggle': 'dropdown', 'aria-haspopup': true, 'aria-expanded': false) %>
-    <div class="dropdown-menu more-action-dropdown">
-      <%= link_to '轮播图', admins_laboratory_carousels_path(laboratory), class: 'dropdown-item' %>
-
-      <%= link_to '查看实训项目', admins_laboratory_laboratory_shixuns_path(laboratory), class: 'dropdown-item' %>
-      <%= link_to '查看实践课程', admins_laboratory_laboratory_subjects_path(laboratory), class: 'dropdown-item' %>
-
-      <% if school.present? && laboratory.id != 1 %>
-        <%= delete_link '删除', admins_laboratory_path(laboratory, element: ".laboratory-item-#{laboratory.id}"), class: 'dropdown-item delete-laboratory-action' %>
-      <% end %>
-    </div>
-  </div>
 </td>
