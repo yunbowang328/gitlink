@@ -11,7 +11,16 @@ if @project.forge?
 
   json.content decode64_content(entry, @owner, @repository, @ref)
   json.target entry['target']
-  json.download_url entry['download_url']
+  
+  download_url = 
+    if image_type
+      dir_path = [@owner.login, @repository.identifier, "raw/branch", @ref].join('/')
+      render_download_image_url(dir_path, entry['path'], decode64_content(entry, @owner, @repository, @ref))
+    else
+      entry['download_url']
+    end
+  json.download_url download_url
+
   json.direct_download direct_download
   json.image_type image_type
   json.is_readme_file is_readme?(entry['type'], entry['name'])
