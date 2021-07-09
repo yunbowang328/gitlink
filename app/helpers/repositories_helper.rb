@@ -15,7 +15,7 @@ module RepositoriesHelper
   end
 
   def image_type?(str)
-    default_type = %w(png jpg gif tif psd svg)
+    default_type = %w(png jpg gif tif psd svg gif bmp webp jpeg)
     default_type.include?(str&.downcase)
   end
 
@@ -86,4 +86,39 @@ module RepositoriesHelper
       render_decode64_content(entry['content'])
     end
   end
+
+  def base64_to_image(path, content)
+    # generate to https://git.trusite.net/pawm36ozq/-/raw/branch/master/entrn.png"
+    content      = Base64.decode64(content)
+    File.open(path, 'wb') { |f| f.write(content) }
+  end
+  
+  def render_download_image_url(dir_path, file_path, content)
+    # 用户名/项目标识/文件路径
+    dir_path = generate_dir_path(dir_path)
+
+    file_path = [dir_path, file_path].join('/')
+
+    puts "##### render_download_image_url file_path: #{file_path}"
+    base64_to_image(file_path, content)
+  
+    file_path = file_path.split('public')[1]
+    File.join(base_url, file_path)
+  end
+  
+  def generate_dir_path(dir_path)
+    # tmp_dir_path
+    # eg: jasder/forgeplus/raw/branch/ref
+    dir_path = ["public", tmp_dir, dir_path].join('/')
+    puts "#### dir_path: #{dir_path}"
+    unless Dir.exists?(dir_path)
+      FileUtils.mkdir_p(dir_path) ##不成功这里会抛异常
+    end
+    dir_path
+  end
+
+  def tmp_dir
+    "repo"
+  end
+  
 end
