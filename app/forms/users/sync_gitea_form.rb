@@ -1,4 +1,4 @@
-class Users::SyncGiteaForm 
+class Users::SyncGiteaForm
   include ActiveModel::Model
   
   attr_accessor :login, :password, :email, :user
@@ -8,7 +8,7 @@ class Users::SyncGiteaForm
   validate :check_user, :check_password
 
   def check_user 
-    @user = User.find_by(login: login)
+    user = User.find_by(login: login)
     raise '用户不存在.' unless user.present?
   end
 
