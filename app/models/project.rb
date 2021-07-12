@@ -76,8 +76,6 @@
 #
 
 
-
-
 class Project < ApplicationRecord
   include Matchable
   include Publicable
