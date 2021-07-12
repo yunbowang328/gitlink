@@ -150,9 +150,16 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+          @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, @repository.identifier, @pull_request.gitea_number, current_user&.gitea_token)
 
-          if result.status == 200 && @pull_request.merge!
+          if @gitea_pull["merged_by"].present?
+            success_condition = true
+          else
+            result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+            success_condition = result.status == 200
+          end
+
+          if success_condition && @pull_request.merge!
             @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
