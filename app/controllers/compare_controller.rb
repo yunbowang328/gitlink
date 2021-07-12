@@ -8,30 +8,30 @@ class CompareController < ApplicationController
   def show
     load_compare_params
     compare
-    @merge_message = get_merge_message
+    @merge_status, @merge_message = get_merge_message
   end
 
   private
   def get_merge_message 
     if @base.blank? || @head.blank?
-      return "请选择分支"
+      return -2, "请选择分支"
     else
       if @head.include?(":")
         fork_project = @project.forked_projects.joins(:owner).where(users: {login: @head.to_s.split("/")[0]}).take
-        return "请选择正确的仓库" unless fork_project.present?
+        return -2, "请选择正确的仓库" unless fork_project.present?
         @exist_pullrequest = @project.pull_requests.where(is_original: true, head: @head.to_s.split(":")[1], base: @base, status: 0, fork_project_id: fork_project.id).take
       else 
         @exist_pullrequest = @project.pull_requests.where(is_original: false, head: @base, base: @head, status: 0).take
       end
       if @exist_pullrequest.present?
-        return "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{@exist_pullrequest.id}/Messagecount'>#{@exist_pullrequest.try(:title)}</a>"
+        return -2, "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{@exist_pullrequest.id}/Messagecount'>#{@exist_pullrequest.try(:title)}</a>"
       else 
         if @compare_result["Commits"].blank? && @compare_result["Diff"].blank?
-          return "分支内容相同，无需创建合并请求"
+          return -2, "分支内容相同，无需创建合并请求"
         end
       end
     end
-    return "可以合并"
+    return 0, "可以合并"
   end
 
   def compare
