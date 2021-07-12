@@ -83,3 +83,5 @@ json.diff do
 
   end
 end
+json.status @merge_status
+json.message @merge_message
