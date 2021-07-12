@@ -48,6 +48,6 @@ class CompareController < ApplicationController
   end
 
   def gitea_compare(base, head)
-    Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, @base, @head)
+    Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, base, head)
   end
 end
