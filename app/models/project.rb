@@ -1,3 +1,4 @@
+
 # == Schema Information
 #
 # Table name: projects
@@ -75,7 +76,6 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
-
 
 
 

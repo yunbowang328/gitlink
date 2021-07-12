@@ -91,7 +91,7 @@ class PullRequestsController < ApplicationController
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
               gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
-                  @pull_request.gpid, @requests_params, current_user.gitea_token)
+                  @pull_request.gitea_number, @requests_params, current_user.gitea_token)
 
               if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
@@ -139,7 +139,7 @@ class PullRequestsController < ApplicationController
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
     @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, 
-      @repository.identifier, @pull_request.gpid, current_user&.gitea_token)
+      @repository.identifier, @pull_request.gitea_number, current_user&.gitea_token)
   end
 
   def pr_merge
@@ -198,12 +198,12 @@ class PullRequestsController < ApplicationController
 
 
   def files
-    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gitea_number, current_user&.gitea_token)
     # render json: @files_result
   end
 
   def commits
-    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gitea_number, current_user&.gitea_token)
     # render json: @commits_result
   end
 
