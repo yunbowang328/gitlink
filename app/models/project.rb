@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 # == Schema Information
 #
 # Table name: projects
@@ -75,6 +79,10 @@
 #  index_projects_on_updated_on              (updated_on)
 #
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 
 class Project < ApplicationRecord
   include Matchable
