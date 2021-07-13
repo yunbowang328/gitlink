@@ -8,7 +8,7 @@
 #  bug_num         :integer          default("0")
 #  file_num        :integer          default("0")
 #  project_id      :integer
-#  branch_name     :integer
+#  branch_name     :string(255)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #

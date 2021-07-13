@@ -206,26 +206,7 @@ class RepositoriesController < ApplicationController
   end
 
   def sonarqube
-    # [
-    #   "分支1": {
-    #     "start_time": "",
-    #     "end_time": "",
-    #     "bugs": 0,
-    #     // 漏洞
-    #     "loopholes": 0,
-    #     // 重复率
-    #     "repetition_rate": 0,
-    #     // 代码行数
-    #     "file_num": 0
-    #   },
-    #   "分支1": {
-
-    #   }
-    # ]
-    # 
-
     @sonarqubes = @project.sonarqubes
-
 
     branches = Gitea::Repository::Branches::ListService.call(@owner, @project.identifier)
     branches.each do |branch|
@@ -236,7 +217,6 @@ class RepositoriesController < ApplicationController
       file_num += entries.size
       entries.each do |entry|
         file_path_uri = URI.parse(URI.encode(entry['path'].to_s.strip))
-
         
         interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: branch['name'])
         if interactor.success?
@@ -265,9 +245,6 @@ class RepositoriesController < ApplicationController
           )
       end
     end
-    # curl -X GET http://localhost:3000/api/jasder/nre-few-guee/sonarqube  | jq
-
-    
   end
   
 
