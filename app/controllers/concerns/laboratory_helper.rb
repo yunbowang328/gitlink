@@ -41,7 +41,8 @@ module LaboratoryHelper
       my_courses: "https://forge.educoder.net/users/#{current_user.try(:login)}/user_courselist",
       my_projects: "/users/#{current_user.try(:login)}/projects",
       my_organ: "https://forge.educoder.net/users/#{current_user.try(:login)}/user_organizations",
-      default_url: "https://www.educoder.net/",
+      default_url: "http://106.75.178.228",
+      forge_url: "http://106.75.178.228:81",
       tiding_url: "https://www.educoder.net/users/#{current_user.try(:login)}/user_tidings",
       register_url: "https://www.educoder.net/user/register"
     }
