@@ -76,6 +76,8 @@
 #
 
 
+
+
 class Project < ApplicationRecord
   include Matchable
   include Publicable
@@ -123,6 +125,7 @@ class Project < ApplicationRecord
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
+  has_many :sonarqubes, dependent: :destroy
 
   after_save :check_project_members, :reset_cache_data
   before_save :set_invite_code

@@ -205,6 +205,72 @@ class RepositoriesController < ApplicationController
     redirect_to file_path
   end
 
+  def sonarqube
+    # [
+    #   "分支1": {
+    #     "start_time": "",
+    #     "end_time": "",
+    #     "bugs": 0,
+    #     // 漏洞
+    #     "loopholes": 0,
+    #     // 重复率
+    #     "repetition_rate": 0,
+    #     // 代码行数
+    #     "file_num": 0
+    #   },
+    #   "分支1": {
+
+    #   }
+    # ]
+    # 
+
+    @sonarqubes = @project.sonarqubes
+
+
+    branches = Gitea::Repository::Branches::ListService.call(@owner, @project.identifier)
+    branches.each do |branch|
+      sonarqube = @sonarqubes.find_by(branch_name: branch['name'])
+      file_num = 0 
+
+      entries = Gitea::Repository::Entries::ListService.call(@owner, @project.identifier, ref: branch['name'])
+      file_num += entries.size
+      entries.each do |entry|
+        file_path_uri = URI.parse(URI.encode(entry['path'].to_s.strip))
+
+        
+        interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: branch['name'])
+        if interactor.success?
+          result = interactor.result
+          
+          while result.is_a?(Array)
+            file_num += result.size
+            result.each do |res|
+              file_path_uri = URI.parse(URI.encode(res['path'].to_s.strip))
+              interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: branch['name'])
+              result = interactor.result
+            end
+          end
+        end
+      end
+
+      if sonarqube
+        sonarqube.update(bug_num: 0, loophole: 0, repetition_rate: 0, file_num: file_num)
+      else
+        @project.sonarqubes.create!(
+          branch_name: branch['name'],
+          bug_num: 0,
+          loophole: 0,
+          repetition_rate: 0,
+          file_num: file_num
+          )
+      end
+    end
+    # curl -X GET http://localhost:3000/api/jasder/nre-few-guee/sonarqube  | jq
+
+    
+  end
+  
+
   private
 
   def find_project

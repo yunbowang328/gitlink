@@ -433,6 +433,7 @@ Rails.application.routes.draw do
           get 'readme'
           get 'languages'
           get 'archive/:archive', to: 'repositories#archive', as: "archive", constraints: { archive: /.+/, format: /(zip|gzip)/ }
+          get 'sonarqube'
         end
       end
 
