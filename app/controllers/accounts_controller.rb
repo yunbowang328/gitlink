@@ -8,8 +8,8 @@ class AccountsController < ApplicationController
 
   # 为了同步平台上未注册gitea的用户
   def gitea_register
-    Users::SyncGiteaForm.new(sync_gitea_params).validate!
     user = User.find_by(login: sync_gitea_params[:login])
+    Users::SyncGiteaForm.new(sync_gitea_params.merge(user: user)).validate!
     return render_error("该用户已同步协作平台") if user.gitea_token.present? && user.gitea_uid.present?
     
     result = create_gitea_user!(user, sync_gitea_params[:login], sync_gitea_params[:email], sync_gitea_params[:password])
