@@ -326,6 +326,20 @@
               </ul>
           </li>
           <li>
+            <a href="#publickeys" class="toc-h1 toc-link" data-title="PublicKeys">PublicKeys</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#public_keys" class="toc-h2 toc-link" data-title="public_keys列表">public_keys列表</a>
+                  </li>
+                  <li>
+                    <a href="#public_key" class="toc-h2 toc-link" data-title="创建public_key">创建public_key</a>
+                  </li>
+                  <li>
+                    <a href="#public_key-2" class="toc-h2 toc-link" data-title="删除public_key">删除public_key</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#users" class="toc-h1 toc-link" data-title="Users">Users</a>
               <ul class="toc-list-h2">
                   <li>
@@ -621,6 +635,251 @@ http://localhost:3000/api/ignores.json
       </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+Success — a happy kitten is an authenticated kitten!
+</aside>
+<!--
+ * @Date: 2021-07-14 15:10:29
+ * @LastEditors: viletyy
+ * @LastEditTime: 2021-07-14 15:37:23
+ * @FilePath: /forgeplus/app/docs/slate/source/includes/_public_keys.md
+-->
+<h1 id='publickeys'>PublicKeys</h1><h2 id='public_keys'>public_keys列表</h2>
+<p>获取public_keys列表，支持分页</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
+http://localhost:3000/api/public_keys.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/public_keys.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http'>HTTP 请求</h3>
+<p><code>GET api/public_keys.json</code></p>
+<h3 id='1f9ac54b15'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>page</td>
+<td>否</td>
+<td>1</td>
+<td>int</td>
+<td>页码</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>否</td>
+<td>15</td>
+<td>int</td>
+<td>每页数量</td>
+</tr>
+</tbody></table>
+<h3 id='b302a98fa6'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_count</td>
+<td>int</td>
+<td>总数</td>
+</tr>
+<tr>
+<td>public_keys.id</td>
+<td>int</td>
+<td>ID</td>
+</tr>
+<tr>
+<td>public_keys.name</td>
+<td>string</td>
+<td>密钥标题</td>
+</tr>
+<tr>
+<td>public_keys.content</td>
+<td>string</td>
+<td>密钥内容</td>
+</tr>
+<tr>
+<td>public_keys.fingerprint</td>
+<td>string</td>
+<td>密钥标识</td>
+</tr>
+<tr>
+<td>public_keys.created_time</td>
+<td>string</td>
+<td>密钥创建时间</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"public_keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxx"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDe5ETOTB5PcmcYJkIhfF7+mxmJQDCLg7/LnMoKHpKoo/jYUnFU9OjfsxVo3FTNUvh2475WXMAur5KsFoNKjK9+JHxvoXyJKmyVPWgXU/NRxQyaWPnPLPK8qPRF5ksJE6feBOqtsdxsvBiHs2r1NX/U26Ecnpr6avudD0cmyrEfbYMWbupLrhsd39dswPT73f3W5jc7B9Y47Ioiv8UOju3ABt1+kpuAjaaVC6VtUQoEFiZb1y33yBnyePya7dvFyApyD4ILyyIG2rtZWK7l53YFnwZDuFsTWjEEEQD0U4FBSFdH5wtwx0WQLMSNyTtaFBSG0kJ+uiQQIrxlvikcm63df7zbC3/rWLPsKgW122Zt966dcpFqiCiJNDKZPPw3qpg8TBL6X+qIZ+FxVEk/16/zScpyEfoxQp0GvgxI7hPLErmfkC5tMsib8MAXYBNyvJXna0vg/wOaNNIaI4SAH9Ksh3f/TtalYVjp6WxIwVBfnbq51WnmlnEXePtX6XjAGL+GbF2VQ1nv/IzrY09tNbTV6wQsrSIP3VDzYQxdJ1rdsVNMoJB0H2Pu0NdcSz53Wx45N+myD0QnE05ss+zDp5StY90OYsx2aCo6qAA8Qn2jUjdta7MQWwkPfKrta4tTQ0XbWMjx4/E1+l3J5liwZkl2XOGOwhfXdRsBjaEziZ18kQ== yystopf@163.com"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SHA256:cU8AK/+roqUUyiaYXIdS2Nj4+Rb2p6rqWSeRDc+aqKM"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_unix"</span><span class="p">:</span><span class="w"> </span><span class="mi">1626246596</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"created_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021/07/14 15:09"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+Success — a happy kitten is an authenticated kitten!
+</aside>
+<h2 id='public_key'>创建public_key</h2>
+<p>创建public_key</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+http://localhost:3000/api/public_keys.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/public_keys.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-2'>HTTP 请求</h3>
+<p><code>POST api/public_keys.json</code></p>
+<h3 id='1f9ac54b15-2'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>key</td>
+<td>是</td>
+<td>否</td>
+<td>string</td>
+<td>密钥</td>
+</tr>
+<tr>
+<td>title</td>
+<td>是</td>
+<td>否</td>
+<td>string</td>
+<td>密钥标题</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例：
+<code>json
+{
+  &quot;public_key&quot;: {
+    &quot;key&quot;: &quot;ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDe5ETOTB5PcmcYJkIhfF7+mxmJQDCLg7/LnMoKHpKoo/jYUnFU9OjfsxVo3FTNUvh2475WXMAur5KsFoNKjK9+JHxvoXyJKmyVPWgXU/NRxQyaWPnPLPK8qPRF5ksJE6feBOqtsdxsvBiHs2r1NX/U26Ecnpr6avudD0cmyrEfbYMWbupLrhsd39dswPT73f3W5jc7B9Y47Ioiv8UOju3ABt1+kpuAjaaVC6VtUQoEFiZb1y33yBnyePya7dvFyApyD4ILyyIG2rtZWK7l53YFnwZDuFsTWjEEEQD0U4FBSFdH5wtwx0WQLMSNyTtaFBSG0kJ+uiQQIrxlvikcm63df7zbC3/rWLPsKgW122Zt966dcpFqiCiJNDKZPPw3qpg8TBL6X+qIZ+FxVEk/16/zScpyEfoxQp0GvgxI7hPLErmfkC5tMsib8MAXYBNyvJXna0vg/wOaNNIaI4SAH9Ksh3f/TtalYVjp6WxIwVBfnbq51WnmlnEXePtX6XjAGL+GbF2VQ1nv/IzrY09tNbTV6wQsrSIP3VDzYQxdJ1rdsVNMoJB0H2Pu0NdcSz53Wx45N+myD0QnE05ss+zDp5StY90OYsx2aCo6qAA8Qn2jUjdta7MQWwkPfKrta4tTQ0XbWMjx4/E1+l3J5liwZkl2XOGOwhfXdRsBjaEziZ18kQ== yystopf@163.com&quot;, 
+    &quot;title&quot;: &quot;xxx&quot;
+  }
+}
+</code></p>
+</blockquote>
+<h3 id='b302a98fa6-2'>返回字段说明</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>total_count</td>
+<td>int</td>
+<td>总数</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>ID</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>密钥标题</td>
+</tr>
+<tr>
+<td>content</td>
+<td>string</td>
+<td>密钥内容</td>
+</tr>
+<tr>
+<td>fingerprint</td>
+<td>string</td>
+<td>密钥标识</td>
+</tr>
+<tr>
+<td>created_time</td>
+<td>string</td>
+<td>密钥创建时间</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">17</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxx"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDe5ETOTB5PcmcYJkIhfF7+mxmJQDCLg7/LnMoKHpKoo/jYUnFU9OjfsxVo3FTNUvh2475WXMAur5KsFoNKjK9+JHxvoXyJKmyVPWgXU/NRxQyaWPnPLPK8qPRF5ksJE6feBOqtsdxsvBiHs2r1NX/U26Ecnpr6avudD0cmyrEfbYMWbupLrhsd39dswPT73f3W5jc7B9Y47Ioiv8UOju3ABt1+kpuAjaaVC6VtUQoEFiZb1y33yBnyePya7dvFyApyD4ILyyIG2rtZWK7l53YFnwZDuFsTWjEEEQD0U4FBSFdH5wtwx0WQLMSNyTtaFBSG0kJ+uiQQIrxlvikcm63df7zbC3/rWLPsKgW122Zt966dcpFqiCiJNDKZPPw3qpg8TBL6X+qIZ+FxVEk/16/zScpyEfoxQp0GvgxI7hPLErmfkC5tMsib8MAXYBNyvJXna0vg/wOaNNIaI4SAH9Ksh3f/TtalYVjp6WxIwVBfnbq51WnmlnEXePtX6XjAGL+GbF2VQ1nv/IzrY09tNbTV6wQsrSIP3VDzYQxdJ1rdsVNMoJB0H2Pu0NdcSz53Wx45N+myD0QnE05ss+zDp5StY90OYsx2aCo6qAA8Qn2jUjdta7MQWwkPfKrta4tTQ0XbWMjx4/E1+l3J5liwZkl2XOGOwhfXdRsBjaEziZ18kQ== yystopf@163.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"fingerprint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SHA256:cU8AK/+roqUUyiaYXIdS2Nj4+Rb2p6rqWSeRDc+aqKM"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021/07/14 15:26"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+Success — a happy kitten is an authenticated kitten!
+</aside>
+<h2 id='public_key-2'>删除public_key</h2>
+<p>删除public_key</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+http://localhost:3000/api/public_keys/:id.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/public_keys/:id.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+<p><code>DELETE api/public_keys/:id.json</code></p>
+<h3 id='1f9ac54b15-3'>请求参数</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>是</td>
+<td>否</td>
+<td>int</td>
+<td>密钥ID</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <aside class="success">
