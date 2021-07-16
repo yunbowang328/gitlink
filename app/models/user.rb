@@ -170,6 +170,7 @@ class User < Owner
   accepts_nested_attributes_for :is_pinned_projects
   has_many :issues, dependent: :destroy, foreign_key: :author_id 
   has_many :pull_requests, dependent: :destroy
+  has_many :public_keys, class_name: "Gitea::PublicKey",primary_key: :gitea_uid, foreign_key: :owner_id, dependent: :destroy
 
   # Groups and active users
   scope :active, lambda { where(status: [STATUS_ACTIVE, STATUS_EDIT_INFO]) }
