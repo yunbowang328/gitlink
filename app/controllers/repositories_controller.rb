@@ -234,7 +234,9 @@ class RepositoriesController < ApplicationController
       end
 
       if sonarqube
-        sonarqube.update(bug_num: 0, loophole: 0, repetition_rate: 0, file_num: file_num)
+        sonarqube.update(bug_num: 0, loophole: 0, repetition_rate: 0, file_num: file_num, created_at: Time.now)
+        sleep 3.seconds
+        sonarqube.update_column(:updated_at, Time.now)
       else
         @project.sonarqubes.create!(
           branch_name: branch['name'],
