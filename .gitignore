@@ -74,6 +74,7 @@ vendor/bundle/
 /log
 /public/admin
 /mysql_data
+/public/repo/
 
 
 .generators
