@@ -105,7 +105,7 @@ module RepositoriesHelper
 
     puts "##### render_download_image_url file_path: #{file_path}"
     base64_to_image(file_path, content)
-    file_path = file_path.split('public')[1]
+    file_path = file_path[6..-1]
     File.join(base_url, file_path)
   end
   
