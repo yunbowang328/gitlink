@@ -11,17 +11,17 @@ class PublicKeysController < ApplicationController
   end
 
   def create 
-    return render_error("请输入密钥") if public_key_params[:key].blank?
-    return render_error("请输入标题") if public_key_params[:title].blank?
+    return render_ok({status: 10002, message: "请输入密钥"}) if public_key_params[:key].blank?
+    return render_ok({status: 10001, message: "请输入标题"}) if public_key_params[:title].blank?
     @gitea_response = Gitea::User::Keys::CreateService.call(current_user.gitea_token, public_key_params)
     if @gitea_response[0] == 201 
       @public_key = @gitea_response[2]
-      puts @public_key
     else 
-      return render_error if @gitea_response[2]["message"].nil?
-      return render_error("密钥格式不正确") if @gitea_response[2]["message"].starts_with?("Invalid key content")
-      return render_error("密钥已存在，请勿重复添加") if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key")
-      puts @gitea_response[2]
+      return render_ok({status: 10000, message: "创建ssh key失败"}) if @gitea_response[2]["message"].nil?
+      return render_ok({status: 10002, message: "密钥格式不正确"}) if @gitea_response[2]["message"].starts_with?("Invalid key content")
+      exist_public_key = Gitea::PublicKey.find_by(content: public_key_params[:key])
+      return render_ok({status: 10002, message: "密钥已存在，请勿重复添加"}) if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key") && exist_public_key.owner_id == current_user.gitea_uid
+      return render_ok({status: 10002, message: "密钥已被占用"}) if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key") && exist_public_key.present?
       @public_key = nil
     end
   rescue Exception => e
