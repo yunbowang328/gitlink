@@ -10,12 +10,12 @@ module RepositoriesHelper
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx dot)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
     default_type.include?(str&.downcase)
   end
 
   def image_type?(str)
-    default_type = %w(png jpg gif tif psd svg)
+    default_type = %w(png jpg gif tif psd svg gif bmp webp jpeg)
     default_type.include?(str&.downcase)
   end
 
@@ -82,8 +82,46 @@ module RepositoriesHelper
       readme_render_decode64_content(content, path)
     else
       file_type = entry['name'].to_s.split(".").last
-      return entry['content'] if download_type(file_type)
+      if download_type(file_type)
+        return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content'] : entry['content']  
+      end
       render_decode64_content(entry['content'])
     end
   end
+
+  def base64_to_image(path, content)
+    # generate to https://git.trusite.net/pawm36ozq/-/raw/branch/master/entrn.png"
+    content      = Base64.decode64(content)
+    File.open(path, 'wb') { |f| f.write(content) }
+  end
+  
+  def render_download_image_url(dir_path, file_path, content)
+    full_path = file_path.starts_with?("/") ? [dir_path, file_path].join("") : [dir_path, file_path].join("/")
+    file_name = full_path.split("/")[-1]
+    # 用户名/项目标识/文件路径
+    dir_path = generate_dir_path(full_path.split("/"+file_name)[0])
+
+    file_path = [dir_path, file_name].join('/')
+
+    puts "##### render_download_image_url file_path: #{file_path}"
+    base64_to_image(file_path, content)
+    file_path = file_path[6..-1]
+    File.join(base_url, file_path)
+  end
+  
+  def generate_dir_path(dir_path)
+    # tmp_dir_path
+    # eg: jasder/forgeplus/raw/branch/ref
+    dir_path = ["public", tmp_dir, dir_path].join('/')
+    puts "#### dir_path: #{dir_path}"
+    unless Dir.exists?(dir_path)
+      FileUtils.mkdir_p(dir_path) ##不成功这里会抛异常
+    end
+    dir_path
+  end
+
+  def tmp_dir
+    "repo"
+  end
+  
 end

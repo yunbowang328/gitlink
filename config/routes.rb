@@ -71,6 +71,8 @@ Rails.application.routes.draw do
       # end
     end
 
+    resources :public_keys, only: [:index, :create, :destroy]
+
     resources :statistic, only: [:index] do
       collection do
         get :platform_profile
