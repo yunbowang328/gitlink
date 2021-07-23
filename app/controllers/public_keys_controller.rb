@@ -18,11 +18,11 @@ class PublicKeysController < ApplicationController
     if @gitea_response[0] == 201 
       @public_key = @gitea_response[2]
     else 
-      return render_error("创建ssh key失败") if @gitea_response[2]["message"].nil?
+      return render_error("创建ssh key失败") if @gitea_response[2].blank?
       return render_ok({status: 10002, message: "密钥格式不正确"}) if @gitea_response[2]["message"].starts_with?("Invalid key content")
       exist_public_key = Gitea::PublicKey.find_by(content: public_key_params[:key])
-      return render_ok({status: 10002, message: "密钥已存在，请勿重复添加"}) if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key") && exist_public_key.owner_id == current_user.gitea_uid
-      return render_ok({status: 10002, message: "密钥已被占用"}) if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key") && exist_public_key.present?
+      return render_ok({status: 10002, message: "密钥已被占用"}) if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key") && exist_public_key.present? && exist_public_key&.owner_id != current_user.gitea_uid
+      return render_ok({status: 10002, message: "密钥已存在，请勿重复添加"}) if @gitea_response[2]["message"].starts_with?("Key content has been used as non-deploy key") 
       @public_key = nil
     end
   rescue Exception => e
@@ -32,7 +32,8 @@ class PublicKeysController < ApplicationController
 
   def destroy
     return render_not_found unless @public_key.present?
-    if @public_key.destroy
+    result = Gitea::User::Keys::DeleteService.call(current_user.gitea_token, @public_key.id)
+    if result[0] == 204
       render_ok 
     else 
       render_error
