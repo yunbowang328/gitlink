@@ -1,6 +1,6 @@
 if @project.forge?
   file_name = entry['name']
-  file_type = file_name.to_s.split(".").last
+  file_type = File.extname(file_name.to_s)[1..-1]
   direct_download = download_type(file_type)
   image_type = image_type?(file_type)
   json.name file_name

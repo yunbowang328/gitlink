@@ -81,7 +81,7 @@ module RepositoriesHelper
       content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content']
       readme_render_decode64_content(content, path)
     else
-      file_type = entry['name'].to_s.split(".").last
+      file_type = File.extname(entry['name'].to_s)[1..-1]
       if download_type(file_type)
         return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content'] : entry['content']  
       end
