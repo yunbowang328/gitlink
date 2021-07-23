@@ -32,7 +32,8 @@ class PublicKeysController < ApplicationController
 
   def destroy
     return render_not_found unless @public_key.present?
-    if @public_key.destroy
+    result = Gitea::User::Keys::DeleteService.call(current_user.gitea_token, @public_key.id)
+    if result[0] == 204
       render_ok 
     else 
       render_error

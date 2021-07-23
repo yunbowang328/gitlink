@@ -7,7 +7,8 @@ class Gitea::User::Keys::DeleteService < Gitea::ClientService
   end
 
   def call
-    delete(url, params)
+    response = delete(url, params)
+    render_response(response)
   end
 
   private
