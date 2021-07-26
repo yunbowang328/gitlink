@@ -14,7 +14,7 @@
     <tr class="sinature-item-<%= signature.id %>">
       <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
       <td class="text-left">
-        <%= link_to(signature&.project&.name, "/projects/#{signature&.project&.owner&.login}/#{signature&.project&.identifier}", target: '_blank') %>
+        <%= link_to("#{signature&.project&.owner&.real_name}/#{signature&.project&.name}", "/projects/#{signature&.project&.owner&.login}/#{signature&.project&.identifier}", target: '_blank') %>
       </td>
       <td>
         <%= link_to(signature&.user&.real_name, "/users/#{signature&.user&.login}", target: '_blank') %>
