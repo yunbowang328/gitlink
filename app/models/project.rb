@@ -125,6 +125,7 @@ class Project < ApplicationRecord
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
+  has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
 
   after_save :check_project_members, :reset_cache_data
   before_save :set_invite_code

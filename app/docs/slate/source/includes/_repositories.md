@@ -867,3 +867,88 @@ await octokit.request('GET /api/jasder/jasder_test/sub_entries.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 获取仓库webhooks列表
+获取仓库webhooks列表
+
+> 示例:
+
+```shell
+curl -X GET \
+http://localhost:3000/api/yystopf/ceshi/webhooks.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/ceshi/webhooks.json')
+```
+
+### HTTP 请求
+`GET /api/:owner/:repo/webhooks.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner             |是| |string |用户登录名  |
+|repo             |是| |string |项目标识identifier  |
+
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id                 |int   |id |
+|url                |string|地址|
+|http_method        |string|请求方式|
+|is_active          |bool  |是否激活|
+|type               |string|类型|
+|last_status        |string|最后一次推送的状态|
+|create_time        |string|创建时间|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_count": 4,
+    "webhooks": [
+        {
+            "id": 2,
+            "url": "https://oapi.dingtalk.com/robot/send?access_token=7e1e19d0eddb6a5e33c5c2c4e66f4c88f9437184b9ed2c2653194c6374c7d513",
+            "http_method": "",
+            "is_active": true,
+            "type": "dingtalk",
+            "last_status": "succeed",
+            "create_time": "2021-07-12 10:50:07"
+        },
+        {
+            "id": 3,
+            "url": "http://localhost:3000",
+            "http_method": "GET",
+            "is_active": true,
+            "type": "gitea",
+            "last_status": "succeed",
+            "create_time": "2021-07-26 10:03:45"
+        },
+        {
+            "id": 4,
+            "url": "http://localhost:10081",
+            "http_method": "POST",
+            "is_active": true,
+            "type": "gitea",
+            "last_status": "waiting",
+            "create_time": "2021-07-26 16:56:53"
+        },
+        {
+            "id": 5,
+            "url": "http://localhost:3001",
+            "http_method": "POST",
+            "is_active": true,
+            "type": "gitea",
+            "last_status": "fail",
+            "create_time": "2021-07-26 16:58:23"
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
