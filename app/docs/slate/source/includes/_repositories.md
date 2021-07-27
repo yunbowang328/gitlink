@@ -988,14 +988,16 @@ await octokit.request('POST /api/yystopf/ceshi/webhooks.json')
 
 参数| 含义|
 --------- | ------- | ------- | 
-|create|仓库创建|
+|create|创建分支或标签|
 |delete|分支或标签删除|
 |fork|仓库被fork|
 |push|git仓库推送|
+|issue|易修已打开、已关闭、已重新打开或编辑|
 |issue_assign|易修被指派|
 |issue_label|易修标签被更新或删除|
 |issue_milestone|易修被收入里程碑|
 |issue_comment|易修评论|
+|pull_request|合并请求|
 |pull_request_assign|合并请求被指派|
 |pull_request_label|合并请求被贴上标签|
 |pull_request_milestone|合并请求被记录于里程碑中|
@@ -1004,7 +1006,8 @@ await octokit.request('POST /api/yystopf/ceshi/webhooks.json')
 |pull_request_review_rejected|合并请求被拒绝|
 |pull_request_review_comment|合并请求被提出审查意见|
 |pull_request_sync|合并请求被同步|
-
+|repository|创建或删除仓库|
+|release|版本发布|
 
 
 > 请求的JSON示例:
@@ -1046,6 +1049,131 @@ await octokit.request('POST /api/yystopf/ceshi/webhooks.json')
     ],
     "active": true,
     "create_time": "2021-07-26 18:53:43"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 更新仓库webhook
+更新仓库webhook
+
+> 示例:
+
+```shell
+curl -X PATCH \
+http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
+```
+
+```javascript
+await octokit.request('PATCH /api/yystopf/ceshi/webhooks/7.json')
+```
+
+### HTTP 请求
+`PATCH /api/:owner/:repo/webhooks/:id.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner                |是| | string |用户登录名  |
+|repo                 |是| | string |项目标识identifier  |
+|id                   |是| | string |webhook id  |
+|webhook.url          |是| | string |目标url  |
+|webhook.type         |否| | string |类型|
+|webhook.http_method  |是| | string | http方法, POST和GET |
+|webhook.content_type |是| | string | POST Content Type |
+|webhook.secret       |否| | string |密钥文本|
+|webhook.active       |是| | bool | 是否激活|
+|webhook.branch_filter|否| |string|分支过滤|
+|webhook.events       |否| |array|触发事件|
+
+触发事件字段说明 
+
+参数| 含义|
+--------- | ------- | ------- | 
+|create|创建分支或标签|
+|delete|分支或标签删除|
+|fork|仓库被fork|
+|push|git仓库推送|
+|issue|易修已打开、已关闭、已重新打开或编辑|
+|issue_assign|易修被指派|
+|issue_label|易修标签被更新或删除|
+|issue_milestone|易修被收入里程碑|
+|issue_comment|易修评论|
+|pull_request|合并请求|
+|pull_request_assign|合并请求被指派|
+|pull_request_label|合并请求被贴上标签|
+|pull_request_milestone|合并请求被记录于里程碑中|
+|pull_request_comment|合并请求被评论|
+|pull_request_review_approved|合并请求被批准|
+|pull_request_review_rejected|合并请求被拒绝|
+|pull_request_review_comment|合并请求被提出审查意见|
+|pull_request_sync|合并请求被同步|
+|repository|创建或删除仓库|
+|release|版本发布|
+
+
+> 请求的JSON示例:
+
+```json
+{
+    "active": true, 
+    "content_type": "json",
+    "http_method": "GET",
+    "secret": "123456",
+    "url": "http://localhost:10000",
+    "branch_filter": "*",
+    "events": ["push"]
+}
+```
+
+### 返回字段说明:
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+
+## 删除仓库webhook
+删除仓库webhook
+
+> 示例:
+
+```shell
+curl -X DELETE \
+http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
+```
+
+```javascript
+await octokit.request('DELETE /api/yystopf/ceshi/webhooks/7.json')
+```
+
+### HTTP 请求
+`DELETE /api/:owner/:repo/webhooks/:id.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner                |是| | string |用户登录名  |
+|repo                 |是| | string |项目标识identifier  |
+|id                   |是| | string |webhook id  |
+
+### 返回字段说明:
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
 }
 ```
 <aside class="success">

@@ -1,5 +1,6 @@
 class Projects::WebhooksController < Projects::BaseController
   before_action :require_manager!
+  before_action :find_webhook, only:[:edit, :update, :destroy]
 
   def index 
     @webhooks = @project.webhooks
@@ -8,13 +9,13 @@ class Projects::WebhooksController < Projects::BaseController
 
   def create 
     ActiveRecord::Base.transaction do
+      return render_error("webhooks数量已到上限！请删除暂不使用的webhooks以进行添加操作") if @project.webhooks.size > 19
       return render_error("参数错误.") unless webhook_params.present?
       form =  Projects::Webhooks::CreateForm.new(webhook_params)
       return  render json: {status: -1, message: form.errors} unless form.validate!
       response = Gitea::Repository::Webhooks::CreateService.new(current_user.gitea_token, @project&.owner&.login, @project&.identifier, gitea_webhooks_params).call
       if response[0] == 201 
         @webhook = response[2]
-        puts @webhook
       else 
         render_error("创建失败.")
       end
@@ -25,12 +26,39 @@ class Projects::WebhooksController < Projects::BaseController
   end
 
   def edit 
+
   end
 
   def update 
+    return render_error("参数错误.") unless webhook_params.present?
+    form =  Projects::Webhooks::CreateForm.new(webhook_params)
+    return  render json: {status: -1, message: form.errors} unless form.validate!
+    response = Gitea::Repository::Webhooks::UpdateService.call(current_user.gitea_token, @project&.owner&.login, @project&.identifier, @webhook.id, gitea_webhooks_params)
+    if response[0] == 200
+      @webhook = response[2]
+      render_ok
+    else 
+      render_error("更新失败.")
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
   end
 
   def destroy 
+    response = Gitea::Repository::Webhooks::DeleteService.call(current_user.gitea_token, @project&.owner&.login, @project&.identifier, @webhook.id)
+    if response[0] == 204
+      @webhook = response[2]
+      render_ok
+    else 
+      render_error("删除失败.")
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
+  end
+
+  def webhook_tasks
   end
 
   private 
