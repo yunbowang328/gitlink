@@ -952,3 +952,102 @@ await octokit.request('GET /api/yystopf/ceshi/webhooks.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 添加仓库webhook
+添加仓库webhook
+
+> 示例:
+
+```shell
+curl -X POST \
+http://localhost:3000/api/yystopf/ceshi/webhooks.json
+```
+
+```javascript
+await octokit.request('POST /api/yystopf/ceshi/webhooks.json')
+```
+
+### HTTP 请求
+`POST /api/:owner/:repo/webhooks.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner                |是| | string |用户登录名  |
+|repo                 |是| | string |项目标识identifier  |
+|webhook.url          |是| | string |目标url  |
+|webhook.type         |否| | string |类型|
+|webhook.http_method  |是| | string | http方法, POST和GET |
+|webhook.content_type |是| | string | POST Content Type |
+|webhook.secret       |否| | string |密钥文本|
+|webhook.active       |是| | bool | 是否激活|
+|webhook.branch_filter|否| |string|分支过滤|
+|webhook.events       |否| |array|触发事件|
+
+触发事件字段说明 
+
+参数| 含义|
+--------- | ------- | ------- | 
+|create|仓库创建|
+|delete|分支或标签删除|
+|fork|仓库被fork|
+|push|git仓库推送|
+|issue_assign|易修被指派|
+|issue_label|易修标签被更新或删除|
+|issue_milestone|易修被收入里程碑|
+|issue_comment|易修评论|
+|pull_request_assign|合并请求被指派|
+|pull_request_label|合并请求被贴上标签|
+|pull_request_milestone|合并请求被记录于里程碑中|
+|pull_request_comment|合并请求被评论|
+|pull_request_review_approved|合并请求被批准|
+|pull_request_review_rejected|合并请求被拒绝|
+|pull_request_review_comment|合并请求被提出审查意见|
+|pull_request_sync|合并请求被同步|
+
+
+
+> 请求的JSON示例:
+
+```json
+{
+    "active": true, 
+    "content_type": "json",
+    "http_method": "GET",
+    "secret": "123456",
+    "url": "http://localhost:10000",
+    "branch_filter": "*",
+    "events": ["push"]
+}
+```
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id                 |int   |id |
+|url                |string|地址|
+|content_type       |string|POST Content Type|
+|is_active          |bool  |是否激活|
+|type               |string|类型|
+|events             | array|触发事件 |
+|create_time        |string|创建时间|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "id": 18,
+    "type": "gitea",
+    "content_type": "json",
+    "url": "http://localhost:10000",
+    "events": [
+        "push"
+    ],
+    "active": true,
+    "create_time": "2021-07-26 18:53:43"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
