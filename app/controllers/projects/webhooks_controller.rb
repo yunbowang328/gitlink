@@ -102,6 +102,7 @@ class Projects::WebhooksController < Projects::BaseController
         content_type: webhook_params[:content_type],
         url: webhook_params[:url],
         http_method: webhook_params[:http_method],
+        secret: webhook_params[:secret]
       },
       events: webhook_params[:events],
       type: webhook_type,
