@@ -491,13 +491,22 @@
                     <a href="#webhooks" class="toc-h2 toc-link" data-title="获取仓库webhooks列表">获取仓库webhooks列表</a>
                   </li>
                   <li>
-                    <a href="#webhook" class="toc-h2 toc-link" data-title="添加仓库webhook">添加仓库webhook</a>
+                    <a href="#webhook" class="toc-h2 toc-link" data-title="获取仓库单个webhook">获取仓库单个webhook</a>
                   </li>
                   <li>
-                    <a href="#webhook-2" class="toc-h2 toc-link" data-title="更新仓库webhook">更新仓库webhook</a>
+                    <a href="#webhook-2" class="toc-h2 toc-link" data-title="添加仓库webhook">添加仓库webhook</a>
                   </li>
                   <li>
-                    <a href="#webhook-3" class="toc-h2 toc-link" data-title="删除仓库webhook">删除仓库webhook</a>
+                    <a href="#webhook-3" class="toc-h2 toc-link" data-title="更新仓库webhook">更新仓库webhook</a>
+                  </li>
+                  <li>
+                    <a href="#webhook-4" class="toc-h2 toc-link" data-title="删除仓库webhook">删除仓库webhook</a>
+                  </li>
+                  <li>
+                    <a href="#webhook-5" class="toc-h2 toc-link" data-title="获取仓库webhook的历史推送列表">获取仓库webhook的历史推送列表</a>
+                  </li>
+                  <li>
+                    <a href="#webhook-6" class="toc-h2 toc-link" data-title="仓库webhook测试推送">仓库webhook测试推送</a>
                   </li>
               </ul>
           </li>
@@ -6893,17 +6902,17 @@ http://localhost:3000/api/yystopf/ceshi/webhooks.json
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='webhook'>添加仓库webhook</h2>
-<p>添加仓库webhook</p>
+<h2 id='webhook'>获取仓库单个webhook</h2>
+<p>获取仓库单个webhook</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
-http://localhost:3000/api/yystopf/ceshi/webhooks.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/webhooks.json</span><span class="dl">'</span><span class="p">)</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/webhooks/3/edit.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/webhooks/3/edit.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-15'>HTTP 请求</h3>
-<p><code>POST /api/:owner/:repo/webhooks.json</code></p>
+<p><code>GET /api/:owner/:repo/webhooks/:id/edit.json</code></p>
 <h3 id='2eb6f47757-15'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -6929,64 +6938,77 @@ http://localhost:3000/api/yystopf/ceshi/webhooks.json
 <td>项目标识identifier</td>
 </tr>
 <tr>
-<td>webhook.url</td>
+<td>id</td>
 <td>是</td>
 <td></td>
-<td>string</td>
-<td>目标url</td>
+<td>integer</td>
+<td>webhook ID</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-15'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>id</td>
 </tr>
 <tr>
-<td>webhook.type</td>
-<td>否</td>
-<td></td>
+<td>url</td>
 <td>string</td>
-<td>类型</td>
+<td>地址</td>
 </tr>
 <tr>
-<td>webhook.http_method</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>http方法, POST和GET</td>
-</tr>
-<tr>
-<td>webhook.content_type</td>
-<td>是</td>
-<td></td>
+<td>content_type</td>
 <td>string</td>
 <td>POST Content Type</td>
 </tr>
 <tr>
-<td>webhook.secret</td>
-<td>否</td>
-<td></td>
+<td>http_method</td>
 <td>string</td>
-<td>密钥文本</td>
+<td>请求方式</td>
 </tr>
 <tr>
-<td>webhook.active</td>
-<td>是</td>
+<td>secret</td>
 <td></td>
+<td>string</td>
+</tr>
+<tr>
+<td>is_active</td>
 <td>bool</td>
 <td>是否激活</td>
 </tr>
 <tr>
-<td>webhook.branch_filter</td>
-<td>否</td>
-<td></td>
+<td>type</td>
+<td>string</td>
+<td>类型</td>
+</tr>
+<tr>
+<td>last_status</td>
+<td>string</td>
+<td>最后一次推送的状态, waiting 等待,fail 失败,succeed 成功</td>
+</tr>
+<tr>
+<td>branch_filter</td>
 <td>string</td>
 <td>分支过滤</td>
 </tr>
 <tr>
-<td>webhook.events</td>
-<td>否</td>
-<td></td>
-<td>array</td>
-<td>触发事件</td>
+<td>events</td>
+<td>string</td>
+<td>触发条件</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间</td>
 </tr>
 </tbody></table>
-
-<p>触发事件字段说明 </p>
 
 <table><thead>
 <tr>
@@ -7077,91 +7099,55 @@ http://localhost:3000/api/yystopf/ceshi/webhooks.json
 </tbody></table>
 
 <blockquote>
-<p>请求的JSON示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> 
-    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"http_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"branch_filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"push"</span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div><h3 id='7447e4874e-15'>返回字段说明:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>id</td>
-<td>int</td>
-<td>id</td>
-</tr>
-<tr>
-<td>url</td>
-<td>string</td>
-<td>地址</td>
-</tr>
-<tr>
-<td>content_type</td>
-<td>string</td>
-<td>POST Content Type</td>
-</tr>
-<tr>
-<td>is_active</td>
-<td>bool</td>
-<td>是否激活</td>
-</tr>
-<tr>
-<td>type</td>
-<td>string</td>
-<td>类型</td>
-</tr>
-<tr>
-<td>events</td>
-<td>array</td>
-<td>触发事件</td>
-</tr>
-<tr>
-<td>create_time</td>
-<td>string</td>
-<td>创建时间</td>
-</tr>
-</tbody></table>
-
-<blockquote>
 <p>返回的JSON示例:</p>
 </blockquote>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"http_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"form"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"last_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"succeed"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"is_active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitea"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26 10:03:45"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"branch_filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"push"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26 18:53:43"</span><span class="w">
+        </span><span class="s2">"create"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"delete"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"fork"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"issues"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"issue_assign"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"issue_label"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"issue_milestone"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"issue_comment"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"push"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request_assign"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request_label"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request_milestone"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request_comment"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request_review"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"pull_request_sync"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"repository"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"release"</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='webhook-2'>更新仓库webhook</h2>
-<p>更新仓库webhook</p>
+<h2 id='webhook-2'>添加仓库webhook</h2>
+<p>添加仓库webhook</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH <span class="se">\</span>
-http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/webhooks.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/webhooks.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-16'>HTTP 请求</h3>
-<p><code>PATCH /api/:owner/:repo/webhooks/:id.json</code></p>
+<p><code>POST /api/:owner/:repo/webhooks.json</code></p>
 <h3 id='2eb6f47757-16'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -7185,13 +7171,6 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
 <td></td>
 <td>string</td>
 <td>项目标识identifier</td>
-</tr>
-<tr>
-<td>id</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>webhook id</td>
 </tr>
 <tr>
 <td>webhook.url</td>
@@ -7354,28 +7333,79 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
     </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"push"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><h3 id='7447e4874e-16'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>id</td>
+</tr>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>地址</td>
+</tr>
+<tr>
+<td>content_type</td>
+<td>string</td>
+<td>POST Content Type</td>
+</tr>
+<tr>
+<td>is_active</td>
+<td>bool</td>
+<td>是否激活</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>类型</td>
+</tr>
+<tr>
+<td>events</td>
+<td>array</td>
+<td>触发事件</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间</td>
+</tr>
+</tbody></table>
+
 <blockquote>
 <p>返回的JSON示例:</p>
 </blockquote>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitea"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"push"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26 18:53:43"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='webhook-3'>删除仓库webhook</h2>
-<p>删除仓库webhook</p>
+<h2 id='webhook-3'>更新仓库webhook</h2>
+<p>更新仓库webhook</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-17'>HTTP 请求</h3>
-<p><code>DELETE /api/:owner/:repo/webhooks/:id.json</code></p>
+<p><code>PATCH /api/:owner/:repo/webhooks/:id.json</code></p>
 <h3 id='2eb6f47757-17'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -7407,8 +7437,548 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
 <td>string</td>
 <td>webhook id</td>
 </tr>
+<tr>
+<td>webhook.url</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>目标url</td>
+</tr>
+<tr>
+<td>webhook.type</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>类型</td>
+</tr>
+<tr>
+<td>webhook.http_method</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>http方法, POST和GET</td>
+</tr>
+<tr>
+<td>webhook.content_type</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>POST Content Type</td>
+</tr>
+<tr>
+<td>webhook.secret</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>密钥文本</td>
+</tr>
+<tr>
+<td>webhook.active</td>
+<td>是</td>
+<td></td>
+<td>bool</td>
+<td>是否激活</td>
+</tr>
+<tr>
+<td>webhook.branch_filter</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>分支过滤</td>
+</tr>
+<tr>
+<td>webhook.events</td>
+<td>否</td>
+<td></td>
+<td>array</td>
+<td>触发事件</td>
+</tr>
 </tbody></table>
-<h3 id='7447e4874e-17'>返回字段说明:</h3>
+
+<p>触发事件字段说明 </p>
+
+<table><thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>create</td>
+<td>创建分支或标签</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>分支或标签删除</td>
+</tr>
+<tr>
+<td>fork</td>
+<td>仓库被fork</td>
+</tr>
+<tr>
+<td>push</td>
+<td>git仓库推送</td>
+</tr>
+<tr>
+<td>issue</td>
+<td>易修已打开、已关闭、已重新打开或编辑</td>
+</tr>
+<tr>
+<td>issue_assign</td>
+<td>易修被指派</td>
+</tr>
+<tr>
+<td>issue_label</td>
+<td>易修标签被更新或删除</td>
+</tr>
+<tr>
+<td>issue_milestone</td>
+<td>易修被收入里程碑</td>
+</tr>
+<tr>
+<td>issue_comment</td>
+<td>易修评论</td>
+</tr>
+<tr>
+<td>pull_request</td>
+<td>合并请求</td>
+</tr>
+<tr>
+<td>pull_request_assign</td>
+<td>合并请求被指派</td>
+</tr>
+<tr>
+<td>pull_request_label</td>
+<td>合并请求被贴上标签</td>
+</tr>
+<tr>
+<td>pull_request_milestone</td>
+<td>合并请求被记录于里程碑中</td>
+</tr>
+<tr>
+<td>pull_request_comment</td>
+<td>合并请求被评论</td>
+</tr>
+<tr>
+<td>pull_request_review_approved</td>
+<td>合并请求被批准</td>
+</tr>
+<tr>
+<td>pull_request_review_rejected</td>
+<td>合并请求被拒绝</td>
+</tr>
+<tr>
+<td>pull_request_review_comment</td>
+<td>合并请求被提出审查意见</td>
+</tr>
+<tr>
+<td>pull_request_sync</td>
+<td>合并请求被同步</td>
+</tr>
+<tr>
+<td>repository</td>
+<td>创建或删除仓库</td>
+</tr>
+<tr>
+<td>release</td>
+<td>版本发布</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> 
+    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"http_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"branch_filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"push"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='7447e4874e-17'>返回字段说明:</h3>
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='webhook-4'>删除仓库webhook</h2>
+<p>删除仓库webhook</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
+<p><code>DELETE /api/:owner/:repo/webhooks/:id.json</code></p>
+<h3 id='2eb6f47757-18'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>id</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>webhook id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-18'>返回字段说明:</h3>
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='webhook-5'>获取仓库webhook的历史推送列表</h2>
+<p>获取仓库webhook的历史推送列表</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/webhooks/3/tasks.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/webhooks/3/tasks.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-19'>HTTP 请求</h3>
+<p><code>GET /api/:owner/:repo/webhooks/:id/tasks.json</code></p>
+<h3 id='2eb6f47757-19'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>id</td>
+<td>是</td>
+<td></td>
+<td>integer</td>
+<td>webhook ID</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-19'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>id</td>
+</tr>
+<tr>
+<td>uuid</td>
+<td>string</td>
+<td>推送uuid</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>类型</td>
+</tr>
+<tr>
+<td>is_succeed</td>
+<td>bool</td>
+<td>是否推送成功</td>
+</tr>
+<tr>
+<td>is_delivered</td>
+<td>bool</td>
+<td>是否完成推送</td>
+</tr>
+<tr>
+<td>payload_content</td>
+<td>json</td>
+<td>请求主体内容</td>
+</tr>
+<tr>
+<td>request_content</td>
+<td>json</td>
+<td>请求内容，头部等等</td>
+</tr>
+<tr>
+<td>reponse_content</td>
+<td>json</td>
+<td>响应内容，状态，头部，主体等等</td>
+</tr>
+<tr>
+<td>delivered_time</td>
+<td>string</td>
+<td>推送时间</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"total_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"tasks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitea"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"uuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99aa2c23-6884-4c44-9020-5469320aa408"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"is_succeed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"is_delivered"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"payload_content"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refs/heads/master"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"before"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feb48e31362787a7620b53d4df3c4effddbb6f0b"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"after"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feb48e31362787a7620b53d4df3c4effddbb6f0b"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"compare_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"commits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"feb48e31362787a7620b53d4df3c4effddbb6f0b"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fix</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10081/yystopf/ceshi/commit/feb48e31362787a7620b53d4df3c4effddbb6f0b"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"viletyy"</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf@163.com"</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="nl">"committer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"viletyy"</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf@163.com"</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="nl">"verification"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nl">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpg.error.not_signed_commit"</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"signature"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"signer"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                      </span><span class="nl">"payload"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26T13:52:13+08:00"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"added"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"removed"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"modified"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+          </span><span class="p">],</span><span class="w">
+          </span><span class="nl">"head_commit"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"repository"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf@forge.com"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10081/user/avatar/yystopf/-1"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zh-CN"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"last_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-21T18:38:21+08:00"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-03T14:50:25+08:00"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf/ceshi"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"empty"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"private"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"fork"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"template"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"parent"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"mirror"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">3846</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"html_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10081/yystopf/ceshi"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"ssh_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"virus@localhost:10081:yystopf/ceshi.git"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"clone_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10081/yystopf/ceshi.git"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"original_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"website"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"stars_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"forks_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"watchers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"open_issues_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"open_pr_counter"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"release_counter"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"default_branch"</span><span class="p">:</span><span class="w"> </span><span class="s2">"master"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"archived"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-03T15:15:30+08:00"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26T13:52:16+08:00"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"push"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"pull"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="nl">"has_issues"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"internal_tracker"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"enable_time_tracker"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"allow_only_contributors_to_track_time"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"enable_issue_dependencies"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+              </span><span class="p">},</span><span class="w">
+              </span><span class="nl">"has_wiki"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"has_pull_requests"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"ignore_whitespace_conflicts"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"allow_merge_commits"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"allow_rebase"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"allow_rebase_explicit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"allow_squash_merge"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"internal"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"pusher"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf@forge.com"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10081/user/avatar/yystopf/-1"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"last_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0001-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-03T14:50:25+08:00"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"sender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"full_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf@forge.com"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"avatar_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10081/user/avatar/yystopf/-1"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"last_login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0001-01-01T00:00:00Z"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"created"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-03T14:50:25+08:00"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"request_content"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"X-GitHub-Delivery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99aa2c23-6884-4c44-9020-5469320aa408"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-GitHub-Event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"push"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Gitea-Delivery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99aa2c23-6884-4c44-9020-5469320aa408"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Gitea-Event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"push"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Gitea-Signature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"34a01edcd952ff6410ff6ebc946471161bde74aff86171f21621d2c2c4130f66"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Gogs-Delivery"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99aa2c23-6884-4c44-9020-5469320aa408"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Gogs-Event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"push"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Gogs-Signature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"34a01edcd952ff6410ff6ebc946471161bde74aff86171f21621d2c2c4130f66"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"response_content"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"Cache-Control"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no-store, must-revalidate, private, max-age=0"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"Content-Length"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2556"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"Content-Type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text/html; charset=utf-8"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"Referrer-Policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"strict-origin-when-cross-origin"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"Set-Cookie"</span><span class="p">:</span><span class="w"> </span><span class="s2">"__profilin=p%3Dt; path=/; HttpOnly"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"Vary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Origin"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Content-Type-Options"</span><span class="p">:</span><span class="w"> </span><span class="s2">"nosniff"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Download-Options"</span><span class="p">:</span><span class="w"> </span><span class="s2">"noopen"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Frame-Options"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SAMEORIGIN"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Miniprofiler-Ids"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9ynvpncz5xm0rpgorb5y,hgggd9mv6lr4a9drcrlr,j7zqlx2vy5aji2vtgoba,f1ktsmh3jxvq0z2hf612,mih3dvgvlqhi3zy8lf2x,5k1qbkvbnru8mye9cest,tj6ern8w6awqf2zsimbr,9isaehvubivd52wo5p9v,1rzfhtq1nhuwbgy9p76g,z0xzidzyywna0y7a69m0,hzoklky92ycjqt42gi0s,y0ai7y0t28mcn8x0py2x,322il7nadinp51mw2r5m,m6dukftfsh6tjcxzp1gq,667wlqbytfwbrirnmma1,jcehj3dl8lkw8gk510cr"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Miniprofiler-Original-Cache-Control"</span><span class="p">:</span><span class="w"> </span><span class="s2">"max-age=0, private, must-revalidate"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Permitted-Cross-Domain-Policies"</span><span class="p">:</span><span class="w"> </span><span class="s2">"none"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Request-Id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08bff080-bbb5-4183-b845-81de3d47120a"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Runtime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.394766"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"X-Xss-Protection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1; mode=block"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"body"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;!doctype html&gt;&lt;html lang=</span><span class="se">\"</span><span class="s2">zh-CN</span><span class="se">\"</span><span class="s2"> class=</span><span class="se">\"</span><span class="s2">notranslate translated-ltr</span><span class="se">\"</span><span class="s2"> translate=</span><span class="se">\"</span><span class="s2">no</span><span class="se">\"</span><span class="s2">&gt;&lt;head&gt;&lt;meta charset=</span><span class="se">\"</span><span class="s2">utf-8</span><span class="se">\"</span><span class="s2">&gt;&lt;meta name=</span><span class="se">\"</span><span class="s2">”Keywords”</span><span class="se">\"</span><span class="s2"> content=</span><span class="se">\"</span><span class="s2">”trustie,trustieforge,forge,确实让创建更美好,协同开发平台″</span><span class="se">\"</span><span class="s2">&gt;&lt;meta name=</span><span class="se">\"</span><span class="s2">”Keywords”</span><span class="se">\"</span><span class="s2"> content=</span><span class="se">\"</span><span class="s2">”TrustieOpenSourceProject″</span><span class="se">\"</span><span class="s2">&gt;&lt;meta name=</span><span class="se">\"</span><span class="s2">”Keywords”</span><span class="se">\"</span><span class="s2"> content=</span><span class="se">\"</span><span class="s2">”issue,bug,tracker,软件工程,课程实践″</span><span class="se">\"</span><span class="s2">&gt;&lt;meta name=</span><span class="se">\"</span><span class="s2">”Description”</span><span class="se">\"</span><span class="s2"> content=</span><span class="se">\"</span><span class="s2">”持续构建协同、共享、可信的软件创建生态开源创作与软件生产相结合，支持大规模群体开展软件协同创新活动”</span><span class="se">\"</span><span class="s2">&gt;&lt;meta name=</span><span class="se">\"</span><span class="s2">theme-color</span><span class="se">\"</span><span class="s2"> content=</span><span class="se">\"</span><span class="s2">#000000</span><span class="se">\"</span><span class="s2">&gt;&lt;link rel=</span><span class="se">\"</span><span class="s2">manifest</span><span class="se">\"</span><span class="s2"> href=</span><span class="se">\"</span><span class="s2">/react/build//manifest.json</span><span class="se">\"</span><span class="s2">&gt;&lt;link rel=</span><span class="se">\"</span><span class="s2">stylesheet</span><span class="se">\"</span><span class="s2"> href=</span><span class="se">\"</span><span class="s2">/react/build/css/iconfont.css</span><span class="se">\"</span><span class="s2">&gt;&lt;link rel=</span><span class="se">\"</span><span class="s2">stylesheet</span><span class="se">\"</span><span class="s2"> href=</span><span class="se">\"</span><span class="s2">/react/build/css/edu-purge.css</span><span class="se">\"</span><span class="s2">&gt;&lt;link rel=</span><span class="se">\"</span><span class="s2">stylesheet</span><span class="se">\"</span><span class="s2"> href=</span><span class="se">\"</span><span class="s2">/react/build/css/editormd.min.css</span><span class="se">\"</span><span class="s2">&gt;&lt;link rel=</span><span class="se">\"</span><span class="s2">stylesheet</span><span class="se">\"</span><span class="s2"> href=</span><span class="se">\"</span><span class="s2">/react/build/css/merge.css</span><span class="se">\"</span><span class="s2">&gt;&lt;link href=</span><span class="se">\"</span><span class="s2">/react/build/static/css/main.07f7e90c.chunk.css</span><span class="se">\"</span><span class="s2"> rel=</span><span class="se">\"</span><span class="s2">stylesheet</span><span class="se">\"</span><span class="s2">&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=</span><span class="se">\"</span><span class="s2">md_div</span><span class="se">\"</span><span class="s2"> style=</span><span class="se">\"</span><span class="s2">display:none</span><span class="se">\"</span><span class="s2">&gt;&lt;/div&gt;&lt;div id=</span><span class="se">\"</span><span class="s2">root</span><span class="se">\"</span><span class="s2"> class=</span><span class="se">\"</span><span class="s2">page -layout-v -fit widthunit</span><span class="se">\"</span><span class="s2">&gt;&lt;/div&gt;&lt;div id=</span><span class="se">\"</span><span class="s2">picture_display</span><span class="se">\"</span><span class="s2"> style=</span><span class="se">\"</span><span class="s2">display:none</span><span class="se">\"</span><span class="s2">&gt;&lt;/div&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/js/jquery-1.8.3.min.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/js/js_min_all.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/js/codemirror/codemirror.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/js/editormd/editormd.min.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/js/codemirror/merge/merge.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/./static/js/runtime~main.3d644966.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script src=</span><span class="se">\"</span><span class="s2">/react/build/./static/js/main.e46872e3.chunk.js</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;&lt;script async type=</span><span class="se">\"</span><span class="s2">text/javascript</span><span class="se">\"</span><span class="s2"> id=</span><span class="se">\"</span><span class="s2">mini-profiler</span><span class="se">\"</span><span class="s2"> src=</span><span class="se">\"</span><span class="s2">/mini-profiler-resources/includes.js?v=67dd1c2571ced7fc74ae7f1813e47bdf</span><span class="se">\"</span><span class="s2"> data-version=</span><span class="se">\"</span><span class="s2">67dd1c2571ced7fc74ae7f1813e47bdf</span><span class="se">\"</span><span class="s2"> data-path=</span><span class="se">\"</span><span class="s2">/mini-profiler-resources/</span><span class="se">\"</span><span class="s2"> data-current-id=</span><span class="se">\"</span><span class="s2">9ynvpncz5xm0rpgorb5y</span><span class="se">\"</span><span class="s2"> data-ids=</span><span class="se">\"</span><span class="s2">9ynvpncz5xm0rpgorb5y,hgggd9mv6lr4a9drcrlr,j7zqlx2vy5aji2vtgoba,f1ktsmh3jxvq0z2hf612,mih3dvgvlqhi3zy8lf2x,5k1qbkvbnru8mye9cest,tj6ern8w6awqf2zsimbr,9isaehvubivd52wo5p9v,1rzfhtq1nhuwbgy9p76g,z0xzidzyywna0y7a69m0,hzoklky92ycjqt42gi0s,y0ai7y0t28mcn8x0py2x,322il7nadinp51mw2r5m,m6dukftfsh6tjcxzp1gq,667wlqbytfwbrirnmma1,jcehj3dl8lkw8gk510cr</span><span class="se">\"</span><span class="s2"> data-horizontal-position=</span><span class="se">\"</span><span class="s2">left</span><span class="se">\"</span><span class="s2"> data-vertical-position=</span><span class="se">\"</span><span class="s2">top</span><span class="se">\"</span><span class="s2"> data-trivial=</span><span class="se">\"</span><span class="s2">false</span><span class="se">\"</span><span class="s2"> data-children=</span><span class="se">\"</span><span class="s2">false</span><span class="se">\"</span><span class="s2"> data-max-traces=</span><span class="se">\"</span><span class="s2">20</span><span class="se">\"</span><span class="s2"> data-controls=</span><span class="se">\"</span><span class="s2">false</span><span class="se">\"</span><span class="s2"> data-total-sql-count=</span><span class="se">\"</span><span class="s2">false</span><span class="se">\"</span><span class="s2"> data-authorized=</span><span class="se">\"</span><span class="s2">true</span><span class="se">\"</span><span class="s2"> data-toggle-shortcut=</span><span class="se">\"</span><span class="s2">alt+p</span><span class="se">\"</span><span class="s2"> data-start-hidden=</span><span class="se">\"</span><span class="s2">false</span><span class="se">\"</span><span class="s2"> data-collapse-results=</span><span class="se">\"</span><span class="s2">true</span><span class="se">\"</span><span class="s2"> data-html-container=</span><span class="se">\"</span><span class="s2">body</span><span class="se">\"</span><span class="s2">&gt;&lt;/script&gt;</span><span class="se">\n</span><span class="s2">&lt;/body&gt;&lt;/html&gt;"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"delivered_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-28 11:47:29"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='webhook-6'>仓库webhook测试推送</h2>
+<p>仓库webhook测试推送</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/webhooks/3/test.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/webhooks/3/test.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-20'>HTTP 请求</h3>
+<p><code>POST /api/:owner/:repo/webhooks/:id/test.json</code></p>
+<h3 id='2eb6f47757-20'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>id</td>
+<td>是</td>
+<td></td>
+<td>integer</td>
+<td>webhook ID</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-20'>返回字段说明:</h3>
 <blockquote>
 <p>返回的JSON示例:</p>
 </blockquote>

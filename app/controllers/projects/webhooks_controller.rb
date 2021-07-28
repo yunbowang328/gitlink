@@ -1,6 +1,6 @@
 class Projects::WebhooksController < Projects::BaseController
   before_action :require_manager!
-  before_action :find_webhook, only:[:edit, :update, :destroy]
+  before_action :find_webhook, only:[:edit, :update, :destroy, :tasks, :test]
 
   def index 
     @webhooks = @project.webhooks
@@ -58,7 +58,23 @@ class Projects::WebhooksController < Projects::BaseController
     tip_exception(e.message)
   end
 
-  def webhook_tasks
+  def tasks
+    @tasks = @webhook.tasks.order("delivered desc")
+    @tasks = kaminari_paginate(@tasks)
+  end
+
+  def test 
+    ActiveRecord::Base.transaction do
+      response = Gitea::Repository::Webhooks::TestService.call(current_user.gitea_token, @project&.owner&.login, @project&.identifier, @webhook.id)
+      if response[0] == 204
+        render_ok
+      else 
+        render_error("测试推送失败.")
+      end
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
   end
 
   private 

@@ -572,7 +572,12 @@ Rails.application.routes.draw do
             post :cancel
           end
         end
-        resources :webhooks, except: [:show, :new]
+        resources :webhooks, except: [:show, :new] do 
+          member do 
+            get :tasks 
+            post :test
+          end
+        end
         scope do
           get(
             '/blob/*id/diff',
