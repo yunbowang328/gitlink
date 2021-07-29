@@ -80,6 +80,7 @@ class Projects::WebhooksController < Projects::BaseController
   private 
   def find_webhook
     @webhook = Gitea::Webhook.find_by_id(params[:id])
+    return render_not_found if @webhook.nil?
   end
 
   def webhook_params 

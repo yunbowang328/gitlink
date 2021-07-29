@@ -5,7 +5,7 @@ json.create_time Time.at(@webhook.created_unix).strftime("%Y-%m-%d %H:%M:%S")
 event = @webhook.events
 json.branch_filter event["branch_filter"]
 if event["send_everything"]
-  json.events event["events"].keys
+  json.events event["events"].keys.collect{|i| i == "pull_request" ?  i + "_only" : i}
 else 
-  json.events event["events"].select{|k, v| v}.keys
+  json.events event["events"].select{|k, v| v}.keys.collect{|i| i == "pull_request" ?  i + "_only" : i}
 end
