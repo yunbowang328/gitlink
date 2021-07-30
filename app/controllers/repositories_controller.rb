@@ -5,9 +5,9 @@ class RepositoriesController < ApplicationController
 
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
   before_action :load_repository
-  before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
+  before_action :authorizate!, except: [:sync_mirror, :tags, :commit, :archive]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries top_counts file]
+  before_action :get_ref, only: %i[entries sub_entries top_counts file archive]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
 
@@ -192,6 +192,19 @@ class RepositoriesController < ApplicationController
     render json: languages_precentagable
   end
 
+  def archive
+    domain  = Gitea.gitea_config[:domain]
+    api_url = Gitea.gitea_config[:base_url]
+    archive_url = "/repos/#{@owner.login}/#{@repository.identifier}/archive/#{params[:archive]}"
+
+    file_path = [domain, api_url, archive_url].join
+    file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("?") if @repository.hidden?
+
+    return render_not_found if !request.format.zip? && !request.format.gzip?
+
+    redirect_to file_path
+  end
+
   private
 
   def find_project
@@ -266,7 +279,7 @@ class RepositoriesController < ApplicationController
 
     # uploadPushInfo
   end
-
+  
   def create_new_pr(params)
     if params[:new_branch].present? && params[:new_branch] != params[:branch]
       local_params = {
@@ -303,7 +316,7 @@ class RepositoriesController < ApplicationController
         local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: @pull_issue.id))
         if local_requests.save
           gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @owner.login, @project.try(:identifier), requests_params).call
-          if gitea_request[:status] == :success && local_requests.update_attributes(gpid: gitea_request["body"]["number"])
+          if gitea_request[:status] == :success && local_requests.update_attributes(gitea_number: gitea_request["body"]["number"])
             local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
           end
         end

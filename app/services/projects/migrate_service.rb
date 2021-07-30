@@ -8,6 +8,8 @@ class Projects::MigrateService < ApplicationService
   end
 
   def call
+    raise Error, "user_id不正确." unless authroize_user_id_success
+    
     @project = Project.new(project_params)
     if @project.save!
       ProjectUnit.init_types(@project.id, project.project_type)
@@ -24,6 +26,9 @@ class Projects::MigrateService < ApplicationService
   end
 
   private
+  def authroize_user_id_success 
+    (user.id == params[:user_id].to_i) || (user.organizations.find_by_id(params[:user_id]).present?)
+  end
 
   def project_params
     {

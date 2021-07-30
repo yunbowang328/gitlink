@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   include Acceleratorable
 
   before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
-  before_action :load_project, except: %i[index group_type_list migrate create recommend]
+  before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
 
@@ -116,10 +116,11 @@ class ProjectsController < ApplicationController
   
         Projects::UpdateForm.new(validate_params).validate!
   
-        private = params[:private] || false
+        private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
         new_project_params = project_params.except(:private).merge(is_public: !private)
         @project.update_attributes!(new_project_params)
+        @project.forked_projects.update_all(is_public: @project.is_public)
         gitea_params = {
           private: private,
           default_branch: @project.default_branch,
@@ -144,6 +145,7 @@ class ProjectsController < ApplicationController
       ActiveRecord::Base.transaction do
         Gitea::Repository::DeleteService.new(@project.owner, @project.identifier).call
         @project.destroy!
+        @project.forked_projects.update_all(forked_from_project_id: nil)
         render_ok
       end
     else

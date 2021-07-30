@@ -71,6 +71,8 @@ Rails.application.routes.draw do
       # end
     end
 
+    resources :public_keys, only: [:index, :create, :destroy]
+
     resources :statistic, only: [:index] do
       collection do
         get :platform_profile
@@ -417,7 +419,6 @@ Rails.application.routes.draw do
         member do
           get :files
           get :detail
-          get :archive
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
@@ -432,6 +433,7 @@ Rails.application.routes.draw do
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
           get 'readme'
           get 'languages'
+          get 'archive/:archive', to: 'repositories#archive', as: "archive", constraints: { archive: /.+/, format: /(zip|gzip)/ }
         end
       end
 
@@ -568,6 +570,12 @@ Rails.application.routes.draw do
           collection do 
             get :organizations
             post :cancel
+          end
+        end
+        resources :webhooks, except: [:show, :new] do 
+          member do 
+            get :tasks 
+            post :test
           end
         end
         scope do

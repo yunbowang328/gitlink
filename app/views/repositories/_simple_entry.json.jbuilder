@@ -1,6 +1,6 @@
 if @project.forge?
   file_name = entry['name']
-  file_type = file_name.to_s.split(".").last
+  file_type = File.extname(file_name.to_s)[1..-1]
   direct_download = download_type(file_type)
   image_type = image_type?(file_type)
   json.name file_name
@@ -11,7 +11,16 @@ if @project.forge?
 
   json.content decode64_content(entry, @owner, @repository, @ref)
   json.target entry['target']
-  json.download_url entry['download_url']
+  
+  download_url = 
+    if image_type
+      dir_path = [@owner.login, @repository.identifier, "raw/branch", @ref].join('/')
+      render_download_image_url(dir_path, entry['path'], decode64_content(entry, @owner, @repository, @ref))
+    else
+      entry['download_url']
+    end
+  json.download_url download_url
+
   json.direct_download direct_download
   json.image_type image_type
   json.is_readme_file is_readme?(entry['type'], entry['name'])

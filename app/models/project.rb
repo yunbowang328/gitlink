@@ -37,8 +37,6 @@
 #  rep_identifier         :string(255)
 #  project_category_id    :integer
 #  project_language_id    :integer
-#  license_id             :integer
-#  ignore_id              :integer
 #  praises_count          :integer          default("0")
 #  watchers_count         :integer          default("0")
 #  issues_count           :integer          default("0")
@@ -52,9 +50,10 @@
 #  open_devops_count      :integer          default("0")
 #  recommend              :boolean          default("0")
 #  platform               :integer          default("0")
+#  license_id             :integer
+#  ignore_id              :integer
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
-#  order_index            :integer          default("0")
 #  lesson_url             :string(255)
 #
 # Indexes
@@ -64,16 +63,17 @@
 #  index_projects_on_invite_code             (invite_code)
 #  index_projects_on_is_public               (is_public)
 #  index_projects_on_lft                     (lft)
+#  index_projects_on_license_id              (license_id)
 #  index_projects_on_name                    (name)
 #  index_projects_on_platform                (platform)
+#  index_projects_on_project_category_id     (project_category_id)
+#  index_projects_on_project_language_id     (project_language_id)
 #  index_projects_on_project_type            (project_type)
 #  index_projects_on_recommend               (recommend)
 #  index_projects_on_rgt                     (rgt)
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
-
-
 
 
 class Project < ApplicationRecord
@@ -98,10 +98,12 @@ class Project < ApplicationRecord
   belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
+  belongs_to :forked_from_project, class_name: 'Project', optional: true, foreign_key: :forked_from_project_id
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
   has_many :forked_users, class_name: 'ForkUser', foreign_key: :fork_project_id, dependent: :destroy
+  has_many :forked_projects, class_name: 'Project', foreign_key: :forked_from_project_id
   has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
@@ -120,6 +122,7 @@ class Project < ApplicationRecord
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
+  has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
 
   after_save :check_project_members, :reset_cache_data
   before_save :set_invite_code

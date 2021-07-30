@@ -56,7 +56,7 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
-        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
+        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
         render_ok
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
@@ -91,7 +91,7 @@ class PullRequestsController < ApplicationController
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
               gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
-                  @pull_request.gpid, @requests_params, current_user.gitea_token)
+                  @pull_request.gitea_number, @requests_params, current_user.gitea_token)
 
               if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
@@ -139,7 +139,7 @@ class PullRequestsController < ApplicationController
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
     @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, 
-      @repository.identifier, @pull_request.gpid, current_user&.gitea_token)
+      @repository.identifier, @pull_request.gitea_number, current_user&.gitea_token)
   end
 
   def pr_merge
@@ -150,9 +150,16 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+          @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, @repository.identifier, @pull_request.gitea_number, current_user&.gitea_token)
 
-          if result.status == 200 && @pull_request.merge!
+          if @gitea_pull["merged_by"].present?
+            success_condition = true
+          else
+            result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+            success_condition = result.status == 200
+          end
+
+          if success_condition && @pull_request.merge!
             @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             normal_status(1, "合并成功")
@@ -191,12 +198,12 @@ class PullRequestsController < ApplicationController
 
 
   def files
-    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gitea_number, current_user&.gitea_token)
     # render json: @files_result
   end
 
   def commits
-    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gitea_number, current_user&.gitea_token)
     # render json: @commits_result
   end
 

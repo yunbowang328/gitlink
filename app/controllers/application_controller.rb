@@ -770,7 +770,7 @@ class ApplicationController < ActionController::Base
 	end
 
 	def base_url
-		request.base_url
+		Rails.application.config_for(:configuration)['platform_url'] || request.base_url
 	end
 
 	def convert_image!

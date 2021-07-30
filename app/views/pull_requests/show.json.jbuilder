@@ -32,3 +32,5 @@ json.issue do
   json.version @issue.version.try(:name)
   json.issue_tags @issue.get_issue_tags
 end
+
+json.conflict_files @pull_request.conflict_files

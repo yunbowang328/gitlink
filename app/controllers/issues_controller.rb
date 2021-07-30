@@ -3,6 +3,7 @@ class IssuesController < ApplicationController
   before_action :load_project
   before_action :set_user
   before_action :check_issue_permission
+  before_action :operate_issue_permission, only:[:create, :update, :destroy, :clean, :series_update, :copy]
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
@@ -230,7 +231,7 @@ class IssuesController < ApplicationController
   end
 
   def show
-    @user_permission = current_user.present? && current_user.logged? && (!@issue.is_lock || @project.member?(current_user) || current_user.admin? || @issue.user == current_user)
+    @user_permission = current_user.present? && current_user.logged? && (@project.member?(current_user) || current_user.admin? || @issue.user == current_user)
     @issue_attachments = @issue.attachments
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
@@ -303,7 +304,7 @@ class IssuesController < ApplicationController
     if issue_ids.present?
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids).update_all(update_hash)
+      elsif Issue.where(id: issue_ids)&.update(update_hash)
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")
@@ -315,6 +316,7 @@ class IssuesController < ApplicationController
 
   def copy
     @new_issue = @issue.dup
+    @new_issue.author_id = current_user.id
     if @new_issue.save
       issue_tags = @issue.issue_tags.pluck(:id)
       if issue_tags.present?
@@ -410,6 +412,10 @@ class IssuesController < ApplicationController
     unless @project.is_public || (current_user.present? && (@project.member?(current_user) || current_user&.admin? || (@project.user_id == current_user&.id)))
       normal_status(-1, "您没有权限")
     end
+  end
+
+  def operate_issue_permission
+    return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.member?(current_user)
   end
 
   def export_issues(issues)
