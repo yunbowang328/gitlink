@@ -59,7 +59,7 @@ class Projects::WebhooksController < Projects::BaseController
   end
 
   def tasks
-    @tasks = @webhook.tasks.order("delivered desc")
+    @tasks = @webhook.tasks.where(is_delivered: true).order("delivered desc")
     @tasks = kaminari_paginate(@tasks)
   end
 
