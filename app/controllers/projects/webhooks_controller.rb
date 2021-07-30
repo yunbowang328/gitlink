@@ -13,7 +13,7 @@ class Projects::WebhooksController < Projects::BaseController
       return render_error("参数错误.") unless webhook_params.present?
       form =  Projects::Webhooks::CreateForm.new(webhook_params)
       return  render json: {status: -1, message: form.errors} unless form.validate!
-      response = Gitea::Repository::Webhooks::CreateService.new(current_user.gitea_token, @project&.owner&.login, @project&.identifier, gitea_webhooks_params).call
+      response = Gitea::Repository::Webhooks::CreateService.new(operating_token, @project&.owner&.login, @project&.identifier, gitea_webhooks_params).call
       if response[0] == 201 
         @webhook = response[2]
       else 
@@ -33,7 +33,7 @@ class Projects::WebhooksController < Projects::BaseController
     return render_error("参数错误.") unless webhook_params.present?
     form =  Projects::Webhooks::CreateForm.new(webhook_params)
     return  render json: {status: -1, message: form.errors} unless form.validate!
-    response = Gitea::Repository::Webhooks::UpdateService.call(current_user.gitea_token, @project&.owner&.login, @project&.identifier, @webhook.id, gitea_webhooks_params)
+    response = Gitea::Repository::Webhooks::UpdateService.call(operating_token, @project&.owner&.login, @project&.identifier, @webhook.id, gitea_webhooks_params)
     if response[0] == 200
       @webhook = response[2]
       render_ok
@@ -46,7 +46,7 @@ class Projects::WebhooksController < Projects::BaseController
   end
 
   def destroy 
-    response = Gitea::Repository::Webhooks::DeleteService.call(current_user.gitea_token, @project&.owner&.login, @project&.identifier, @webhook.id)
+    response = Gitea::Repository::Webhooks::DeleteService.call(operating_token, @project&.owner&.login, @project&.identifier, @webhook.id)
     if response[0] == 204
       @webhook = response[2]
       render_ok
@@ -65,7 +65,7 @@ class Projects::WebhooksController < Projects::BaseController
 
   def test 
     ActiveRecord::Base.transaction do
-      response = Gitea::Repository::Webhooks::TestService.call(current_user.gitea_token, @project&.owner&.login, @project&.identifier, @webhook.id)
+      response = Gitea::Repository::Webhooks::TestService.call(operating_token, @project&.owner&.login, @project&.identifier, @webhook.id)
       if response[0] == 204
         render_ok
       else 
@@ -79,7 +79,7 @@ class Projects::WebhooksController < Projects::BaseController
 
   private 
   def find_webhook
-    @webhook = Gitea::Webhook.find_by_id(params[:id])
+    @webhook = @project.webhooks.find_by_id(params[:id])
     return render_not_found if @webhook.nil?
   end
 
@@ -108,5 +108,9 @@ class Projects::WebhooksController < Projects::BaseController
       events: webhook_params[:events],
       type: webhook_type,
     }
+  end
+
+  def operating_token 
+    @project.member?(current_user) ? current_user.gitea_token : @project&.owner&.gitea_token
   end
 end
