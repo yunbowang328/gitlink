@@ -4,6 +4,6 @@ class Gitea::PublicKey < Gitea::Base
   
   self.table_name = "public_key"
 
-  belongs_to :user, class_name: '::User', foreign_key: :gitea_uid, primary_key: :owner_id, optional: true
+  belongs_to :user, class_name: '::User', primary_key: :gitea_uid, foreign_key: :owner_id, optional: true
 
 end
