@@ -20,8 +20,14 @@ module TagChosenHelper
       "done_ratio": render_complete_percentage,
       "issue_tag": render_issue_tags(project),
       "issue_type": render_issue_species,
-      "all_issues": all_issues
+      "all_issues": all_issues,
+      "branches": render_branches(project)
     }
+  end
+
+  def render_branches(project)
+    branches = Gitea::Repository::Branches::ListService.call(project&.owner, project.identifier)
+    branches.collect{|i| i["name"] if i.is_a?(Hash)}
   end
 
   def render_cache_trackers
