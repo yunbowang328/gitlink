@@ -108,8 +108,14 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       # TODO:
       # 临时特殊处理修改website、lesson_url操作方法
-      if project_params.has_key?("website")
+      if project_params.has_key?("website") 
         @project.update(project_params)
+      elsif project_params.has_key?("default_branch")
+        @project.update(project_params)
+        gitea_params = {
+          default_branch: @project.default_branch
+        }
+        Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
       else
         validate_params = project_params.slice(:name, :description, 
           :project_category_id, :project_language_id, :private)
@@ -213,7 +219,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url, :default_branch,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 

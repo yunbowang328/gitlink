@@ -219,7 +219,7 @@ class IssuesController < ApplicationController
           change_type = change_token > 0 ? "add" : "minus"
           post_to_chain(change_type, change_token.abs, current_user.try(:login))
         end
-        @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
+        @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id) if @issue.previous_changes.present? 
         normal_status(0, "更新成功")
       else
         normal_status(-1, "更新失败")
