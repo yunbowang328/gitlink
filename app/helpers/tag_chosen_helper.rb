@@ -20,8 +20,14 @@ module TagChosenHelper
       "done_ratio": render_complete_percentage,
       "issue_tag": render_issue_tags(project),
       "issue_type": render_issue_species,
-      "all_issues": all_issues
+      "all_issues": all_issues,
+      "branches": render_branches(project)
     }
+  end
+
+  def render_branches(project)
+    branches = Gitea::Repository::Branches::ListService.call(project&.owner, project.identifier)
+    branches.collect{|i| i["name"] if i.is_a?(Hash)}
   end
 
   def render_cache_trackers
@@ -176,7 +182,7 @@ module TagChosenHelper
         real_name = user.try(:show_real_name)
         user_id = user.id
         is_chosen = ((user.id.to_s == issue_info[0].to_s) ? "1" : "0")
-        member_info = {id: user_id, name: real_name,avatar_url: url_to_avatar(user),is_chosen: is_chosen}
+        member_info = {id: user_id, name: real_name,avatar_url: url_to_avatar(user), permission: project.get_premission(user), is_chosen: is_chosen}
         project_members_info.push(member_info)
       end
     end
