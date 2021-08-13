@@ -2,16 +2,17 @@ namespace :produce_and_export_ceshi_user do
   desc "Produce ceshi user and Export to excel"
   task call: :environment do 
     puts "=======Begin======="
-    email = FFaker::Internet.unique.email 
-    username = email.split("@")[0]
+    DCODES = %W(1 2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
+    username = DCODES.sample(8).join
+    email =  username + '@forge.com'
     password = SecureRandom.base64[8..-1]
     p = Axlsx::Package.new 
     p.workbook.add_worksheet(:name => '测试用户') do |sheet| 
       sheet.add_row ["用户名", "邮箱", "密码", "GiteaToken", "测试仓库", "测试仓库克隆地址"]
       (1..100).to_a.each do |i|
         while (User.find_by(login: username).present? || User.find_by(mail: email).present?) do 
-          email = FFaker::Internet.unique.email 
-          username = email.split("@")[0]
+          username = DCODES.sample(8).join
+          email =  username + '@forge.com'
           password = SecureRandom.base64[8..-1]
         end
         puts "=======Generate:[#{i}] Username: #{username}, Password: #{password}, Email: #{email}======="
@@ -36,7 +37,6 @@ namespace :produce_and_export_ceshi_user do
         end
   
         puts "=======Create User End====== "
-        DCODES = %W(1 2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z)
         code = DCODES.sample(8).join
         project_params = {
           user_id: user.id, 
