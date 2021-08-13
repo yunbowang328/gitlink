@@ -123,6 +123,7 @@ GEM
     execjs (2.7.0)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
+    ffaker (2.18.0)
     ffi (1.12.2)
     font-awesome-sass (4.7.0)
       sass (>= 3.2)
@@ -452,6 +453,7 @@ DEPENDENCIES
   diffy
   enumerize
   faraday (~> 0.15.4)
+  ffaker
   font-awesome-sass (= 4.7.0)
   grape-entity (~> 0.7.1)
   groupdate (~> 4.1.0)
