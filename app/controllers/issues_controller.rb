@@ -302,9 +302,11 @@ class IssuesController < ApplicationController
     # update_hash = params[:issue]
     issue_ids = params[:ids]
     if issue_ids.present?
+      issues = Issue.where(id: issue_ids)
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids)&.update(update_hash)
+      elsif issues&.update(update_hash)
+        issues.map{|i| i.create_journal_detail(false, [], [], current_user&.id) if i.previous_changes.present?}
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")
