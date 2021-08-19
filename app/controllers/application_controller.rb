@@ -774,7 +774,8 @@ class ApplicationController < ActionController::Base
 	end
 
 	def convert_image!
-		@image = params[:image] || user_params[:image]
+		@image = params[:image] 
+		@image = @image.nil? && params[:user].present? ? params[:user][:image] : @image
     return unless @image.present?
     max_size = EduSetting.get('upload_avatar_max_size') || 2 * 1024 * 1024 # 2M
     if @image.class == ActionDispatch::Http::UploadedFile

@@ -16,7 +16,7 @@
 class ProjectUnit < ApplicationRecord
   belongs_to :project
 
-  enum unit_type: {code: 1, issues: 2, pulls: 3, devops: 4, versions: 5, resources: 6}
+  enum unit_type: {code: 1, issues: 2, pulls: 3, wiki:4, devops: 5, versions: 6, resources: 7}
 
   validates :unit_type, uniqueness: { scope: :project_id}
 
