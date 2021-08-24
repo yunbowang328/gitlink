@@ -32,7 +32,7 @@ class Repositories::MigrateService < ApplicationService
       private: params[:hidden],
       mirror: wrapper_mirror || false,
       auth_username: params[:login],
-      auth_password: params[:password]
+      auth_password: Base64.decode64(params[:password]) 
     }
   end
 
