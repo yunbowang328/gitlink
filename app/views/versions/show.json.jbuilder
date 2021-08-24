@@ -8,7 +8,7 @@ json.user_login @version.version_user.try(:login)
 json.created_at format_time(@version.created_on)
 json.updated_at format_time(@version.updated_on)
 json.search_count @version_issues_size
-json.percent @version.percent*100
+json.percent @version_close_issues_size.to_f/@version_issues_size*100#@version.percent*100
 json.extract! @version, :id,:name,:project_id,:description, :effective_date, :status, :sharing,:wiki_page_title
 
 json.issues do

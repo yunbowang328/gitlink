@@ -86,3 +86,4 @@ redis_data/
 Dockerfile
 dump.rdb
 .tags*
+ceshi_user.xlsx

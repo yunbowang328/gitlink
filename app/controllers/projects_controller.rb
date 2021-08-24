@@ -16,6 +16,7 @@ class ProjectsController < ApplicationController
     menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
     menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
     menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
+    menu.append(menu_hash_by_name("wiki")) if @project.has_menu_permission("wiki")
     menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
     menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources")
