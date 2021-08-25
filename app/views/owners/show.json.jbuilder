@@ -1,6 +1,6 @@
 json.type @owner.type
 if @owner.is_a?(Organization)
-  json.partial! "organizations/detail", organization: @owner
+  json.partial! "organizations/organizations/detail", organization: @owner
   json.can_create_project @can_create_project
   json.is_admin @is_admin
   json.is_member @is_member
