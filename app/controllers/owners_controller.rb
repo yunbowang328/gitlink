@@ -12,8 +12,10 @@ class OwnersController < ApplicationController
 
   def show 
     @owner = Owner.find_by(login: params[:id]) || Owner.find_by(id: params[:id])
+    return render_not_found unless @owner.present?
     # 组织
     if @owner.is_a?(Organization)
+      return render_forbidden("没有查看组织的权限") if org_limited_condition || org_privacy_condition
       @can_create_project = @owner.can_create_project?(current_user.id)
       @is_admin = current_user.admin? || @owner.is_owner?(current_user.id)
       @is_member = @owner.is_member?(current_user.id)
@@ -47,4 +49,13 @@ class OwnersController < ApplicationController
     end
   end
 
+  private 
+  def org_limited_condition
+    @owner.organization_extension.limited? && !current_user.logged?
+  end
+
+  def org_privacy_condition
+    return false if current_user.admin?
+    @owner.organization_extension.privacy? && @owner.organization_users.where(user_id: current_user.id).blank?
+  end
 end
