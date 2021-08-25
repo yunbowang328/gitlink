@@ -30,7 +30,7 @@ class Projects::ApplyTransferService < ApplicationService
 
   def is_permit_owner
     return true unless @owner.is_a?(Organization)
-    return @owner.is_owner?(@user)
+    return @owner.is_admin?(@user)
   end
 
   def create_apply 
