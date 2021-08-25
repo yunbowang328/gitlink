@@ -107,7 +107,7 @@ Rails.application.routes.draw do
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
 
-    resources :owners, only: [:index]
+    resources :owners, only: [:index, :show]
 
     scope module: :organizations do
       resources :organizations, except: [:edit, :new] do
