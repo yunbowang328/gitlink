@@ -33,7 +33,7 @@ class Organizations::Teams::UpdateService < ApplicationService
   end
 
   def units_params
-    %w(admin owner).include?(team.authorize) ? %w(code issues pulls releases) : params[:unit_types]
+    %w(code issues pulls wiki releases)
   end
 
   def update_team(update_params)
