@@ -54,7 +54,7 @@ class Organizations::Teams::CreateService < ApplicationService
   end
 
   def units_params
-    %w(admin owner).include?(authorize) ? %w(code issues pulls wiki releases) : params[:unit_types]
+    %w(code issues pulls wiki releases)
   end
 
   def create_units
