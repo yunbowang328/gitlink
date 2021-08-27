@@ -42,4 +42,20 @@ namespace :fix_some_error_data do
     puts "======Count: #{team_count}======"
     puts "======End: fix open full team authorize======"
   end
+
+  task transfer_repository_user_id: :environment do 
+    puts "======Begin: fix open full team authorize======"
+    repo_count = 0
+    AppliedTransferProject.find_each do |transfer|
+      next unless transfer.project.present?
+      next unless transfer.project.repository.present?
+      if transfer.project.user_id != transfer.project.repository.user_id 
+        transfer.project.repository.update(user_id: transfer.project.user_id)
+        repo_count += 1
+      end
+    end
+    puts "======Count: #{repo_count}======"
+    puts "======End: fix open full team authorize======"
+
+  end
 end

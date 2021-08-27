@@ -28,7 +28,7 @@ class Projects::TransferService < ApplicationService
   end
 
   def update_repo_url
-    project.repository.update!(url: @gitea_repo["clone_url"])
+    project.repository.update!(user_id: new_owner.id, url: @gitea_repo["clone_url"])
   end
 
   def update_visit_teams
