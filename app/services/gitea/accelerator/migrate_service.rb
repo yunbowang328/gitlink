@@ -44,7 +44,7 @@ class Gitea::Accelerator::MigrateService < Gitea::Accelerator::BaseService
       clone_addr: params[:clone_addr],
       repo_name: params[:repository_name],
       auth_username: params[:auth_username],
-      auth_password: params[:auth_password],
+      auth_password: Base64.decode64(params[:auth_password]),
       mirror: ActiveModel::Type::Boolean.new.cast(params[:is_mirror])
     }
   end

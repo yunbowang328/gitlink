@@ -29,6 +29,11 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
+      org_team_users = @organization.team_users.where(user_id: @operate_user.id)
+      unless org_team_users.present?
+        @organization.organization_users.find_by(user_id: @operate_user.id).destroy!
+        Gitea::Organization::OrganizationUser::DeleteService.call(@organization.gitea_token, @organization.login, @operate_user.login)
+      end
       render_ok
     end
   rescue Exception => e
@@ -43,6 +48,11 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, current_user.login)
+      org_team_users = @organization.team_users.where(user_id: current_user.id)
+      unless org_team_users.present?
+        @organization.organization_users.find_by(user_id: current_user.id).destroy!
+        Gitea::Organization::OrganizationUser::DeleteService.call(@organization.gitea_token, @organization.login, current_user.login)
+      end
       render_ok
     end
   rescue Exception => e

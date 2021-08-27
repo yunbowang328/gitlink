@@ -5,7 +5,7 @@ class Users::BaseController < ApplicationController
   helper_method :observed_logged_user?, :observed_user
 
   def observed_user
-    @_observed_user ||= (User.find_by_id(params[:user_id]) || User.find_by_login(params[:user_id]))
+    @_observed_user ||= (User.find_by_login(params[:user_id]) || User.find_by_id(params[:user_id]))
   end
 
   def observed_logged_user?
