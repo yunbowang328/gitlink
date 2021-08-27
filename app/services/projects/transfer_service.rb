@@ -23,12 +23,12 @@ class Projects::TransferService < ApplicationService
 
   private
   def update_owner
-    project.members.find_by(user_id: owner.id).destroy! if owner.is_a?(User)
+    project.members.map{|m| m.destroy! if m.user_id == owner.id || (new_owner.is_a?(Organization) && new_owner.is_member?(m.user_id)) }
     project.update!(user_id: new_owner.id)
   end
 
   def update_repo_url
-    project.repository.update!(url: @gitea_repo["clone_url"])
+    project.repository.update!(user_id: new_owner.id, url: @gitea_repo["clone_url"])
   end
 
   def update_visit_teams

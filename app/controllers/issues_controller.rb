@@ -219,7 +219,7 @@ class IssuesController < ApplicationController
           change_type = change_token > 0 ? "add" : "minus"
           post_to_chain(change_type, change_token.abs, current_user.try(:login))
         end
-        @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id)
+        @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id) if @issue.previous_changes.present? 
         normal_status(0, "更新成功")
       else
         normal_status(-1, "更新失败")
@@ -302,9 +302,11 @@ class IssuesController < ApplicationController
     # update_hash = params[:issue]
     issue_ids = params[:ids]
     if issue_ids.present?
+      issues = Issue.where(id: issue_ids)
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
-      elsif Issue.where(id: issue_ids)&.update(update_hash)
+      elsif issues&.update(update_hash)
+        issues.map{|i| i.create_journal_detail(false, [], [], current_user&.id) if i.previous_changes.present?}
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")

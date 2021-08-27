@@ -12,6 +12,7 @@ toc_footers:
 includes:
   - licenses
   - gitignores
+  - public_keys
   - users
   - projects
   - repositories

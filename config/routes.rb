@@ -71,6 +71,8 @@ Rails.application.routes.draw do
       # end
     end
 
+    resources :public_keys, only: [:index, :create, :destroy]
+
     resources :statistic, only: [:index] do
       collection do
         get :platform_profile
@@ -348,6 +350,7 @@ Rails.application.routes.draw do
 
     get '/auth/qq/callback', to: 'oauth/qq#create'
     get '/auth/wechat/callback', to: 'oauth/wechat#create'
+    get '/auth/educoder/callback', to: 'oauth/educoder#create'
     resource :bind_user, only: [:create]
 
     resources :hot_keywords, only: [:index]
@@ -569,6 +572,12 @@ Rails.application.routes.draw do
           collection do 
             get :organizations
             post :cancel
+          end
+        end
+        resources :webhooks, except: [:show, :new] do 
+          member do 
+            get :tasks 
+            post :test
           end
         end
         scope do

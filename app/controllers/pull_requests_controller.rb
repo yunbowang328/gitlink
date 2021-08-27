@@ -19,6 +19,7 @@ class PullRequestsController < ApplicationController
     @close_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::CLOSED})
     @merged_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::MERGED})
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
+    @user_admin_or_developer = current_user.present? && (current_user.admin || @project.all_developers.include?(current_user))
 
     scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "PullRequest")
     @issues_size = scopes.size

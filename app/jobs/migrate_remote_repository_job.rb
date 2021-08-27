@@ -8,10 +8,13 @@ class MigrateRemoteRepositoryJob < ApplicationJob
     puts "############ MigrateRemoteRepositoryJob starting ... ############"
 
     gitea_repository = Gitea::Repository::MigrateService.new(token, params).call
-    if gitea_repository
-      repo&.project&.update_columns(gpid: gitea_repository["id"])
+    puts "#gitea_repository#{gitea_repository}"
+    if gitea_repository[0]==201
+      repo&.project&.update_columns(gpid: gitea_repository[2]["id"])
       repo&.mirror&.succeeded!
       puts "############ mirror status: #{repo.mirror.status} ############"
+    else 
+      repo&.mirror&.failed!
     end
   end
 end
