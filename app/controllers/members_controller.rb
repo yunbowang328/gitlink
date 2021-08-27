@@ -47,7 +47,7 @@ class MembersController < ApplicationController
   end
 
   def member_exists?
-    @project.member?(params[:user_id])
+    @project.members.exists?(user_id: params[:user_id])
   end
 
   def operate!
@@ -59,6 +59,6 @@ class MembersController < ApplicationController
   end
 
   def check_member_not_exists!
-    return render_error("user_id为#{params[:user_id]}的用户还不是项目成员") unless @project.member?(params[:user_id])
+    return render_error("user_id为#{params[:user_id]}的用户还不是项目成员") unless member_exists?
   end
 end

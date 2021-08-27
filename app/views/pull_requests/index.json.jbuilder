@@ -5,6 +5,7 @@ json.merged_issues_size @merged_issues.size
 json.search_count @issues_size
 json.limit @limit
 json.user_admin_or_member @user_admin_or_member
+json.user_admin_or_developer @user_admin_or_developer
 json.project_name @project.name
 json.project_author_name @project.owner.try(:login)
 
