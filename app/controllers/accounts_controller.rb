@@ -9,6 +9,7 @@ class AccountsController < ApplicationController
   # 其他平台同步注册的用户
   def remote_register
     username = params[:username]&.gsub(/\s+/, "")
+    return render_forbidden('该用户名为系统保留关键字.') if ReversedKeyword.is_reversed(username).present?
     email = params[:email]&.gsub(/\s+/, "")
     password = params[:password]
     platform = (params[:platform] || 'forge')&.gsub(/\s+/, "")
