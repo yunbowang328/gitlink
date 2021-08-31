@@ -12,5 +12,15 @@
 
 class ReversedKeyword < ApplicationRecord
 
-  scope :is_reversed, -> (identifier){where(identifier: identifier, closed: false) if identifier.present?}
+  scope :is_reversed, -> (identifier){where(identifier: identifier.downcase, closed: false) if identifier.present?}
+
+  validates :identifier, presence: true, uniqueness: true
+
+  before_validation :set_identifier 
+
+  private 
+
+  def set_identifier 
+    self.identifier = self.identifier.downcase
+  end
 end
