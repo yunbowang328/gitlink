@@ -78,6 +78,7 @@ class UsersController < ApplicationController
     return render_forbidden unless User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
     Util.write_file(@image, avatar_path(@user)) if user_params[:image].present?
     @user.attributes = user_params.except(:image)
+    @user.profile_completed = true if @user.nickname.present? && @user.gender.present? && @user.mail.present? && @user.custom_department.present?
     unless @user.save
       render_error(@user.errors.full_messages.join(", "))
     end

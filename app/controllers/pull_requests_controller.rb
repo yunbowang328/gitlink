@@ -1,5 +1,6 @@
 class PullRequestsController < ApplicationController
   before_action :require_login, except: [:index, :show, :files, :commits]
+  before_action :require_profile_completed, only: [:create]
   before_action :load_repository
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
   before_action :load_pull_request, only: [:files, :commits]

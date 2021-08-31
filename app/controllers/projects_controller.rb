@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   include Acceleratorable
 
   before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
+  before_action :require_profile_completed, only: [:create, :migrate]
   before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]

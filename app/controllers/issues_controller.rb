@@ -1,5 +1,6 @@
 class IssuesController < ApplicationController
   before_action :require_login, except: [:index, :show, :index_chosen]
+  before_action :require_profile_completed, only: [:create]
   before_action :load_project
   before_action :set_user
   before_action :check_issue_permission
