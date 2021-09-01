@@ -9,9 +9,7 @@ else
 
       forge_user = 
         if commiter.present? 
-          User.simple_select.find_by(mail: commiter['email'])
-        else
-          User.simple_select.find_by(mail: commit['commit']['committer']['email'])
+          User.simple_select.find_by(gitea_uid: commiter['id'])
         end
         
       json.sha commit['sha']
