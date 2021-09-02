@@ -1,6 +1,6 @@
 class Projects::AppliedTransferProjectsController < Projects::BaseController
   before_action :check_auth
-  before_action :check_user_profile_completed
+  before_action :check_user_profile_completed, only: [:create]
 
   def organizations 
     @organizations = Organization.includes(:organization_extension).joins(team_users: :team).where(team_users: {user_id: current_user.id}, teams: {authorize: %w(admin owner)})
