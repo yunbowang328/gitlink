@@ -4,5 +4,6 @@ json.array! users do |user|
   json.login user.login
   json.user_id user.id
   json.image_url url_to_avatar(user)
+  json.profile_completed user.profile_completed
 end
 

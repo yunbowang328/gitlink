@@ -250,6 +250,10 @@ class ApplicationController < ActionController::Base
 		tip_exception(411, "请完善资料后再操作") unless User.current.profile_completed
 	end
 
+	def require_user_profile_completed(user)
+		tip_exception(412, "请用户完善资料后再操作") unless user.profile_completed
+	end
+
 	# 异常提醒
 	def tip_exception(status = -1, message)
 		raise Educoder::TipException.new(status, message)
