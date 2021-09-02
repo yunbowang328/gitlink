@@ -74,7 +74,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    return render_not_found unless @user = User.find_by_id(params[:id]) || User.find_by(login: params[:id])
+    return render_not_found unless @user = User.find_by(login: params[:id]) || User.find_by_id(params[:id]) 
     return render_forbidden unless User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
     Util.write_file(@image, avatar_path(@user)) if user_params[:image].present?
     @user.attributes = user_params.except(:image)

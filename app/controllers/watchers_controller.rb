@@ -1,5 +1,6 @@
 class WatchersController < ApplicationController
   before_action :require_login, except: %i[index]
+  before_action :require_profile_completed, only: [:follow]
   # before_action :find_project_with_id
   before_action :get_target
 

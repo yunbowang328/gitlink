@@ -1,5 +1,6 @@
 class Organizations::OrganizationsController < Organizations::BaseController
   before_action :require_login, except: [:index, :show, :recommend]
+  before_action :require_profile_completed, only: [:create]
   before_action :convert_image!, only: [:create, :update]
   before_action :load_organization, only: [:show, :update, :destroy]
   before_action :check_user_can_edit_org, only: [:update, :destroy]
