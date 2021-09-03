@@ -1,5 +1,6 @@
 class Organizations::OrganizationsController < Organizations::BaseController
   before_action :require_login, except: [:index, :show, :recommend]
+  before_action :require_profile_completed, only: [:create]
   before_action :convert_image!, only: [:create, :update]
   before_action :load_organization, only: [:show, :update, :destroy]
   before_action :check_user_can_edit_org, only: [:update, :destroy]
@@ -25,6 +26,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def create
     ActiveRecord::Base.transaction do
+      tip_exception("无法使用以下关键词：#{organization_params[:name]}，请重新命名") if ReversedKeyword.is_reversed(organization_params[:name]).present?
       Organizations::CreateForm.new(organization_params).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
