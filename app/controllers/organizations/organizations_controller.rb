@@ -25,7 +25,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def create
     ActiveRecord::Base.transaction do
-      return render_forbidden('该组织标识为系统保留关键字.') if ReversedKeyword.is_reversed(organization_params[:name]).present?
+      tip_exception("无法使用以下关键词：#{organization_params[:name]}，请重新命名") if ReversedKeyword.is_reversed(organization_params[:name]).present?
       Organizations::CreateForm.new(organization_params).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?

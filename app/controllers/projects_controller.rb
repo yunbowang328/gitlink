@@ -45,7 +45,7 @@ class ProjectsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      return render_forbidden('该项目标识为系统保留关键字.') if ReversedKeyword.is_reversed(project_params[:repository_name]).present?
+      tip_exception("无法使用以下关键词：#{project_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(project_params[:repository_name]).present?
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 
@@ -56,7 +56,7 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
-    return render_forbidden('该项目标识为系统保留关键字.') if ReversedKeyword.is_reversed(mirror_params[:repository_name]).present?
+    tip_exception("无法使用以下关键词：#{mirror_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(mirror_params[:repository_name]).present?
     Projects::MigrateForm.new(mirror_params).validate!
 
     @project = 
