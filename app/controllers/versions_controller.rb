@@ -2,11 +2,11 @@ class VersionsController < ApplicationController
   before_action :require_login, except: [:index, :show]
   before_action :require_profile_completed, only: [:create]
   before_action :load_repository
+  before_action :check_menu_authorize
   before_action :check_issue_permission, except: [:show, :index]
   before_action :set_version, only: [:edit, :update, :destroy, :show,:update_status]
 
   def index
-    return render_not_found unless @project.has_menu_permission("versions")
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
     status = params[:status]
     versions = @project.versions.version_includes
@@ -181,6 +181,10 @@ class VersionsController < ApplicationController
 
    def order_type
     %w(desc asc).include?(params[:order_type]) ? params[:order_type] : 'desc'
+   end
+
+   def check_menu_authorize
+    return render_not_found unless @project.has_menu_permission("versions")
    end
 
 end

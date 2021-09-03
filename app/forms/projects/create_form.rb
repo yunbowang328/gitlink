@@ -15,6 +15,8 @@ class Projects::CreateForm < BaseForm
   validate do
     check_project_category(project_category_id)
     check_project_language(project_language_id)
+    check_project_name(user_id, name) unless name.blank?
+    check_repository_name(user_id, repository_name) unless repository_name.blank?
   end
 
   def check_license

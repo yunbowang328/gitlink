@@ -3,6 +3,7 @@ class IssuesController < ApplicationController
   before_action :require_profile_completed, only: [:create]
   before_action :load_project
   before_action :set_user
+  before_action :check_menu_authorize, except: [:index_chosen]
   before_action :check_issue_permission
   before_action :operate_issue_permission, only:[:create, :update, :destroy, :clean, :series_update, :copy]
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
@@ -14,7 +15,6 @@ class IssuesController < ApplicationController
   include TagChosenHelper
 
   def index
-    return render_not_found unless @project.has_menu_permission("issues")
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
@@ -499,5 +499,9 @@ class IssuesController < ApplicationController
       return normal_status(-1, "获取token失败，请稍后重试") if response.status != 200
       return normal_status(-1, "您的token值不足") if JSON.parse(response.body)["balance"].to_i < params[:token].to_i
     end
+  end
+
+  def check_menu_authorize
+    return render_not_found unless @project.has_menu_permission("issues")
   end
 end
