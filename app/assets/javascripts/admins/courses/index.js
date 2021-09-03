@@ -1,7 +1,7 @@
 $(document).on('turbolinks:load', function() {
   if ($('body.admins-courses-index-page').length > 0) {
-    let searchContainer = $(".course-list-form");
-    let searchForm = $("form.search-form",searchContainer);
+    var searchContainer = $(".course-list-form");
+    var searchForm = $("form.search-form",searchContainer);
 
     searchContainer.on('change', '.course-homepage-show', function(){
       searchForm.find('input[type="submit"]').trigger('click');
