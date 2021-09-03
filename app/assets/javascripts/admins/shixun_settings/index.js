@@ -1,7 +1,15 @@
+/*
+ * @Description: Do not edit
+ * @Date: 2021-07-16 11:58:16
+ * @LastEditors: viletyy
+ * @Author: viletyy
+ * @LastEditTime: 2021-08-31 14:48:59
+ * @FilePath: /forgeplus/app/assets/javascripts/admins/shixun_settings/index.js
+ */
 $(document).on('turbolinks:load', function() {
   if ($('body.admins-shixun-settings-index-page').length > 0) {
-    let searchContainer = $(".shixun-settings-list-form");
-    let searchForm = $("form.search-form",searchContainer);
+    var searchContainer = $(".shixun-settings-list-form");
+    var searchForm = $("form.search-form",searchContainer);
 
     searchContainer.on('change', '.shixun-settings-select', function(){
       searchForm.find('input[type="submit"]').trigger('click');

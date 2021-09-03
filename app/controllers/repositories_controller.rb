@@ -4,6 +4,7 @@ class RepositoriesController < ApplicationController
   include Repository::LanguagesPercentagable
 
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
+  before_action :require_profile_completed, only: [:create_file]
   before_action :load_repository
   before_action :authorizate!, except: [:sync_mirror, :tags, :commit, :archive]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]

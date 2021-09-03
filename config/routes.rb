@@ -107,7 +107,7 @@ Rails.application.routes.draw do
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
 
-    resources :owners, only: [:index]
+    resources :owners, only: [:index, :show]
 
     scope module: :organizations do
       resources :organizations, except: [:edit, :new] do
@@ -655,6 +655,7 @@ Rails.application.routes.draw do
     resources :project_categories
     resources :project_licenses
     resources :project_ignores
+    resources :reversed_keywords
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do

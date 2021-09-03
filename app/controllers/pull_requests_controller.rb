@@ -1,6 +1,8 @@
 class PullRequestsController < ApplicationController
   before_action :require_login, except: [:index, :show, :files, :commits]
+  before_action :require_profile_completed, only: [:create]
   before_action :load_repository
+  before_action :check_menu_authorize
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
   before_action :load_pull_request, only: [:files, :commits]
   include TagChosenHelper
@@ -8,7 +10,6 @@ class PullRequestsController < ApplicationController
 
 
   def index
-    return render_not_found unless @project.has_menu_permission("pulls")
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
     issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
@@ -259,5 +260,9 @@ class PullRequestsController < ApplicationController
       tracker_id: 2,
       status_id: 1,
     }
+  end
+
+  def check_menu_authorize
+    return render_not_found unless @project.has_menu_permission("pulls")
   end
 end

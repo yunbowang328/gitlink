@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   include Acceleratorable
 
   before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
+  before_action :require_profile_completed, only: [:create, :migrate]
   before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
@@ -21,7 +22,7 @@ class ProjectsController < ApplicationController
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
     menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources")
     menu.append(menu_hash_by_name("activity"))
-    menu.append(menu_hash_by_name("setting")) if current_user.admin? || @project.manager?(current_user)
+    menu.append(menu_hash_by_name("settings")) if current_user.admin? || @project.manager?(current_user)
 
     render json: menu
   end
@@ -45,6 +46,7 @@ class ProjectsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
+      tip_exception("无法使用以下关键词：#{project_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(project_params[:repository_name]).present?
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 
@@ -55,6 +57,7 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
+    tip_exception("无法使用以下关键词：#{mirror_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(mirror_params[:repository_name]).present?
     Projects::MigrateForm.new(mirror_params).validate!
 
     @project = 

@@ -1,6 +1,7 @@
 class Organizations::TeamUsersController < Organizations::BaseController
   before_action :load_organization, :load_team
   before_action :load_operate_user, only: [:create, :destroy]
+  before_action :check_user_profile_completed, only: [:create]
   before_action :load_team_user, only: [:destroy]
   before_action :check_user_can_edit_org, only: [:create, :destroy]
 
@@ -81,6 +82,10 @@ class Organizations::TeamUsersController < Organizations::BaseController
   def load_team_user
     @team_user = TeamUser.find_by(team_id: @team.id, user_id: @operate_user.id)
     tip_exception("组织团队成员不存在") if @team_user.nil?
+  end
+
+  def check_user_profile_completed
+    require_user_profile_completed(@operate_user)
   end
 
 end
