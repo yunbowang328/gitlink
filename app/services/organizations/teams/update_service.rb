@@ -25,7 +25,7 @@ class Organizations::Teams::UpdateService < ApplicationService
   private
   def update_params
     if team.authorize == "owner"
-      update_params = params.slice(:description)
+      update_params = params.slice(:description, :nickname)
     else
       update_params = params.slice(:name, :nickname, :description, :authorize, :includes_all_project, :can_create_org_project)
     end
