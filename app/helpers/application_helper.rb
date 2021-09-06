@@ -434,6 +434,10 @@ module ApplicationHelper
     User.find_by_login login
   end
 
+  def find_user_by_gitea_uid(gitea_uid)
+    User.find_by(gitea_uid: gitea_uid)
+  end
+
   def render_base64_decoded(str)
     return nil if str.blank?
     Base64.decode64 str

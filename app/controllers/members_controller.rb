@@ -2,6 +2,7 @@ class MembersController < ApplicationController
   before_action :require_login
   before_action :load_project
   before_action :find_user_with_id, only: %i[create remove change_role]
+  before_action :check_user_profile_completed, only: [:create]
   before_action :operate!, except: %i[index]
   before_action :check_member_exists!, only: %i[create]
   before_action :check_member_not_exists!, only: %i[remove change_role]
@@ -69,5 +70,9 @@ class MembersController < ApplicationController
 
   def check_member_not_exists!
     return render_error("user_id为#{params[:user_id]}的用户还不是项目成员") unless member_exists?
+  end
+
+  def check_user_profile_completed
+    require_user_profile_completed(@user)
   end
 end
