@@ -1,0 +1,37 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="5%">序号</th>
+    <th width="30%"><%= sort_tag('标识', name: 'identifier', path: admins_reversed_keywords_path) %></th>
+    <th width="20%">描述</th>
+    <th width="20%"><%= sort_tag('限制是否开启', name: 'closed', path: admins_reversed_keywords_path) %></th>
+    <th width="20%"><%= sort_tag('创建时间', name: 'created_at', path: admins_reversed_keywords_path) %></th>
+    <th width="25%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if keywords.present? %>
+    <% keywords.each_with_index do |keyword, index| %>
+      <tr class="reversed-keyword-item-<%= keyword.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td>
+          <%= link_to(keyword.identifier, "javascript:void(0)") %>
+        </td>
+        <td><%= keyword.description %></td>
+        <td class="keyword_closed"><%= !keyword.closed ? '√' : '' %></td>
+        <td><%= keyword.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
+        <td class="action-container">
+        <%= javascript_void_link '开启限制', class: 'action unclose-action', data: { id: keyword.id }, style: keyword.closed? ? '' : 'display: none;' %>
+        <%= javascript_void_link '关闭限制', class: 'action close-action', data: { id: keyword.id }, style: keyword.closed? ? 'display: none;' : '' %>
+        <%= link_to "编辑", edit_admins_reversed_keyword_path(keyword), remote: true, class: "action" %>
+        <%= link_to "删除", admins_reversed_keyword_path(keyword), method: :delete, data:{confirm: "确认删除的吗？"}, class: "action" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: keywords } %>

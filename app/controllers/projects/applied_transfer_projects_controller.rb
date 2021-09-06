@@ -1,5 +1,6 @@
 class Projects::AppliedTransferProjectsController < Projects::BaseController
   before_action :check_auth
+  before_action :check_user_profile_completed, only: [:create]
 
   def organizations 
     @organizations = Organization.includes(:organization_extension).joins(team_users: :team).where(team_users: {user_id: current_user.id}, teams: {authorize: %w(admin owner)})
@@ -22,5 +23,11 @@ class Projects::AppliedTransferProjectsController < Projects::BaseController
   private 
   def check_auth 
     return render_forbidden unless current_user.admin? ||@project.owner?(current_user)
+  end
+
+  def check_user_profile_completed
+    @owner = Owner.find_by(login: params[:owner_name])
+    return if @owner.is_a?(Organization)
+    require_user_profile_completed(@owner)
   end
 end
