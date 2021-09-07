@@ -13,6 +13,7 @@ class Repositories::DetailService < ApplicationService
         repo: {},
         release: [],
         branch: [],
+        branch_type: [],
         tag: [],
         contributor: [],
         language: {},
@@ -23,6 +24,7 @@ class Repositories::DetailService < ApplicationService
         repo: repo_suitable,
         release: release_suitable,
         branch: branch_suitable,
+        branch_slice: branch_slice_suitable,
         tag: tag_suitable,
         contributor: contributor_suitable,
         language: language_suitable,
@@ -43,7 +45,12 @@ class Repositories::DetailService < ApplicationService
 
   def branch_suitable
     branches = Gitea::Repository::Branches::ListService.call(@owner, @repo.identifier)
-    branches.is_a?(Hash) && branches[:status] == :error ? [] : branches
+    branches.is_a?(Hash) && branches.key?(:status) ? [] : branches
+  end
+
+  def branch_slice_suitable
+    branches = Gitea::Repository::Branches::ListSliceService.call(@owner, @repo.identifier)
+    branches.is_a?(Hash) && branches.key?(:status) == :error ? [] : branches
   end
 
   def tag_suitable

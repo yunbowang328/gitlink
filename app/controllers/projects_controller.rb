@@ -86,6 +86,13 @@ class ProjectsController < ApplicationController
     @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
   end
 
+  def branches_slice
+    return @branches = [] unless @project.forge?
+
+    slice_result = Gitea::Repository::Branches::ListSliceService.call(@owner, @project.identifier)
+    @branches_slice = slice_result.is_a?(Hash) && slice_result.key?(:status) ? [] : slice_result
+  end
+
   def group_type_list
     project_statics = ProjectStatistic.first
 

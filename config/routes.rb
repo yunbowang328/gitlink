@@ -416,6 +416,7 @@ Rails.application.routes.draw do
         member do
           get :menu_list
           get :branches
+          get :branches_slice
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'

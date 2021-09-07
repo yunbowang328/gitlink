@@ -72,6 +72,15 @@ json.branches do
   end
   json.total_count @result[:branch].size
 end
+json.branches_slice do 
+  json.list @result[:branch_slice].each do |branch_slice|
+    json.branch_type branch_slice["branch_name"]
+    json.list branch_slice["branches"].each do |branch|
+      json.name branch["name"]
+    end
+  end
+  json.total_count @result[:branch_slice].size
+end
 json.tags do
   json.list @result[:tag].each do |tag|
     json.name tag["name"]
