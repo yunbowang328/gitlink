@@ -137,6 +137,18 @@ class Project < ApplicationRecord
   delegate :content, to: :project_detail, allow_nil: true
   delegate :name, to: :license, prefix: true, allow_nil: true
 
+  def self.all_visible(user_id=nil)
+    user_projects_sql = Project.joins(:owner).where(users: {type: 'User'}).to_sql
+    org_public_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension).where(organization_extensions: {visibility: 'common'})).to_sql
+    if user_id.present?
+      org_limit_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension).where(organization_extensions: {visibility: 'limited'})).to_sql
+      org_privacy_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension, :organization_users).where(organization_extensions: {visibility: 'privacy'}, organization_users: {user_id: user_id})).to_sql
+      return Project.from("( #{ user_projects_sql } UNION #{ org_public_projects_sql } UNION #{ org_limit_projects_sql } UNION #{org_privacy_projects_sql} ) AS projects").visible
+    else
+      return Project.from("( #{ user_projects_sql } UNION #{ org_public_projects_sql } ) AS projects").visible
+    end
+  end
+
   def reset_cache_data 
     if changes[:user_id].present?
       first_owner = Owner.find_by_id(changes[:user_id].first) 

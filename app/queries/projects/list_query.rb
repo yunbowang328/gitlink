@@ -1,16 +1,17 @@
 class Projects::ListQuery < ApplicationQuery
   include CustomSortable
 
-  attr_reader :params
+  attr_reader :params, :current_user_id
 
   sort_columns :updated_on, :created_on, :forked_count, :praises_count, default_by: :updated_on, default_direction: :desc
 
-  def initialize(params)
+  def initialize(params, current_user_id=nil)
     @params = params
+    @current_user_id = current_user_id
   end
 
   def call
-    q = Project.visible.by_name_or_identifier(params[:search])
+    q = Project.all_visible(current_user_id).by_name_or_identifier(params[:search])
 
     scope = q
       .with_project_type(params[:project_type])
