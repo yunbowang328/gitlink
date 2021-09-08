@@ -432,6 +432,7 @@ Rails.application.routes.draw do
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
+          get :commits_slice
           get :tags
           get :contributors
           post :create_file

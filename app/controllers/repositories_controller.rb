@@ -107,6 +107,11 @@ class RepositoriesController < ApplicationController
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
   end
 
+  def commits_slice 
+    @hash_commit = Gitea::Repository::Commits::ListSliceService.call(@owner.login, @project.identifier,
+      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token)
+  end 
+
   def commit
     @sha         = params[:sha]
     @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
