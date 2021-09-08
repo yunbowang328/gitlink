@@ -14,7 +14,7 @@ class Users::StatisticsController < Users::BaseController
       @date_data << date.strftime("%Y.%m.%d")
       @issue_data << observed_user.issues.where("DATE(created_on) = ?", date).size
       @pull_request_data << observed_user.pull_requests.where("DATE(created_at) = ?", date).size
-      date_commit_data = commit_data.select{|item| item["timestamp"] == date.to_time.to_i}
+      date_commit_data = commit_data.blank? ? nil : commit_data.select{|item| item["timestamp"] == date.to_time.to_i}
       @commit_data << (date_commit_data.blank? ? 0 : date_commit_data[0]["contributions"].to_i)
     end
     render :json => {dates: @date_data, issues_count: @issue_data, pull_requests_count: @pull_request_data, commits_count: @commit_data}
