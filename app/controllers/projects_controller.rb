@@ -56,7 +56,6 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
-    tip_exception("无法使用以下关键词：#{mirror_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(mirror_params[:repository_name]).present?
     Projects::MigrateForm.new(mirror_params).validate!
 
     @project = 

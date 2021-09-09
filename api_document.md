@@ -374,9 +374,7 @@ curl -X POST \
 -d "user_id=36408" \
 -d "clone_addr=https://gitea.com/mx8090alex/golden.git" \
 -d "name=golden_mirror1" \
--d "description=golden_mirror" \
--d "project_category_id=1" \
--d "project_language_id=2" \
+-d "repository_name=golden_mirror1" \
 http://localhost:3000/api/projects/migrate.json  | jq
 ```
 *请求参数说明:*

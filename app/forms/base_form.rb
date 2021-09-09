@@ -19,7 +19,7 @@ class BaseForm
   end
 
   def check_reversed_keyword(repository_name)
-    raise "仓库名称已被使用." if ReversedKeyword.is_reversed(repository_name).exists?
+    raise "仓库名称已被占用." if ReversedKeyword.is_reversed(repository_name).exists?
   end
   
 end
