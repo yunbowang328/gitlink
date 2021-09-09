@@ -3,8 +3,7 @@ class Projects::CreateForm < BaseForm
   attr_accessor :user_id, :name, :description, :repository_name, :project_category_id,
                 :project_language_id, :ignore_id, :license_id, :private, :owner
   
-  validates :user_id, :name, :description,:repository_name,
-            :project_category_id, :project_language_id, presence: true
+  validates :user_id, :name, :repository_name, presence: true
   validates :repository_name, format: { with: REPOSITORY_NAME_REGEX, multiline: true, message: "只能含有数字、字母、下划线且不能以下划线开头和结尾" }
 
   validates :name, length: { maximum: 50 }

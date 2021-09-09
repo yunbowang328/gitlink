@@ -46,7 +46,6 @@ class ProjectsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      tip_exception("无法使用以下关键词：#{project_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(project_params[:repository_name]).present?
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 

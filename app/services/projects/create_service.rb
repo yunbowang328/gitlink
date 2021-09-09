@@ -43,7 +43,7 @@ class Projects::CreateService < ApplicationService
       ignore_id: params[:ignore_id],
       license_id: params[:license_id],
       website: params[:website],
-      identifier: params[:repository_name]  #新增,hs
+      identifier: params[:repository_name]
     }
   end
 
