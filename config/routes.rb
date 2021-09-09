@@ -300,6 +300,13 @@ Rails.application.routes.draw do
         # resources :recent_contacts, only: [:index]
         # resource :private_message_details, only: [:show]
         # resource :unread_message_info, only: [:show]
+
+        # 通知中心
+        resources :messages, only: [:index, :create, :delete] do 
+          collection do 
+            post :read
+          end
+        end
       end
 
       resources :tidings, only: [:index]

@@ -57,6 +57,9 @@ default: &default
       domain: 'https://testgit.trustie.net'
       base_url: '/api/v1'
 
+  notice: 
+    domain: ''
+    base_url: ''
 
 production:
   <<: *default
