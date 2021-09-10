@@ -26,13 +26,14 @@ class Projects::CreateForm < BaseForm
   end
 
   def check_owner
-    @owner = Owner.find_by(id: user_id)
-    raise "user_id值无效." if user_id && owner.blank?
+    @project_owner = Owner.find_by(id: user_id)
+    raise "user_id值无效." if user_id && @project_owner.blank?
   end
 
   def check_max_repo_creation
-    return unless owner.is_a?(Organization)
-    return if owner.max_repo_creation <= -1
-    raise "已超过组织设置最大仓库数" if owner.max_repo_creation == owner.num_projects
+    return unless @project_owner.is_a?(Organization)
+    return if @project_owner.max_repo_creation <= -1
+
+    raise "已超过组织设置最大仓库数" if @project_owner.max_repo_creation == @project_owner.num_projects
   end
 end
