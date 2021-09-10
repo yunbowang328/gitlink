@@ -21,6 +21,10 @@ module ProjectsHelper
     [base_url, archive_repositories_path(owner&.login, repository, "#{archive}.tar.gz")].join
   end
 
+  def render_download_file_url(owner, repository, filepath, ref)
+    [base_url, "/api/#{owner&.login}/#{repository.identifier}/raw?filepath=#{filepath}&ref=#{ref}"].join
+  end
+
   def render_http_url(project)
     [gitea_domain, project.owner.login, "#{project.identifier}.git"].join('/')
   end

@@ -205,6 +205,17 @@ class RepositoriesController < ApplicationController
 
     redirect_to file_path
   end
+  
+  def raw 
+    domain  = Gitea.gitea_config[:domain]
+    api_url = Gitea.gitea_config[:base_url]
+
+    url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{params[:filepath]}?ref=#{params[:ref]}"
+    file_path = [domain, api_url, url].join
+    file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") if @repository.hidden?
+
+    redirect_to file_path
+  end
 
   private
 
