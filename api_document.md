@@ -338,10 +338,10 @@ http://localhost:3000/api/projects/  | jq
 |-|-|-|-|
 |user_id            |是|int    |用户id或者组织id  |
 |name               |是|string |项目名称  |
-|description        |是|string |项目描述  |
+|description        |否|string |项目描述  |
 |repository_name    |是|string |仓库名称, 只含有数字、字母、下划线不能以下划线开头和结尾，且唯一  |
-|project_category_id|是|int    |项目类别id  |
-|project_language_id|是|int    |项目语言id  |
+|project_category_id|否|int    |项目类别id  |
+|project_language_id|否|int    |项目语言id  |
 |ignore_id          |否|int    |gitignore相关id  |
 |license_id         |否|int    |开源许可证id  |
 |private            |否|boolean|项目是否私有, true：为私有，false: 公开，默认为公开  |
@@ -374,9 +374,7 @@ curl -X POST \
 -d "user_id=36408" \
 -d "clone_addr=https://gitea.com/mx8090alex/golden.git" \
 -d "name=golden_mirror1" \
--d "description=golden_mirror" \
--d "project_category_id=1" \
--d "project_language_id=2" \
+-d "repository_name=golden_mirror1" \
 http://localhost:3000/api/projects/migrate.json  | jq
 ```
 *请求参数说明:*
@@ -388,8 +386,8 @@ http://localhost:3000/api/projects/migrate.json  | jq
 |clone_addr         |是|string |镜像项目clone地址  |
 |description        |否|string |项目描述  |
 |repository_name    |是|string |仓库名称, 只含有数字、字母、下划线不能以下划线开头和结尾，且唯一  |
-|project_category_id|是|int    |项目类别id  |
-|project_language_id|是|int    |项目语言id  |
+|project_category_id|否|int    |项目类别id  |
+|project_language_id|否|int    |项目语言id  |
 |is_mirror          |否|boolean|是否设置为镜像， true：是， false：否，默认为否  |
 |auth_username      |否|string|镜像源仓库的登录用户名  |
 |auth_password      |否|string|镜像源仓库的登录秘密  |
