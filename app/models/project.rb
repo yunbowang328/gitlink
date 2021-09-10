@@ -127,8 +127,8 @@ class Project < ApplicationRecord
   has_many :has_pinned_users, through: :pinned_projects, source: :user
   has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
 
-  after_save :check_project_members, :reset_cache_data
-  before_save :set_invite_code
+  after_save :check_project_members
+  before_save :set_invite_code, :reset_cache_data, :reset_unmember_followed
   after_destroy :reset_cache_data
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
@@ -156,6 +156,12 @@ class Project < ApplicationRecord
     end
     self.reset_platform_cache_async_job
     self.reset_user_cache_async_job(self.owner)
+  end
+
+  def reset_unmember_followed
+    if changes[:is_public].present? && changes[:is_public] == [true, false]
+      self.watchers.where.not(user_id: self.all_collaborators).destroy_all
+    end
   end
 
   def set_invite_code
