@@ -17,7 +17,8 @@ if @project.forge?
       dir_path = [@owner.login, @repository.identifier, "raw/branch", @ref].join('/')
       render_download_image_url(dir_path, entry['path'], decode64_content(entry, @owner, @repository, @ref))
     else
-      entry['download_url']
+      # entry['download_url']
+      render_download_file_url(@owner, @repository, entry['path'].to_s, @ref)
     end
   json.download_url download_url
 

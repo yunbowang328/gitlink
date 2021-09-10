@@ -28,7 +28,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    scope = Projects::ListQuery.call(params)
+    scope = current_user.logged? ? Projects::ListQuery.call(params, current_user.id) : Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
     @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
