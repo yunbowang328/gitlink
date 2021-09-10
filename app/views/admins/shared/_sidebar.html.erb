@@ -44,6 +44,12 @@
       <% end %>
     </li>
     <li>
+      <%= sidebar_item_group('#setting-system', '系统配置', icon: 'wrench') do %>
+        <li><%= sidebar_item(admins_sites_path, 'setting接口配置', icon: 'deaf', controller: 'admins-sites') %></li>
+        <li><%= sidebar_item(admins_edu_settings_path, '全局变量配置', icon: 'pencil-square', controller: 'admins-edu_settings') %></li>
+      <% end %>
+    </li>
+    <li>
       <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>
     
