@@ -11,7 +11,7 @@ class BaseForm
 
   def check_repository_name(user_id, repository_name)
     check_reversed_keyword(repository_name)
-    raise "仓库名称已被使用." if Repository.where(user_id: user_id, identifier: repository_name.strip).exists?
+    raise "项目标识已被使用." if Repository.where(user_id: user_id, identifier: repository_name.strip).exists?
   end
 
   def check_project_name(user_id, project_name)
@@ -19,7 +19,7 @@ class BaseForm
   end
 
   def check_reversed_keyword(repository_name)
-    raise "仓库名称已被占用." if ReversedKeyword.is_reversed(repository_name).exists?
+    raise "项目标识已被占用." if ReversedKeyword.is_reversed(repository_name).exists?
   end
   
 end
