@@ -1,9 +1,13 @@
 class Projects::MigrateForm < BaseForm
-  attr_accessor :user_id, :name, :repository_name, :project_category_id, :project_language_id, :clone_addr, :private, :is_mirror, :auth_username, :auth_password, :owner
+  attr_accessor :user_id, :name, :repository_name, :project_category_id, :description,
+                :project_language_id, :clone_addr, :private, :is_mirror, :auth_username, :auth_password, :owner
 
   validates :user_id, :name, :repository_name, :clone_addr, presence: true
   validates :repository_name, format: { with: CustomRegexp::REPOSITORY_NAME_REGEX, multiline: true, message: "只能含有数字、字母、下划线且不能以下划线开头和结尾" }
   validates :clone_addr, format: { with: CustomRegexp::URL_REGEX, multiline: true, message: "地址格式不正确" }
+  validates :name, length: { maximum: 50 }
+  validates :repository_name, length: { maximum: 100 }
+  validates :description, length: { maximum: 200 }
   validate do
     check_project_name(user_id, name) unless name.blank?
     check_repository_name(user_id, repository_name) unless repository_name.blank?
