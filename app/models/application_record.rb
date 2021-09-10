@@ -24,4 +24,12 @@ class ApplicationRecord < ActiveRecord::Base
   def reset_platform_cache_async_job
     ResetPlatformCacheJob.perform_later
   end
+
+  def self.strip_param(key)
+    key.to_s.strip.presence
+  end
+
+  def strip_param(key)
+    key.to_s.strip.presence
+  end
 end

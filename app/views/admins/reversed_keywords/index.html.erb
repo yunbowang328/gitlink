@@ -11,6 +11,10 @@
  <%= link_to "新增", new_admins_reversed_keyword_path, remote: true, class: "btn btn-primary pull-right", "data-disabled-with":"...新增" %> 
 </div>
 
+<div class="box py-0 pt-4 pl-4 daily-school-statistic-title">
+  旨在为特殊用户群体、特殊场景、路由而保留的关键词，如：Gitlink、Trustie等；目前主要在用户注册、创建组织、创建项目等场景下做关键词的验证.
+</div>
+
 <div class="box admin-list-container reversed-keyword-list-container">
   <%= render partial: 'admins/reversed_keywords/list', locals: { keywords: @keywords } %>
 </div>
