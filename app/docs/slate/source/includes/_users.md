@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-09-09 16:24:28
+ * @LastEditTime: 2021-09-10 16:07:14
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -67,7 +67,7 @@ await octokit.request('GET /api/users/:login/messages.json')
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
 |type       | string  | 消息类型，不传为所有消息，notification为系统消息，atme为@我消息|
-|status     | integer | 是否已读，不传为所有消息，0为未读，1为已读 |
+|status     | integer | 是否已读，不传为所有消息，1为未读，2为已读 |
 |limit      | integer | 每页个数 |
 |page       | integer | 页码 |
 
@@ -79,7 +79,7 @@ await octokit.request('GET /api/users/:login/messages.json')
 |unread_notification | integer | 未读系统通知数量 |
 |unread_atme | integer | 未读@我数量 |
 |messages.id | integer | 消息id |
-|messages.status | integer | 消息是否已读，0为未读，1为已读 |
+|messages.status | integer | 消息是否已读，1为未读，2为已读 |
 |messages.content | string | 消息内容 |
 |messages.notification_url | string | 消息跳转地址 |
 |messages.source | string | 消息来源 |
@@ -136,6 +136,7 @@ await octokit.request('GET /api/users/:login/messages.json')
             "content": "Atme Message Content 1",
             "notification_url": "http://www.baidu.com",
             "source": "PullRequestAtme",
+            "time_ago": "1天前",
             "type": "atme",
             "sender": {
                 "id": 5,
@@ -151,6 +152,7 @@ await octokit.request('GET /api/users/:login/messages.json')
             "content": "Atme Message Content 2",
             "notification_url": "http://www.baidu.com",
             "source": "IssueAtme",
+            "time_ago": "1天前",
             "type": "atme",
             "sender": {
                 "id": 4,
@@ -166,6 +168,7 @@ await octokit.request('GET /api/users/:login/messages.json')
             "content": "Notification Message Content 1",
             "notification_url": "http://www.baidu.com",
             "source": "IssueDelete",
+            "time_ago": "1天前",
             "type": "notification"
         },
         {
@@ -174,6 +177,7 @@ await octokit.request('GET /api/users/:login/messages.json')
             "content": "Notification Message Content 2",
             "notification_url": "http://www.baidu.com",
             "source": "IssueChanged",
+            "time_ago": "1天前",
             "type": "notification"
         },
         {
@@ -182,6 +186,7 @@ await octokit.request('GET /api/users/:login/messages.json')
             "content": "Notification Message Content 3",
             "notification_url": "http://www.baidu.com",
             "source": "ProjectJoined",
+            "time_ago": "1天前",
             "type": "notification"
         }
     ]

@@ -6,6 +6,8 @@ json.status message["status"]
 json.content message["content"]
 json.notification_url message["notification_url"]
 json.source message["source"]
+json.time_ago time_from_now(message["created_at"].to_time)
+
 case message["type"]
 when 1
   json.type "notification"
