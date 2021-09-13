@@ -302,11 +302,13 @@ Rails.application.routes.draw do
         # resource :unread_message_info, only: [:show]
 
         # 通知中心
-        resources :messages, only: [:index, :create, :delete] do 
+        resources :messages, only: [:index, :create] do 
           collection do 
             post :read
+
           end
         end
+        delete 'messages', to: 'messages#delete'
       end
 
       resources :tidings, only: [:index]

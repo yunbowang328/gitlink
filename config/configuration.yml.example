@@ -58,7 +58,9 @@ default: &default
       base_url: '/api/v1'
 
   notice: 
-    domain: ''
+    platform: ''
+    write_domain: ''
+    read_domain: ''
     base_url: ''
 
 production:

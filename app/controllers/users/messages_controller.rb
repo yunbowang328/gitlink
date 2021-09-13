@@ -1,108 +1,78 @@
 class Users::MessagesController < Users::BaseController 
   before_action :private_user_resources!
+  before_action :find_receivers, only: [:create]
 
   def index 
-    data = {
-      "receiver": 2,
-      "type": @message_type,
-      "unread_total": 5,
-      "unread_notification": 3,
-      "unread_atme": 2,
-      "records": [
-        {
-          "id": 1,
-          "sender": 5,
-          "receiver": 2,
-          "content": "Atme Message Content 1",
-          "status": 1,
-          "type": 2,
-          "source": "PullRequestAtme",
-          "notification_url": "http://www.baidu.com",
-          "created_at": "2021-09-09 14:34:40"
-        },
-        {
-          "id": 2,
-          "sender": 4,
-          "receiver": 2,
-          "content": "Atme Message Content 2",
-          "status": 2,
-          "type": 2,
-          "source": "IssueAtme",
-          "notification_url": "http://www.baidu.com",
-          "created_at": "2021-09-09 14:34:40"
-        },
-        {
-          "id": 3,
-          "sender": -1,
-          "receiver": 2,
-          "content": "Notification Message Content 1",
-          "status": 1,
-          "type": 1,
-          "source": "IssueDelete",
-          "notification_url": "http://www.baidu.com",
-          "created_at": "2021-09-09 14:34:40"
-        },
-        {
-          "id": 4,
-          "sender": -1,
-          "receiver": 2,
-          "content": "Notification Message Content 2",
-          "status": 2,
-          "type": 1,
-          "source": "IssueChanged",
-          "notification_url": "http://www.baidu.com",
-          "created_at": "2021-09-09 14:34:40"
-        },
-        {
-          "id": 5,
-          "sender": -1,
-          "receiver": 2,
-          "content": "Notification Message Content 3",
-          "status": 2,
-          "type": 1,
-          "source": "ProjectJoined",
-          "notification_url": "http://www.baidu.com",
-          "created_at": "2021-09-09 14:34:40"
-        }
-      ],
-      "records_count": 5,
-      "page_num": 1,
-      "total_page_size": 1,
-      "page_size": 10
-    }
-    result = [1, "请求成功", data]
+		limit = params[:limit] || params[:per_page]
+		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
+    result = Notice::Read::ListService.call(observed_user.id, message_type, message_status, page, limit)
     return render_error if result.nil?
-    puts result
-    @data = result[2].stringify_keys
-
+    @data = result[2]
   end
 
   def create
-    return render_forbidden unless %w(3).include(@message_type)
+    return render_forbidden unless %w(atme).include?(params[:type])
+    case params[:type] 
+    when 'atme' 
+      Notice::Write::CreateAtmeForm.new(atme_params).validate!
+      result = Notice::Write::CreateService.call(@receivers.pluck(:id), '发送了一个@我消息', base_url, "IssueAtme", 2)
+      return render_error if result.nil?
+    end
     render_ok
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
   end
 
   def delete 
-    return render_forbidden unless %w(2).include(@message_type)
+    return render_forbidden unless %w(atme).include?(params[:type])
+    result = Notice::Write::DeleteService.call(params[:ids], observed_user.id)
+    return render_error if result.nil? 
+      
     render_ok
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
   end
 
   def read 
-    render_ok
+    return render_forbidden unless %w(notification atme).include?(params[:type])
+    result = Notice::Write::ChangeStatusService.call(params[:ids], observed_user.id)
+    if result.nil? 
+      render_error 
+    else
+      render_ok
+    end
+  rescue Exception => e
+    uid_logger_error(e.message)
+    tip_exception(e.message)
   end
 
   private 
   def message_type 
     @message_type = begin
       case params[:type]
-      when "notification"
-        1
-      when "atme"
-        2
+      when "notification" then 1
+      when "atme" then 2
       else 
         -1
       end
     end
+  end
+
+  def message_status 
+    @message_status = begin 
+      case params[:status]
+      when "1" then 1
+      else 
+        2
+      end
+    end
+  end
+
+  def atme_params 
+    params.permit(:atmeable_type, :atmeable_id, receivers_login: [])
   end
 
   def message_params 
@@ -114,8 +84,8 @@ class Users::MessagesController < Users::BaseController
     }
   end
 
-
-  def find_receiver 
-    @receiver = User.find_by(login: params[:receiver_login])
+  def find_receivers
+    @receivers = User.where(login: params[:receivers_login])
+    return render_not_found if @receivers.size == 0
   end
 end
