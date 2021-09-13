@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-09-10 16:07:14
+ * @LastEditTime: 2021-09-13 17:54:51
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -83,6 +83,7 @@ await octokit.request('GET /api/users/:login/messages.json')
 |messages.content | string | 消息内容 |
 |messages.notification_url | string | 消息跳转地址 |
 |messages.source | string | 消息来源 |
+|messages.timeago | string | 消息时间 |
 |messages.type | string | 消息类型，notification为系统消息，atme为@我消息|
 |sender | object | 消息发送者 |
 
@@ -197,7 +198,7 @@ await octokit.request('GET /api/users/:login/messages.json')
 </aside>
 
 ## 发送消息
-发送消息
+发送消息, 目前只支持atme
 
 > 示例:
 
@@ -217,7 +218,20 @@ await octokit.request('POST /api/users/:login/messages.json')
 --------- | ----------- | -----------
 |type       | string  | 消息类型 |
 |recervers_login  | array   | 需要发送消息的用户名数组|
-|content | string | 消息内容 |
+|atmeable_type | string | atme消息对象，是从哪里@我的，比如评论：Journal |
+|atmeable_id | integer | atme消息对象id |
+
+> 请求的JSON示例:
+
+```json
+{
+    "type": "atme",
+    "receivers_login": ["yystopf", "testforge1"],
+    "atmeable_type": "Journal",
+    "atmeable_id": 67
+}
+```
+
 
 > 返回的JSON示例:
 
