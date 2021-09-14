@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-09-13 17:54:51
+ * @LastEditTime: 2021-09-14 17:34:40
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -101,7 +101,7 @@ await octokit.request('GET /api/users/:login/messages.json')
 |OrganizationJoined         | 账号被拉入组织  | 
 |OrganizationLeft           | 账号被移出组织  | 
 |OrganizationRole           | 账号组织权限变更  | 
-|ProjectDelete              | 我关注的仓库被删除  | 
+|ProjectDeleted             | 我关注的仓库被删除  | 
 |ProjectFollowed            | 我管理的仓库被关注  | 
 |ProjectForked              | 我管理的仓库被复刻  | 
 |ProjectIssue               | 我管理/关注的仓库有新的易修  | 
@@ -119,7 +119,9 @@ await octokit.request('GET /api/users/:login/messages.json')
 |PullRequestAssigned        | 有新指派给我的合并请求  | 
 |PullReuqestAtme            | 在合并请求中@我  | 
 |PullRequestChanged         | 我创建或负责的合并请求状态变更  | 
-|PullRequestJournal         | 我创建或负责的合并请求有新的评论  | 
+|PullRequestClosed          | 我创建或负责的合并请求被关闭  |
+|PullRequestJournal         | 我创建或负责的合并请求有新的评论  |
+|PullRequestMerged          | 我创建或负责的合并请求被合并  | 
 
 
 > 返回的JSON示例:

@@ -11,6 +11,6 @@
 #  notification_url :string(255)
 #
 
-# 我创建或负责的易修状态变更
-class MessageTemplate::IssueChanged < MessageTemplate 
+# 我关注的仓库被删除
+class MessageTemplate::ProjectDeleted < MessageTemplate
 end

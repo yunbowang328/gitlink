@@ -11,6 +11,6 @@
 #  notification_url :string(255)
 #
 
-# 我创建或负责的易修状态变更
-class MessageTemplate::IssueChanged < MessageTemplate 
+# 被关注提示
+class MessageTemplate::FollowedTip < MessageTemplate
 end

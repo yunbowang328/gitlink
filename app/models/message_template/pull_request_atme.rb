@@ -11,5 +11,5 @@
 #
 
 # 在合并请求中@我
-class MessageTemplate::PullReuqestAtme < MessageTemplate 
+class MessageTemplate::PullRequestAtme < MessageTemplate 
 end
