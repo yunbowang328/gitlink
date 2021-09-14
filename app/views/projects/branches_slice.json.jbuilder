@@ -13,8 +13,12 @@ json.array! @branches_slice do |branch_slice|
       json.message branch['commit']['message']
       json.timestamp render_unix_time(branch['commit']['timestamp'])
       json.time_from_now time_from_now(branch['commit']['timestamp'])
-      json.author branch['commit']['author']
-      json.committer branch['commit']['committer']
+      json.author do 
+        json.partial! 'repositories/commit_author', user: render_commit_author(branch['commit']['author']), name: branch['commit']['author']['name']
+      end
+      json.committer do 
+        json.partial! 'repositories/commit_author', user: render_commit_author(branch['commit']['committer']), name: branch['commit']['committer']['name']
+      end
     end
   end
 end
