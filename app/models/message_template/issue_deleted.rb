@@ -13,4 +13,15 @@
 
 # 我创建或负责的易修删除
 class MessageTemplate::IssueDeleted < MessageTemplate 
+
+  # MessageTemplate::IssueDeleted.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last)
+  def self.get_message_content(receivers, operator, issue)
+    project = issue&.project 
+    owner = project&.owner 
+    content = sys_notice.gsub('{nickname}', operator&.nickname).gsub('{title}', issue&.subject)
+    return receivers_string(receivers), content, notification_url
+  rescue => e
+    Rails.logger.info("MessageTemplate::IssueAtme.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

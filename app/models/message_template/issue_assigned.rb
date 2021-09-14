@@ -13,4 +13,16 @@
 
 # 有新指派给我的易修
 class MessageTemplate::IssueAssigned < MessageTemplate
+
+  # MessageTemplate::IssueAssigned.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last)
+  def self.get_message_content(receivers, operator, issue)
+    project = issue&.project
+    owner = project&.owner 
+    content = sys_notice.gsub('{nickname1}', operator&.nickname).gsub('{nickname2}', owner&.nickname).gsub('{repository}', project&.name).gsub('{title}', issue&.subject)
+    url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier).gsub('{id}', issue&.id.to_s)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::IssueAssigned.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

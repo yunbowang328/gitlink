@@ -11,6 +11,14 @@
 #  notification_url :string(255)
 #
 
-# 我管理的仓库被关注
+# TODO 我管理的仓库被关注
 class MessageTemplate::ProjectFollowed < MessageTemplate
+
+  # MessageTemplate::ProjectFollowed.get_message_content(User.where(login: 'yystopf'))
+  def self.get_message_content(receivers)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::ProjectFollowed.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

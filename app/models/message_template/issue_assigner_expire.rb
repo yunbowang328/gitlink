@@ -13,4 +13,16 @@
 
 # 我负责的易修截止日期到达最后一天
 class MessageTemplate::IssueAssignerExpire < MessageTemplate
+
+  # MessageTemplate::IssueAssignerExpire.get_message_content(User.where(login: 'yystopf'), Issue.last)
+  def self.get_message_content(receivers, issue)
+    project = issue&.project
+    owner = project&.owner
+    content = sys_notice.gsub('{title}', issue&.subject)
+    url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier).gsub('{id}', issue&.id.to_s)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::IssueAssignerExpire.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

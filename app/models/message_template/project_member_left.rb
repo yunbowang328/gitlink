@@ -11,6 +11,14 @@
 #  notification_url :string(255)
 #
 
-# 我管理的仓库有成员移出
+# TODO 我管理的仓库有成员移出
 class MessageTemplate::ProjectMemberLeft < MessageTemplate
+
+  # MessageTemplate::ProjectMemberLeft.get_message_content(User.where(login: 'yystopf'))
+  def self.get_message_content(receivers)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::ProjectMemberLeft.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

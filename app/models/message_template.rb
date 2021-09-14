@@ -18,14 +18,14 @@ class MessageTemplate <ApplicationRecord
     self.create(type: 'MessageTemplate::IssueAssigned', sys_notice: '{nickname1}在<b>{nickname2}/{repository}</b>指派给你一个易修：<b>{title}<b>', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
     self.create(type: 'MessageTemplate::IssueAssignerExpire', sys_notice: '您负责的易修<b>{title}</b>已临近截止日期，请尽快处理', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
     self.create(type: 'MessageTemplate::IssueAtme', sys_notice: '<b>{nickname}</b>在易修<b>{title}</b>中@我', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
-    self.create(type: 'MessageTemplate::IssueChanged', sys_notice: '在项目{nickname2}/{repository1}的易修<b>{title}</b>中：{ifassigner}{nickname1}将负责人从<b>{assigner1}</b>修改为<b>{assigner1}</b>{endassigner}<br/>{ifstatus}{nickname1}将状态从<b>{status1}</b>修改为<b>{status1}</b>{endstatus}<br/>{iftracker}{nickname1}将类型从<b>{tracker1}</b>修改为<b>{tracker1}</b>{endtracker}<br/>{ifpriority}{nickname1}将优先度从<b>{priority1}</b>修改为<b>{priority1}</b>{endpriority}<br/>{ifmilestone}{nickname1}将里程碑从<b>{milestone1}</b>修改为<b>{milestone1}</b>{endmilestone}<br/>{iftag}{nickname1}将标签从<b>{tag1}</b>修改为<b>{tag1}</b>{endtag}<br/>{ifdoneratio}{nickname1}将完成度从<b>{doneratio1}</b>修改为<b>{doneratio1}</b>{enddoneratio}<br/>{ifbranch}{nickname1}将指定分支从<b>{branch1}</b>修改为<b>{branch1}</b>{endbranch}<br/>{ifstartdate}{nickname1}将开始日期从<b>{startdate1}</b>修改为<b>{startdate1}</b>{endstartdate}<br/>{ifduedate}{nickname1}将结束日期从<b>{duedate1}</b>修改为<b>{duedate1}</b>{endduedate}', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
+    self.create(type: 'MessageTemplate::IssueChanged', sys_notice: '在项目{nickname2}/{repository}的易修<b>{title}</b>中：{ifassigner}{nickname1}将负责人从<b>{assigner1}</b>修改为<b>{assigner2}</b><br/>{endassigner}{ifstatus}{nickname1}将状态从<b>{status1}</b>修改为<b>{status2}</b><br/>{endstatus}{iftracker}{nickname1}将类型从<b>{tracker1}</b>修改为<b>{tracker2}</b><br/>{endtracker}{ifpriority}{nickname1}将优先级从<b>{priority1}</b>修改为<b>{priority2}</b><br/>{endpriority}{ifmilestone}{nickname1}将里程碑从<b>{milestone1}</b>修改为<b>{milestone2}</b><br/>{endmilestone}{iftag}{nickname1}将标签从<b>{tag1}</b>修改为<b>{tag2}</b><br/>{endtag}{ifdoneratio}{nickname1}将完成度从<b>{doneratio2}</b>修改为<b>{doneratio1}</b>{enddoneratio}<br/>{ifbranch}{nickname1}将指定分支从<b>{branch1}</b>修改为<b>{branch2}</b><br/>{endbranch}{ifstartdate}{nickname1}将开始日期从<b>{startdate1}</b>修改为<b>{startdate2}</b><br/>{endstartdate}{ifduedate}{nickname1}将结束日期从<b>{duedate1}</b>修改为<b>{duedate2}</b><br/>{endduedate}', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
     self.create(type: 'MessageTemplate::IssueCreatorExpire', sys_notice: '您发布的易修<b>{title}</b>已临近截止日期，请尽快处理', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
     self.create(type: 'MessageTemplate::IssueDeleted', sys_notice: '{nickname}已将易修<b>{title}</b>删除', notification_url: '')
     self.create(type: 'MessageTemplate::IssueJournal', sys_notice: '{nickname}评论易修{title}：<b>{notes}</b>', notification_url: '{baseurl}/{owner}/{identifier}/issues/{id}')
     self.create(type: 'MessageTemplate::LoginIpTip', sys_notice: '您的账号{nickname}于{login_time)在非常用的IP地址{ip}登录，如非本人操作，请立即修改密码', notification_url: '')
     self.create(type: 'MessageTemplate::OrganizationJoined', sys_notice: '你已加入<b>{organization}</b>组织', notification_url: '{baseurl}/{login}')
     self.create(type: 'MessageTemplate::OrganizationLeft', sys_notice: '你已被移出<b>{organization}</b>组织', notification_url: '')
-    self.create(type: 'MessageTemplate::OrganizationRole', sys_notice: '组织{organization}已把你的角色改为<b>{role}</b>', notification_url: '{baseurl}/{owner}')
+    self.create(type: 'MessageTemplate::OrganizationRole', sys_notice: '组织{organization}已把你的角色改为<b>{role}</b>', notification_url: '{baseurl}/{login}')
     self.create(type: 'MessageTemplate::ProjectDeleted', sys_notice: '你关注的仓库{nickname}/{repository}已被删除', notification_url: '')
     self.create(type: 'MessageTemplate::ProjectFollowed', sys_notice: '<b>{nickname}</b>关注了你管理的仓库', notification_url: '{baseurl}/{login}')
     self.create(type: 'MessageTemplate::ProjectForked', sys_notice: '<b>{nickname1}</b>复刻了你管理的仓库{nickname1}/{repository1}到{nickname2}/{repository2}', notification_url: '{baseurl}/{owner}/{identifier}')
@@ -43,13 +43,25 @@ class MessageTemplate <ApplicationRecord
     self.create(type: 'MessageTemplate::ProjectVersion', sys_notice: '{nickname1}在<b>{nickname2}/{repository}</b>创建了发行版：<b>{title}</b>', notification_url: '{baseurl}/{owner}/{identifier}/releases')
     self.create(type: 'MessageTemplate::PullRequestAssigned', sys_notice: '{nickname1}在<b>{nickname2}/{repository}</b>指派给你一个合并请求：<b>{title}<b>', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
     self.create(type: 'MessageTemplate::PullRequestAtme', sys_notice: '<b>{nickname}</b>在合并请求<b>{title}</b>中@我', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
-    self.create(type: 'MessageTemplate::PullRequestChanged', sys_notice: '在项目{nickname2}/{repository1}的合并请求<b>{title}</b>中：{ifassigner}{nickname1}将审查成员从<b>{assigner1}</b>修改为<b>{assigner1}</b>{endassigner}<br/>{ifmilestone}{nickname1}将里程碑从<b>{milestone1}</b>修改为<b>{milestone1}</b>{endmilestone}<br/>{iftag}{nickname1}将标签从<b>{tag1}</b>修改为<b>{tag1}</b>{endtag}<br/>{ifpriority}{nickname1}将优先度从<b>{priority1}</b>修改为<b>{priority1}</b>{endpriority}<br/>', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
-    self.create(type: 'MessageTemplate::PullRequestClosed', sys_notice: '你提交的合并请求：{title]被拒绝', notification_url: '')
+    self.create(type: 'MessageTemplate::PullRequestChanged', sys_notice: '在项目{nickname2}/{repository}的合并请求<b>{title}</b>中：{ifassigner}{nickname1}将审查成员从<b>{assigner1}</b>修改为<b>{assigner2}</b><br/>{endassigner}{ifmilestone}{nickname1}将里程碑从<b>{milestone1}</b>修改为<b>{milestone2}</b><br/>{endmilestone}{iftag}{nickname1}将标签从<b>{tag1}</b>修改为<b>{tag2}</b><br/>{endtag}{ifpriority}{nickname1}将优先级从<b>{priority1}</b>修改为<b>{priority2}</b><br/>{endpriority}', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
+    self.create(type: 'MessageTemplate::PullRequestClosed', sys_notice: '你提交的合并请求：{title}被拒绝', notification_url: '')
     self.create(type: 'MessageTemplate::PullRequestJournal', sys_notice: '{nickname}评论合并请求{title}：<b>{notes}</b>', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
     self.create(type: 'MessageTemplate::PullRequestMerged', sys_notice: '你提交的合并请求：{title}被合并', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
   end
 
   def self.sys_notice
     self.last&.sys_notice
+  end
+
+  def self.notification_url 
+    self.last&.notification_url.gsub('{baseurl}', base_url)
+  end
+
+  def self.base_url 
+    Rails.application.config_for(:configuration)['platform_url']
+  end
+
+  def self.receivers_string(receivers)
+    receivers.pluck(:id).join(",")
   end
 end

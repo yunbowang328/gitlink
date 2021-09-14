@@ -13,4 +13,16 @@
 
 # 在易修中@我
 class MessageTemplate::IssueAtme < MessageTemplate 
+
+  # MessageTemplate::IssueAtme.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last)
+  def self.get_message_content(receivers, operator, issue)
+    project = issue&.project 
+    owner = project&.owner 
+    content = sys_notice.gsub('{nickname}', operator&.nickname).gsub('{title}', issue&.subject)
+    url = notification_url.gsub('{owner}', owner&.login).gsub('{identifer}', project&.identifier).gsub('{id}', issue&.id.to_s)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::IssueAtme.get_message_content [ERROR] #{e}")
+    return 0, '', ''
+  end
 end

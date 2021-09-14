@@ -11,6 +11,14 @@
 #  notification_url :string(255)
 #
 
-# 我关注的仓库被转移
+# TODO 我关注的仓库被转移
 class MessageTemplate::ProjectTransfer < MessageTemplate
+
+  # MessageTemplate::ProjectTransfer.get_message_content(User.where(login: 'yystopf'))
+  def self.get_message_content(receivers)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::ProjectTransfer.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

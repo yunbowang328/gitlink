@@ -13,4 +13,14 @@
 
 # 账号被拉入项目
 class MessageTemplate::ProjectJoined < MessageTemplate
+
+  # MessageTemplate::ProjectJoined.get_message_content(User.where(login: 'yystopf'), Project.last)
+  def self.get_message_content(receivers, project)
+    content = sys_notice.gsub('{repository}', project&.name)
+    url = notification_url.gsub('{owner}', project&.owner&.login).gsub('{identifier}', project&.identifier)
+    return receivers_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::ProjectJoined.get_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end
