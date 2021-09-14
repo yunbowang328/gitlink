@@ -16,19 +16,11 @@ class Notice::Read::ListService < Notice::Read::ClientService
 
   private
 
-  def request_status 
-    case status 
-    when 1 then 1
-    else
-      2
-    end
-  end
-
   def request_params
     {
       receiver: receiver,
       page: page, 
-      show: request_status,
+      status: status,
       size: size,
       type: type
     }.stringify_keys

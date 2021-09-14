@@ -65,23 +65,15 @@ class Users::MessagesController < Users::BaseController
     @message_status = begin 
       case params[:status]
       when "1" then 1
+      when "2" then 2
       else 
-        2
+        -1
       end
     end
   end
 
   def atme_params 
     params.permit(:atmeable_type, :atmeable_id, receivers_login: [])
-  end
-
-  def message_params 
-    {
-      sender: current_user.id,
-      reservers: @receiver.id,
-      type: @message_type,
-      content: params[:content]
-    }
   end
 
   def find_receivers
