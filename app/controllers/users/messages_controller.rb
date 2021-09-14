@@ -16,7 +16,7 @@ class Users::MessagesController < Users::BaseController
     case params[:type] 
     when 'atme' 
       Notice::Write::CreateAtmeForm.new(atme_params).validate!
-      result = Notice::Write::CreateService.call(@receivers.pluck(:id), '发送了一个@我消息', base_url, "IssueAtme", 2)
+      result = Notice::Write::CreateService.call(@receivers.pluck(:id), '发送了一个@我消息', base_url, "IssueAtme", 2, {}, current_user.id)
       return render_error if result.nil?
     end
     render_ok
@@ -27,7 +27,7 @@ class Users::MessagesController < Users::BaseController
 
   def delete 
     return render_forbidden unless %w(atme).include?(params[:type])
-    result = Notice::Write::DeleteService.call(params[:ids], observed_user.id)
+    result = Notice::Write::DeleteService.call(params[:ids], observed_user.id, message_type)
     return render_error if result.nil? 
       
     render_ok
@@ -38,7 +38,7 @@ class Users::MessagesController < Users::BaseController
 
   def read 
     return render_forbidden unless %w(notification atme).include?(params[:type])
-    result = Notice::Write::ChangeStatusService.call(params[:ids], observed_user.id)
+    result = Notice::Write::ChangeStatusService.call(params[:ids], observed_user.id, message_type)
     if result.nil? 
       render_error 
     else

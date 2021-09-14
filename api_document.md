@@ -26,11 +26,11 @@ POST accounts/remote_register
 *示例*
 ```bash
 curl -X POST \
--d "email=2456233122@qq.com" \
--d "password=djs_D_00001" \
--d "username=16895620" \
+-d "email=yystopf@163.com" \
+-d "password=a19960425" \
+-d "username=yystopf" \
 -d "platform=forge" \
-http://localhost:3000/api/accounts/remote_register  | jq
+http://120.132.31.109:8080/api/accounts/remote_register  | jq
 ```
 *请求参数说明:*
 

@@ -1,9 +1,10 @@
 class Notice::Write::ChangeStatusService < Notice::Write::ClientService 
-  attr_accessor :notification_ids, :receiver, :status
+  attr_accessor :notification_ids, :receiver, :type, :status
 
-  def initialize(notification_ids, receiver, status=2)
+  def initialize(notification_ids, receiver, type=-1, status=2)
     @notification_ids = notification_ids
     @receiver = receiver
+    @type = type
     @status = status
   end
 
@@ -22,6 +23,7 @@ class Notice::Write::ChangeStatusService < Notice::Write::ClientService
     Hash.new.merge(data: {
       notificationIds: request_notification_ids,
       receiver: receiver,
+      type: type,
       status: status
     }.stringify_keys)
   end

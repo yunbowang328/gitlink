@@ -1,9 +1,10 @@
 class Notice::Write::DeleteService < Notice::Write::ClientService 
-  attr_accessor :notification_ids, :receiver
+  attr_accessor :notification_ids, :receiver, :type
 
-  def initialize(notification_ids, receiver)
+  def initialize(notification_ids, receiver, type=-1)
     @notification_ids = notification_ids
     @receiver = receiver
+    @type = type
   end
 
   def call
@@ -20,7 +21,8 @@ class Notice::Write::DeleteService < Notice::Write::ClientService
   def request_params
     Hash.new.merge(data: {
       notificationIds: request_notification_ids,
-      receiver: receiver
+      receiver: receiver,
+      type: type
     }.stringify_keys)
   end
 
