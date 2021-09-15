@@ -50,7 +50,7 @@ class Repositories::DetailService < ApplicationService
 
   def branch_slice_suitable
     branches = Gitea::Repository::Branches::ListSliceService.call(@owner, @repo.identifier)
-    branches.is_a?(Hash) && branches.key?(:status) == :error ? [] : branches
+    branches.is_a?(Hash) && branches.key?(:status) ? [] : branches
   end
 
   def tag_suitable
