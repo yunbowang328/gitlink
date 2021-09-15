@@ -18,12 +18,29 @@ class BroadcastMirrorRepoMsgJob < ApplicationJob
       id: project.id,
       type: project.numerical_for_project_type
     }
+    # 新增失败重试机制, 重试三次
+    result = broadcast(project, json_data)
+
+    if result == 0 
+      count = 3
+      while count > 0 
+        result = broadcast(project, json_data)
+        if result > 0 
+          break
+        end
+        count -= 1
+      end
+    end
+  end
+
+  def broadcast(project, json_data)
     puts "############ broadcast start.......... "
     puts "############ broadcast channel_name: channel_room_#{project.id}"
     puts "############ broadcast project data: #{json_data} "
 
     cable_result = ActionCable.server.broadcast "channel_room_#{project.id}", project: json_data
 
-    puts "############ broadcast result: #{cable_result == 1 ? 'successed' : 'failed'} "
+    puts "############ broadcast result: #{cable_result > 0 ? 'successed' : 'failed'} "
+    return cable_result
   end
 end
