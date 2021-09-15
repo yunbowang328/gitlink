@@ -24,6 +24,7 @@ class BroadcastMirrorRepoMsgJob < ApplicationJob
     if result == 0 
       count = 3
       while count > 0 
+        sleep 3.seconds
         result = broadcast(project, json_data)
         if result > 0 
           break
