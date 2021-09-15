@@ -16,8 +16,21 @@ class Users::MessagesController < Users::BaseController
     case params[:type] 
     when 'atme' 
       Notice::Write::CreateAtmeForm.new(atme_params).validate!
-      result = Notice::Write::CreateService.call(@receivers.pluck(:id), '发送了一个@我消息', base_url, "IssueAtme", 2, {}, current_user.id)
-      return render_error if result.nil?
+      case atme_params[:atmeable_type]
+      when 'Issue'
+        SendTemplateMessageJob.perform_now('IssueAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+      when 'PullRequest'
+        SendTemplateMessageJob.perform_now('PullRequestAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+      when 'Journal'
+        journal = Journal.find_by_id(atme_params[:atmeable_id])
+        if journal.present?
+          if journal&.issue&.pull_request.present?
+            SendTemplateMessageJob.perform_now('PullRequestAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+          else
+            SendTemplateMessageJob.perform_now('IssueAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+          end
+        end
+      end
     end
     render_ok
   rescue Exception => e

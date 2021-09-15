@@ -14,116 +14,132 @@
 # 我创建或负责的易修状态变更
 class MessageTemplate::IssueChanged < MessageTemplate 
 
-  # MessageTemplate::IssueChanged.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last, {assigner: 'testforge2', milestone: '里程碑', tag: '标签', priority: '低', tracker: '支持', doneratio: '70', branch: 'master', startdate: Date.today, duedate: Date.today + 1.days})
+  # MessageTemplate::IssueChanged.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last, {status_id: [1, 2], assigned_to_id: [nil, 203], tracker_id: [4, 3], priority_id: [2, 4], fixed_version_id: [nil, 5], due_date: ['', '2021-09-11'], done_ratio: [0, 40], issue_tags_value: ["", "7"], branch_name: ["", "master"]})
   def self.get_message_content(receivers, operator, issue, change_params) 
+    return '', '', '' if change_params.blank?
     project = issue&.project 
     owner = project&.owner 
     content = MessageTemplate::IssueChanged.sys_notice.gsub('{nickname1}', operator&.nickname).gsub('{nickname2}', owner&.nickname).gsub('{repository}', project&.name).gsub('{title}', issue&.subject)
     url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier).gsub('{id}', issue&.id.to_s)
     # 易修负责人修改
-    if change_params[:assigner].present?
-      assigner = issue&.get_assign_user&.nickname || '未指派成员'
+    if change_params[:assigned_to_id].present?
+      assigner1 = User.find_by_id(change_params[:assigned_to_id][0])
+      assigner2 = User.find_by_id(change_params[:assigned_to_id][1])
       content.sub!('{ifassigner}', '')
       content.sub!('{endassigner}', '')
-      content.gsub!('{assigner1}', assigner)
-      content.gsub!('{assigner2}', change_params[:assigner])
+      content.gsub!('{assigner1}', assigner1.present? ? assigner1&.nickname || assigner1.login : '未指派成员')
+      content.gsub!('{assigner2}', assigner2.present? ? assigner2&.nickname || assigner2.login : '未指派成员')
     else
       content.gsub!(/({ifassigner})(.*)({endassigner})/, '') 
     end
     # 易修状态修改
-    if change_params[:status].present?
-      status = issue&.issue_status&.name
+    if change_params[:status_id].present?
+      status1 = IssueStatus.find_by_id(change_params[:status_id][0])
+      status2 = IssueStatus.find_by_id(change_params[:status_id][1])
       content.sub!('{ifstatus}', '')
       content.sub!('{endstatus}', '')
-      content.gsub!('{status1}', status)
-      content.gsub!('{status2}', change_params[:status])
+      content.gsub!('{status1}', status1&.name)
+      content.gsub!('{status2}', status2&.name)
     else
       content.gsub!(/({ifstatus})(.*)({endstatus})/, '') 
     end
     # 易修类型修改
-    if change_params[:tracker].present?
-      tracker = issue&.tracker&.name
+    if change_params[:tracker_id].present?
+      tracker1 = Tracker.find_by_id(change_params[:tracker_id][0])
+      tracker2 = Tracker.find_by_id(change_params[:tracker_id][1])
       content.sub!('{iftracker}', '')
       content.sub!('{endtracker}', '')
-      content.gsub!('{tracker1}', tracker)
-      content.gsub!('{tracker2}', change_params[:tracker])
+      content.gsub!('{tracker1}', tracker1&.name)
+      content.gsub!('{tracker2}', tracker2&.name)
     else
       content.gsub!(/({iftracker})(.*)({endtracker})/, '') 
     end
-    # 合并请求里程碑修改
-    if change_params[:milestone].present?
-      milestone = issue&.version&.name || '未选择里程碑'
+    # 易修里程碑修改
+    if change_params[:fixed_version_id].present?
+      fix_version1 = Version.find_by_id(change_params[:fixed_version_id][0])
+      fix_version2 = Version.find_by_id(change_params[:fixed_version_id][1])
       content.sub!('{ifmilestone}', '')
       content.sub!('{endmilestone}', '')
-      content.gsub!('{milestone1}', milestone)
-      content.gsub!('{milestone2}', change_params[:milestone])
+      content.gsub!('{milestone1}', fix_version1.present? ? fix_version1&.name : '未选择里程碑')
+      content.gsub!('{milestone2}', fix_version2.present? ? fix_version2&.name : '未选择里程碑')
     else
       content.gsub!(/({ifmilestone})(.*)({endmilestone})/, '') 
     end
-    # 合并请求标签修改
-    if change_params[:tag].present?
-      tag = issue&.issue_tags.distinct.pluck(:name).join(",")
-      tag = '未选择标签' if tag == ''
+    # 易修标签修改
+    if change_params[:issue_tags_value].present?
+      issue_tags1 = IssueTag.where(id: change_params[:issue_tags_value][0]).distinct
+      issue_tags2 = IssueTag.where(id: change_params[:issue_tags_value][1]).distinct
+      tag1 = issue_tags1.pluck(:name).join(",").blank? ? '未选择标签' : issue_tags1.pluck(:name).join(",")
+      tag2 = issue_tags2.pluck(:name).join(",").blank? ? '未选择标签' : issue_tags2.pluck(:name).join(",")
       content.sub!('{iftag}', '')
       content.sub!('{endtag}', '')
-      content.gsub!('{tag1}', tag)
-      content.gsub!('{tag2}', change_params[:tag])
+      content.gsub!('{tag1}', tag1)
+      content.gsub!('{tag2}', tag2)
     else
       content.gsub!(/({iftag})(.*)({endtag})()/, '') 
     end
-    # 合并请求优先级修改
-    if change_params[:priority].present?
-      priority = issue&.priority&.name
+    # 易修优先级修改
+    if change_params[:priority_id].present?
+      priority1 = IssuePriority.find_by_id(change_params[:priority_id][0])
+      priority2 = IssuePriority.find_by_id(change_params[:priority_id][1])
+
       content.sub!('{ifpriority}', '')
       content.sub!('{endpriority}', '')
-      content.gsub!('{priority1}', priority)
-      content.gsub!('{priority2}', change_params[:priority])
+      content.gsub!('{priority1}', priority1&.name)
+      content.gsub!('{priority2}', priority2&.name)
     else
       content.gsub!(/({ifpriority})(.*)({endpriority})/, '') 
     end
     # 易修完成度修改
-    if change_params[:doneratio].present?
-      doneratio = issue&.done_ratio
+    if change_params[:done_ratio].present?
+      doneratio1 = change_params[:done_ratio][0]
+      doneratio2 = change_params[:done_ratio][1]
+
       content.sub!('{ifdoneratio}', '')
       content.sub!('{enddoneratio}', '')
-      content.gsub!('{doneratio1}', "#{doneratio}%")
-      content.gsub!('{doneratio2}', "#{change_params[:doneratio]}%")
+      content.gsub!('{doneratio1}', "#{doneratio1}%")
+      content.gsub!('{doneratio2}', "#{doneratio2}%")
     else
       content.gsub!(/({ifdoneratio})(.*)({enddoneratio})/, '') 
     end
     # 易修指定分支修改
-    if change_params[:branch].present?
-      branch = issue&.branch_name || '分支未指定'
+    if change_params[:branch_name].present?
+      branch1 = change_params[:branch_name][0].blank? ? '分支未指定' : change_params[:branch_name][0]
+      branch2 = change_params[:branch_name][1].blank? ? '分支未指定' : change_params[:branch_name][1]
+
       content.sub!('{ifbranch}', '')
       content.sub!('{endbranch}', '')
-      content.gsub!('{branch1}', branch )
-      content.gsub!('{branch2}', change_params[:branch])
+      content.gsub!('{branch1}', branch1)
+      content.gsub!('{branch2}', branch2)
     else
       content.gsub!(/({ifbranch})(.*)({endbranch})/, '') 
     end
     # 易修开始日期修改
-    if change_params[:startdate].present?
-      startdate = issue&.start_date || "未选择开始日期"
+    if change_params[:start_date].present?
+      startdate1 = change_params[:start_date][0].blank? ? "未选择开始日期" : change_params[:start_date][0]
+      startdate2 = change_params[:start_date][1].blank? ? "未选择开始日期" : change_params[:start_date][1]
+
       content.sub!('{ifstartdate}', '')
       content.sub!('{endstartdate}', '')
-      content.gsub!('{startdate1}', startdate.to_s )
-      content.gsub!('{startdate2}', change_params[:startdate].to_s)
+      content.gsub!('{startdate1}', startdate1 )
+      content.gsub!('{startdate2}', startdate2)
     else
       content.gsub!(/({ifstartdate})(.*)({endstartdate})/, '') 
     end
     # 易修结束日期修改
-    if change_params[:duedate].present?
-      duedate = issue&.due_date || '未选择结束日期'
+    if change_params[:due_date].present?
+      duedate1 = change_params[:due_date][0].blank? ? '未选择结束日期' : change_params[:due_date][0]
+      duedate2 = change_params[:due_date][1].blank? ? '未选择结束日期' : change_params[:due_date][1]
       content.sub!('{ifduedate}', '')
       content.sub!('{endduedate}', '')
-      content.gsub!('{duedate1}', duedate.to_s)
-      content.gsub!('{duedate2}', change_params[:duedate].to_s)
+      content.gsub!('{duedate1}', duedate1)
+      content.gsub!('{duedate2}', duedate2)
     else
       content.gsub!(/({ifduedate})(.*)({endduedate})/, '') 
     end
     return receivers_string(receivers), content, url
-  # rescue => e
-  #   Rails.logger.info("MessageTemplate::IssueAssigned.get_message_content [ERROR] #{e}")
-  #   return '', '', ''
+  rescue => e
+    Rails.logger.info("MessageTemplate::IssueAssigned.get_message_content [ERROR] #{e}")
+    return '', '', ''
   end
 end

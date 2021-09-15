@@ -111,6 +111,7 @@ class IssuesController < ApplicationController
     Issues::CreateForm.new({subject:issue_params[:subject]}).validate!
     @issue = Issue.new(issue_params)
     if @issue.save!
+      SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @issue&.id)
       if params[:attachment_ids].present?
         params[:attachment_ids].each do |id|
           attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
@@ -202,6 +203,20 @@ class IssuesController < ApplicationController
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
       Issues::UpdateForm.new({subject:issue_params[:subject]}).validate!
       if @issue.update_attributes(issue_params)
+        if @issue&.pull_request.present?
+          SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @issue&.pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value))
+          SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @issue&.pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present?
+        else
+          previous_changes = @issue.previous_changes.slice(:status_id, :assigned_to_id, :tracker_id, :priority_id, :fixed_version_id, :done_ratio, :issue_tags_value, :branch_name)
+          if @issue.previous_changes[:start_date].present? 
+            previous_changes.merge!(start_date: [@issue.previous_changes[:start_date][0].to_s,  @issue.previous_changes[:start_date][1].to_s])
+          end
+          if @issue.previous_changes[:due_date].present? 
+            previous_changes.merge!(due_date: [@issue.previous_changes[:due_date][0].to_s,  @issue.previous_changes[:due_date][1].to_s])
+          end
+          SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, @issue&.id, previous_changes)
+          SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @issue&.id) if @issue.previous_changes[:assigned_to_id].present?
+        end
         if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
           @issue.issue_times.update_all(end_time: Time.now)
           @issue.update_closed_issues_count_in_project!
@@ -253,6 +268,7 @@ class IssuesController < ApplicationController
       status_id = @issue.status_id
       token = @issue.token
       login =  @issue.user.try(:login)
+      SendTemplateMessageJob.perform_later('IssueDeleted', current_user.id, @issue&.subject, @issue.assigned_to_id, @issue.author_id)
       if @issue.destroy
         if issue_type == "2" && status_id != 5
           post_to_chain("add", token, login)

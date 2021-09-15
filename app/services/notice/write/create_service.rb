@@ -1,7 +1,7 @@
 class Notice::Write::CreateService < Notice::Write::ClientService 
   attr_accessor :receivers, :sender, :content, :notification_url, :source, :extra, :type
 
-  def initialize(receivers, content, notification_url, source, type=1, extra={},sender=-1)
+  def initialize(receivers, content, notification_url, source, extra={}, type=1, sender=-1)
     @receivers = receivers
     @sender = sender 
     @content = content 
@@ -12,6 +12,7 @@ class Notice::Write::CreateService < Notice::Write::ClientService
   end
 
   def call
+    return nil if request_receivers.blank?
     result = post("", request_params)
     response = render_response(result)
   end
@@ -19,7 +20,7 @@ class Notice::Write::CreateService < Notice::Write::ClientService
   private
 
   def request_receivers
-    receivers.join(",")
+    receivers.is_a?(Array) ? receivers.join(",") : receivers
   end
 
   def request_params

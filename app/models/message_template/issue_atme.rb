@@ -19,7 +19,7 @@ class MessageTemplate::IssueAtme < MessageTemplate
     project = issue&.project 
     owner = project&.owner 
     content = sys_notice.gsub('{nickname}', operator&.nickname).gsub('{title}', issue&.subject)
-    url = notification_url.gsub('{owner}', owner&.login).gsub('{identifer}', project&.identifier).gsub('{id}', issue&.id.to_s)
+    url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier).gsub('{id}', issue&.id.to_s)
     return receivers_string(receivers), content, url
   rescue => e
     Rails.logger.info("MessageTemplate::IssueAtme.get_message_content [ERROR] #{e}")

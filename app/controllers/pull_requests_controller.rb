@@ -59,6 +59,7 @@ class PullRequestsController < ApplicationController
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
         @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id)
         render_ok
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
@@ -91,6 +92,8 @@ class PullRequestsController < ApplicationController
           end
 
           if @issue.update_attributes(@issue_params)
+            SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value))
+            SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present?
             if @pull_request.update_attributes(@local_params.compact)
               gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
                   @pull_request.gitea_number, @requests_params, current_user.gitea_token)
@@ -125,7 +128,12 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
-        colsed === true ? normal_status(1, "已拒绝") : normal_status(-1, '合并失败')
+        if colsed === true 
+          SendTemplateMessageJob.perform_later('PullRequestClosed', current_user.id, @pull_request.id)
+          normal_status(1, "已拒绝") 
+        else
+          normal_status(-1, '合并失败')
+        end
       rescue => e
         normal_status(-1, e.message)
         raise ActiveRecord::Rollback
@@ -164,6 +172,7 @@ class PullRequestsController < ApplicationController
           if success_condition && @pull_request.merge!
             @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
+            SendTemplateMessageJob.perform_later('PullRequestMerged', current_user.id, @pull_request.id)
             normal_status(1, "合并成功")
           else
             normal_status(-1, result.message)

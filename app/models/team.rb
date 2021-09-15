@@ -54,4 +54,15 @@ class Team < ApplicationRecord
     team_users.where(user_id: user_id).present?
   end
 
+  def authorize_name 
+    case self.authorize 
+    when 'read' then '报告者'
+    when 'write' then '开发者'
+    when 'admin' then '管理员'
+    when 'owner' then '管理员'
+    else 
+      ''
+    end
+  end
+
 end

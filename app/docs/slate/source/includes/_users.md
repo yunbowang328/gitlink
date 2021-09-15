@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-09-14 17:34:40
+ * @LastEditTime: 2021-09-15 18:00:10
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -219,8 +219,8 @@ await octokit.request('POST /api/users/:login/messages.json')
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
 |type       | string  | 消息类型 |
-|recervers_login  | array   | 需要发送消息的用户名数组|
-|atmeable_type | string | atme消息对象，是从哪里@我的，比如评论：Journal |
+|receivers_login  | array   | 需要发送消息的用户名数组|
+|atmeable_type | string | atme消息对象，是从哪里@我的，比如评论：Journal、易修：Issue、合并请求：PullRequest |
 |atmeable_id | integer | atme消息对象id |
 
 > 请求的JSON示例:
