@@ -16,7 +16,7 @@ class MessageTemplate::OrganizationJoined < MessageTemplate
 
   # MessageTemplate::OrganizationJoined.get_message_content(User.where(login: 'yystopf'), Organization.last)
   def self.get_message_content(receivers, organization)
-    content = sys_notice.gsub('{organization}', organization&.name)
+    content = sys_notice.gsub('{organization}', organization&.real_name)
     url = notification_url.gsub('{login}', organization&.name)
     return receivers_string(receivers), content, url
   rescue => e

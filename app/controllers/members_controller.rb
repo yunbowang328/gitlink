@@ -9,7 +9,8 @@ class MembersController < ApplicationController
 
   def create
     interactor = Projects::AddMemberInteractor.call(@project.owner, @project, @user)
-    SendTemplateMessageJob.perform_later('ProjectJoined', @user.id, @project.id)
+    SendTemplateMessageJob.perform_later('ProjectJoined', current_user.id, @user.id, @project.id)
+    SendTemplateMessageJob.perform_later('ProjectMemberJoined', current_user.id, @user.id, @project.id)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -29,7 +30,8 @@ class MembersController < ApplicationController
 
   def remove
     interactor = Projects::DeleteMemberInteractor.call(@project.owner, @project, @user)
-    SendTemplateMessageJob.perform_later('ProjectLeft', @user.id, @project.id)
+    SendTemplateMessageJob.perform_later('ProjectLeft', current_user.id, @user.id, @project.id)
+    SendTemplateMessageJob.perform_later('ProjectMemberLeft', current_user.id, @user.id, @project.id)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -38,7 +40,7 @@ class MembersController < ApplicationController
 
   def change_role
     interactor = Projects::ChangeMemberRoleInteractor.call(@project.owner, @project, @user, params[:role])
-    SendTemplateMessageJob.perform_later('ProjectRole', @user.id, @project.id, message_role_name)
+    SendTemplateMessageJob.perform_later('ProjectRole', current_user.id, @user.id, @project.id, message_role_name)
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)

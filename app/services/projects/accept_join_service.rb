@@ -53,6 +53,8 @@ class Projects::AcceptJoinService < ApplicationService
 
   def operate_project_member
     Projects::AddMemberInteractor.call(@project.owner, @project, @applied_project.user, permission)
+    SendTemplateMessageJob.perform_later('ProjectJoined', @user.id, @applied_project.user_id, @project.id)
+    SendTemplateMessageJob.perform_later('ProjectMemberJoined', @user.id, @applied_project.user_id, @project.id)
   end
 
   def send_apply_message 

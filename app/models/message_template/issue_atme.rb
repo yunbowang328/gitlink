@@ -18,7 +18,7 @@ class MessageTemplate::IssueAtme < MessageTemplate
   def self.get_message_content(receivers, operator, issue)
     project = issue&.project 
     owner = project&.owner 
-    content = sys_notice.gsub('{nickname}', operator&.nickname).gsub('{title}', issue&.subject)
+    content = sys_notice.gsub('{nickname}', operator&.real_name).gsub('{title}', issue&.subject)
     url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier).gsub('{id}', issue&.id.to_s)
     return receivers_string(receivers), content, url
   rescue => e
