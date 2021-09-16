@@ -64,7 +64,7 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
       content.gsub!(/({ifpermission})(.*)({endpermission})/, '') 
     end
     # 项目导航更改
-    if change_params[:navbar].present? || navbar_is_changed_by_time
+    if change_params[:navbar].present? 
       navbar = project.project_units.order(unit_type: :asc).pluck(:unit_type).join('，') 
       navbar.gsub!('code，', '')
       navbar.gsub!('issues', '易修')

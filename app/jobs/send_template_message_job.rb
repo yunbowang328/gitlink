@@ -1,5 +1,5 @@
 class SendTemplateMessageJob < ApplicationJob
-  queue_as :default
+  queue_as :message
 
   def perform(source, *args)
     Rails.logger.info "SendTemplateMessageJob [args] #{args}"
@@ -94,7 +94,7 @@ class SendTemplateMessageJob < ApplicationJob
       project = Project.find_by_id(project_id)
       return unless user.present? && project.present?
       receivers = User.where(id: user.id)
-      receivers_string, content, notification_url = MessageTemplate::ProjectJoined.get_message_content(receivers, project)
+      receivers_string, content, notification_url = MessageTemplate::ProjectLeft.get_message_content(receivers, project)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, project_id: project.id})
     when 'ProjectRole'
       user_id, project_id, role = args[0], args[1], args[2]
