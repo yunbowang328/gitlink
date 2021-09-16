@@ -158,6 +158,7 @@ class IssuesController < ApplicationController
   def update
     last_token = @issue.token
     last_status_id = @issue.status_id
+    @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
