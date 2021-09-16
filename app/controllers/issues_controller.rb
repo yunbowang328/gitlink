@@ -353,6 +353,8 @@ class IssuesController < ApplicationController
     @new_issue = @issue.dup
     @new_issue.author_id = current_user.id
     if @new_issue.save
+      SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @new_issue&.id)
+      SendTemplateMessageJob.perform_later('ProjectIssue', current_user.id, @new_issue&.id)
       issue_tags = @issue.issue_tags.pluck(:id)
       if issue_tags.present?
         issue_tags.each do |tag|
