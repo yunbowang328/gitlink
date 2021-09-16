@@ -85,7 +85,7 @@ class SendTemplateMessageJob < ApplicationJob
       user = User.find_by_id(user_id)
       project = Project.find_by_id(project_id)
       return unless user.present? && project.present?
-      receivers = User.where(id: user.user_id)
+      receivers = User.where(id: user.id)
       receivers_string, content, notification_url = MessageTemplate::ProjectJoined.get_message_content(receivers, project)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, project_id: project.id})
     when 'ProjectLeft'
@@ -93,7 +93,7 @@ class SendTemplateMessageJob < ApplicationJob
       user = User.find_by_id(user_id)
       project = Project.find_by_id(project_id)
       return unless user.present? && project.present?
-      receivers = User.where(id: user.user_id)
+      receivers = User.where(id: user.id)
       receivers_string, content, notification_url = MessageTemplate::ProjectJoined.get_message_content(receivers, project)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, project_id: project.id})
     when 'ProjectRole'
@@ -101,7 +101,7 @@ class SendTemplateMessageJob < ApplicationJob
       user = User.find_by_id(user_id)
       project = Project.find_by_id(project_id)
       return unless user.present? && project.present?
-      receivers = User.where(id: user.user_id)
+      receivers = User.where(id: user.id)
       receivers_string, content, notification_url = MessageTemplate::ProjectRole.get_message_content(receivers, project, role)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, project_id: project.id, role: role})
     when 'ProjectSettingChanged'
