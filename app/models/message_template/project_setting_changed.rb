@@ -35,39 +35,63 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
     end
     # 项目简介更改
     if change_params[:description].present?
-      if change_count > 1
-        content.sub!('{ifdescription}', '<br/>') 
+      if change_params[:description][1].blank?
+        if change_count > 1
+          content.gsub!(/({ifdescription})(.*)({enddescription})/, '<br/>删除了项目简介') 
+        else
+          content.gsub!(/({ifdescription})(.*)({enddescription})/, '删除了项目简介') 
+        end
       else
-        content.sub!('{ifdescription}', '') 
+        if change_count > 1
+          content.sub!('{ifdescription}', '<br/>') 
+        else
+          content.sub!('{ifdescription}', '') 
+        end
+        content.sub!('{enddescription}', '')
+        content.gsub!('{description}', change_params[:description][1])
       end
-      content.sub!('{enddescription}', '')
-      content.gsub!('{description}', change_params[:description][1])
     else 
       content.gsub!(/({ifdescription})(.*)({enddescription})/, '') 
     end
     # 项目类别更改
     if change_params[:project_category_id].present?
       category = ProjectCategory.find_by_id(change_params[:project_category_id][1])
-      if change_count > 1
-        content.sub!('{ifcategory}', '<br/>') 
-      else
-        content.sub!('{ifcategory}', '') 
+      if category.present? 
+        if change_count > 1
+          content.sub!('{ifcategory}', '<br/>') 
+        else
+          content.sub!('{ifcategory}', '') 
+        end
+        content.sub!('{endcategory}', '')
+        content.gsub!('{category}', category&.name)
+      else 
+        if change_count > 1
+          content.gsub!(/({ifcategory})(.*)({endcategory})/, '<br/>删除了项目类别') 
+        else
+          content.gsub!(/({ifcategory})(.*)({endcategory})/, '删除了项目类别') 
+        end
       end
-      content.sub!('{endcategory}', '')
-      content.gsub!('{category}', category&.name)
     else
       content.gsub!(/({ifcategory})(.*)({endcategory})/, '') 
     end
     # 项目语言更改
     if change_params[:project_language_id].present?
       language = ProjectLanguage.find_by_id(change_params[:project_language_id][1])
-      if change_count > 1
-        content.sub!('{iflanguage}', '<br/>') 
+      if language.present?
+        if change_count > 1
+          content.sub!('{iflanguage}', '<br/>') 
+        else
+          content.sub!('{iflanguage}', '') 
+        end
+        content.sub!('{endlanguage}', '')
+        content.gsub!('{language}', language&.name)
       else
-        content.sub!('{iflanguage}', '') 
+        if change_count > 1
+          content.gsub!(/({iflanguage})(.*)({endlanguage})/, '<br/>删除了项目语言') 
+        else
+          content.gsub!(/({iflanguage})(.*)({endlanguage})/, '删除了项目语言') 
+        end
       end
-      content.sub!('{endlanguage}', '')
-      content.gsub!('{language}', language&.name)
     else
       content.gsub!(/({iflanguage})(.*)({endlanguage})/, '') 
     end

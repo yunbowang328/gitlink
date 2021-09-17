@@ -156,8 +156,9 @@ class SendTemplateMessageJob < ApplicationJob
       operator_id, pull_request_id = args[0], args[1]
       operator = User.find_by_id(operator_id)
       pull_request = PullRequest.find_by_id(pull_request_id)
-      return unless operator.present? && pull_request.present?
-      receivers = User.where(id: pull_request&.issue&.assigned_to_id).where.not(id: operator&.id)
+      issue = Issue.find_by_id(pull_request&.issue_id)
+      return unless operator.present? && pull_request.present? && issue.present?
+      receivers = User.where(id: issue&.assigned_to_id).where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::PullRequestAssigned.get_message_content(receivers, operator, pull_request)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id})
     when 'PullRequestAtme'
@@ -172,8 +173,9 @@ class SendTemplateMessageJob < ApplicationJob
       operator_id, pull_request_id, change_params = args[0], args[1], args[2]
       operator = User.find_by_id(operator_id)
       pull_request = PullRequest.find_by_id(pull_request_id)
-      return unless operator.present? && pull_request.present?
-      receivers = User.where(id: [pull_request&.issue&.assigned_to_id, pull_request&.user_id]).where.not(id: operator&.id)
+      issue = Issue.find_by_id(pull_request&.issue_id)
+      return unless operator.present? && pull_request.present? && issue.present?
+      receivers = User.where(id: [issue&.assigned_to_id, pull_request&.user_id]).where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::PullRequestChanged.get_message_content(receivers, operator, pull_request, change_params.symbolize_keys)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id, change_params: change_params})
     when 'PullRequestClosed'

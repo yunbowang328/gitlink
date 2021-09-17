@@ -93,8 +93,6 @@ class PullRequestsController < ApplicationController
           end
 
           if @issue.update_attributes(@issue_params)
-            SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value))
-            SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present?
             if @pull_request.update_attributes(@local_params.compact)
               gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
                   @pull_request.gitea_number, @requests_params, current_user.gitea_token)
@@ -120,6 +118,8 @@ class PullRequestsController < ApplicationController
           normal_status(-1, e.message)
           raise ActiveRecord::Rollback
         end
+        SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value))
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present?
       end
     end
 

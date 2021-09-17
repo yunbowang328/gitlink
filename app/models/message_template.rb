@@ -46,7 +46,7 @@ class MessageTemplate <ApplicationRecord
     self.create(type: 'MessageTemplate::PullRequestChanged', sys_notice: '在项目{nickname2}/{repository}的合并请求<b>{title}</b>中：{ifassigner}{nickname1}将审查成员从<b>{assigner1}</b>修改为<b>{assigner2}</b>{endassigner}{ifmilestone}{nickname1}将里程碑从<b>{milestone1}</b>修改为<b>{milestone2}</b>{endmilestone}{iftag}{nickname1}将标记从<b>{tag1}</b>修改为<b>{tag2}</b>{endtag}{ifpriority}{nickname1}将优先级从<b>{priority1}</b>修改为<b>{priority2}</b>{endpriority}', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
     self.create(type: 'MessageTemplate::PullRequestClosed', sys_notice: '你提交的合并请求：{title}被拒绝', notification_url: '')
     self.create(type: 'MessageTemplate::PullRequestJournal', sys_notice: '{nickname}评论合并请求{title}：<b>{notes}</b>', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
-    self.create(type: 'MessageTemplate::PullRequestMerged', sys_notice: '你提交的合并请求：{title}被合并', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
+    self.create(type: 'MessageTemplate::PullRequestMerged', sys_notice: '你提交的合并请求：{title}已通过', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}/Messagecount')
   end
 
   def self.sys_notice
