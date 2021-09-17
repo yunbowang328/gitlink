@@ -59,7 +59,7 @@ class Team < ApplicationRecord
     when 'read' then '报告者'
     when 'write' then '开发者'
     when 'admin' then '管理员'
-    when 'owner' then '管理员'
+    when 'owner' then '拥有者'
     else 
       ''
     end
