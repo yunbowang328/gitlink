@@ -2,11 +2,15 @@ class BaseForm
   include ActiveModel::Model
 
   def check_project_category(project_category_id)
-    raise "project_category_id参数值无效." unless project_category_id == '' && (project_category_id && !ProjectCategory.exists?(project_category_id))
+    unless project_category_id == ''
+      raise "project_category_id参数值无效." if project_category_id && !ProjectCategory.exists?(project_category_id)
+    end
   end
 
   def check_project_language(project_language_id)
-    raise "project_language_id参数值无效." unless project_language_id == '' && (project_language_id && !ProjectLanguage.exists?(project_language_id))
+    unless project_language_id == ''
+      raise "project_language_id参数值无效." if project_language_id && !ProjectLanguage.exists?(project_language_id)
+    end
   end
 
   def check_repository_name(user_id, repository_name)
