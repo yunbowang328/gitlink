@@ -53,12 +53,12 @@ class MessageTemplate::PullRequestChanged < MessageTemplate
     else
       content.gsub!(/({ifmilestone})(.*)({endmilestone})/, '') 
     end
-    # 合并请求标签修改
+    # 合并请求标记修改
     if change_params[:issue_tags_value].present?
       issue_tags1 = IssueTag.where(id: change_params[:issue_tags_value][0]).distinct
       issue_tags2 = IssueTag.where(id: change_params[:issue_tags_value][1]).distinct
-      tag1 = issue_tags1.pluck(:name).join(",").blank? ? '未选择标签' : issue_tags1.pluck(:name).join(",")
-      tag2 = issue_tags2.pluck(:name).join(",").blank? ? '未选择标签' : issue_tags2.pluck(:name).join(",")
+      tag1 = issue_tags1.pluck(:name).join(",").blank? ? '未选择标记' : issue_tags1.pluck(:name).join(",")
+      tag2 = issue_tags2.pluck(:name).join(",").blank? ? '未选择标记' : issue_tags2.pluck(:name).join(",")
       if change_count > 1
         content.sub!('{iftag}', '<br/>') 
       else
