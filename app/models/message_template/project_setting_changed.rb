@@ -110,8 +110,12 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
     end
     # 项目导航更改
     if change_params[:navbar].present? 
-      navbar = project.project_units.order(unit_type: :asc).pluck(:unit_type).join('，') 
-      navbar.gsub!('code，', '')
+      unit_types = project.project_units.order(unit_type: :asc).pluck(:unit_type)
+      unit_types.delete('code')
+      unit_types.unshift('代码库')
+      unit_types.unshift('主页')
+      unit_types.append('动态')
+      navbar = unit_types.join('，') 
       navbar.gsub!('issues', '易修')
       navbar.gsub!('pulls', '合并请求')
       navbar.gsub!('wiki', 'Wiki')

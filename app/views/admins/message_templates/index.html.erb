@@ -1,0 +1,9 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('消息模版') %>
+<% end %>
+<div id="admins-message-templates-content">
+  <div class="box admin-list-container message-templates-list-container">
+    <%= render partial: 'admins/message_templates/list', locals: { message_templates: @message_templates } %>
+  </div>
+</div>
+
