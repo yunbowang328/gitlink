@@ -14,7 +14,7 @@ json.tidding_count 0
 json.user_phone_binded @user.phone.present?
 # json.phone @user.phone
 json.email @user.mail
-json.profile_completed @user.profile_completed?
+json.profile_completed @user.profile_is_completed?
 json.professional_certification @user.professional_certification
 json.devops_step @user.devops_step
 json.ci_certification @user.ci_certification?

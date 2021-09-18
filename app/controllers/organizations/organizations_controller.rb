@@ -43,7 +43,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
       @organization.login = organization_params[:name] if organization_params[:name].present?
       @organization.nickname = organization_params[:nickname] if organization_params[:nickname].present?
       @organization.save!
-      @organization.organization_extension.update_attributes!(organization_params.except(:name, :nickname))
+      sync_organization_extension!
+      
       Gitea::Organization::UpdateService.call(@organization.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
@@ -97,4 +98,18 @@ class Organizations::OrganizationsController < Organizations::BaseController
     %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
   end
 
+  def set_max_repo_creation
+    organization_params[:max_repo_creation].blank? ? -1 : organization_params[:max_repo_creation]
+  end
+
+  def organization_extension_params
+    organization_params
+    .except(:name, :nickname)
+    .merge(max_repo_creation: set_max_repo_creation)
+  end
+  
+  def sync_organization_extension!
+    @organization.organization_extension.update_attributes!(organization_extension_params)
+  end
+  
 end

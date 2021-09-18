@@ -1,0 +1,38 @@
+<div class="modal fade edu_setting-change-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= type == "create" ? "新增" : "编辑" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+       <%= form_for @edu_setting, url: {controller: "edu_settings", action: "#{type}"} do |p| %>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>
+              变量名 <span class="ml10 color-orange mr20">*</span>
+            </label>
+            <%= p.text_field :name, class: "form-control input-lg",required: true%>
+          </div>
+          <div class="form-group">
+            <label>
+              变量值 <span class="ml10 color-orange mr20">*</span>
+            </label>
+            <%= p.text_field :value, class: "form-control input-lg",required: true%>
+          </div>
+          <div class="form-group">
+            <label>
+              备注说明
+            </label>
+            <%= p.text_area :description, class: "form-control", placeholder: ""%>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <%= p.submit "确认", class: "btn btn-primary submit-btn" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

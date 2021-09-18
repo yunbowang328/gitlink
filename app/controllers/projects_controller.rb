@@ -28,7 +28,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    scope = Projects::ListQuery.call(params)
+    scope = current_user.logged? ? Projects::ListQuery.call(params, current_user.id) : Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
     @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
@@ -46,7 +46,6 @@ class ProjectsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      tip_exception("无法使用以下关键词：#{project_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(project_params[:repository_name]).present?
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 
@@ -64,7 +63,6 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
-    tip_exception("无法使用以下关键词：#{mirror_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(mirror_params[:repository_name]).present?
     Projects::MigrateForm.new(mirror_params).validate!
 
     @project = 

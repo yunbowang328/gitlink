@@ -26,9 +26,10 @@
         <li><%= sidebar_item(admins_project_categories_path, '分类列表', icon: 'sitemap', controller: 'admins-project_categories') %></li>
         <li><%= sidebar_item(admins_project_licenses_path, '开源许可证', icon: 'file-text-o', controller: 'admins-project_licenses') %></li>
         <li><%= sidebar_item(admins_project_ignores_path, '忽略文件', icon: 'git', controller: 'admins-project_ignores') %></li>
-        <li><%= sidebar_item(admins_reversed_keywords_path, '系统保留关键词', icon: 'key', controller: 'admins-reversed_keywords') %></li>
       <% end %>
     </li>
+
+    <li><%= sidebar_item(admins_reversed_keywords_path, '系统保留关键词', icon: 'key', controller: 'admins-reversed_keywords') %></li>
 
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
 
@@ -40,6 +41,12 @@
         <li><%= sidebar_item(edit_admins_agreement_path, '服务协议', icon: 'file-text-o', controller: 'admins-agreements') %></li>
         <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
         <li><%= sidebar_item(admins_faqs_path, 'FAQ', icon: 'question-circle', controller: 'admins-faqs') %></li>
+      <% end %>
+    </li>
+    <li>
+      <%= sidebar_item_group('#setting-system', '系统配置', icon: 'wrench') do %>
+        <li><%= sidebar_item(admins_sites_path, 'setting接口配置', icon: 'deaf', controller: 'admins-sites') %></li>
+        <li><%= sidebar_item(admins_edu_settings_path, '全局变量配置', icon: 'pencil-square', controller: 'admins-edu_settings') %></li>
       <% end %>
     </li>
     <li>

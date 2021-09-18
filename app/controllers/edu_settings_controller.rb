@@ -29,10 +29,8 @@ class EduSettingsController < ApplicationController
 
     respond_to do |format|
       if @edu_setting.save
-        format.html { redirect_to @edu_setting, notice: 'Edu setting was successfully created.' }
         format.json { render :show, status: :created, location: @edu_setting }
       else
-        format.html { render :new }
         format.json { render json: @edu_setting.errors, status: :unprocessable_entity }
       end
     end
@@ -43,10 +41,8 @@ class EduSettingsController < ApplicationController
   def update
     respond_to do |format|
       if @edu_setting.update(edu_setting_params)
-        format.html { redirect_to @edu_setting, notice: 'Edu setting was successfully updated.' }
         format.json { render :show, status: :ok, location: @edu_setting }
       else
-        format.html { render :edit }
         format.json { render json: @edu_setting.errors, status: :unprocessable_entity }
       end
     end
@@ -57,7 +53,6 @@ class EduSettingsController < ApplicationController
   def destroy
     @edu_setting.destroy
     respond_to do |format|
-      format.html { redirect_to edu_settings_url, notice: 'Edu setting was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

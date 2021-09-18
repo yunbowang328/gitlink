@@ -1,0 +1,24 @@
+<% define_admin_breadcrumbs do %>
+  <% add_admin_breadcrumb('Setting接口配置') %>
+<% end %>
+
+<div class="box search-form-container sites-list-form">
+  <%= form_tag(admins_sites_path, method: :get, class: 'form-inline search-form flex-1', remote: true) do %>
+    <div class="form-group mr-2">
+      <label for="status">类型：</label>
+      <% type_options = [['全部', ''], ['Add', Site.site_types[:add]], ['Personal', Site.site_types[:personal]], ['Common', Site.site_types[:common]]] %>
+      <%= select_tag(:site_type, options_for_select(type_options), class: 'form-control') %>
+    </div>
+
+    <%= text_field_tag(:search, params[:search], class: 'form-control col-12 col-md-2 mr-3', placeholder: '关键字检索') %>
+    <%= submit_tag('搜索', class: 'btn btn-primary ml-3', 'data-disable-with': '搜索中...') %>
+    <input type="reset" class="btn btn-secondary clear-btn" value="清空"/>
+  <% end %>
+ <%= link_to "新增", new_admins_site_path, remote: true, class: "btn btn-primary pull-right", "data-disabled-with":"...新增" %> 
+</div>
+
+<div class="box admin-list-container sites-list-container">
+  <%= render partial: 'admins/sites/list', locals: { sites: @sites } %>
+</div>
+<div id="site-modals">
+</div>
