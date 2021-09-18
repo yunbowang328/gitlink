@@ -1,5 +1,5 @@
 <div class="box search-form-container project-list-form">
-  <div style="line-height: 38px;" class="flex-1"><%= type == "create" ? "新建" : "编辑" %>消息模版</div>
+  <div style="line-height: 38px;" class="flex-1"><%= type == "create" ? "新建" : "编辑" %><%= @message_template.simple_type %>消息模版</div>
   <%= link_to "返回", admins_message_templates_path, class: "btn btn-default pull-right" %>
 </div>
 

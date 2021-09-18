@@ -64,4 +64,8 @@ class MessageTemplate <ApplicationRecord
   def self.receivers_string(receivers)
     receivers.pluck(:id).join(",")
   end
+
+  def simple_type 
+    self.type.split("::")[-1]
+  end
 end

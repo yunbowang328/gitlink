@@ -15,7 +15,7 @@
       <% message_template = message_template_type.constantize.last%>
       <tr class="project-language-item-<%= message_template.id %>">
         <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
-        <td><%= message_template.type.split("::")[1] %></td>
+        <td><%= message_template.simple_type %></td>
         <td>
             <%= message_template.sys_notice.to_s.truncate(200) %>
         </td>
