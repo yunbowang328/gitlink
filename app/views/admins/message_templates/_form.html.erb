@@ -1,0 +1,53 @@
+<div class="box search-form-container project-list-form">
+  <div style="line-height: 38px;" class="flex-1"><%= type == "create" ? "新建" : "编辑" %><%= @message_template.simple_type %>消息模版</div>
+  <%= link_to "返回", admins_message_templates_path, class: "btn btn-default pull-right" %>
+</div>
+
+<div class="box">
+  <%= form_for @message_template, url: {controller: "message_templates", action: "#{type}"} do |f| %>
+  
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        站内信模版
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= f.text_area :sys_notice, class:"form-control", rows: "10", cols: "20",placeholer: "站内信模版" %>
+    </div>
+
+
+
+  </div>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        邮件模版
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= f.text_area :email, class:"form-control", rows: "10", cols: "20",placeholer: "邮件模版" %>
+    </div>
+
+
+
+  </div>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        跳转地址
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= f.text_field :notification_url, class: "form-control input-lg", maxlength: "60", placeholder: "跳转地址" %>
+    </div>
+
+  </div>
+  <div class="form-group">
+    <%= f.submit "确认", class: "btn btn-primary submit-btn" %>
+  </div>
+  <% end %>
+</div>

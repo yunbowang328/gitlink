@@ -22,3 +22,4 @@ json.city @user.city
 json.custom_department @user.custom_department
 json.description @user.description
 json.(@user, :show_email, :show_department, :show_location)
+json.message_unread_total @message_unread_total

@@ -2,3 +2,8 @@ sync_gitea_repo_update_time:
   cron: "0 0 * * *"
   class: "SyncRepoUpdateTimeJob"
   queue: default
+
+delay_expired_issue:
+  cron: "0 0 * * *"
+  class: "DelayExpiredIssueJob"
+  queue: message
