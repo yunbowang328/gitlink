@@ -2,6 +2,9 @@
   <% add_admin_breadcrumb('消息模版') %>
 <% end %>
 <div id="admins-message-templates-content">
+  <div class="box search-form-container project-list-form">
+    <%= link_to "初始化数据", init_data_admins_message_templates_path, class: "btn btn-primary pull-right", "data-disabled-with":"...初始化数据" %> 
+  </div>
   <div class="box admin-list-container message-templates-list-container">
     <%= render partial: 'admins/message_templates/list', locals: { message_templates: @message_templates } %>
   </div>

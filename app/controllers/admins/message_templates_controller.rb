@@ -19,6 +19,16 @@ class Admins::MessageTemplatesController < Admins::BaseController
     end
   end
 
+  def init_data
+    if MessageTemplate.build_init_data
+      redirect_to admins_message_templates_path
+      flash[:success] = '消息模版初始化成功'
+    else 
+      redirect_to admins_message_templates_path
+      flash[:danger] = '消息模版初始化失败'
+    end
+  end
+
   private 
   def message_template_params 
     params.require(:message_template).permit!
