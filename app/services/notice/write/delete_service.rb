@@ -8,7 +8,7 @@ class Notice::Write::DeleteService < Notice::Write::ClientService
   end
 
   def call
-    result = delete("", request_params)
+    result = delete(url, request_params)
     response = render_response(result)
   end
 
@@ -24,6 +24,10 @@ class Notice::Write::DeleteService < Notice::Write::ClientService
       receiver: receiver,
       type: type
     }.stringify_keys)
+  end
+
+  def url
+    "/notification/#{platform}".freeze
   end
 
 end

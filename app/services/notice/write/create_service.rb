@@ -13,7 +13,7 @@ class Notice::Write::CreateService < Notice::Write::ClientService
 
   def call
     return nil if request_receivers.blank?
-    result = post("", request_params)
+    result = post(url, request_params)
     response = render_response(result)
   end
 
@@ -33,6 +33,10 @@ class Notice::Write::CreateService < Notice::Write::ClientService
       extra: extra.to_json.to_s,
       type: type
     }.stringify_keys)
+  end
+
+  def url
+    "/notification/#{platform}".freeze
   end
 
 end

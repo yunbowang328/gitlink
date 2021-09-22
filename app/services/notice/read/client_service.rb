@@ -48,7 +48,11 @@ class Notice::Read::ClientService < ApplicationService
     end
   end
 
-  #private 
+  def platform 
+    Notice.notice_config[:platform]
+  end
+
+  private 
   def conn 
     @client ||= begin
       Faraday.new(url: domain) do |req|
@@ -69,12 +73,8 @@ class Notice::Read::ClientService < ApplicationService
     Notice.notice_config[:read_domain]
   end
 
-  def platform 
-    Notice.notice_config[:platform]
-  end
-
   def api_url
-    [domain, base_url, "/#{platform}"].join('')
+    [domain, base_url].join('')
   end
 
   def full_url(api_rest, action='post')

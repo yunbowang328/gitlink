@@ -11,7 +11,7 @@
 #  notification_url :string(255)
 #
 
-class MessageTemplate <ApplicationRecord
+class MessageTemplate < ApplicationRecord
 
   def self.build_init_data
     self.create(type: 'MessageTemplate::FollowedTip', sys_notice: '<b>{nickname}</b> 关注了你', notification_url: '{baseurl}/{login}')
@@ -53,6 +53,10 @@ class MessageTemplate <ApplicationRecord
     self.last&.sys_notice
   end
 
+  def self.email 
+    self.last&.email
+  end
+
   def self.notification_url 
     self.last&.notification_url.gsub('{baseurl}', base_url)
   end
@@ -63,6 +67,10 @@ class MessageTemplate <ApplicationRecord
 
   def self.receivers_string(receivers)
     receivers.pluck(:id).join(",")
+  end
+
+  def self.receivers_email_string(receivers) 
+    receivers.pluck(:mail).join(",")
   end
 
   def simple_type 

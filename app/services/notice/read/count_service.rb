@@ -20,6 +20,6 @@ class Notice::Read::CountService < Notice::Read::ClientService
   end
 
   def url
-    "/count".freeze
+    "/notification/#{platform}/count".freeze
   end
 end

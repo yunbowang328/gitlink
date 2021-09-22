@@ -27,6 +27,6 @@ class Notice::Read::ListService < Notice::Read::ClientService
   end
 
   def url
-    "/list".freeze
+    "/notification/#{platform}/list".freeze
   end
 end

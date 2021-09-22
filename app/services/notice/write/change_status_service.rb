@@ -9,7 +9,7 @@ class Notice::Write::ChangeStatusService < Notice::Write::ClientService
   end
 
   def call
-    result = put("", request_params)
+    result = put(url, request_params)
     response = render_response(result)
   end
 
@@ -26,6 +26,10 @@ class Notice::Write::ChangeStatusService < Notice::Write::ClientService
       type: type,
       status: status
     }.stringify_keys)
+  end
+
+  def url
+    "/notification/#{platform}".freeze
   end
 
 end

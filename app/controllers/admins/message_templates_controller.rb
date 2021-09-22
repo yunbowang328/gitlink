@@ -1,5 +1,5 @@
 class Admins::MessageTemplatesController < Admins::BaseController 
-  before_action :get_template, only: [:edit,:update, :destroy]
+  before_action :get_template, only: [:edit, :update, :destroy]
 
   def index 
     message_templates = MessageTemplate.group(:type).count.keys
@@ -30,8 +30,8 @@ class Admins::MessageTemplatesController < Admins::BaseController
   end
 
   private 
-  def message_template_params 
-    params.require(:message_template).permit!
+  def message_template_params
+    params.require(@message_template.type.split("::").join("_").underscore.to_sym).permit!
   end
 
   def get_template

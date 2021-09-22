@@ -23,4 +23,12 @@ class MessageTemplate::ProjectJoined < MessageTemplate
     Rails.logger.info("MessageTemplate::ProjectJoined.get_message_content [ERROR] #{e}")
     return '', '', ''
   end
+
+  def self.get_email_message_content(receivers, project) 
+    content = email.gsub('{repository}', project&.name)
+    url = notification_url.gsub('{owner}', project&.owner&.login).gsub('{identifier}', project&.identifier)
+  rescue => e
+    Rails.logger.info("MessageTemplate::ProjectJoined.get_email_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end

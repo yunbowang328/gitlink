@@ -23,4 +23,13 @@ class MessageTemplate::OrganizationRole < MessageTemplate
     Rails.logger.info("MessageTemplate::OrganizationRole.get_message_content [ERROR] #{e}")
     return '', '', ''
   end
+
+  def self.get_email_message_content(receivers, organization, role) 
+    content = email.gsub('{organization}', organization&.real_name).gsub('{role}', role)
+    url = notification_url.gsub('{login}', organization&.login)
+    return receivers_email_string(receivers), content, url
+  rescue => e
+    Rails.logger.info("MessageTemplate::OrganizationRole.get_email_message_content [ERROR] #{e}")
+    return '', '', ''
+  end
 end
