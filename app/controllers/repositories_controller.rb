@@ -125,7 +125,11 @@ class RepositoriesController < ApplicationController
   end
 
   def contributors
-    @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
+    if params[:filepath].present? 
+      @contributors = []
+    else
+      @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
+    end
   end
 
   def edit
@@ -188,10 +192,16 @@ class RepositoriesController < ApplicationController
   end
 
   def readme
-    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
-
+    if params[:filepath].present?
+      result = Gitea::Repository::Readme::DirService.call(@owner.login, @repository.identifier, params[:filepath], params[:ref], current_user&.gitea_token)
+    else
+      result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
+    end
     @readme = result[:status] === :success ? result[:body] : nil
-    render json: @readme
+  
+    render json: @readme.slice("type", "encoding", "size", "name", "path", "content", "sha")
+  rescue 
+    render json: nil
   end
 
   def languages

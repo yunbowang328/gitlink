@@ -868,6 +868,63 @@ await octokit.request('GET /api/jasder/jasder_test/sub_entries.json')
   Success Data.
 </aside>
 
+## 获取仓库README文件
+获取仓库README文件
+
+> 示例:
+
+```shell
+curl -X GET \
+-d "ref=master" \
+-d "filepath=lib" \
+http://localhost:3000/api/yystopf/csfjkkj/readme.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/csfjkkj/readme.json')
+```
+
+### HTTP 请求
+`GET /api/:owner/:repo/readme.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner             |是| |string |用户登录名  |
+|repo             |是| |string |项目标识identifier  |
+|ref             |否| | string |分支名称、tag名称或是提交记录id，默认为默认分支  |
+|filepath        |否| | string |子目录名称，默认为空 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type           |string|文件类型， file:文件，dir：文件目录
+|encoding       |string   |编码 |
+|size           |int|文件夹或文件大小 单位B
+|name           |string|文件夹或文件名称|
+|path           |string|文件夹或文件相对路径|
+|content        |string|文件内容
+|sha            |string|文件commitid
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "type": "file",
+    "encoding": "base64",
+    "size": 24,
+    "name": "README.md",
+    "path": "lib/README.md",
+    "content": "ZGZhc2RhZGpmIGRrZnNsCgpzZGZkZnMK",
+    "sha": "860962cd21c60b1a9e07d723080c87c32c18d44a"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+
 ## 获取仓库webhooks列表
 获取仓库webhooks列表
 
