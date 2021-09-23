@@ -28,11 +28,10 @@
       </span>
     </label>
     <div class="mt-10">
-      <%= f.text_area :email, class:"form-control", rows: "10", cols: "20",placeholer: "邮件模版" %>
+      <div class="pl-0 my-3 setting-item-body" id="message-template-email-editor">
+        <%= f.text_area :email, class:"form-control", style: 'display: none;', rows: "10", cols: "20", placeholer: "请输入邮件模版" %>
+      </div>
     </div>
-
-
-
   </div>
   <div class="form-group">
     <label>
