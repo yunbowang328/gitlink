@@ -30,8 +30,8 @@ module RepositoriesHelper
     if author_json["id"].present?
       return find_user_by_gitea_uid author_json['id']
     end
-    if author_json["id"].nil? && author_json["name"].present?
-      return find_user_by_login author_json['name']
+    if author_json["id"].nil? && (author_json["name"].present? && author_json["email"].present?)
+      return find_user_by_login_and_mail(author_json['name'], author_json["email"])
     end
   end
 

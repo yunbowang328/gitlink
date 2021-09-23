@@ -6,6 +6,11 @@ json.array! @tags do |tag|
     json.tarball_url render_tar_url(@owner, @repository, tag['name'])
     json.commit do
       json.sha tag['commit']['sha']
+      json.message tag['commit_message']
+      json.time_ago time_from_now(tag['commit_time'].to_time)
+      json.committer do 
+        json.partial! 'commit_author', user: render_commit_author(tag['commiter']), name: tag['commiter']['name']
+      end
     end
   end
 end

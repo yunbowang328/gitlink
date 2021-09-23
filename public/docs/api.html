@@ -470,6 +470,9 @@
                     <a href="#ba8983357c" class="toc-h2 toc-link" data-title="仓库详情(新版)">仓库详情(新版)</a>
                   </li>
                   <li>
+                    <a href="#46a7ce7681" class="toc-h2 toc-link" data-title="仓库标签列表">仓库标签列表</a>
+                  </li>
+                  <li>
                     <a href="#af9709123a" class="toc-h2 toc-link" data-title="编辑仓库信息">编辑仓库信息</a>
                   </li>
                   <li>
@@ -6185,16 +6188,16 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
         </span><span class="nl">"Shell"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.1%"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h2 id='af9709123a'>编辑仓库信息</h2>
-<p>编辑仓库信息</p>
+</span></code></pre></div><h2 id='46a7ce7681'>仓库标签列表</h2>
+<p>仓库标签列表</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/jasder/jasder_test/edit.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/edit.json</span><span class="dl">'</span><span class="p">)</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/yystopf/csfjkkj/tags.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/csfjkkj/tags.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-4'>HTTP 请求</h3>
-<p><code>GET /api/:owner/:repo/edit.json</code></p>
+<p><code>GET /api/:owner/:repo/tags.json</code></p>
 <h3 id='2eb6f47757-4'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -6221,6 +6224,135 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 </tr>
 </tbody></table>
 <h3 id='7447e4874e-4'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>标签id</td>
+</tr>
+<tr>
+<td>name</td>
+<td>string</td>
+<td>标签名称</td>
+</tr>
+<tr>
+<td>zipball_url</td>
+<td>string</td>
+<td>标签zip包下载地址</td>
+</tr>
+<tr>
+<td>tarball_url</td>
+<td>string</td>
+<td>标签tar包下载地址</td>
+</tr>
+<tr>
+<td>commit</td>
+<td>object</td>
+<td>标签最后一个commit</td>
+</tr>
+<tr>
+<td>commit.sha</td>
+<td>string</td>
+<td>commit的id</td>
+</tr>
+<tr>
+<td>commit.message</td>
+<td>string</td>
+<td>commit的提交信息</td>
+</tr>
+<tr>
+<td>commit.time_ago</td>
+<td>string</td>
+<td>commit的提交时间</td>
+</tr>
+<tr>
+<td>commit.commiter</td>
+<td>object</td>
+<td>commit的提交者</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v2.0.0"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c7d0873ee41796d1a0e193063095ccf539a9bf31"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.zip"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.tar.gz"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08fe383f1e5ebe2e2a384a8ea3ee890a758c7cd7"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4小时前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"committer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1.0.0"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12168ad39c3ef201a445a2db181a3e43d50e40dd"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.zip"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.tar.gz"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5291b5e45a377c1f7710cc6647259887ed7aaccf"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADD file via upload</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"committer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heh"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/H/188_239_142/120.png"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div><h2 id='af9709123a'>编辑仓库信息</h2>
+<p>编辑仓库信息</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/jasder/jasder_test/edit.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/edit.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+<p><code>GET /api/:owner/:repo/edit.json</code></p>
+<h3 id='2eb6f47757-5'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-5'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6297,9 +6429,9 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <span class="nt">-d</span> <span class="s2">"private=true"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH /api/jasder/jasder_test.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>PATCH /api/:owner/:repo</code></p>
-<h3 id='2eb6f47757-5'>请求参数:</h3>
+<h3 id='2eb6f47757-6'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6359,7 +6491,7 @@ http://localhost:3000/api/jasder/jasder_test.json
 <td>项目是否私有, true：为私有，false: 公开，默认为公开</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<h3 id='7447e4874e-6'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6424,9 +6556,9 @@ http://localhost:3000/api/jasder/jasder_test.json
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE http://localhost:3000/api/jasder/jasder_test.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/jasder/jasder_test.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
 <p><code>PATCH /api/:owner/:repo</code></p>
-<h3 id='2eb6f47757-6'>请求参数:</h3>
+<h3 id='2eb6f47757-7'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6451,7 +6583,7 @@ http://localhost:3000/api/jasder/jasder_test.json
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-6'>返回字段说明:</h3>
+<h3 id='7447e4874e-7'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6492,83 +6624,8 @@ http://localhost:3000/api/jasder/jasder_test.json
 <span class="nt">-d</span> <span class="s2">"user_id=12"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test/collaborators.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
-<p><code>POST /api/:owner/:repo/collaborators.json</code></p>
-<h3 id='2eb6f47757-7'>请求参数:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>必选</th>
-<th>默认</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>owner</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>用户登录名</td>
-</tr>
-<tr>
-<td>repo</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>项目标识identifier</td>
-</tr>
-<tr>
-<td>user_id</td>
-<td>是</td>
-<td>int</td>
-<td></td>
-<td>用户id</td>
-</tr>
-</tbody></table>
-<h3 id='7447e4874e-7'>返回字段说明:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>status</td>
-<td>int</td>
-<td>返回状态， 0: 表示操作成功</td>
-</tr>
-<tr>
-<td>message</td>
-<td>string</td>
-<td>返回信息说明</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>返回的JSON示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<aside class="warning">
-  只有平台管理员和项目管理员才能添加仓库成员.
-</aside>
-<h2 id='c25af9423c'>删除仓库成员</h2>
-<p>仓库中删除成员操作</p>
-
-<blockquote>
-<p>示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
-<span class="nt">-d</span> <span class="s2">"user_id=12"</span> <span class="se">\</span>
-http://localhost:3000/api/jasder/jasder_test/collaborators.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-8'>HTTP 请求</h3>
-<p><code>DELETE /api/:owner/:repo/collaborators.json</code></p>
+<p><code>POST /api/:owner/:repo/collaborators.json</code></p>
 <h3 id='2eb6f47757-8'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -6630,6 +6687,81 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <aside class="warning">
+  只有平台管理员和项目管理员才能添加仓库成员.
+</aside>
+<h2 id='c25af9423c'>删除仓库成员</h2>
+<p>仓库中删除成员操作</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+<span class="nt">-d</span> <span class="s2">"user_id=12"</span> <span class="se">\</span>
+http://localhost:3000/api/jasder/jasder_test/collaborators.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+<p><code>DELETE /api/:owner/:repo/collaborators.json</code></p>
+<h3 id='2eb6f47757-9'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>是</td>
+<td>int</td>
+<td></td>
+<td>用户id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-9'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>返回状态， 0: 表示操作成功</td>
+</tr>
+<tr>
+<td>message</td>
+<td>string</td>
+<td>返回信息说明</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="warning">
   只有平台管理员和项目管理员才能删除仓库成员.
 </aside>
 <h2 id='d4fbcddc09'>更改仓库成员角色(权限)</h2>
@@ -6643,9 +6775,9 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <span class="nt">-d</span> <span class="s2">"role=Developer"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test/change_role.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PUT /api/jasder/jasder_test/change_role.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
 <p><code>PUT /api/:owner/:repo/change_role.json</code></p>
-<h3 id='2eb6f47757-9'>请求参数:</h3>
+<h3 id='2eb6f47757-10'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6684,7 +6816,7 @@ http://localhost:3000/api/jasder/jasder_test/change_role.json
 <td>取值范围：&quot;Manager&quot;, &quot;Developer&quot;, &quot;Reporter&quot;；分别为项目管理人员(拥有所有操作权限)、项目开发人员(只拥有读写权限)、项目报告人员(只拥有读权限)</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-9'>返回字段说明:</h3>
+<h3 id='7447e4874e-10'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6726,9 +6858,9 @@ http://localhost:3000/api/jasder/jasder_test/change_role.json
 <span class="nt">-d</span> <span class="s2">"limit=5"</span> <span class="se">\</span>
 http://localhost:3000/api/jasder/jasder_test/collaborators.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/collaborators.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/collaborators.json</code></p>
-<h3 id='2eb6f47757-10'>请求参数:</h3>
+<h3 id='2eb6f47757-11'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6767,7 +6899,7 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <td>每页多少条数据，默认15条</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-10'>返回字段说明:</h3>
+<h3 id='7447e4874e-11'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6855,9 +6987,9 @@ http://localhost:3000/api/jasder/jasder_test/collaborators.json
 <span class="nt">-d</span> <span class="s2">"ref=develop"</span> <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/files.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/files.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/files</code></p>
-<h3 id='2eb6f47757-11'>请求参数:</h3>
+<h3 id='2eb6f47757-12'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6896,7 +7028,7 @@ http://localhost:3000/api/yystopf/ceshi/files.json
 <td>分支名，默认为仓库默认分支</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-11'>返回字段说明:</h3>
+<h3 id='7447e4874e-12'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -6978,9 +7110,9 @@ http://localhost:3000/api/yystopf/ceshi/files.json
 <span class="nt">-d</span> <span class="s2">"ref=develop"</span> <span class="se">\</span>
 http://localhost:3000//api/jasder/jasder_test/entries.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/entries.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/entries.json</code></p>
-<h3 id='2eb6f47757-12'>请求参数:</h3>
+<h3 id='2eb6f47757-13'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7012,7 +7144,7 @@ http://localhost:3000//api/jasder/jasder_test/entries.json
 <td>分支名称、tag名称或是提交记录id，默认为master分支</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-12'>返回字段说明:</h3>
+<h3 id='7447e4874e-13'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7126,9 +7258,9 @@ http://localhost:3000//api/jasder/jasder_test/entries.json
 <span class="nt">-d</span> <span class="s2">"filepath=file"</span> <span class="se">\</span>
 http://localhost:3000//api/jasder/jasder_test/sub_entries.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/jasder/jasder_test/sub_entries.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/sub_entries.json</code></p>
-<h3 id='2eb6f47757-13'>请求参数:</h3>
+<h3 id='2eb6f47757-14'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7167,7 +7299,7 @@ http://localhost:3000//api/jasder/jasder_test/sub_entries.json
 <td>分支名称、tag名称或是提交记录id，默认为master分支</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-13'>返回字段说明:</h3>
+<h3 id='7447e4874e-14'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7264,9 +7396,9 @@ http://localhost:3000//api/jasder/jasder_test/sub_entries.json
 <span class="nt">-d</span> <span class="s2">"filepath=lib"</span> <span class="se">\</span>
 http://localhost:3000/api/yystopf/csfjkkj/readme.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/csfjkkj/readme.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/readme.json</code></p>
-<h3 id='2eb6f47757-14'>请求参数:</h3>
+<h3 id='2eb6f47757-15'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7305,7 +7437,7 @@ http://localhost:3000/api/yystopf/csfjkkj/readme.json
 <td>子目录名称，默认为空</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-14'>返回字段说明:</h3>
+<h3 id='7447e4874e-15'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7377,9 +7509,9 @@ http://localhost:3000/api/yystopf/csfjkkj/readme.json
 <span class="nt">-d</span> <span class="s2">"filepath=lib"</span> <span class="se">\</span>
 http://localhost:3000/api/yystopf/csfjkkj/contributors.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/csfjkkj/contributors.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/contributors.json</code></p>
-<h3 id='2eb6f47757-15'>请求参数:</h3>
+<h3 id='2eb6f47757-16'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7418,7 +7550,7 @@ http://localhost:3000/api/yystopf/csfjkkj/contributors.json
 <td>子目录名称，默认为空</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-15'>返回字段说明:</h3>
+<h3 id='7447e4874e-16'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7493,9 +7625,9 @@ http://localhost:3000/api/yystopf/csfjkkj/contributors.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/webhooks.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/webhooks.json</code></p>
-<h3 id='2eb6f47757-16'>请求参数:</h3>
+<h3 id='2eb6f47757-17'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7520,7 +7652,7 @@ http://localhost:3000/api/yystopf/ceshi/webhooks.json
 <td>项目标识identifier</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-16'>返回字段说明:</h3>
+<h3 id='7447e4874e-17'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7622,9 +7754,9 @@ http://localhost:3000/api/yystopf/ceshi/webhooks.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks/3/edit.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/webhooks/3/edit.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/webhooks/:id/edit.json</code></p>
-<h3 id='2eb6f47757-17'>请求参数:</h3>
+<h3 id='2eb6f47757-18'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7656,7 +7788,7 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/3/edit.json
 <td>webhook ID</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-17'>返回字段说明:</h3>
+<h3 id='7447e4874e-18'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -7857,266 +7989,8 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/3/edit.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/webhooks.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
-<p><code>POST /api/:owner/:repo/webhooks.json</code></p>
-<h3 id='2eb6f47757-18'>请求参数:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>必选</th>
-<th>默认</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>owner</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>用户登录名</td>
-</tr>
-<tr>
-<td>repo</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>项目标识identifier</td>
-</tr>
-<tr>
-<td>webhook.url</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>目标url</td>
-</tr>
-<tr>
-<td>webhook.type</td>
-<td>否</td>
-<td></td>
-<td>string</td>
-<td>类型</td>
-</tr>
-<tr>
-<td>webhook.http_method</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>http方法, POST和GET</td>
-</tr>
-<tr>
-<td>webhook.content_type</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>POST Content Type</td>
-</tr>
-<tr>
-<td>webhook.secret</td>
-<td>否</td>
-<td></td>
-<td>string</td>
-<td>密钥文本</td>
-</tr>
-<tr>
-<td>webhook.active</td>
-<td>是</td>
-<td></td>
-<td>bool</td>
-<td>是否激活</td>
-</tr>
-<tr>
-<td>webhook.branch_filter</td>
-<td>否</td>
-<td></td>
-<td>string</td>
-<td>分支过滤</td>
-</tr>
-<tr>
-<td>webhook.events</td>
-<td>否</td>
-<td></td>
-<td>array</td>
-<td>触发事件</td>
-</tr>
-</tbody></table>
-
-<p>触发事件字段说明 </p>
-
-<table><thead>
-<tr>
-<th>参数</th>
-<th>含义</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>create</td>
-<td>创建分支或标签</td>
-</tr>
-<tr>
-<td>delete</td>
-<td>分支或标签删除</td>
-</tr>
-<tr>
-<td>fork</td>
-<td>仓库被fork</td>
-</tr>
-<tr>
-<td>push</td>
-<td>git仓库推送</td>
-</tr>
-<tr>
-<td>issue</td>
-<td>易修已打开、已关闭、已重新打开或编辑</td>
-</tr>
-<tr>
-<td>issue_assign</td>
-<td>易修被指派</td>
-</tr>
-<tr>
-<td>issue_label</td>
-<td>易修标签被更新或删除</td>
-</tr>
-<tr>
-<td>issue_milestone</td>
-<td>易修被收入里程碑</td>
-</tr>
-<tr>
-<td>issue_comment</td>
-<td>易修评论</td>
-</tr>
-<tr>
-<td>pull_request</td>
-<td>合并请求</td>
-</tr>
-<tr>
-<td>pull_request_assign</td>
-<td>合并请求被指派</td>
-</tr>
-<tr>
-<td>pull_request_label</td>
-<td>合并请求被贴上标签</td>
-</tr>
-<tr>
-<td>pull_request_milestone</td>
-<td>合并请求被记录于里程碑中</td>
-</tr>
-<tr>
-<td>pull_request_comment</td>
-<td>合并请求被评论</td>
-</tr>
-<tr>
-<td>pull_request_review_approved</td>
-<td>合并请求被批准</td>
-</tr>
-<tr>
-<td>pull_request_review_rejected</td>
-<td>合并请求被拒绝</td>
-</tr>
-<tr>
-<td>pull_request_review_comment</td>
-<td>合并请求被提出审查意见</td>
-</tr>
-<tr>
-<td>pull_request_sync</td>
-<td>合并请求被同步</td>
-</tr>
-<tr>
-<td>repository</td>
-<td>创建或删除仓库</td>
-</tr>
-<tr>
-<td>release</td>
-<td>版本发布</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>请求的JSON示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> 
-    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"http_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"branch_filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"push"</span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div><h3 id='7447e4874e-18'>返回字段说明:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>id</td>
-<td>int</td>
-<td>id</td>
-</tr>
-<tr>
-<td>url</td>
-<td>string</td>
-<td>地址</td>
-</tr>
-<tr>
-<td>content_type</td>
-<td>string</td>
-<td>POST Content Type</td>
-</tr>
-<tr>
-<td>is_active</td>
-<td>bool</td>
-<td>是否激活</td>
-</tr>
-<tr>
-<td>type</td>
-<td>string</td>
-<td>类型</td>
-</tr>
-<tr>
-<td>events</td>
-<td>array</td>
-<td>触发事件</td>
-</tr>
-<tr>
-<td>create_time</td>
-<td>string</td>
-<td>创建时间</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>返回的JSON示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitea"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"push"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26 18:53:43"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div>
-<aside class="success">
-  Success Data.
-</aside>
-<h2 id='webhook-3'>更新仓库webhook</h2>
-<p>更新仓库webhook</p>
-
-<blockquote>
-<p>示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH <span class="se">\</span>
-http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-19'>HTTP 请求</h3>
-<p><code>PATCH /api/:owner/:repo/webhooks/:id.json</code></p>
+<p><code>POST /api/:owner/:repo/webhooks.json</code></p>
 <h3 id='2eb6f47757-19'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -8140,13 +8014,6 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
 <td></td>
 <td>string</td>
 <td>项目标识identifier</td>
-</tr>
-<tr>
-<td>id</td>
-<td>是</td>
-<td></td>
-<td>string</td>
-<td>webhook id</td>
 </tr>
 <tr>
 <td>webhook.url</td>
@@ -8309,28 +8176,79 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
     </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"push"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div><h3 id='7447e4874e-19'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>id</td>
+</tr>
+<tr>
+<td>url</td>
+<td>string</td>
+<td>地址</td>
+</tr>
+<tr>
+<td>content_type</td>
+<td>string</td>
+<td>POST Content Type</td>
+</tr>
+<tr>
+<td>is_active</td>
+<td>bool</td>
+<td>是否激活</td>
+</tr>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>类型</td>
+</tr>
+<tr>
+<td>events</td>
+<td>array</td>
+<td>触发事件</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>string</td>
+<td>创建时间</td>
+</tr>
+</tbody></table>
+
 <blockquote>
 <p>返回的JSON示例:</p>
 </blockquote>
 <div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gitea"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"push"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"create_time"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-07-26 18:53:43"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div>
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='webhook-4'>删除仓库webhook</h2>
-<p>删除仓库webhook</p>
+<h2 id='webhook-3'>更新仓库webhook</h2>
+<p>更新仓库webhook</p>
 
 <blockquote>
 <p>示例:</p>
 </blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
 </code></pre></div><h3 id='http-20'>HTTP 请求</h3>
-<p><code>DELETE /api/:owner/:repo/webhooks/:id.json</code></p>
+<p><code>PATCH /api/:owner/:repo/webhooks/:id.json</code></p>
 <h3 id='2eb6f47757-20'>请求参数:</h3>
 <table><thead>
 <tr>
@@ -8362,8 +8280,222 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
 <td>string</td>
 <td>webhook id</td>
 </tr>
+<tr>
+<td>webhook.url</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>目标url</td>
+</tr>
+<tr>
+<td>webhook.type</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>类型</td>
+</tr>
+<tr>
+<td>webhook.http_method</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>http方法, POST和GET</td>
+</tr>
+<tr>
+<td>webhook.content_type</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>POST Content Type</td>
+</tr>
+<tr>
+<td>webhook.secret</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>密钥文本</td>
+</tr>
+<tr>
+<td>webhook.active</td>
+<td>是</td>
+<td></td>
+<td>bool</td>
+<td>是否激活</td>
+</tr>
+<tr>
+<td>webhook.branch_filter</td>
+<td>否</td>
+<td></td>
+<td>string</td>
+<td>分支过滤</td>
+</tr>
+<tr>
+<td>webhook.events</td>
+<td>否</td>
+<td></td>
+<td>array</td>
+<td>触发事件</td>
+</tr>
 </tbody></table>
-<h3 id='7447e4874e-20'>返回字段说明:</h3>
+
+<p>触发事件字段说明 </p>
+
+<table><thead>
+<tr>
+<th>参数</th>
+<th>含义</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>create</td>
+<td>创建分支或标签</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>分支或标签删除</td>
+</tr>
+<tr>
+<td>fork</td>
+<td>仓库被fork</td>
+</tr>
+<tr>
+<td>push</td>
+<td>git仓库推送</td>
+</tr>
+<tr>
+<td>issue</td>
+<td>易修已打开、已关闭、已重新打开或编辑</td>
+</tr>
+<tr>
+<td>issue_assign</td>
+<td>易修被指派</td>
+</tr>
+<tr>
+<td>issue_label</td>
+<td>易修标签被更新或删除</td>
+</tr>
+<tr>
+<td>issue_milestone</td>
+<td>易修被收入里程碑</td>
+</tr>
+<tr>
+<td>issue_comment</td>
+<td>易修评论</td>
+</tr>
+<tr>
+<td>pull_request</td>
+<td>合并请求</td>
+</tr>
+<tr>
+<td>pull_request_assign</td>
+<td>合并请求被指派</td>
+</tr>
+<tr>
+<td>pull_request_label</td>
+<td>合并请求被贴上标签</td>
+</tr>
+<tr>
+<td>pull_request_milestone</td>
+<td>合并请求被记录于里程碑中</td>
+</tr>
+<tr>
+<td>pull_request_comment</td>
+<td>合并请求被评论</td>
+</tr>
+<tr>
+<td>pull_request_review_approved</td>
+<td>合并请求被批准</td>
+</tr>
+<tr>
+<td>pull_request_review_rejected</td>
+<td>合并请求被拒绝</td>
+</tr>
+<tr>
+<td>pull_request_review_comment</td>
+<td>合并请求被提出审查意见</td>
+</tr>
+<tr>
+<td>pull_request_sync</td>
+<td>合并请求被同步</td>
+</tr>
+<tr>
+<td>repository</td>
+<td>创建或删除仓库</td>
+</tr>
+<tr>
+<td>release</td>
+<td>版本发布</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>请求的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> 
+    </span><span class="nl">"content_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"json"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"http_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:10000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"branch_filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"events"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"push"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h3 id='7447e4874e-20'>返回字段说明:</h3>
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='webhook-4'>删除仓库webhook</h2>
+<p>删除仓库webhook</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE <span class="se">\</span>
+http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/yystopf/ceshi/webhooks/7.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-21'>HTTP 请求</h3>
+<p><code>DELETE /api/:owner/:repo/webhooks/:id.json</code></p>
+<h3 id='2eb6f47757-21'>请求参数:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>必选</th>
+<th>默认</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>owner</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>用户登录名</td>
+</tr>
+<tr>
+<td>repo</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>项目标识identifier</td>
+</tr>
+<tr>
+<td>id</td>
+<td>是</td>
+<td></td>
+<td>string</td>
+<td>webhook id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-21'>返回字段说明:</h3>
 <blockquote>
 <p>返回的JSON示例:</p>
 </blockquote>
@@ -8384,9 +8516,9 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks/3/tasks.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/yystopf/ceshi/webhooks/3/tasks.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-21'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-22'>HTTP 请求</h3>
 <p><code>GET /api/:owner/:repo/webhooks/:id/tasks.json</code></p>
-<h3 id='2eb6f47757-21'>请求参数:</h3>
+<h3 id='2eb6f47757-22'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -8418,7 +8550,7 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/3/tasks.json
 <td>webhook ID</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-21'>返回字段说明:</h3>
+<h3 id='7447e4874e-22'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -8655,9 +8787,9 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/3/tasks.json
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
 http://localhost:3000/api/yystopf/ceshi/webhooks/3/test.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/yystopf/ceshi/webhooks/3/test.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-22'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-23'>HTTP 请求</h3>
 <p><code>POST /api/:owner/:repo/webhooks/:id/test.json</code></p>
-<h3 id='2eb6f47757-22'>请求参数:</h3>
+<h3 id='2eb6f47757-23'>请求参数:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -8689,7 +8821,7 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/3/test.json
 <td>webhook ID</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-22'>返回字段说明:</h3>
+<h3 id='7447e4874e-23'>返回字段说明:</h3>
 <blockquote>
 <p>返回的JSON示例:</p>
 </blockquote>
