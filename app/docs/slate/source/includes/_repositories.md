@@ -924,6 +924,71 @@ await octokit.request('GET /api/yystopf/csfjkkj/readme.json')
   Success Data.
 </aside>
 
+## 获取仓库贡献者
+获取仓库贡献者
+
+> 示例:
+
+```shell
+curl -X GET \
+-d "ref=master" \
+-d "filepath=lib" \
+http://localhost:3000/api/yystopf/csfjkkj/contributors.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/csfjkkj/contributors.json')
+```
+
+### HTTP 请求
+`GET /api/:owner/:repo/contributors.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner             |是| |string |用户登录名  |
+|repo             |是| |string |项目标识identifier  |
+|ref             |否| | string |分支名称、tag名称或是提交记录id，默认为整个仓库  |
+|filepath        |否| | string |子目录名称，默认为空 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_count    |integer|贡献者数量|
+|contributions  |integer|贡献数量|
+|login          |string |用户登录名 |
+|type           |string|用户类型 |
+|name           |string|用户昵称|
+|image_url      |string|用户头像|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "contributors": [
+        {
+            "contributions": 5,
+            "login": "testforge2",
+            "type": "User",
+            "name": "testforge2",
+            "image_url": "system/lets/letter_avatars/2/T/236_177_85/120.png"
+        },
+        {
+            "contributions": 79,
+            "login": "yystopf",
+            "type": "User",
+            "name": "yystopf",
+            "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+        }
+    ],
+    "total_count": 2
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
 
 ## 获取仓库webhooks列表
 获取仓库webhooks列表
