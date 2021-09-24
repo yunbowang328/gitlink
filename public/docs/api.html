@@ -6222,6 +6222,20 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>string</td>
 <td>项目标识identifier</td>
 </tr>
+<tr>
+<td>page</td>
+<td>否</td>
+<td>1</td>
+<td>integer</td>
+<td>页码</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>否</td>
+<td>20</td>
+<td>integer</td>
+<td>每页个数</td>
+</tr>
 </tbody></table>
 <h3 id='7447e4874e-4'>返回字段说明:</h3>
 <table><thead>
@@ -6252,6 +6266,16 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>标签tar包下载地址</td>
 </tr>
 <tr>
+<td>tagger</td>
+<td>object</td>
+<td>打标签的人</td>
+</tr>
+<tr>
+<td>message</td>
+<td>string</td>
+<td>标签信息</td>
+</tr>
+<tr>
 <td>commit</td>
 <td>object</td>
 <td>标签最后一个commit</td>
@@ -6276,6 +6300,11 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
 <td>object</td>
 <td>commit的提交者</td>
 </tr>
+<tr>
+<td>commit.author</td>
+<td>object</td>
+<td>commit的作者</td>
+</tr>
 </tbody></table>
 
 <blockquote>
@@ -6287,11 +6316,24 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
         </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c7d0873ee41796d1a0e193063095ccf539a9bf31"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.zip"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.tar.gz"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"tagger"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jdfkls"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08fe383f1e5ebe2e2a384a8ea3ee890a758c7cd7"</span><span class="p">,</span><span class="w">
             </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4小时前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1天前"</span><span class="p">,</span><span class="w">
             </span><span class="nl">"committer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/T/19_237_174/120.png"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
                 </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
                 </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
                 </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testforge1"</span><span class="p">,</span><span class="w">
@@ -6304,15 +6346,28 @@ http://localhost:3000/api/ceshi1/ceshi_repo1/applied_transfer_projects/organizat
         </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12168ad39c3ef201a445a2db181a3e43d50e40dd"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"zipball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.zip"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"tarball_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.tar.gz"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"tagger"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"viletyy"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"viletyy"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/V/39_141_222/120.png"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dfks"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"commit"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nl">"sha"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5291b5e45a377c1f7710cc6647259887ed7aaccf"</span><span class="p">,</span><span class="w">
             </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADD file via upload</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9天前"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21天前"</span><span class="p">,</span><span class="w">
             </span><span class="nl">"committer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
                 </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heh"</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/H/188_239_142/120.png"</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"author"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="w">
             </span><span class="p">}</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">

@@ -295,6 +295,8 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
 --------- | ------- | ------- | -------- | ----------
 |owner             |是| |string |用户登录名  |
 |repo             |是| |string |项目标识identifier  |
+|page             |否| 1 | integer | 页码 |
+|limit            |否| 20| integer | 每页个数 |
 
 
 ### 返回字段说明:
@@ -304,11 +306,14 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
 |name           |string|标签名称|
 |zipball_url    |string|标签zip包下载地址|
 |tarball_url    |string|标签tar包下载地址|
+|tagger         |object|打标签的人|
+|message        |string|标签信息|
 |commit         |object|标签最后一个commit|
 |commit.sha     |string|commit的id|
 |commit.message |string|commit的提交信息|
 |commit.time_ago|string|commit的提交时间|
 |commit.commiter|object|commit的提交者|
+|commit.author|object|commit的作者|
 
 
 > 返回的JSON示例:
@@ -320,11 +325,24 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
         "id": "c7d0873ee41796d1a0e193063095ccf539a9bf31",
         "zipball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.zip",
         "tarball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.tar.gz",
+        "tagger": {
+            "id": 4,
+            "login": "testforge1",
+            "name": "testforge1",
+            "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+        },
+        "message": "jdfkls",
         "commit": {
             "sha": "08fe383f1e5ebe2e2a384a8ea3ee890a758c7cd7",
             "message": "add\n",
-            "time_ago": "4小时前",
+            "time_ago": "1天前",
             "committer": {
+                "id": 4,
+                "login": "testforge1",
+                "name": "testforge1",
+                "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+            },
+            "author": {
                 "id": 4,
                 "login": "testforge1",
                 "name": "testforge1",
@@ -337,15 +355,28 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
         "id": "12168ad39c3ef201a445a2db181a3e43d50e40dd",
         "zipball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.zip",
         "tarball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.tar.gz",
+        "tagger": {
+            "id": null,
+            "login": "viletyy",
+            "name": "viletyy",
+            "image_url": "system/lets/letter_avatars/2/V/39_141_222/120.png"
+        },
+        "message": "dfks",
         "commit": {
             "sha": "5291b5e45a377c1f7710cc6647259887ed7aaccf",
             "message": "ADD file via upload\n",
-            "time_ago": "9天前",
+            "time_ago": "21天前",
             "committer": {
-                "id": 2,
+                "id": null,
                 "login": "yystopf",
-                "name": "heh",
-                "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
+                "name": "yystopf",
+                "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+            },
+            "author": {
+                "id": null,
+                "login": "yystopf",
+                "name": "yystopf",
+                "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
             }
         }
     }
