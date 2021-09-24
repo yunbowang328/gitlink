@@ -2,11 +2,11 @@
   <thead class="thead-light">
   <tr>
     <th width="5%">序号</th>
-    <th width="15%">类型</th>
+    <th width="10%">类型</th>
     <th width="35%">系统消息模版</th>
-    <th width="35%">邮件模版</th>
+    <th width="30%">邮件模版</th>
     <th width="25%">通知地址</th>
-    <th width="20%">操作</th>
+    <th width="10%">操作</th>
   </tr>
   </thead>
   <tbody>
@@ -20,7 +20,7 @@
             <%= message_template.sys_notice.to_s.truncate(200) %>
         </td>
         <td>
-            <%= message_template.email.to_s.truncate(200) %>
+            <%= message_template.email.to_s.truncate(100) %>
         </td>
         <td>
           <%= message_template.notification_url.to_s.truncate(200) %>

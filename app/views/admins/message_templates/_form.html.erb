@@ -9,39 +9,51 @@
   <div class="form-group">
     <label>
       <span class="color-grey-6 pt10">
-        站内信模版
+        站内信
         <span class="ml10 color-orange mr20">*</span>
       </span>
     </label>
     <div class="mt-10">
-      <%= f.text_area :sys_notice, class:"form-control", rows: "10", cols: "20",placeholer: "站内信模版" %>
+      <%= f.text_area :sys_notice, class:"form-control", rows: "10", cols: "20",placeholer: "请输入站内信" %>
     </div>
 
 
 
   </div>
+    <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        邮件标题
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= f.text_field :email_title, class: "form-control input-lg", maxlength: "60", placeholder: "请输入邮件标题" %>
+    </div>
+
+  </div>
   <div class="form-group">
     <label>
       <span class="color-grey-6 pt10">
-        邮件模版
+        邮件正文
         <span class="ml10 color-orange mr20">*</span>
       </span>
     </label>
     <div class="mt-10">
       <div class="pl-0 my-3 setting-item-body" id="message-template-email-editor">
-        <%= f.text_area :email, class:"form-control", style: 'display: none;', rows: "10", cols: "20", placeholer: "请输入邮件模版" %>
+        <%= f.text_area :email, class:"form-control", style: 'display: none;', rows: "10", cols: "20", placeholer: "请输入邮件正文" %>
       </div>
     </div>
   </div>
   <div class="form-group">
     <label>
       <span class="color-grey-6 pt10">
-        跳转地址
+        站内信跳转地址
         <span class="ml10 color-orange mr20">*</span>
       </span>
     </label>
     <div class="mt-10">
-      <%= f.text_field :notification_url, class: "form-control input-lg", maxlength: "60", placeholder: "跳转地址" %>
+      <%= f.text_field :notification_url, class: "form-control input-lg", maxlength: "60", placeholder: "请输入站内信跳转地址" %>
     </div>
 
   </div>

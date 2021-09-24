@@ -9,6 +9,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  notification_url :string(255)
+#  email_title      :string(255)
 #
 
 # TODO 我创建或负责的易修有新的评论

@@ -9,6 +9,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  notification_url :string(255)
+#  email_title      :string(255)
 #
 
 # 我管理的仓库项目设置被更改
@@ -139,11 +140,22 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
     return '', '', ''
   end
 
-  def self.get_email_message_content(receivers, operator, project, change_params)
+  def self.get_email_message_content(receiver, operator, project, change_params)
     return '', '', '' if change_params.blank?
     owner = project&.owner
-    content = email.gsub('{nickname1}', operator&.real_name).gsub('{nickname2}', owner&.real_name).gsub('{repository}', project&.name)
-    url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier)
+    title = email_title
+    title.gsub!('{nickname2}', owner&.real_name)
+    title.gsub!('{repository}', project&.name)
+
+    content = email 
+    content.gsub!('{receiver}', receiver&.real_name)
+    content.gsub!('{baseurl}', base_url)
+    content.gsub!('{login1}', operator&.login)
+    content.gsub!('{nickname1}', operator&.real_name)
+    content.gsub!('{login2}', owner&.login)
+    content.gsub!('{nickname2}', owner&.real_name)
+    content.gsub!('{identifier}', project&.identifier)
+    content.gsub!('{repository}', project&.name)
     change_count = change_params.keys.size
     # 项目名称更改
     if change_params[:name].present?
@@ -257,7 +269,7 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
       content.gsub!(/({ifnavbar})(.*)({endnavbar})/, '') 
     end
     
-    return receivers_email_string(receivers), content, url
+    return receiver&.mail, title, content
   rescue => e
     Rails.logger.info("MessageTemplate::ProjectSettingChanged.get_email_message_content [ERROR] #{e}")
     return '', '', ''

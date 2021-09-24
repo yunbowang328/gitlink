@@ -9,6 +9,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  notification_url :string(255)
+#  email_title      :string(255)
 #
 
 # TODO 我管理的仓库有新的里程碑

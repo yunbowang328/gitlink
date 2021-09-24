@@ -9,6 +9,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  notification_url :string(255)
+#  email_title      :string(255)
 #
 
 # 我创建的易修截止日期到达最后一天
