@@ -307,6 +307,7 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
 |zipball_url    |string|标签zip包下载地址|
 |tarball_url    |string|标签tar包下载地址|
 |tagger         |object|打标签的人|
+|time_ago       |string|打标签的时间| 
 |message        |string|标签信息|
 |commit         |object|标签最后一个commit|
 |commit.sha     |string|commit的id|
@@ -331,6 +332,7 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
             "name": "testforge1",
             "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
         },
+        "time_ago": "1天前",
         "message": "jdfkls",
         "commit": {
             "sha": "08fe383f1e5ebe2e2a384a8ea3ee890a758c7cd7",
@@ -361,6 +363,7 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
             "name": "viletyy",
             "image_url": "system/lets/letter_avatars/2/V/39_141_222/120.png"
         },
+        "time_ago": "10天前",
         "message": "dfks",
         "commit": {
             "sha": "5291b5e45a377c1f7710cc6647259887ed7aaccf",

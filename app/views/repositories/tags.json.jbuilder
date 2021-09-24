@@ -7,6 +7,7 @@ json.array! @tags do |tag|
     json.tagger do 
       json.partial! 'commit_author', user: render_commit_author(tag['tagger']), name: tag['tagger']['name']
     end
+    json.time_ago time_from_now(tag['tagger']['date'].to_time)
     json.message tag['message']
     json.commit do
       json.sha tag['commit']['sha']
