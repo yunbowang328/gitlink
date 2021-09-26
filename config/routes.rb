@@ -434,6 +434,7 @@ Rails.application.routes.draw do
           get 'readme'
           get 'languages'
           get 'archive/:archive', to: 'repositories#archive', as: "archive", constraints: { archive: /.+/, format: /(zip|gzip)/ }
+          get 'raw', to: 'repositories#raw', as: "raw"
         end
       end
 
@@ -651,6 +652,8 @@ Rails.application.routes.draw do
         get :visits_static
       end
     end
+    resources :sites
+    resources :edu_settings
     resources :project_languages
     resources :project_categories
     resources :project_licenses

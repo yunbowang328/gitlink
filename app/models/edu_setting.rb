@@ -17,6 +17,8 @@
 class EduSetting < ApplicationRecord
   after_commit :expire_value_cache
 
+  scope :by_search,     -> (keyword){ where("name LIKE :keyword OR value LIKE :keyword", keyword: "%#{strip_param(keyword)}%") unless strip_param(keyword).blank? }
+
   def value_cache_key
     self.class.value_cache_key(name)
   end
