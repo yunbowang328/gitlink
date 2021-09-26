@@ -13,12 +13,6 @@ json.releases do
           json.partial! "version_release", locals: {version: version, user: user, re: re}
         end
       end
-      
-      json.attachments do
-        json.array! version.try(:attachments) do |attachment|
-          json.partial! "attachments/attachment_simple", locals: {attachment: attachment}
-        end
-      end
     end
     
   end
