@@ -2,7 +2,7 @@ class VersionReleasesController < ApplicationController
   before_action :load_repository
   before_action :set_user
   before_action :require_login, except: [:index]
-  before_action :find_version , only: [:edit, :update, :destroy]
+  before_action :find_version , only: [:show, :edit, :update, :destroy]
 
   def index
     version_releases = Gitea::Versions::ListService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier)).call
@@ -20,6 +20,10 @@ class VersionReleasesController < ApplicationController
         @all_branches.push(b["name"])
       end
     end
+  end
+
+  def show 
+    @release = Gitea::Versions::GetService.call(current_user.gitea_token, @user&.login, @repository&.identifier, @version&.version_gid)
   end
 
   def create
