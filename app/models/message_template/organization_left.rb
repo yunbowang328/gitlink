@@ -34,7 +34,7 @@ class MessageTemplate::OrganizationLeft < MessageTemplate
     content.gsub!('{login}', organization&.login)
     content.gsub!('{organization}', organization&.real_name)
 
-    return receiver, title, content
+    return receiver&.mail, title, content
   rescue => e
     Rails.logger.info("MessageTemplate::OrganizationLeft.get_email_message_content [ERROR] #{e}")
     return '', '', ''
