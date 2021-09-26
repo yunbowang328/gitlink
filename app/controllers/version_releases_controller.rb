@@ -1,7 +1,7 @@
 class VersionReleasesController < ApplicationController
   before_action :load_repository
   before_action :set_user
-  before_action :require_login, except: [:index]
+  before_action :require_login, except: [:index, :show]
   before_action :find_version , only: [:show, :edit, :update, :destroy]
 
   def index
