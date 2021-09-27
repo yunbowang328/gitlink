@@ -146,7 +146,7 @@ class SendTemplateMessageJob < ApplicationJob
       user = User.find_by_id(user_id)
       project = Project.find_by_id(project_id)
       return unless operator.present? && user.present? && project.present?
-      receivers = project&.all_managers.where.not(id: operator&.id)
+      receivers = project&.all_managers.where.not(id: [operator&.id, user&.id])
       receivers_string, content, notification_url = MessageTemplate::ProjectMemberJoined.get_message_content(receivers, user, project)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, user_id: user.id, project_id: project.id})
       receivers.find_each do |receiver|
@@ -159,7 +159,7 @@ class SendTemplateMessageJob < ApplicationJob
       user = User.find_by_id(user_id)
       project = Project.find_by_id(project_id)
       return unless operator.present? && user.present? && project.present?
-      receivers = project&.all_managers.where.not(id: operator&.id)
+      receivers = project&.all_managers.where.not(id: [operator&.id, user&.id])
       receivers_string, content, notification_url = MessageTemplate::ProjectMemberLeft.get_message_content(receivers, user, project)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, user_id: user.id, project_id: project.id})
       receivers.find_each do |receiver|
