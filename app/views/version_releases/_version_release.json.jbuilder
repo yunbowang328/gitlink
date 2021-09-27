@@ -3,6 +3,7 @@ json.id re["id"]
 json.tag_name re["tag_name"]
 json.target_commitish re["target_commitish"]
 json.name re["name"]
+json.sha re["sha"]
 json.body re["body"]
 json.url re["url"]
 json.tarball_url render_tar_url(@owner, @repository, re["tag_name"])
