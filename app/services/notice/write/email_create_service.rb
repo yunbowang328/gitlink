@@ -1,7 +1,7 @@
 class Notice::Write::EmailCreateService < Notice::Write::ClientService 
   attr_accessor :receivers, :sender, :content, :subject
 
-  def initialize(receivers, content, subject, sender=-1)
+  def initialize(receivers, subject, content, sender=-1)
     @receivers = receivers
     @sender = sender 
     @content = content 
@@ -20,12 +20,16 @@ class Notice::Write::EmailCreateService < Notice::Write::ClientService
     receivers.is_a?(Array) ? receivers.join(",") : receivers
   end
 
+  def request_subject
+    "Trustie: #{subject}"
+  end
+
   def request_params
     Hash.new.merge(data: {
       emails: request_receivers,
       sender: sender,
       content: content,
-      subject: subject
+      subject: request_subject
     }.stringify_keys)
   end
 

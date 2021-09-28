@@ -9,6 +9,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  notification_url :string(255)
+#  email_title      :string(255)
 #
 
 # 账号组织权限变更
@@ -24,10 +25,18 @@ class MessageTemplate::OrganizationRole < MessageTemplate
     return '', '', ''
   end
 
-  def self.get_email_message_content(receivers, organization, role) 
-    content = email.gsub('{organization}', organization&.real_name).gsub('{role}', role)
-    url = notification_url.gsub('{login}', organization&.login)
-    return receivers_email_string(receivers), content, url
+  def self.get_email_message_content(receiver, organization, role) 
+    title = email_title
+    title.gsub!('{organization}', organization&.real_name)
+    title.gsub!('{role}', role)
+    content = email 
+    content.gsub!('{receiver}', receiver&.real_name)
+    content.gsub!('{baseurl}', base_url)
+    content.gsub!('{login}', organization&.login)
+    content.gsub!('{organization}', organization&.real_name)
+    content.gsub!('{role}', role)
+
+    return receiver&.mail, title, content
   rescue => e
     Rails.logger.info("MessageTemplate::OrganizationRole.get_email_message_content [ERROR] #{e}")
     return '', '', ''
