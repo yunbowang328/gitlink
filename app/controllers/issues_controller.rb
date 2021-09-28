@@ -160,6 +160,7 @@ class IssuesController < ApplicationController
   def update
     last_token = @issue.token
     last_status_id = @issue.status_id
+    @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
@@ -432,22 +433,22 @@ class IssuesController < ApplicationController
 
   def check_project_public
     unless @project.is_public || @project.member?(current_user) || current_user.admin? || (@project.user_id == current_user.id)
-      normal_status(-1, "您没有权限")
+      return render_forbidden
     end
   end
 
   def set_issue
     @issue = Issue.find_by_id(params[:id])
     if @issue.blank?
-      normal_status(-1, "标签不存在")
-    elsif @issue.is_lock &&!(@project.member?(current_user) || current_user.admin?)
-      normal_status(-1, "您没有权限")
+      return render_not_found
+    elsif !(@project.is_public || (current_user.present? && (@project.member?(current_user) || current_user&.admin? || (@project.user_id == current_user&.id))))
+      return render_forbidden
     end
   end
 
   def check_issue_permission
     unless @project.is_public || (current_user.present? && (@project.member?(current_user) || current_user&.admin? || (@project.user_id == current_user&.id)))
-      normal_status(-1, "您没有权限")
+      return render_forbidden
     end
   end
 

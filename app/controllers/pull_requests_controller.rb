@@ -79,12 +79,13 @@ class PullRequestsController < ApplicationController
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
-      normal_status(-1, "标签不能为空")
+      normal_status(-1, "标记不能为空")
     else
       ActiveRecord::Base.transaction do
         begin
           merge_params
 
+          @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
           if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
             @issue&.issue_tags_relates&.destroy_all
             params[:issue_tag_ids].each do |tag|
