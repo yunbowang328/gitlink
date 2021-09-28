@@ -91,6 +91,12 @@ class UsersController < ApplicationController
   def get_user_info
     begin
       @user = current_user
+      begin
+        result = Notice::Read::CountService.call(current_user.id)
+        @message_unread_total = result.nil? ? 0 : result[2]["unread_notification"]
+      rescue 
+        @message_unread_total = 0
+      end
       # TODO 等消息上线再打开注释
       #@tidding_count = unviewed_tiddings(current_user) if current_user.present?
     rescue Exception => e

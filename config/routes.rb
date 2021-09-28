@@ -300,6 +300,15 @@ Rails.application.routes.draw do
         # resources :recent_contacts, only: [:index]
         # resource :private_message_details, only: [:show]
         # resource :unread_message_info, only: [:show]
+
+        # 通知中心
+        resources :messages, only: [:index, :create] do 
+          collection do 
+            post :read
+
+          end
+        end
+        delete 'messages', to: 'messages#delete'
       end
 
       resources :tidings, only: [:index]
@@ -659,6 +668,11 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
+    resources :message_templates, only: [:index, :edit, :update] do 
+      collection do 
+        get :init_data
+      end
+    end
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do
