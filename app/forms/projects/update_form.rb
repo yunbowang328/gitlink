@@ -1,6 +1,6 @@
 class Projects::UpdateForm < BaseForm
   attr_accessor :name, :description, :project_category_id, :project_language_id, :private
-  validates :name, :description, :project_category_id, :project_language_id, presence: true
+  validates :name, presence: true
   validates :name, length: { maximum: 50 }
   validates :description, length: { maximum: 200 }
   validate do

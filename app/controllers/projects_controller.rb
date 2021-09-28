@@ -139,6 +139,7 @@ class ProjectsController < ApplicationController
           @project.repository.update_column(:hidden, private)
         end
       end
+      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public))
     end
   rescue Exception => e
     uid_logger_error(e.message)
