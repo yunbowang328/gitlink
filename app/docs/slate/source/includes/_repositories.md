@@ -315,7 +315,7 @@ await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
 |commit.message |string|commit的提交信息|
 |commit.time_ago|string|commit的提交时间|
 |commit.created_at_unix|string|commit的提交时间戳|
-|commit.commiter|object|commit的提交者|
+|commit.committer|object|commit的提交者|
 |commit.author|object|commit的作者|
 
 
