@@ -280,7 +280,7 @@ class ApplicationController < ActionController::Base
 
 	# 资料是否完善
 	def check_account
-		if !current_user.profile_completed?
+		if !current_user. profile_is_completed?
 			#info_url = '/account/profile'
 			tip_exception(402, nil)
 		end
