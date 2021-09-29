@@ -1,5 +1,6 @@
 json.partial! "commons/success"
 json.user_permission @user_permission
+json.user_admin_permission @user_admin_permission
 # json.releases @version_releases
 json.releases do
   json.array! @version_releases.to_a.each do |re|
