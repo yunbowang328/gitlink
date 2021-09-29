@@ -41,7 +41,7 @@ class VersionReleasesController < ApplicationController
           version_params = releases_params
           version_release = VersionRelease.new(version_params.merge(user_id: current_user.id, repository_id: @repository.id))
           if version_release.save!
-            git_version_release = Gitea::Versions::CreateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params).call
+            git_version_release = Gitea::Versions::CreateService.new(current_user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params).call
             if git_version_release
               update_params = {
                 tarball_url: git_version_release["tarball_url"],
@@ -85,7 +85,7 @@ class VersionReleasesController < ApplicationController
 
           if @version.update_attributes!(version_params)
             create_attachments(params[:attachment_ids], @version) if params[:attachment_ids].present?
-            git_version_release = Gitea::Versions::UpdateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
+            git_version_release = Gitea::Versions::UpdateService.new(current_user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
             unless git_version_release
               raise Error, "更新失败"
             end
@@ -106,7 +106,7 @@ class VersionReleasesController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         if @version.destroy
-          git_version_release = Gitea::Versions::DeleteService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), @version.try(:version_gid)).call
+          git_version_release = Gitea::Versions::DeleteService.new(current_user.gitea_token, @user.try(:login), @repository.try(:identifier), @version.try(:version_gid)).call
 
           if git_version_release.status == 204
             normal_status(0, "删除成功")
