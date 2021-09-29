@@ -43,10 +43,6 @@ class SettingsController < ApplicationController
     def get_third_party
       @third_party = []
       @third_party << {
-        name: 'educoder',
-        url: EducoderOauth.oauth_url
-      }
-      @third_party << {
         name: 'mulan',
         url: MulanossOauth.oauth_url
       }
