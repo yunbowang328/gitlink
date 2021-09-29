@@ -264,29 +264,29 @@ Rails.application.routes.draw do
 
       scope module: :users do
         resources :applied_messages, only: [:index]
-        resources :applied_transfer_projects, only: [:index] do 
-          member do 
+        resources :applied_transfer_projects, only: [:index] do
+          member do
             post :accept
             post :refuse
           end
         end
-        resources :applied_projects, only: [:index] do 
-          member do 
+        resources :applied_projects, only: [:index] do
+          member do
             post :accept
             post :refuse
           end
         end
         resources :headmaps, only: [:index]
-        resources :is_pinned_projects, only: [:index, :update] do 
-          collection do 
-            post :pin 
+        resources :is_pinned_projects, only: [:index, :update] do
+          collection do
+            post :pin
           end
         end
-        resources :statistics, only: [:index] do 
-          collection do 
-            get :activity 
-            get :develop 
-            get :role 
+        resources :statistics, only: [:index] do
+          collection do
+            get :activity
+            get :develop
+            get :role
             get :major
           end
         end
@@ -349,6 +349,7 @@ Rails.application.routes.draw do
     get '/auth/qq/callback', to: 'oauth/qq#create'
     get '/auth/wechat/callback', to: 'oauth/wechat#create'
     get '/auth/educoder/callback', to: 'oauth/educoder#create'
+    get '/auth/mulanoss/callback', to: 'oauth/mulanoss#create'
     resource :bind_user, only: [:create]
 
     resources :hot_keywords, only: [:index]
@@ -567,15 +568,15 @@ Rails.application.routes.draw do
       scope module: :projects do
         resources :teams, only: [:index, :create, :destroy]
         resources :project_units, only: [:index, :create]
-        resources :applied_transfer_projects, only: [:create] do 
-          collection do 
+        resources :applied_transfer_projects, only: [:create] do
+          collection do
             get :organizations
             post :cancel
           end
         end
-        resources :webhooks, except: [:show, :new] do 
-          member do 
-            get :tasks 
+        resources :webhooks, except: [:show, :new] do
+          member do
+            get :tasks
             post :test
           end
         end
