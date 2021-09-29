@@ -18,7 +18,7 @@ class Admins::DeleteUnitApplyService < ApplicationService
 
       use_extensions = UserExtension&.where(school_id: @unit_apply.school_id)
       user_ids = UserExtension&.where(school_id: @unit_apply.school_id)&.pluck(:user_id)
-      User.where(id: user_ids).update_all(profile_completed: false)
+      User.where(id: user_ids)
       use_extensions.update_all(school_id: nil,department_id: nil)
 
       @unit_apply&.user&.user_extension&.update_attribute("department_id", nil)
