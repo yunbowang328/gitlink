@@ -10,12 +10,12 @@ module RepositoriesHelper
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
     default_type.include?(str&.downcase)
   end
 
   def image_type?(str)
-    default_type = %w(png jpg gif tif psd svg gif bmp webp jpeg)
+    default_type = %w(png jpg gif tif psd svg bmp webp jpeg)
     default_type.include?(str&.downcase)
   end
 
@@ -83,12 +83,15 @@ module RepositoriesHelper
 
   def decode64_content(entry, owner, repo, ref, path=nil)
     if is_readme?(entry['type'], entry['name'])
-      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content']
+      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content']
       readme_render_decode64_content(content, path)
     else
       file_type = File.extname(entry['name'].to_s)[1..-1]
+      if image_type?(file_type)
+        return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content'] : entry['content']  
+      end
       if download_type(file_type)
-        return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content'] : entry['content']  
+        return entry['content']
       end
       render_decode64_content(entry['content'])
     end

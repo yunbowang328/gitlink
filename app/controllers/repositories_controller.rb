@@ -229,7 +229,7 @@ class RepositoriesController < ApplicationController
     file_path = [domain, api_url, url].join
     file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") if @repository.hidden?
 
-    redirect_to file_path
+    redirect_to URI.escape(file_path)
   end
 
   private
