@@ -46,6 +46,10 @@ class SettingsController < ApplicationController
         name: 'educoder',
         url: EducoderOauth.oauth_url
       }
+      @third_party << {
+        name: 'mulan',
+        url: MulanossOauth.oauth_url
+      }
     end
 
     def get_site_url(key, value)
