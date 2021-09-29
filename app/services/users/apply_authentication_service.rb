@@ -7,7 +7,7 @@ class Users::ApplyAuthenticationService < ApplicationService
   end
 
   def call
-    raise Error, '请先完善基本信息' unless user.profile_completed?
+    raise Error, '请先完善基本信息' unless user.profile_is_completed?
 
     Users::ApplyAuthenticationForm.new(params).validate!
     # raise Error, '您已经申请过实名认证了' if ApplyUserAuthentication.real_name_auth.processing.exists?(user_id: user.id)
