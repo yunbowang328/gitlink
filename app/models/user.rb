@@ -114,7 +114,7 @@ class User < Owner
   # trustie: 来自Trustie平台
   # forge: 平台本身注册的用户
   # military: 军科的用户
-  enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
+  enumerize :platform, in: [:forge, :educoder, :trustie, :military, :mulan], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
   has_many :composes, dependent: :destroy
@@ -154,7 +154,7 @@ class User < Owner
   # 项目
   has_many :applied_projects, dependent: :destroy
   has_many :operate_applied_transfer_projects, class_name: 'AppliedTransferProject', dependent: :destroy
-  has_many :members, dependent: :destroy 
+  has_many :members, dependent: :destroy
   has_many :team_users, dependent: :destroy
   has_many :teams, through: :team_users
 
@@ -168,7 +168,7 @@ class User < Owner
   has_many :pinned_projects, dependent: :destroy
   has_many :is_pinned_projects, through: :pinned_projects, source: :project
   accepts_nested_attributes_for :is_pinned_projects
-  has_many :issues, dependent: :destroy, foreign_key: :author_id 
+  has_many :issues, dependent: :destroy, foreign_key: :author_id
   has_many :pull_requests, dependent: :destroy
   has_many :public_keys, class_name: "Gitea::PublicKey",primary_key: :gitea_uid, foreign_key: :owner_id, dependent: :destroy
 
@@ -205,14 +205,14 @@ class User < Owner
   validate :validate_password_length
 
   # 用户参与的所有项目
-  def full_member_projects 
+  def full_member_projects
     normal_projects = Project.members_projects(self.id).to_sql
     org_projects = Project.joins(teams: :team_users).where(team_users: {user_id: self.id}).to_sql
     return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
   end
 
   # 用户管理的所有项目
-  def full_admin_projects 
+  def full_admin_projects
     normal_projects = Project.joins(members: :roles).where(roles: {name: 'Manager'}, members: {user_id: self.id}).to_sql
     org_projects = Project.joins(teams: :team_users).where(teams: {authorize: %w(admin owner)}, team_users: {user_id: self.id}).to_sql
     return Project.from("( #{ normal_projects} UNION #{ org_projects } ) AS projects").distinct
@@ -221,7 +221,7 @@ class User < Owner
   def name
     login
   end
-  
+
   # 删除自动登录的token，一旦退出下次会提示需要登录
   def delete_autologin_token(value)
     Token.where(:user_id => id, :action => 'autologin', :value => value).delete_all
@@ -427,7 +427,7 @@ class User < Owner
     self.status = STATUS_LOCKED
   end
 
-  def need_edit_info 
+  def need_edit_info
     self.status = STATUS_EDIT_INFO
   end
 
