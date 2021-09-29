@@ -57,7 +57,7 @@ class Admins::ImportUserService < ApplicationService
       password: '12345678',
       phone: data.phone,
       mail: "#{prefix}#{data.student_id}@qq.com",
-      profile_completed: true
+      # profile_completed: true
     }
     ActiveRecord::Base.transaction do
       user = User.create!(attr)
