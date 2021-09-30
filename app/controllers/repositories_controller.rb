@@ -200,7 +200,6 @@ class RepositoriesController < ApplicationController
     end
     @readme = result[:status] === :success ? result[:body] : nil
     @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref])
-    Rails.logger.info "======+#{@readme}"
     render json: @readme.slice("type", "encoding", "size", "name", "path", "content", "sha")
   rescue 
     render json: nil
