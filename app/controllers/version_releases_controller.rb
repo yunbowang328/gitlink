@@ -2,6 +2,7 @@ class VersionReleasesController < ApplicationController
   before_action :load_repository
   before_action :set_user
   before_action :require_login, except: [:index, :show]
+  before_action :check_release_authorize, except: [:index, :show]
   before_action :find_version , only: [:show, :edit, :update, :destroy]
 
   def index
@@ -159,6 +160,10 @@ class VersionReleasesController < ApplicationController
         attachment.save
       end
     end
+  end
+
+  def check_release_authorize
+    return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.manager?(current_user)
   end
 
 end

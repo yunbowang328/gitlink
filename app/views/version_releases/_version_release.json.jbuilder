@@ -12,6 +12,7 @@ json.draft version&.draft ? "草稿" : (version&.prerelease ? "预发行" : "稳
 json.created_at format_time(version.created_at.to_s.to_time)
 json.published_at format_time(version.created_at.to_s.to_time)
 json.user_name user.present? ? user.try(:show_real_name) : ""
+json.user_login user&.login
 json.image_url user.present? ? url_to_avatar(user) : ""
 json.attachments do
   json.array! version.try(:attachments) do |attachment|
