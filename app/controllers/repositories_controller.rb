@@ -1,4 +1,5 @@
 class RepositoriesController < ApplicationController
+  include RepositoriesHelper
   include ApplicationHelper
   include OperateProjectAbilityAble
   include Repository::LanguagesPercentagable
@@ -198,7 +199,8 @@ class RepositoriesController < ApplicationController
       result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
     end
     @readme = result[:status] === :success ? result[:body] : nil
-  
+    @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref])
+    Rails.logger.info "======+#{@readme}"
     render json: @readme.slice("type", "encoding", "size", "name", "path", "content", "sha")
   rescue 
     render json: nil
