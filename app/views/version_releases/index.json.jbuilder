@@ -14,3 +14,4 @@ json.releases do
     end
   end
 end
+json.total_count @version_releases.total_count
