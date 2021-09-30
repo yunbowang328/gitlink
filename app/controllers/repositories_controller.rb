@@ -74,6 +74,7 @@ class RepositoriesController < ApplicationController
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
 
     if @project.educoder?
       if params[:type] === 'file'
