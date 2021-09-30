@@ -1,2 +1,2 @@
-user = User.select(:id, :gitea_uid, :login, :lastname,:firstname, :nickname).find_by_gitea_uid(@release["author"]["id"])
-json.partial! "version_release", locals: {version: @version, user: user, re: @release}
+
+json.partial! "version_release", locals: {version: @version, user: @version&.user}

@@ -5,11 +5,9 @@ class VersionReleasesController < ApplicationController
   before_action :find_version , only: [:show, :edit, :update, :destroy]
 
   def index
-    version_releases = Gitea::Versions::ListService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier)).call
-    @version_releases = version_releases
+    @version_releases = kaminari_paginate(@repository.version_releases.order(created_at: :desc))
     @user_permission = current_user.present? && (@repository.project.all_developers.include?(current_user) || current_user.admin?)
     @user_admin_permission = current_user.present? && (@repository.project.all_managers.include?(current_user) || current_user.admin?)
-    @forge_releases = @repository.version_releases.select(:id,:version_gid, :created_at).includes(:attachments)
   end
 
   def new
@@ -24,7 +22,7 @@ class VersionReleasesController < ApplicationController
   end
 
   def show 
-    @release = Gitea::Versions::GetService.call(current_user.gitea_token, @user&.login, @repository&.identifier, @version&.version_gid)
+    # @release = Gitea::Versions::GetService.call(current_user.gitea_token, @user&.login, @repository&.identifier, @version&.version_gid)
   end
 
   def create
@@ -49,6 +47,7 @@ class VersionReleasesController < ApplicationController
                 zipball_url: git_version_release["zipball_url"],
                 url: git_version_release["url"],
                 version_gid: git_version_release["id"],
+                sha: git_version_release["sha"]
               }
               version_release.update_attributes!(update_params)
               version_release.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
