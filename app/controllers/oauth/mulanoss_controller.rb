@@ -7,7 +7,6 @@ class Oauth::MulanossController < Oauth::BaseController
     begin
       code = params['code'].to_s.strip
       tip_exception("code不能为空") if code.blank?
-      new_user = false
       result = MulanossOauth::Service.access_token(code)
       result = MulanossOauth::Service.user_info(result[:access_token])
 
@@ -17,9 +16,9 @@ class Oauth::MulanossController < Oauth::BaseController
         successful_authentication(open_user.user)
       else
         if current_user.blank? || !current_user.logged?
-          new_user = true
           login = User.generate_login('ML')
-          reg_result = autologin_register(login, "#{login}@forge.com" , "M#{login}2021#", 'mulan', true)
+          mail = result["email"].to_s.match(CustomRegexp::EMAIL).present? ?  result["email"].to_s : "#{login}@mulan.com"
+          reg_result = autologin_register(login, mail , "M#{login}2021#", 'mulan', true)
           open_user = OpenUsers::Mulan.create!(user_id: reg_result[:user][:id], uid: result['id'], extra: result)
           successful_authentication(open_user.user)
         else
