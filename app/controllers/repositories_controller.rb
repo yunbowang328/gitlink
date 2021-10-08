@@ -254,8 +254,14 @@ class RepositoriesController < ApplicationController
 
   # TODO 获取最新commit信息
   def project_commits
-    Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
-      sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    if params[:filepath].present?
+      file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+      Gitea::Repository::Commits::FileListService.new(@project.owner.login, @project.identifier, file_path_uri,
+        sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    else
+      Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+        sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    end
   end
 
   def get_statistics
