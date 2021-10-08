@@ -105,8 +105,14 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
-      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    if params[:filepath].present?
+      file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+      @hash_commit = Gitea::Repository::Commits::FileListService.new(@owner.login, @project.identifier, file_path_uri,
+        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    else
+      @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
+        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    end
   end
 
   def commits_slice 
