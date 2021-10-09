@@ -8,29 +8,25 @@ class Repositories::DetailService < ApplicationService
   end
 
   def call
-    if @repo.project.educoder?
-      return {
-        repo: {},
-        release: [],
-        branch: [],
-        branch_type: [],
-        tag: [],
-        contributor: [],
-        language: {},
-        readme: {}
-      }
-    else
-      return {
-        repo: repo_suitable,
-        release: release_suitable,
-        branch: branch_suitable,
-        branch_slice: branch_slice_suitable,
-        tag: tag_suitable,
-        contributor: contributor_suitable,
-        language: language_suitable,
-        readme: readme_suitable
-      }
-    end
+    return {
+      repo: repo_suitable,
+      release: release_suitable,
+      branch: branch_suitable,
+      tag: tag_suitable,
+      contributor: contributor_suitable,
+      language: language_suitable
+    }
+  rescue 
+    return {
+      repo: {},
+      release: [],
+      branch: [],
+      branch_type: [],
+      tag: [],
+      contributor: [],
+      language: {},
+      readme: {}
+    }
   end
 
   private
@@ -48,11 +44,6 @@ class Repositories::DetailService < ApplicationService
     branches.is_a?(Hash) && branches.key?(:status) ? [] : branches
   end
 
-  def branch_slice_suitable
-    branches = Gitea::Repository::Branches::ListSliceService.call(@owner, @repo.identifier)
-    branches.is_a?(Hash) && branches.key?(:status) ? [] : branches
-  end
-
   def tag_suitable
     tags = Gitea::Repository::Tags::ListService.call(@owner&.gitea_token, @owner.login, @repo.identifier)
     tags.is_a?(Hash) && tags[:status] == -1 ? [] : tags
@@ -66,10 +57,5 @@ class Repositories::DetailService < ApplicationService
   def language_suitable
     result = Gitea::Repository::Languages::ListService.call(@owner.login, @repo.identifier, @user&.gitea_token)
     result[:status] === :success ? hash_transform_precentagable(result[:body]) : nil
-  end
-
-  def readme_suitable
-    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repo.identifier, @repo.default_branch, @owner.gitea_token)
-    result[:status] === :success ? result[:body] : nil
   end
 end
