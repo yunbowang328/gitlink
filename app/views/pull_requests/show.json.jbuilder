@@ -5,7 +5,8 @@ json.project_identifier @project.identifier
 json.pr_time time_from_now(@pull_request.updated_at)
 json.commits_count @pull_request.commits_count
 json.files_count @pull_request.files_count
-json.comments_count @issue.get_journals_size
+json.comments_count @issue.journals.parent_journals.size
+json.comments_total_count @issue.get_journals_size
 
 json.pull_request do
   json.extract! @pull_request, :id,:base, :head, :status,:fork_project_id, :is_original
