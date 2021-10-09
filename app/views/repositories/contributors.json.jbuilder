@@ -6,7 +6,7 @@ json.contributors @contributors.each do |contributor|
     next
   end
   json.contributions contributor["contributions"]
-  json.gid contributor["id"]
+  # json.gid contributor["id"]
   json.login user.login
   json.type user&.type
   json.name user.real_name

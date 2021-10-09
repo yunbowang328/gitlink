@@ -416,6 +416,7 @@ Rails.application.routes.draw do
         member do
           get :menu_list
           get :branches
+          get :branches_slice
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
@@ -431,6 +432,7 @@ Rails.application.routes.draw do
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
+          get :commits_slice
           get :tags
           get :contributors
           post :create_file
@@ -526,7 +528,7 @@ Rails.application.routes.draw do
       resources :forks, only: [:create]
       resources :project_trends, :path => :activity, only: [:index, :create]
       resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
-      resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+      resources :version_releases, :path => :releases, only: [:index,:new, :show, :create, :edit, :update, :destroy]
 
       scope module: :ci do
         scope do
