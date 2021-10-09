@@ -15,7 +15,7 @@ class IssuesController < ApplicationController
   include TagChosenHelper
 
   def index
-    @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
+    @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user) || @project.is_public?)
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
 
@@ -453,7 +453,7 @@ class IssuesController < ApplicationController
   end
 
   def operate_issue_permission
-    return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.member?(current_user)
+    return render_forbidden("您没有权限进行此操作.") unless current_user.present? && current_user.logged? && (current_user.admin? || @project.member?(current_user) || @project.is_public?)
   end
 
   def export_issues(issues)

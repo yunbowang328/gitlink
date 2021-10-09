@@ -9,7 +9,7 @@ if @project.forge?
   json.type entry['type']
   json.size entry['size']
 
-  json.content decode64_content(entry, @owner, @repository, @ref)
+  json.content decode64_content(entry, @owner, @repository, @ref, @path)
   json.target entry['target']
   
   download_url = 

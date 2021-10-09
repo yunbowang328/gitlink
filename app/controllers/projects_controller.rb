@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include Acceleratorable
 
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
+  before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :require_profile_completed, only: [:create, :migrate]
   before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
@@ -84,6 +84,13 @@ class ProjectsController < ApplicationController
 
     result = Gitea::Repository::Branches::ListService.call(@owner, @project.identifier)
     @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
+  end
+
+  def branches_slice
+    return @branches = [] unless @project.forge?
+
+    slice_result = Gitea::Repository::Branches::ListSliceService.call(@owner, @project.identifier)
+    @branches_slice = slice_result.is_a?(Hash) && slice_result.key?(:status) ? [] : slice_result
   end
 
   def group_type_list
