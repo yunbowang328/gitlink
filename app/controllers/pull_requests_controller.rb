@@ -200,7 +200,7 @@ class PullRequestsController < ApplicationController
       if can_merge.present?
         render json: {
           status: -2,
-          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
+          message: "在这些分支之间的合并请求已存在：<a href='/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}''>#{can_merge.first.try(:title)}</a>",
         }
       else
         normal_status(0, "可以合并")
