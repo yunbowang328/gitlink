@@ -61,7 +61,6 @@ class PullRequestsController < ApplicationController
         @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
         SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id)
         SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id)
-        render_ok
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
         raise ActiveRecord::Rollback
