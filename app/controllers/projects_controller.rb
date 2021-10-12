@@ -139,11 +139,12 @@ class ProjectsController < ApplicationController
         gitea_params = {
           private: private,
           default_branch: @project.default_branch,
-          website: @project.website
+          website: @project.website,
+          name: @project.identifier
         }
         if [true, false].include? private
-          Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
-          @project.repository.update_column(:hidden, private)
+          Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
+          @project.repository.update_attributes({hidden: private, identifier: @project.identifier})
         end
       end
       SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public))
