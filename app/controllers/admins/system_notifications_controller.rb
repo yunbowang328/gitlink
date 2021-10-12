@@ -6,7 +6,7 @@ class Admins::SystemNotificationsController < Admins::BaseController
     sort_by = SystemNotification.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
     sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
     q = SystemNotification.ransack(subject_cont: params[:search])
-    notifications = q.result(distinct: true).order("#{sort_by} #{sort_direction},created_at desc")
+    notifications = q.result(distinct: true).reorder("#{sort_by} #{sort_direction},created_at desc")
     @notifications = paginate(notifications)
   end
 
@@ -25,7 +25,7 @@ class Admins::SystemNotificationsController < Admins::BaseController
     @notification = SystemNotification.new(notification_params)
     if @notification.save
       redirect_to admins_system_notifications_path
-      flash[:success] = '系统保留关键词创建成功'
+      flash[:success] = '系统消息创建成功'
     else
       redirect_to admins_system_notifications_path
       flash[:danger] = @notification.errors.full_messages.join(",")
@@ -38,7 +38,7 @@ class Admins::SystemNotificationsController < Admins::BaseController
       if @notification.update_attributes(notification_params)
         format.html do 
           redirect_to admins_system_notifications_path
-          flash[:success] = '系统保留关键词更新成功'
+          flash[:success] = '系统消息更新成功'
         end
         format.js {render_ok}
       else 
@@ -54,10 +54,10 @@ class Admins::SystemNotificationsController < Admins::BaseController
   def destroy 
     if @notification.destroy 
       redirect_to admins_system_notifications_path 
-      flash[:success] = "系统保留关键词删除成功"
+      flash[:success] = "系统消息删除成功"
     else 
       redirect_to admins_system_notifications_path 
-      flash[:danger] = "系统保留关键词删除失败"
+      flash[:danger] = "系统消息删除失败"
     end
   end
 
@@ -70,7 +70,7 @@ class Admins::SystemNotificationsController < Admins::BaseController
     @notification = SystemNotification.find_by(id: params[:id])
     unless @notification.present?
       redirect_to admins_system_notifications_path 
-      flash[:danger] = "系统保留关键词不存在"
+      flash[:danger] = "系统消息不存在"
     end
   end
 end
