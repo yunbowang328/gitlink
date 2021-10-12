@@ -138,6 +138,9 @@ Rails.application.routes.draw do
 
     resources :issues, except: [:index, :new,:create, :update, :edit, :destroy] do
       resources :journals, only: [:index, :create, :destroy, :edit, :update] do
+        collection do
+          post :beihang
+        end
         member do
           get :get_children_journals
         end
