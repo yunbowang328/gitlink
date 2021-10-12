@@ -142,10 +142,8 @@ class ProjectsController < ApplicationController
           website: @project.website,
           name: @project.identifier
         }
-        if [true, false].include? private
-          Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
-          @project.repository.update_attributes({hidden: private, identifier: @project.identifier})
-        end
+        gitea_repo = Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
+        @project.repository.update_attributes({hidden: gitea_repo["private"], identifier: gitea_repo["name"]})
       end
       SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public))
     end
