@@ -24,7 +24,7 @@ class CompareController < ApplicationController
         @exist_pullrequest = @project.pull_requests.where(is_original: false, head: @base, base: @head, status: 0).take
       end
       if @exist_pullrequest.present?
-        return -2, "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{@exist_pullrequest.id}/Messagecount'>#{@exist_pullrequest.try(:title)}</a>"
+        return -2, "在这些分支之间的合并请求已存在：<a href='/#{@owner.login}/#{@project.identifier}/pulls/#{@exist_pullrequest.id}/Messagecount'>#{@exist_pullrequest.try(:title)}</a>"
       else 
         if @compare_result["Commits"].blank? && @compare_result["Diff"].blank?
           return -2, "分支内容相同，无需创建合并请求"
