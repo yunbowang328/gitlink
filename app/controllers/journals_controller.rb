@@ -1,5 +1,5 @@
 class JournalsController < ApplicationController
-  before_action :require_login, except: [:index, :get_children_journals]
+  before_action :require_login, except: [:index, :get_children_journals,:beihang]
   before_action :require_profile_completed, only: [:create]
   before_action :set_issue
   before_action :check_issue_permission
@@ -13,8 +13,8 @@ class JournalsController < ApplicationController
     parent_journals = total_journals.parent_journals.order("created_on desc")
     @journals = parent_journals.order("created_on desc").page(@page).per(@limit)
     @journals_size = parent_journals.size
-    
-   
+
+
   end
 
   def create
@@ -49,6 +49,31 @@ class JournalsController < ApplicationController
       else
         normal_status(-1, "评论失败")
       end
+    end
+  end
+
+  def beihang
+    token = request.headers["HTTP_TOKEN"]
+    playod = JWT.decode(token,EducoderOauth.client_id)[0]
+    data = HashWithIndifferentAccess.new playod
+
+    notes = params[:content]
+    return normal_status(-1, "评论内容不能为空") if notes.blank?
+    return normal_status(-1, "验证失败") if data["user_id"].blank?
+    journal_params = {
+      journalized_id: @issue.id ,
+      journalized_type: "Issue",
+      user_id: data["user_id"] ,
+      notes: notes.to_s.strip,
+      parent_id: params[:parent_id]
+    }
+    journal = Journal.new journal_params
+    if journal.save
+      # @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "journal")
+      render :json => { status: 0, message: "评论成功", id:  journal.id}
+      # normal_status(0, "评论成功")
+    else
+      normal_status(-1, "评论失败")
     end
   end
 
