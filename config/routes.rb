@@ -670,6 +670,11 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
+    resources :system_notifications do 
+      member do 
+        get :history
+      end
+    end
     resources :message_templates, only: [:index, :edit, :update] do 
       collection do 
         get :init_data

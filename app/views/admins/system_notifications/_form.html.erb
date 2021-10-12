@@ -1,0 +1,57 @@
+<div class="box search-form-container project-list-form">
+  <div style="line-height: 38px;" class="flex-1"><%= type == "create" ? "新建" : "编辑" %>忽略文件</div>
+  <%= link_to "返回", admins_project_ignores_path, class: "btn btn-default pull-right" %>
+</div>
+
+<div class="box">
+  <%= form_for @notification, url: {controller: "system_notifications", action: "#{type}"} do |p| %>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        系统通知标题
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= p.text_field :subject, class: "form-control input-lg", placeholder: "请输入系统通知标题" %>
+    </div>
+
+  </div>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        系统通知副标题
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="mt-10">
+      <%= p.text_field :sub_subject, class: "form-control input-lg", placeholder: "请输入系统通知副标题" %>
+    </div>
+
+  </div>
+  <div class="form-group">
+    <label>
+      <span class="color-grey-6 pt10">
+        系统通知正文
+        <span class="ml10 color-orange mr20">*</span>
+      </span>
+    </label>
+    <div class="pl-0 my-3 setting-item-body" id="system-notification-content-editor">
+      <%= p.text_area :content, class:"form-control", style: 'display: none;', rows: "10", cols: "20", placeholer: "请输入系统通知正文" %>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <div class="form-check">
+      <%= p.check_box :is_top, class: "form-check-input", value:"true"%>
+      <label class="form-check-label" for="is_top">
+        是否置顶
+      </label>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= p.submit "确认", class: "btn btn-primary submit-btn" %>
+  </div>
+  <% end %>
+</div>
