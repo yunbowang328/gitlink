@@ -59,8 +59,8 @@ class PullRequestsController < ApplicationController
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
         @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
-        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id)
-        SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id)
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id) if Site.has_notice_menu?
+        SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id) if Site.has_notice_menu?
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
         raise ActiveRecord::Rollback
@@ -118,8 +118,8 @@ class PullRequestsController < ApplicationController
           normal_status(-1, e.message)
           raise ActiveRecord::Rollback
         end
-        SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value))
-        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present?
+        SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value)) if Site.has_notice_menu?
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
       end
     end
 
@@ -131,7 +131,7 @@ class PullRequestsController < ApplicationController
         colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
         if colsed === true 
           @pull_request.project_trends.create!(user: current_user, project: @project,action_type: ProjectTrend::CLOSE)
-          SendTemplateMessageJob.perform_later('PullRequestClosed', current_user.id, @pull_request.id)
+          SendTemplateMessageJob.perform_later('PullRequestClosed', current_user.id, @pull_request.id) if Site.has_notice_menu?
           normal_status(1, "已拒绝") 
         else
           normal_status(-1, '合并失败')
@@ -175,7 +175,7 @@ class PullRequestsController < ApplicationController
             # @pull_request.project_trend_status!
             @pull_request.project_trends.create!(user: current_user, project: @project,action_type: ProjectTrend::MERGE)
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
-            SendTemplateMessageJob.perform_later('PullRequestMerged', current_user.id, @pull_request.id)
+            SendTemplateMessageJob.perform_later('PullRequestMerged', current_user.id, @pull_request.id) if Site.has_notice_menu?
             normal_status(1, "合并成功")
           else
             normal_status(-1, result.message)

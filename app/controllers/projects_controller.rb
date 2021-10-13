@@ -145,7 +145,7 @@ class ProjectsController < ApplicationController
         gitea_repo = Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
         @project.repository.update_attributes({hidden: gitea_repo["private"], identifier: gitea_repo["name"]})
       end
-      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public))
+      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public)) if Site.has_notice_menu?
     end
   rescue Exception => e
     uid_logger_error(e.message)

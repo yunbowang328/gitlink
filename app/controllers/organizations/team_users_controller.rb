@@ -18,7 +18,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user = TeamUser.build(@organization.id, @operate_user.id, @team.id)
       @organization_user = OrganizationUser.build(@organization.id, @operate_user.id)
-      SendTemplateMessageJob.perform_later('OrganizationRole', @operate_user.id, @organization.id, @team.authorize_name)
+      SendTemplateMessageJob.perform_later('OrganizationRole', @operate_user.id, @organization.id, @team.authorize_name) if Site.has_notice_menu?
       Gitea::Organization::TeamUser::CreateService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
     end
   rescue Exception => e
