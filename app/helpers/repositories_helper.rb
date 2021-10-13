@@ -6,16 +6,16 @@ module RepositoriesHelper
 
   def render_decode64_content(str)
     return nil if str.blank?
-    Base64.decode64(str).force_encoding("UTF-8")
+    Base64.decode64(str).force_encoding("UTF-8").encode("UTF-8", invalid: :replace)
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
     default_type.include?(str&.downcase)
   end
 
   def image_type?(str)
-    default_type = %w(png jpg gif tif psd svg gif bmp webp jpeg)
+    default_type = %w(png jpg gif tif psd svg bmp webp jpeg)
     default_type.include?(str&.downcase)
   end
 
@@ -26,9 +26,13 @@ module RepositoriesHelper
   end
 
   def render_commit_author(author_json)
-    return nil if author_json.blank? || author_json["id"].blank?
-    # find_user_by_login author_json['name']
-    find_user_by_gitea_uid author_json['id']
+    return nil if author_json.blank? || (author_json["id"].blank? && author_json['name'].blank?)
+    if author_json["id"].present?
+      return find_user_by_gitea_uid author_json['id']
+    end
+    if author_json["id"].nil? && (author_json["name"].present? && author_json["email"].present?)
+      return find_user_by_login_and_mail(author_json['name'], author_json["email"])
+    end
   end
 
   def readme_render_decode64_content(str, path)
@@ -79,12 +83,15 @@ module RepositoriesHelper
 
   def decode64_content(entry, owner, repo, ref, path=nil)
     if is_readme?(entry['type'], entry['name'])
-      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content']
+      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content']
       readme_render_decode64_content(content, path)
     else
       file_type = File.extname(entry['name'].to_s)[1..-1]
+      if image_type?(file_type)
+        return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content'] : entry['content']  
+      end
       if download_type(file_type)
-        return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content'] : entry['content']  
+        return entry['content']
       end
       render_decode64_content(entry['content'])
     end

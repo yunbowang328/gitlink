@@ -9,3 +9,4 @@ json.parents @commit['parents'] do |parent|
   json.sha parent['sha']
   # json.url EduSetting.get('host_name') + commit_repository_path(@repo, parent['sha'])
 end
+json.branch @commit['branch']

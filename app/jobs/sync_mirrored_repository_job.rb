@@ -26,6 +26,7 @@ class SyncMirroredRepositoryJob < ApplicationJob
     result = Gitea::Repository::SyncMirroredService.call(repo.owner.login,
       repo.identifier, token: user.gitea_token)
     repo&.mirror.set_status! if result[:status] === 200
+    BroadcastMirrorRepoMsgJob.perform_later(repo.id) unless repo&.mirror.waiting?
   end
 
 end

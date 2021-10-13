@@ -8,27 +8,25 @@ class Repositories::DetailService < ApplicationService
   end
 
   def call
-    if @repo.project.educoder?
-      return {
-        repo: {},
-        release: [],
-        branch: [],
-        tag: [],
-        contributor: [],
-        language: {},
-        readme: {}
-      }
-    else
-      return {
-        repo: repo_suitable,
-        release: release_suitable,
-        branch: branch_suitable,
-        tag: tag_suitable,
-        contributor: contributor_suitable,
-        language: language_suitable,
-        readme: readme_suitable
-      }
-    end
+    return {
+      repo: repo_suitable,
+      release: release_suitable,
+      branch: branch_suitable,
+      tag: tag_suitable,
+      contributor: contributor_suitable,
+      language: language_suitable
+    }
+  rescue 
+    return {
+      repo: {},
+      release: [],
+      branch: [],
+      branch_type: [],
+      tag: [],
+      contributor: [],
+      language: {},
+      readme: {}
+    }
   end
 
   private
@@ -43,7 +41,7 @@ class Repositories::DetailService < ApplicationService
 
   def branch_suitable
     branches = Gitea::Repository::Branches::ListService.call(@owner, @repo.identifier)
-    branches.is_a?(Hash) && branches[:status] == :error ? [] : branches
+    branches.is_a?(Hash) && branches.key?(:status) ? [] : branches
   end
 
   def tag_suitable
@@ -59,10 +57,5 @@ class Repositories::DetailService < ApplicationService
   def language_suitable
     result = Gitea::Repository::Languages::ListService.call(@owner.login, @repo.identifier, @user&.gitea_token)
     result[:status] === :success ? hash_transform_precentagable(result[:body]) : nil
-  end
-
-  def readme_suitable
-    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repo.identifier, @repo.default_branch, @owner.gitea_token)
-    result[:status] === :success ? result[:body] : nil
   end
 end

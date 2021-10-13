@@ -18,7 +18,7 @@ default: &default
   password: 123456
 #  socket: /var/run/mysqld/mysqld.sock
   gitea_server:
-    aadapter: mysql2
+    adapter: mysql2
     database: gitea_development
     host: 127.0.0.1
     username: root

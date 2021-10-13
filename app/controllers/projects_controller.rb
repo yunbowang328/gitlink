@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include Acceleratorable
 
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
+  before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :require_profile_completed, only: [:create, :migrate]
   before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
@@ -86,6 +86,13 @@ class ProjectsController < ApplicationController
     @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
   end
 
+  def branches_slice
+    return @branches = [] unless @project.forge?
+
+    slice_result = Gitea::Repository::Branches::ListSliceService.call(@owner, @project.identifier)
+    @branches_slice = slice_result.is_a?(Hash) && slice_result.key?(:status) ? [] : slice_result
+  end
+
   def group_type_list
     project_statics = ProjectStatistic.first
 
@@ -139,6 +146,7 @@ class ProjectsController < ApplicationController
           @project.repository.update_column(:hidden, private)
         end
       end
+      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public))
     end
   rescue Exception => e
     uid_logger_error(e.message)
