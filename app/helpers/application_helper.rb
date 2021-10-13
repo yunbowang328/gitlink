@@ -434,6 +434,10 @@ module ApplicationHelper
     User.find_by_login login
   end
 
+  def find_user_by_login_and_mail(login, mail)
+    User.find_by(login: login, mail: mail)
+  end
+
   def find_user_by_gitea_uid(gitea_uid)
     User.find_by(gitea_uid: gitea_uid)
   end

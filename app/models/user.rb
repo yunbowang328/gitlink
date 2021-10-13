@@ -187,7 +187,7 @@ class User < Owner
            :show_email, :show_location, :show_department,
            :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
-  before_save :update_hashed_password, :set_lastname, :set_profile_completed
+  before_save :update_hashed_password, :set_lastname
   after_create do
     SyncTrustieJob.perform_later("user", 1) if allow_sync_to_trustie?
   end
@@ -770,6 +770,10 @@ class User < Owner
     laboratory_id.present? && laboratory_id != 1
   end
 
+  def profile_is_completed?
+    self.nickname.present? && self.gender.present? && self.mail.present? && self.custom_department.present?
+  end
+
   protected
   def validate_password_length
     # 管理员的初始密码是5位
@@ -795,10 +799,6 @@ class User < Owner
 
   def set_lastname
     self.lastname = self.nickname if changes[:nickname].present?
-  end
-
-  def set_profile_completed
-    self.profile_completed = self.nickname.present? && self.gender.present? && self.mail.present? && self.custom_department.present?
   end
 end
 

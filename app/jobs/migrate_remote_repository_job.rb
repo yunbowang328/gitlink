@@ -16,5 +16,6 @@ class MigrateRemoteRepositoryJob < ApplicationJob
     else 
       repo&.mirror&.failed!
     end
+    BroadcastMirrorRepoMsgJob.perform_later(repo.id) unless repo&.mirror.waiting?
   end
 end

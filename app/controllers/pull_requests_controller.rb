@@ -58,8 +58,9 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
-        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
-        render_ok
+        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id)
+        SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id)
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
         raise ActiveRecord::Rollback
@@ -77,12 +78,13 @@ class PullRequestsController < ApplicationController
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
-      normal_status(-1, "标签不能为空")
+      normal_status(-1, "标记不能为空")
     else
       ActiveRecord::Base.transaction do
         begin
           merge_params
 
+          @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
           if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
             @issue&.issue_tags_relates&.destroy_all
             params[:issue_tag_ids].each do |tag|
@@ -116,6 +118,8 @@ class PullRequestsController < ApplicationController
           normal_status(-1, e.message)
           raise ActiveRecord::Rollback
         end
+        SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value))
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present?
       end
     end
 
@@ -125,7 +129,12 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
-        colsed === true ? normal_status(1, "已拒绝") : normal_status(-1, '合并失败')
+        if colsed === true 
+          SendTemplateMessageJob.perform_later('PullRequestClosed', current_user.id, @pull_request.id)
+          normal_status(1, "已拒绝") 
+        else
+          normal_status(-1, '合并失败')
+        end
       rescue => e
         normal_status(-1, e.message)
         raise ActiveRecord::Rollback
@@ -164,6 +173,7 @@ class PullRequestsController < ApplicationController
           if success_condition && @pull_request.merge!
             @pull_request.project_trend_status!
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
+            SendTemplateMessageJob.perform_later('PullRequestMerged', current_user.id, @pull_request.id)
             normal_status(1, "合并成功")
           else
             normal_status(-1, result.message)
@@ -190,7 +200,7 @@ class PullRequestsController < ApplicationController
       if can_merge.present?
         render json: {
           status: -2,
-          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
+          message: "在这些分支之间的合并请求已存在：<a href='/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}''>#{can_merge.first.try(:title)}</a>",
         }
       else
         normal_status(0, "可以合并")
