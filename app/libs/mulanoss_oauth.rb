@@ -11,7 +11,7 @@ module MulanossOauth
     end
 
     def oauth_url
-      "#{base_url}/action/oauth2/authorize?client_id=#{client_id}&redirect_uri=#{URI.encode_www_form_component(redirect_uri)}&response_type=code"
+      "#{base_url}/api/auth/oschina?client_id=#{client_id}&redirect_uri=#{URI.encode_www_form_component(redirect_uri)}&response_type=code"
     end
 
   end
