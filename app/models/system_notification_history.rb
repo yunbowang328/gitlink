@@ -18,4 +18,6 @@ class SystemNotificationHistory < ApplicationRecord
 
   belongs_to :system_notification
   belongs_to :user
+
+  validates :system_notification_id, uniqueness: { scope: :user_id, message: '只能阅读一次'}
 end

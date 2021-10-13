@@ -349,6 +349,9 @@
                     <a href="#5b752913ae" class="toc-h2 toc-link" data-title="用户消息列表">用户消息列表</a>
                   </li>
                   <li>
+                    <a href="#6087e717ed" class="toc-h2 toc-link" data-title="用户阅读系统通知">用户阅读系统通知</a>
+                  </li>
+                  <li>
                     <a href="#94306b2fc3" class="toc-h2 toc-link" data-title="发送消息">发送消息</a>
                   </li>
                   <li>
@@ -1328,7 +1331,39 @@ Success — a happy kitten is an authenticated kitten!
 <aside class="success">
   Success Data.
 </aside>
-<h2 id='94306b2fc3'>发送消息</h2>
+<h2 id='6087e717ed'>用户阅读系统通知</h2>
+<p>用户阅读系统通知</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/system_notification_histories.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/system_notification_histories.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+<p><code>POST /api/users/:login/system_notification_histories.json</code></p>
+<h3 id='aa883f5d52-2'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>system_notification_id</td>
+<td>integer</td>
+<td>阅读的系统通知id</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='94306b2fc3'>发送消息</h2>
 <p>发送消息, 目前只支持atme</p>
 
 <blockquote>
@@ -1336,9 +1371,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/:login/messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/users/:login/messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-3'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
 <p><code>POST api/users/yystopf/messages.json</code></p>
-<h3 id='aa883f5d52-2'>请求字段说明:</h3>
+<h3 id='aa883f5d52-3'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1397,9 +1432,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/:login/messages/read.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">POST /api/users/:login/messages/read.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-4'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
 <p><code>POST api/users/yystopf/messages/read.json</code></p>
-<h3 id='aa883f5d52-3'>请求字段说明:</h3>
+<h3 id='aa883f5d52-4'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1438,9 +1473,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> DELETE http://localhost:3000/api/users/:login/messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">DELETE /api/users/:login/messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-5'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
 <p><code>DELETE api/users/yystopf/messages.json</code></p>
-<h3 id='aa883f5d52-4'>请求字段说明:</h3>
+<h3 id='aa883f5d52-5'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1479,9 +1514,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH/PUT http://localhost:3000/api/users/yystopf.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH/PUT /api/users/:login.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-6'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
 <p><code>PATCH/PUT /api/users/:login.json</code></p>
-<h3 id='aa883f5d52-5'>请求字段说明:</h3>
+<h3 id='aa883f5d52-6'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1577,7 +1612,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/is_pinned_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
 <p><code>GET api/users/:login/is_pinned_projects.json</code></p>
 <h3 id='7447e4874e-3'>返回字段说明:</h3>
 <table><thead>
@@ -1764,9 +1799,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/is_pinned_projects/pin.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects/pin.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
 <p><code>POST /api/users/:login/is_pinned_projects/pin.json</code></p>
-<h3 id='aa883f5d52-6'>请求字段说明:</h3><h4 id='0ca7f0efb8'>同时设定多个星标项目</h4>
+<h3 id='aa883f5d52-7'>请求字段说明:</h3><h4 id='0ca7f0efb8'>同时设定多个星标项目</h4>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1810,9 +1845,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH http://localhost:3000/api/users/yystopf/is_pinned_projects/11.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH/PUT /api/users/:login/is_pinned_projects/:id.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
 <p><code>PATCH/PUT /api/users/:login/is_pinned_projects/:id.json</code></p>
-<h3 id='aa883f5d52-7'>请求字段说明:</h3>
+<h3 id='aa883f5d52-8'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1851,7 +1886,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/activity.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/activity.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/activity.json</code></p>
 <h3 id='7447e4874e-4'>返回字段说明:</h3>
 <table><thead>
@@ -1940,9 +1975,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/headmaps.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/headmaps.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET api/users/:login/headmaps.json</code></p>
-<h3 id='aa883f5d52-8'>请求字段说明:</h3>
+<h3 id='aa883f5d52-9'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2085,9 +2120,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/project_trends.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/project_trends.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>GET api/users/:login/project_trends.json</code></p>
-<h3 id='aa883f5d52-9'>请求字段说明:</h3>
+<h3 id='aa883f5d52-10'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2402,9 +2437,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/develop.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/develop.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/develop.json</code></p>
-<h3 id='aa883f5d52-10'>请求字段说明:</h3>
+<h3 id='aa883f5d52-11'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2545,9 +2580,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/role.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/role.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/role.json</code></p>
-<h3 id='aa883f5d52-11'>请求字段说明:</h3>
+<h3 id='aa883f5d52-12'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2627,9 +2662,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/major.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/major.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/major.json</code></p>
-<h3 id='aa883f5d52-12'>请求字段说明:</h3>
+<h3 id='aa883f5d52-13'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2688,9 +2723,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_messages.json</code></p>
-<h3 id='aa883f5d52-13'>请求字段说明:</h3>
+<h3 id='aa883f5d52-14'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2967,9 +3002,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects.json</code></p>
-<h3 id='aa883f5d52-14'>请求字段说明:</h3>
+<h3 id='aa883f5d52-15'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3159,9 +3194,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-19'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/accept.json</code></p>
-<h3 id='aa883f5d52-15'>请求字段说明:</h3>
+<h3 id='aa883f5d52-16'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3350,9 +3385,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/refuse.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-19'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-20'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/refuse.json</code></p>
-<h3 id='aa883f5d52-16'>请求字段说明:</h3>
+<h3 id='aa883f5d52-17'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3541,9 +3576,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-20'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-21'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_projects.json</code></p>
-<h3 id='aa883f5d52-17'>请求字段说明:</h3>
+<h3 id='aa883f5d52-18'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3701,9 +3736,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-21'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-22'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_projects/:id/accept.json</code></p>
-<h3 id='aa883f5d52-18'>请求字段说明:</h3>
+<h3 id='aa883f5d52-19'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3860,9 +3895,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/refuse.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-22'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-23'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_projects/:id/refuse.json</code></p>
-<h3 id='aa883f5d52-19'>请求字段说明:</h3>
+<h3 id='aa883f5d52-20'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>

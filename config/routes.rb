@@ -263,6 +263,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        resources :system_notification_histories, only: [:create]
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
           member do 
