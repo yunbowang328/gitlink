@@ -33,7 +33,6 @@ class Admins::SystemNotificationsController < Admins::BaseController
   end
 
   def update 
-    
     respond_to do |format|
       if @notification.update_attributes(notification_params)
         format.html do 
