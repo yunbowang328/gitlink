@@ -11,5 +11,7 @@ class CreateTemplateMessageSettings < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
+
+    TemplateMessageSetting.build_init_data
   end
 end

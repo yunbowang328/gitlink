@@ -15,7 +15,16 @@
 
 class TemplateMessageSetting < ApplicationRecord
 
+  scope :openning, ->() {where(openning: true)}
+
+  def self.type_name 
+    ""
+  end
+
   def self.build_init_data
-    
+    TemplateMessageSetting::CreateOrAssign.build_init_data
+    TemplateMessageSetting::ManageProject.build_init_data
+    TemplateMessageSetting::Normal.build_init_data
+    TemplateMessageSetting::WatchProject.build_init_data
   end
 end

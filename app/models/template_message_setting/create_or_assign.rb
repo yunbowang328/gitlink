@@ -16,6 +16,10 @@
 #我创建的或负责的
 class TemplateMessageSetting::CreateOrAssign < TemplateMessageSetting 
 
+  def self.type_name 
+    "我创建的或负责的"
+  end
+
   def self.build_init_data
     self.find_or_create_by(name: "易修状态变更", key: "IssueChanged")
     self.find_or_create_by(name: "易修被指派", key: "IssueAssigned")

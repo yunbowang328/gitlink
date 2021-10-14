@@ -361,6 +361,9 @@
                     <a href="#c6da6881ac" class="toc-h2 toc-link" data-title="更改用户信息">更改用户信息</a>
                   </li>
                   <li>
+                    <a href="#8469c9a565" class="toc-h2 toc-link" data-title="获取平台消息设置配置信息">获取平台消息设置配置信息</a>
+                  </li>
+                  <li>
                     <a href="#16a4666845" class="toc-h2 toc-link" data-title="获取用户星标项目">获取用户星标项目</a>
                   </li>
                   <li>
@@ -1569,7 +1572,173 @@ Success — a happy kitten is an authenticated kitten!
     </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
     </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre></div><h2 id='16a4666845'>获取用户星标项目</h2>
+</span></code></pre></div><h2 id='8469c9a565'>获取平台消息设置配置信息</h2>
+<p>获取平台消息设置配置信息</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/template_message_settings.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/template_message_settings.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+<p><code>GET /api/template_message_settings.json</code></p>
+<h3 id='7447e4874e-3'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>消息配置类型</td>
+</tr>
+<tr>
+<td>type_name</td>
+<td>string</td>
+<td>消息配置类型含义</td>
+</tr>
+<tr>
+<td>total_settings_count</td>
+<td>int</td>
+<td>配置条数</td>
+</tr>
+<tr>
+<td>settings.name</td>
+<td>string</td>
+<td>配置名称</td>
+</tr>
+<tr>
+<td>settings.key</td>
+<td>string</td>
+<td>配置标识</td>
+</tr>
+<tr>
+<td>settings.notification_disabled</td>
+<td>boolean</td>
+<td>站内信设置是否禁用</td>
+</tr>
+<tr>
+<td>settings.email_disabled</td>
+<td>boolean</td>
+<td>邮件设置是否禁用</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"响应成功"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"setting_types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TemplateMessageSetting::CreateOrAssign"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"我创建的或负责的"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"total_settings_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"易修状态变更"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IssueChanged"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"易修被指派"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IssueAssigned"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"合并请求被指派"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequestAssigned"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"合并请求状态变更"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PullRequestAssigned"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TemplateMessageSetting::ManageProject"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"我管理的仓库"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"total_settings_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"有新的易修"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ProjectIssue"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"有新的合并请求"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ProjectPullRequest"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"有成员变动"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ProjectMember"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"设置更改"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ProjectSettingChanged"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TemplateMessageSetting::Normal"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"total_settings_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"被拉入或移出组织"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"被拉入或移出项目"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Project"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"有权限变更"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Permission"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"openning"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+<aside class="success">
+  Success Data.
+</aside>
+<h2 id='16a4666845'>获取用户星标项目</h2>
 <p>获取用户星标项目</p>
 
 <blockquote>
@@ -1577,9 +1746,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/is_pinned_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-7'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
 <p><code>GET api/users/:login/is_pinned_projects.json</code></p>
-<h3 id='7447e4874e-3'>返回字段说明:</h3>
+<h3 id='7447e4874e-4'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1764,7 +1933,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/is_pinned_projects/pin.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/is_pinned_projects/pin.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-8'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
 <p><code>POST /api/users/:login/is_pinned_projects/pin.json</code></p>
 <h3 id='aa883f5d52-6'>请求字段说明:</h3><h4 id='0ca7f0efb8'>同时设定多个星标项目</h4>
 <table><thead>
@@ -1810,7 +1979,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> PATCH http://localhost:3000/api/users/yystopf/is_pinned_projects/11.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">PATCH/PUT /api/users/:login/is_pinned_projects/:id.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-9'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
 <p><code>PATCH/PUT /api/users/:login/is_pinned_projects/:id.json</code></p>
 <h3 id='aa883f5d52-7'>请求字段说明:</h3>
 <table><thead>
@@ -1851,9 +2020,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/activity.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/activity.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-10'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/activity.json</code></p>
-<h3 id='7447e4874e-4'>返回字段说明:</h3>
+<h3 id='7447e4874e-5'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -1940,7 +2109,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/headmaps.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/headmaps.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-11'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
 <p><code>GET api/users/:login/headmaps.json</code></p>
 <h3 id='aa883f5d52-8'>请求字段说明:</h3>
 <table><thead>
@@ -1956,7 +2125,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>年份</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-5'>返回字段说明:</h3>
+<h3 id='7447e4874e-6'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2085,7 +2254,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/project_trends.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/project_trends.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-12'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
 <p><code>GET api/users/:login/project_trends.json</code></p>
 <h3 id='aa883f5d52-9'>请求字段说明:</h3>
 <table><thead>
@@ -2101,7 +2270,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>日期，格式: 2021-05-28</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-6'>返回字段说明:</h3>
+<h3 id='7447e4874e-7'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2402,7 +2571,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/develop.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/develop.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-13'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/develop.json</code></p>
 <h3 id='aa883f5d52-10'>请求字段说明:</h3>
 <table><thead>
@@ -2423,7 +2592,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>时间戳，结束时间，格式：1622131200</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-7'>返回字段说明:</h3>
+<h3 id='7447e4874e-8'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2545,7 +2714,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/role.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/role.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-14'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/role.json</code></p>
 <h3 id='aa883f5d52-11'>请求字段说明:</h3>
 <table><thead>
@@ -2566,7 +2735,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>时间戳，结束时间，格式：1622131200</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-8'>返回字段说明:</h3>
+<h3 id='7447e4874e-9'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2627,7 +2796,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/statistics/major.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/statistics/major.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-15'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/statistics/major.json</code></p>
 <h3 id='aa883f5d52-12'>请求字段说明:</h3>
 <table><thead>
@@ -2648,7 +2817,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>时间戳，结束时间，格式：1622131200</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-9'>返回字段说明:</h3>
+<h3 id='7447e4874e-10'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2688,7 +2857,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_messages.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_messages.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-16'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_messages.json</code></p>
 <h3 id='aa883f5d52-13'>请求字段说明:</h3>
 <table><thead>
@@ -2704,7 +2873,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-10'>返回字段说明:</h3>
+<h3 id='7447e4874e-11'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -2967,7 +3136,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_transfer_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-17'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects.json</code></p>
 <h3 id='aa883f5d52-14'>请求字段说明:</h3>
 <table><thead>
@@ -2983,7 +3152,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-11'>返回字段说明:</h3>
+<h3 id='7447e4874e-12'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3159,200 +3328,9 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-18'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-19'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_transfer_projects/:id/accept.json</code></p>
 <h3 id='aa883f5d52-15'>请求字段说明:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>login</td>
-<td>string</td>
-<td>用户标识</td>
-</tr>
-<tr>
-<td>id</td>
-<td>int</td>
-<td>迁移id</td>
-</tr>
-</tbody></table>
-<h3 id='7447e4874e-12'>返回字段说明:</h3>
-<table><thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>字段说明</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>id</td>
-<td>int</td>
-<td>迁移id</td>
-</tr>
-<tr>
-<td>status</td>
-<td>string</td>
-<td>迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝</td>
-</tr>
-<tr>
-<td>time_ago</td>
-<td>string</td>
-<td>迁移创建的时间</td>
-</tr>
-<tr>
-<td>project.id</td>
-<td>int</td>
-<td>迁移项目的id</td>
-</tr>
-<tr>
-<td>project.identifier</td>
-<td>string</td>
-<td>迁移项目的标识</td>
-</tr>
-<tr>
-<td>project.name</td>
-<td>string</td>
-<td>迁移项目的名称</td>
-</tr>
-<tr>
-<td>project.description</td>
-<td>string</td>
-<td>迁移项目的描述</td>
-</tr>
-<tr>
-<td>project.is_public</td>
-<td>bool</td>
-<td>迁移项目是否公开</td>
-</tr>
-<tr>
-<td>project.owner.id</td>
-<td>bool</td>
-<td>迁移项目拥有者id</td>
-</tr>
-<tr>
-<td>project.owner.type</td>
-<td>string</td>
-<td>迁移项目拥有者类型</td>
-</tr>
-<tr>
-<td>project.owner.name</td>
-<td>string</td>
-<td>迁移项目拥有者昵称</td>
-</tr>
-<tr>
-<td>project.owner.login</td>
-<td>string</td>
-<td>迁移项目拥有者标识</td>
-</tr>
-<tr>
-<td>project.owner.image_url</td>
-<td>string</td>
-<td>迁移项目拥有者头像</td>
-</tr>
-<tr>
-<td>user.id</td>
-<td>int</td>
-<td>迁移创建者的id</td>
-</tr>
-<tr>
-<td>user.type</td>
-<td>string</td>
-<td>迁移创建者的类型</td>
-</tr>
-<tr>
-<td>user.name</td>
-<td>string</td>
-<td>迁移创建者的名称</td>
-</tr>
-<tr>
-<td>user.login</td>
-<td>string</td>
-<td>迁移创建者的标识</td>
-</tr>
-<tr>
-<td>user.image_url</td>
-<td>string</td>
-<td>迁移创建者头像</td>
-</tr>
-<tr>
-<td>owner.id</td>
-<td>int</td>
-<td>迁移接受者的id</td>
-</tr>
-<tr>
-<td>owner.type</td>
-<td>string</td>
-<td>迁移接受者的类型</td>
-</tr>
-<tr>
-<td>owner.name</td>
-<td>string</td>
-<td>迁移接受者的名称</td>
-</tr>
-<tr>
-<td>owner.login</td>
-<td>string</td>
-<td>迁移接受者的标识</td>
-</tr>
-<tr>
-<td>owner.image_url</td>
-<td>string</td>
-<td>迁移接受者头像</td>
-</tr>
-</tbody></table>
-
-<blockquote>
-<p>返回的JSON示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_repo1"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试项目啊1"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"二十多"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"canceled"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-25 18:06"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16小时前"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div><h2 id='5e6ed41015'>用户拒绝迁移</h2>
-<p>用户拒绝迁移</p>
-
-<blockquote>
-<p>示例:</p>
-</blockquote>
-<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/refuse.json
-</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-19'>HTTP 请求</h3>
-<p><code>GET /api/users/:login/applied_transfer_projects/:id/refuse.json</code></p>
-<h3 id='aa883f5d52-16'>请求字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3533,6 +3511,197 @@ Success — a happy kitten is an authenticated kitten!
     </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-25 18:06"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16小时前"</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre></div><h2 id='5e6ed41015'>用户拒绝迁移</h2>
+<p>用户拒绝迁移</p>
+
+<blockquote>
+<p>示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_transfer_projects/2/refuse.json
+</code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_transfer_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div><h3 id='http-20'>HTTP 请求</h3>
+<p><code>GET /api/users/:login/applied_transfer_projects/:id/refuse.json</code></p>
+<h3 id='aa883f5d52-16'>请求字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>login</td>
+<td>string</td>
+<td>用户标识</td>
+</tr>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>迁移id</td>
+</tr>
+</tbody></table>
+<h3 id='7447e4874e-14'>返回字段说明:</h3>
+<table><thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>字段说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>int</td>
+<td>迁移id</td>
+</tr>
+<tr>
+<td>status</td>
+<td>string</td>
+<td>迁移状态，canceled:取消,common:正在迁移, accept:已接受,refuse:已拒绝</td>
+</tr>
+<tr>
+<td>time_ago</td>
+<td>string</td>
+<td>迁移创建的时间</td>
+</tr>
+<tr>
+<td>project.id</td>
+<td>int</td>
+<td>迁移项目的id</td>
+</tr>
+<tr>
+<td>project.identifier</td>
+<td>string</td>
+<td>迁移项目的标识</td>
+</tr>
+<tr>
+<td>project.name</td>
+<td>string</td>
+<td>迁移项目的名称</td>
+</tr>
+<tr>
+<td>project.description</td>
+<td>string</td>
+<td>迁移项目的描述</td>
+</tr>
+<tr>
+<td>project.is_public</td>
+<td>bool</td>
+<td>迁移项目是否公开</td>
+</tr>
+<tr>
+<td>project.owner.id</td>
+<td>bool</td>
+<td>迁移项目拥有者id</td>
+</tr>
+<tr>
+<td>project.owner.type</td>
+<td>string</td>
+<td>迁移项目拥有者类型</td>
+</tr>
+<tr>
+<td>project.owner.name</td>
+<td>string</td>
+<td>迁移项目拥有者昵称</td>
+</tr>
+<tr>
+<td>project.owner.login</td>
+<td>string</td>
+<td>迁移项目拥有者标识</td>
+</tr>
+<tr>
+<td>project.owner.image_url</td>
+<td>string</td>
+<td>迁移项目拥有者头像</td>
+</tr>
+<tr>
+<td>user.id</td>
+<td>int</td>
+<td>迁移创建者的id</td>
+</tr>
+<tr>
+<td>user.type</td>
+<td>string</td>
+<td>迁移创建者的类型</td>
+</tr>
+<tr>
+<td>user.name</td>
+<td>string</td>
+<td>迁移创建者的名称</td>
+</tr>
+<tr>
+<td>user.login</td>
+<td>string</td>
+<td>迁移创建者的标识</td>
+</tr>
+<tr>
+<td>user.image_url</td>
+<td>string</td>
+<td>迁移创建者头像</td>
+</tr>
+<tr>
+<td>owner.id</td>
+<td>int</td>
+<td>迁移接受者的id</td>
+</tr>
+<tr>
+<td>owner.type</td>
+<td>string</td>
+<td>迁移接受者的类型</td>
+</tr>
+<tr>
+<td>owner.name</td>
+<td>string</td>
+<td>迁移接受者的名称</td>
+</tr>
+<tr>
+<td>owner.login</td>
+<td>string</td>
+<td>迁移接受者的标识</td>
+</tr>
+<tr>
+<td>owner.image_url</td>
+<td>string</td>
+<td>迁移接受者头像</td>
+</tr>
+</tbody></table>
+
+<blockquote>
+<p>返回的JSON示例:</p>
+</blockquote>
+<div class="highlight"><pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"project"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"identifier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi_repo1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"测试项目啊1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"二十多"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"is_public"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"yystopf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"system/lets/letter_avatars/2/Y/241_125_89/120.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Organization"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"身份卡手动阀"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"login"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ceshi1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"images/avatars/Organization/52?t=1618805056"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"canceled"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-04-25 18:06"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"time_ago"</span><span class="p">:</span><span class="w"> </span><span class="s2">"16小时前"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div><h2 id='ba97e431b8'>待办事项-项目申请</h2>
 <p>待办事项-项目申请</p>
 
@@ -3541,7 +3710,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> GET http://localhost:3000/api/users/yystopf/applied_projects.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-20'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-21'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_projects.json</code></p>
 <h3 id='aa883f5d52-17'>请求字段说明:</h3>
 <table><thead>
@@ -3557,7 +3726,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>用户标识</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-14'>返回字段说明:</h3>
+<h3 id='7447e4874e-15'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3701,7 +3870,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/accept.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/accept.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-21'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-22'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_projects/:id/accept.json</code></p>
 <h3 id='aa883f5d52-18'>请求字段说明:</h3>
 <table><thead>
@@ -3722,7 +3891,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>申请id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-15'>返回字段说明:</h3>
+<h3 id='7447e4874e-16'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>
@@ -3860,7 +4029,7 @@ Success — a happy kitten is an authenticated kitten!
 </blockquote>
 <div class="highlight"><pre class="highlight shell tab-shell"><code>curl <span class="nt">-X</span> POST http://localhost:3000/api/users/yystopf/applied_projects/2/refuse.json
 </code></pre></div><div class="highlight"><pre class="highlight javascript tab-javascript"><code><span class="k">await</span> <span class="nx">octokit</span><span class="p">.</span><span class="nx">request</span><span class="p">(</span><span class="dl">'</span><span class="s1">GET /api/users/:login/applied_projects/:id/refuse.json</span><span class="dl">'</span><span class="p">)</span>
-</code></pre></div><h3 id='http-22'>HTTP 请求</h3>
+</code></pre></div><h3 id='http-23'>HTTP 请求</h3>
 <p><code>GET /api/users/:login/applied_projects/:id/refuse.json</code></p>
 <h3 id='aa883f5d52-19'>请求字段说明:</h3>
 <table><thead>
@@ -3881,7 +4050,7 @@ Success — a happy kitten is an authenticated kitten!
 <td>申请id</td>
 </tr>
 </tbody></table>
-<h3 id='7447e4874e-16'>返回字段说明:</h3>
+<h3 id='7447e4874e-17'>返回字段说明:</h3>
 <table><thead>
 <tr>
 <th>参数</th>

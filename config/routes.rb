@@ -150,6 +150,8 @@ Rails.application.routes.draw do
       resources :issue_depends, only: [:create, :destroy]
     end
 
+    resources :template_message_settings, only: [:index]
+
     resources :applied_projects, only: [:create]
 
     resources :project_categories, only: [:index, :show] do

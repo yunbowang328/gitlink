@@ -372,6 +372,146 @@ await octokit.request('PATCH/PUT /api/users/:login.json')
     "message": "success"
 }
 ```
+
+## 获取平台消息设置配置信息
+获取平台消息设置配置信息
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/template_message_settings.json
+```
+
+```javascript
+await octokit.request('GET /api/template_message_settings.json')
+```
+
+### HTTP 请求
+`GET /api/template_message_settings.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type                 |string   |消息配置类型 |
+|type_name            |string   |消息配置类型含义|
+|total_settings_count |int      |配置条数|
+|settings.name        |string   |配置名称|
+|settings.key         |string   |配置标识|
+|settings.notification_disabled |boolean  |站内信设置是否禁用|
+|settings.email_disabled        |boolean  |邮件设置是否禁用|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "响应成功",
+    "setting_types": [
+        {
+            "type": "TemplateMessageSetting::CreateOrAssign",
+            "type_name": "我创建的或负责的",
+            "total_settings_count": 4,
+            "settings": [
+                {
+                    "name": "易修状态变更",
+                    "key": "IssueChanged",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "易修被指派",
+                    "key": "IssueAssigned",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "合并请求被指派",
+                    "key": "PullRequestAssigned",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "合并请求状态变更",
+                    "key": "PullRequestAssigned",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        },
+        {
+            "type": "TemplateMessageSetting::ManageProject",
+            "type_name": "我管理的仓库",
+            "total_settings_count": 4,
+            "settings": [
+                {
+                    "name": "有新的易修",
+                    "key": "ProjectIssue",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有新的合并请求",
+                    "key": "ProjectPullRequest",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有成员变动",
+                    "key": "ProjectMember",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "设置更改",
+                    "key": "ProjectSettingChanged",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        },
+        {
+            "type": "TemplateMessageSetting::Normal",
+            "type_name": "",
+            "total_settings_count": 3,
+            "settings": [
+                {
+                    "name": "被拉入或移出组织",
+                    "key": "Organization",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "被拉入或移出项目",
+                    "key": "Project",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有权限变更",
+                    "key": "Permission",
+                    "openning": true,
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
 ## 获取用户星标项目
 获取用户星标项目
 
