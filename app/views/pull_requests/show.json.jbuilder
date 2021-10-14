@@ -3,8 +3,8 @@ json.project_name @project.name
 json.identifier @project.identifier
 json.project_identifier @project.identifier
 json.pr_time time_from_now(@pull_request.updated_at)
-json.commits_count @pull_request.commits_count
-json.files_count @pull_request.files_count
+json.commits_count @gitea_pull["commit_num"]
+json.files_count @gitea_pull["changed_files"]
 json.comments_count @issue.journals.parent_journals.size
 json.comments_total_count @issue.get_journals_size
 
