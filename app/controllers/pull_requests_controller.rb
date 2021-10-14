@@ -69,9 +69,9 @@ class PullRequestsController < ApplicationController
   end
 
   def edit
-    @fork_project_user_name = @project&.fork_project&.owner.try(:show_real_name)
-    @fork_project_user = @project&.fork_project&.owner.try(:login)
-    @fork_project_identifier = @project&.fork_project&.repository.try(:identifier)
+    @fork_project_user_name = @pull_request&.fork_project&.owner.try(:show_real_name)
+    @fork_project_user = @pull_request&.fork_project&.owner.try(:login)
+    @fork_project_identifier = @pull_request&.fork_project&.repository.try(:identifier)
   end
 
   def update
