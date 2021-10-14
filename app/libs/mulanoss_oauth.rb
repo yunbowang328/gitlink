@@ -11,7 +11,7 @@ module MulanossOauth
     end
 
     def oauth_url
-      "#{base_url}/api/auth/oschina?client_id=#{client_id}&redirect_uri=#{URI.encode_www_form_component(redirect_uri)}&response_type=code"
+      "https://portal.mulanos.cn/api/auth/oschina?client_id=#{client_id}&redirect_uri=#{URI.encode_www_form_component(redirect_uri)}&response_type=code"
     end
 
   end
