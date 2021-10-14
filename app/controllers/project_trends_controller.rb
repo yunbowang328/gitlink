@@ -14,14 +14,13 @@ class ProjectTrendsController < ApplicationController
       project_trends = project_trends.where("created_at between ? and ?",(Time.now.beginning_of_day - check_time.days), Time.now.end_of_day)
     end
 
-    @project_open_issues_count = project_trends.where(trend_type: "Issue", action_type: "create").size
     @project_close_issues_count = project_trends.where(trend_type: "Issue", action_type: "close").size
-    @project_issues_count = @project_open_issues_count + @project_close_issues_count
+    @project_issues_count = project_trends.where(trend_type: "Issue", action_type: "create").size
+    @project_open_issues_count = @project_issues_count - @project_close_issues_count
 
     @project_pr_count = project_trends.where(trend_type: "PullRequest", action_type: "close").size
-    @project_new_pr_count = project_trends.where(trend_type: "PullRequest", action_type: "create").size
-    @project_pr_all_count = @project_pr_count + @project_new_pr_count
-
+    @project_pr_all_count = project_trends.where(trend_type: "PullRequest", action_type: "create").size
+    @project_new_pr_count = @project_pr_all_count - @project_pr_count
     if check_type.present?
       project_trends = project_trends.where(trend_type: check_type.to_s.strip)
     end

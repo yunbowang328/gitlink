@@ -54,7 +54,7 @@ class PullRequest < ApplicationRecord
     Project.find_by(id: self.fork_project_id)
   end
 
-  def bind_gitea_pull_request!(gitea_pull_number, gitea_pull_id)
+  def bind_gitea_pull_request!(gitea_pull_number, gitea_pull_id=gitea_pull_number)
     update_columns(
       gitea_number: gitea_pull_number,
       gitea_id: gitea_pull_id)
