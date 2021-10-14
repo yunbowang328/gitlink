@@ -127,9 +127,9 @@ class ProjectsController < ApplicationController
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
       else
         validate_params = project_params.slice(:name, :description, 
-          :project_category_id, :project_language_id, :private)
+          :project_category_id, :project_language_id, :private, :identifier)
   
-        Projects::UpdateForm.new(validate_params).validate!
+        Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id)).validate!
   
         private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
