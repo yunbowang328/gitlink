@@ -20,7 +20,8 @@
 class ProjectTrend < ApplicationRecord
   CLOSE  = 'close'
   CREATE = 'create'
-
+  MERGE = 'merge'
+  
   belongs_to :project
   belongs_to :trend, polymorphic: true, optional: true
   belongs_to :user

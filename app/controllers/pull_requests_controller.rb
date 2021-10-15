@@ -130,6 +130,7 @@ class PullRequestsController < ApplicationController
       begin
         colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
         if colsed === true 
+          @pull_request.project_trends.create!(user: current_user, project: @project,action_type: ProjectTrend::CLOSE)
           SendTemplateMessageJob.perform_later('PullRequestClosed', current_user.id, @pull_request.id)
           normal_status(1, "已拒绝") 
         else
@@ -171,7 +172,8 @@ class PullRequestsController < ApplicationController
           end
 
           if success_condition && @pull_request.merge!
-            @pull_request.project_trend_status!
+            # @pull_request.project_trend_status!
+            @pull_request.project_trends.create!(user: current_user, project: @project,action_type: ProjectTrend::MERGE)
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
             SendTemplateMessageJob.perform_later('PullRequestMerged', current_user.id, @pull_request.id)
             normal_status(1, "合并成功")
