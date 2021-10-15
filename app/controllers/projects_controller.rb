@@ -129,7 +129,7 @@ class ProjectsController < ApplicationController
         validate_params = project_params.slice(:name, :description, 
           :project_category_id, :project_language_id, :private, :identifier)
   
-        Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id)).validate!
+        Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id, project_identifier: @project.identifier)).validate!
   
         private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
