@@ -199,36 +199,6 @@ await octokit.request('GET /api/users/:login/messages.json')
   Success Data.
 </aside>
 
-## 用户阅读系统通知
-用户阅读系统通知
-
-> 示例:
-
-```shell
-curl -X POST http://localhost:3000/api/users/yystopf/system_notification_histories.json
-```
-
-```javascript
-await octokit.request('GET /api/users/:login/system_notification_histories.json')
-```
-
-### HTTP 请求
-`POST /api/users/:login/system_notification_histories.json`
-
-### 请求字段说明:
-参数  | 类型 | 字段说明
---------- | ----------- | -----------
-|system_notification_id       |integer   |阅读的系统通知id |
-
-> 返回的JSON示例:
-
-```json
-{
-    "status": 0,
-    "message": "success"
-}
-```
-
 ## 发送消息
 发送消息, 目前只支持atme
 

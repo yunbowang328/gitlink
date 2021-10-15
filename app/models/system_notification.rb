@@ -15,9 +15,6 @@ class SystemNotification < ApplicationRecord
 
   default_scope { order(created_at: :desc)}
 
-  has_many :system_notification_histories
-  has_many :users, through: :system_notification_histories
-
   scope :is_top, lambda { where(is_top: true) }
 
 

@@ -10,10 +10,6 @@ class Admins::SystemNotificationsController < Admins::BaseController
     @notifications = paginate(notifications)
   end
 
-  def history
-    @users = @notification.users
-  end
-
   def new 
     @notification = SystemNotification.new
   end
