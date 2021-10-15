@@ -3,7 +3,7 @@ class ProjectTrendsController < ApplicationController
   before_action :check_project_public
 
   def index
-    project_trends = @project.project_trends.includes(:user, trend: :user)
+    project_trends = @project.project_trends.preload(:user, trend: :user)
 
     check_time = params[:time]  #时间的筛选
     check_type = params[:type]   #动态类型的筛选，目前已知的有 Issue, PullRequest, Version
@@ -14,20 +14,25 @@ class ProjectTrendsController < ApplicationController
       project_trends = project_trends.where("created_at between ? and ?",(Time.now.beginning_of_day - check_time.days), Time.now.end_of_day)
     end
 
-    @project_open_issues_count = project_trends.where(trend_type: "Issue", action_type: "create").size
     @project_close_issues_count = project_trends.where(trend_type: "Issue", action_type: "close").size
-    @project_issues_count = @project_open_issues_count + @project_close_issues_count
+    @project_issues_count = project_trends.where(trend_type: "Issue", action_type: "create").size
+    @project_open_issues_count = @project_issues_count - @project_close_issues_count
 
-    @project_pr_count = project_trends.where(trend_type: "PullRequest", action_type: "close").size
-    @project_new_pr_count = project_trends.where(trend_type: "PullRequest", action_type: "create").size
-    @project_pr_all_count = @project_pr_count + @project_new_pr_count
-
+    @project_pr_count = project_trends.where(trend_type: "PullRequest", action_type: ["close", "merge"]).size
+    @project_pr_all_count = project_trends.where(trend_type: "PullRequest", action_type: "create").size
+    @project_new_pr_count = @project_pr_all_count - @project_pr_count
     if check_type.present?
       project_trends = project_trends.where(trend_type: check_type.to_s.strip)
     end
 
     if check_status.present?
-      project_trends = project_trends.where(action_type: check_status.to_s.strip)
+      if check_status == "delay" || check_status == "close"
+        project_trends = project_trends.where(action_type: ["close", "merge"])
+      else 
+        project_trends = project_trends.where(action_type: ["create"]).where.not(trend_id: project_trends.where(action_type: ["close", "merge"]).pluck(:trend_id)) 
+      end
+    else
+      project_trends = project_trends.where(action_type: "create")
     end
     project_trends = project_trends.order("created_at desc")
 
