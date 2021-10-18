@@ -17,6 +17,12 @@ class MessageTemplate::ProjectMemberLeft < MessageTemplate
 
   # MessageTemplate::ProjectMemberLeft.get_message_content(User.where(login: 'yystopf'), User.last, Project.last)
   def self.get_message_content(receivers, user, project)
+    receivers.each do |receiver|
+      if receiver.user_template_message_setting.present? 
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["ManageProject::Member"]
+      end
+    end
+    return '', '', '' if receivers.blank?
     content = sys_notice.gsub('{nickname1}', user&.real_name).gsub('{nickname2}', project&.owner&.real_name).gsub('{repository}', project&.name)
     url = notification_url.gsub('{owner}', project&.owner&.login).gsub('{identifier}', project&.identifier)
     return receivers_string(receivers), content, url
@@ -26,6 +32,9 @@ class MessageTemplate::ProjectMemberLeft < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, user, project)
+    if receiver.user_template_message_setting.present? 
+      return '', '', '' unless receiver.user_template_message_setting.email_body["ManageProject::Member"]
+    end
     title = email_title
     title.gsub!('{nickname1}', user&.real_name)
     title.gsub!('{nickname2}', project&.owner&.real_name)

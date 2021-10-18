@@ -17,6 +17,12 @@ class MessageTemplate::IssueAssigned < MessageTemplate
 
   # MessageTemplate::IssueAssigned.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last)
   def self.get_message_content(receivers, operator, issue)
+    receivers.each do |receiver|
+      if receiver.user_template_message_setting.present? 
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["CreateOrAssign::IssueAssigned"]
+      end
+    end
+    return '', '', '' if receivers.blank?
     project = issue&.project
     owner = project&.owner 
     content = sys_notice.gsub('{nickname1}', operator&.real_name).gsub('{nickname2}', owner&.real_name).gsub('{repository}', project&.name).gsub('{title}', issue&.subject)
@@ -28,6 +34,9 @@ class MessageTemplate::IssueAssigned < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, operator, issue)
+    if receiver.user_template_message_setting.present? 
+      return '', '', '' unless receiver.user_template_message_setting.email_body["CreateOrAssign::IssueAssigned"]
+    end
     project = issue&.project
     owner = project&.owner 
     title = email_title
