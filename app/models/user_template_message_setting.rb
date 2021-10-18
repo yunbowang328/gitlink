@@ -28,10 +28,8 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_notification_body 
     {
-      "CreateOrAssign::IssueChanged": true,
       "CreateOrAssign::IssueAssigned": true,
       "CreateOrAssign::PullRequestAssigned": true,
-      "CreateOrAssign::PullRequestChanged": true,
       "ManageProject::Issue": true,
       "ManageProject::PullRequest": true,
       "ManageProject::Member": true,
@@ -44,10 +42,8 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_email_body 
     {
-      "CreateOrAssign::IssueChanged": false,
       "CreateOrAssign::IssueAssigned": false,
       "CreateOrAssign::PullRequestAssigned": false,
-      "CreateOrAssign::PullRequestChanged": false,
       "ManageProject::Issue": false,
       "ManageProject::PullRequest": false,
       "ManageProject::Member": false,
