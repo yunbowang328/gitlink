@@ -439,12 +439,6 @@ await octokit.request('GET /api/template_message_settings.json')
             "total_settings_count": 4,
             "settings": [
                 {
-                    "name": "易修状态变更",
-                    "key": "IssueChanged",
-                    "notification_disabled": true,
-                    "email_disabled": false
-                },
-                {
                     "name": "易修被指派",
                     "key": "IssueAssigned",
                     "notification_disabled": true,
@@ -452,12 +446,6 @@ await octokit.request('GET /api/template_message_settings.json')
                 },
                 {
                     "name": "合并请求被指派",
-                    "key": "PullRequestAssigned",
-                    "notification_disabled": true,
-                    "email_disabled": false
-                },
-                {
-                    "name": "合并请求状态变更",
                     "key": "PullRequestAssigned",
                     "notification_disabled": true,
                     "email_disabled": false
@@ -539,10 +527,8 @@ await octokit.request('GET /api/uses/yystopf/template_message_settings.json')
         "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
     },
     "notification_body": {
-        "CreateOrAssign::IssueChanged": true,
         "CreateOrAssign::IssueAssigned": true,
         "CreateOrAssign::PullRequestAssigned": true,
-        "CreateOrAssign::PullRequestChanged": true,
         "ManageProject::Issue": true,
         "ManageProject::PullRequest": true,
         "ManageProject::Member": true,
@@ -552,10 +538,8 @@ await octokit.request('GET /api/uses/yystopf/template_message_settings.json')
         "Normal::Permission": true
     },
     "email_body": {
-        "CreateOrAssign::IssueChanged": false,
         "CreateOrAssign::IssueAssigned": false,
         "CreateOrAssign::PullRequestAssigned": false,
-        "CreateOrAssign::PullRequestChanged": false,
         "ManageProject::Issue": false,
         "ManageProject::PullRequest": false,
         "ManageProject::Member": false,
@@ -599,10 +583,8 @@ await octokit.request('POST /api/uses/yystopf/template_message_settings/update_s
 {
     "setting": {
         "notification_body": {
-            "CreateOrAssign::IssueChanged": true,
             "CreateOrAssign::IssueAssigned": true,
             "CreateOrAssign::PullRequestAssigned": true,
-            "CreateOrAssign::PullRequestChanged": true,
             "ManageProject::Issue": true,
             "ManageProject::PullRequest": true,
             "ManageProject::Member": true,
@@ -612,10 +594,8 @@ await octokit.request('POST /api/uses/yystopf/template_message_settings/update_s
             "Normal::Permission": true
         },
         "email_body": {
-            "CreateOrAssign::IssueChanged": false,
             "CreateOrAssign::IssueAssigned": false,
             "CreateOrAssign::PullRequestAssigned": false,
-            "CreateOrAssign::PullRequestChanged": false,
             "ManageProject::Issue": false,
             "ManageProject::PullRequest": false,
             "ManageProject::Member": false,
@@ -649,10 +629,8 @@ await octokit.request('POST /api/uses/yystopf/template_message_settings/update_s
         "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
     },
     "notification_body": {
-        "CreateOrAssign::IssueChanged": true,
         "CreateOrAssign::IssueAssigned": true,
         "CreateOrAssign::PullRequestAssigned": true,
-        "CreateOrAssign::PullRequestChanged": true,
         "ManageProject::Issue": true,
         "ManageProject::PullRequest": true,
         "ManageProject::Member": true,
@@ -662,10 +640,8 @@ await octokit.request('POST /api/uses/yystopf/template_message_settings/update_s
         "Normal::Permission": true
     },
     "email_body": {
-        "CreateOrAssign::IssueChanged": false,
         "CreateOrAssign::IssueAssigned": false,
         "CreateOrAssign::PullRequestAssigned": false,
-        "CreateOrAssign::PullRequestChanged": false,
         "ManageProject::Issue": false,
         "ManageProject::PullRequest": false,
         "ManageProject::Member": false,
