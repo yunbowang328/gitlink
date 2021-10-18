@@ -409,6 +409,31 @@ await octokit.request('GET /api/template_message_settings.json')
     "message": "响应成功",
     "setting_types": [
         {
+            "type": "TemplateMessageSetting::Normal",
+            "type_name": "",
+            "total_settings_count": 3,
+            "settings": [
+                {
+                    "name": "被拉入或移出组织",
+                    "key": "Organization",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "被拉入或移出项目",
+                    "key": "Project",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有权限变更",
+                    "key": "Permission",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        },
+        {
             "type": "TemplateMessageSetting::CreateOrAssign",
             "type_name": "我创建的或负责的",
             "total_settings_count": 4,
@@ -416,28 +441,24 @@ await octokit.request('GET /api/template_message_settings.json')
                 {
                     "name": "易修状态变更",
                     "key": "IssueChanged",
-                    "openning": true,
                     "notification_disabled": true,
                     "email_disabled": false
                 },
                 {
                     "name": "易修被指派",
                     "key": "IssueAssigned",
-                    "openning": true,
                     "notification_disabled": true,
                     "email_disabled": false
                 },
                 {
                     "name": "合并请求被指派",
                     "key": "PullRequestAssigned",
-                    "openning": true,
                     "notification_disabled": true,
                     "email_disabled": false
                 },
                 {
                     "name": "合并请求状态变更",
                     "key": "PullRequestAssigned",
-                    "openning": true,
                     "notification_disabled": true,
                     "email_disabled": false
                 }
@@ -450,57 +471,25 @@ await octokit.request('GET /api/template_message_settings.json')
             "settings": [
                 {
                     "name": "有新的易修",
-                    "key": "ProjectIssue",
-                    "openning": true,
+                    "key": "Issue",
                     "notification_disabled": true,
                     "email_disabled": false
                 },
                 {
                     "name": "有新的合并请求",
-                    "key": "ProjectPullRequest",
-                    "openning": true,
+                    "key": "PullRequest",
                     "notification_disabled": true,
                     "email_disabled": false
                 },
                 {
                     "name": "有成员变动",
-                    "key": "ProjectMember",
-                    "openning": true,
+                    "key": "Member",
                     "notification_disabled": true,
                     "email_disabled": false
                 },
                 {
                     "name": "设置更改",
-                    "key": "ProjectSettingChanged",
-                    "openning": true,
-                    "notification_disabled": true,
-                    "email_disabled": false
-                }
-            ]
-        },
-        {
-            "type": "TemplateMessageSetting::Normal",
-            "type_name": "",
-            "total_settings_count": 3,
-            "settings": [
-                {
-                    "name": "被拉入或移出组织",
-                    "key": "Organization",
-                    "openning": true,
-                    "notification_disabled": true,
-                    "email_disabled": false
-                },
-                {
-                    "name": "被拉入或移出项目",
-                    "key": "Project",
-                    "openning": true,
-                    "notification_disabled": true,
-                    "email_disabled": false
-                },
-                {
-                    "name": "有权限变更",
-                    "key": "Permission",
-                    "openning": true,
+                    "key": "SettingChanged",
                     "notification_disabled": true,
                     "email_disabled": false
                 }
@@ -512,6 +501,185 @@ await octokit.request('GET /api/template_message_settings.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 获取用户消息设置配置信息
+获取用户消息设置配置信息
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/template_message_settings.json
+```
+
+```javascript
+await octokit.request('GET /api/uses/yystopf/template_message_settings.json')
+```
+
+### HTTP 请求
+`GET /api/users/:user_id/template_message_settings.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|notification_body    |string   |站内信配置 |
+|email_body           |string   |邮件配置|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "响应成功",
+    "user": {
+        "id": 2,
+        "type": "User",
+        "name": "heh",
+        "login": "yystopf",
+        "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
+    },
+    "notification_body": {
+        "CreateOrAssign::IssueChanged": true,
+        "CreateOrAssign::IssueAssigned": true,
+        "CreateOrAssign::PullRequestAssigned": true,
+        "CreateOrAssign::PullRequestChanged": true,
+        "ManageProject::Issue": true,
+        "ManageProject::PullRequest": true,
+        "ManageProject::Member": true,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": true,
+        "Normal::Project": true,
+        "Normal::Permission": true
+    },
+    "email_body": {
+        "CreateOrAssign::IssueChanged": false,
+        "CreateOrAssign::IssueAssigned": false,
+        "CreateOrAssign::PullRequestAssigned": false,
+        "CreateOrAssign::PullRequestChanged": false,
+        "ManageProject::Issue": false,
+        "ManageProject::PullRequest": false,
+        "ManageProject::Member": false,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": false,
+        "Normal::Project": true,
+        "Normal::Permission": false
+    }
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 重新设置用户消息设置配置信息
+重新设置用户消息设置配置信息
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf/template_message_settings/update_setting.json
+```
+
+```javascript
+await octokit.request('POST /api/uses/yystopf/template_message_settings/update_setting.json')
+```
+
+### HTTP 请求
+`POST /api/users/:user_id/template_message_settings/update_setting.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|notification_body    |string   |站内信配置 |
+|email_body           |string   |邮件配置|
+
+
+> 请求的JSON示例:
+
+```json
+{
+    "setting": {
+        "notification_body": {
+            "CreateOrAssign::IssueChanged": true,
+            "CreateOrAssign::IssueAssigned": true,
+            "CreateOrAssign::PullRequestAssigned": true,
+            "CreateOrAssign::PullRequestChanged": true,
+            "ManageProject::Issue": true,
+            "ManageProject::PullRequest": true,
+            "ManageProject::Member": true,
+            "ManageProject::SettingChanged": true,
+            "Normal::Organization": true,
+            "Normal::Project": true,
+            "Normal::Permission": true
+        },
+        "email_body": {
+            "CreateOrAssign::IssueChanged": false,
+            "CreateOrAssign::IssueAssigned": false,
+            "CreateOrAssign::PullRequestAssigned": false,
+            "CreateOrAssign::PullRequestChanged": false,
+            "ManageProject::Issue": false,
+            "ManageProject::PullRequest": false,
+            "ManageProject::Member": false,
+            "ManageProject::SettingChanged": true,
+            "Normal::Organization": false,
+            "Normal::Project": "t",
+            "Normal::Permission": false
+        }
+   }
+}
+```
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|notification_body    |string   |站内信配置 |
+|email_body           |string   |邮件配置|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "响应成功",
+    "user": {
+        "id": 2,
+        "type": "User",
+        "name": "heh",
+        "login": "yystopf",
+        "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
+    },
+    "notification_body": {
+        "CreateOrAssign::IssueChanged": true,
+        "CreateOrAssign::IssueAssigned": true,
+        "CreateOrAssign::PullRequestAssigned": true,
+        "CreateOrAssign::PullRequestChanged": true,
+        "ManageProject::Issue": true,
+        "ManageProject::PullRequest": true,
+        "ManageProject::Member": true,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": true,
+        "Normal::Project": true,
+        "Normal::Permission": true
+    },
+    "email_body": {
+        "CreateOrAssign::IssueChanged": false,
+        "CreateOrAssign::IssueAssigned": false,
+        "CreateOrAssign::PullRequestAssigned": false,
+        "CreateOrAssign::PullRequestChanged": false,
+        "ManageProject::Issue": false,
+        "ManageProject::PullRequest": false,
+        "ManageProject::Member": false,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": false,
+        "Normal::Project": true,
+        "Normal::Permission": false
+    }
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
 ## 获取用户星标项目
 获取用户星标项目
 

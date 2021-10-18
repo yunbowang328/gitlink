@@ -21,9 +21,9 @@ class TemplateMessageSetting::ManageProject < TemplateMessageSetting
   end
 
   def self.build_init_data
-    self.find_or_create_by(name: "有新的易修", key: "ProjectIssue")
-    self.find_or_create_by(name: "有新的合并请求", key: "ProjectPullRequest")
-    self.find_or_create_by(name: "有成员变动", key: "ProjectMember")
-    self.find_or_create_by(name: "设置更改", key: "ProjectSettingChanged")
+    self.find_or_create_by(name: "有新的易修", key: "Issue")
+    self.find_or_create_by(name: "有新的合并请求", key: "PullRequest")
+    self.find_or_create_by(name: "有成员变动", key: "Member")
+    self.find_or_create_by(name: "设置更改", key: "SettingChanged")
   end
 end
