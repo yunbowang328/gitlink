@@ -26,6 +26,10 @@ class Site < ApplicationRecord
     set_common_menu!
   end
 
+  def self.has_notice_menu?
+    self.common.where(key: 'notice').present?
+  end
+
   private
     def self.set_add_menu!
       adds= [
