@@ -20,6 +20,10 @@ class TemplateMessageSetting::WatchProject < TemplateMessageSetting
     "我关注的仓库"
   end
 
+  def self.order_index
+    40
+  end
+
   def self.build_init_data
   end
 end

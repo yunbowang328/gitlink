@@ -20,6 +20,10 @@ class TemplateMessageSetting::ManageProject < TemplateMessageSetting
     "我管理的仓库"
   end
 
+  def self.order_index 
+    30
+  end
+
   def self.build_init_data
     self.find_or_create_by(name: "有新的易修", key: "Issue")
     self.find_or_create_by(name: "有新的合并请求", key: "PullRequest")

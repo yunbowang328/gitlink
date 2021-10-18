@@ -19,6 +19,10 @@ class TemplateMessageSetting::Normal < TemplateMessageSetting
     ""
   end
 
+  def self.order_index 
+    10
+  end
+
   def self.build_init_data
     self.find_or_create_by(name: "被拉入或移出组织", key: "Organization")
     self.find_or_create_by(name: "被拉入或移出项目", key: "Project")
