@@ -216,19 +216,14 @@ class IssuesController < ApplicationController
           if @issue.previous_changes[:due_date].present? 
             previous_changes.merge!(due_date: [@issue.previous_changes[:due_date][0].to_s,  @issue.previous_changes[:due_date][1].to_s])
           end
-<<<<<<< HEAD
           if @issue.previous_changes[:status_id].present? && @issue.previous_changes[:status_id][1] == 5
             @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: ProjectTrend::CLOSE)
           end
           if @issue.previous_changes[:status_id].present? && @issue.previous_changes[:status_id][0] == 5
             @issue.project_trends.where(action_type: ProjectTrend::CLOSE).destroy_all
           end
-          SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, @issue&.id, previous_changes)
-          SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @issue&.id) if @issue.previous_changes[:assigned_to_id].present?
-=======
           SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, @issue&.id, previous_changes) if Site.has_notice_menu?
           SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @issue&.id) if @issue.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
->>>>>>> 356cafdd (fix: send message job need open notice menu)
         end
         if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
           @issue.issue_times.update_all(end_time: Time.now)
@@ -349,19 +344,14 @@ class IssuesController < ApplicationController
           if i.previous_changes[:due_date].present? 
             previous_changes.merge!(due_date: [i.previous_changes[:due_date][0].to_s,  i.previous_changes[:due_date][1].to_s])
           end
-<<<<<<< HEAD
           if i.previous_changes[:status_id].present? && i.previous_changes[:status_id][1] == 5
             i.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: ProjectTrend::CLOSE)
           end
           if i.previous_changes[:status_id].present? && i.previous_changes[:status_id][0] == 5
             i.project_trends.where(action_type: ProjectTrend::CLOSE).destroy_all
           end
-          SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, i&.id, previous_changes)
-          SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, i&.id) if i.previous_changes[:assigned_to_id].present?
-=======
           SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, i&.id, previous_changes) if Site.has_notice_menu?
           SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, i&.id) if i.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
->>>>>>> 356cafdd (fix: send message job need open notice menu)
         end
         normal_status(0, "批量更新成功")
       else
