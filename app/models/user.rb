@@ -170,7 +170,7 @@ class User < Owner
   has_many :issues, dependent: :destroy, foreign_key: :author_id 
   has_many :pull_requests, dependent: :destroy
   has_many :public_keys, class_name: "Gitea::PublicKey",primary_key: :gitea_uid, foreign_key: :owner_id, dependent: :destroy
-
+  
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
