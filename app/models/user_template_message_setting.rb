@@ -28,29 +28,29 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_notification_body 
     {
-      "CreateOrAssign::IssueAssigned": true,
-      "CreateOrAssign::PullRequestAssigned": true,
+      "Normal::Permission": true,
+      "Normal::Project": true,
+      "Normal::Organization": true,
+      "Normal::IssueAssigned": true,
+      "Normal::PullRequestAssigned": true,
       "ManageProject::Issue": true,
       "ManageProject::PullRequest": true,
       "ManageProject::Member": true,
       "ManageProject::SettingChanged": true,
-      "Normal::Organization": true,
-      "Normal::Project": true,
-      "Normal::Permission": true,
     }.stringify_keys!
   end
 
   def self.init_email_body 
     {
-      "CreateOrAssign::IssueAssigned": false,
-      "CreateOrAssign::PullRequestAssigned": false,
-      "ManageProject::Issue": false,
-      "ManageProject::PullRequest": false,
-      "ManageProject::Member": false,
-      "ManageProject::SettingChanged": false,
-      "Normal::Organization": false,
-      "Normal::Project": false,
-      "Normal::Permission": false,
+      "Normal::Permission": true,
+      "Normal::Project": true,
+      "Normal::Organization": true,
+      "Normal::IssueAssigned": true,
+      "Normal::PullRequestAssigned": true,
+      "ManageProject::Issue": true,
+      "ManageProject::PullRequest": true,
+      "ManageProject::Member": true,
+      "ManageProject::SettingChanged": true,
     }.stringify_keys!
   end
 

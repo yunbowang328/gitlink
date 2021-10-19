@@ -16,7 +16,7 @@
 class TemplateMessageSetting::Normal < TemplateMessageSetting 
 
   def self.type_name 
-    ""
+    "我的状态"
   end
 
   def self.order_index 
@@ -24,8 +24,10 @@ class TemplateMessageSetting::Normal < TemplateMessageSetting
   end
 
   def self.build_init_data
+    self.find_or_create_by(name: "账号有权限变更", key: "Permission")
     self.find_or_create_by(name: "被拉入或移出组织", key: "Organization")
     self.find_or_create_by(name: "被拉入或移出项目", key: "Project")
-    self.find_or_create_by(name: "有权限变更", key: "Permission")
+    self.find_or_create_by(name: "易修被指派", key: "IssueAssigned")
+    self.find_or_create_by(name: "合并请求被指派", key: "PullRequestAssigned")
   end
 end
