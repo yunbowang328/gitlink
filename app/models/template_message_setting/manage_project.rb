@@ -28,6 +28,6 @@ class TemplateMessageSetting::ManageProject < TemplateMessageSetting
     self.find_or_create_by(name: "有新的易修", key: "Issue")
     self.find_or_create_by(name: "有新的合并请求", key: "PullRequest")
     self.find_or_create_by(name: "有成员变动", key: "Member")
-    self.find_or_create_by(name: "设置更改", key: "SettingChanged")
+    self.find_or_create_by(name: "仓库设置被更改", key: "SettingChanged")
   end
 end
