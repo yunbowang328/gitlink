@@ -5,6 +5,7 @@ class SettingsController < ApplicationController
     get_common_menu
     get_personal_menu
     get_third_party
+    get_top_system_notification
   end
 
   private
@@ -46,6 +47,10 @@ class SettingsController < ApplicationController
         name: 'mulan',
         url: MulanossOauth.oauth_url
       }
+    end
+    
+    def get_top_system_notification
+      @top_system_notification = SystemNotification.is_top.first
     end
 
     def get_site_url(key, value)
