@@ -31,7 +31,7 @@ class MessageTemplate::ProjectRole < MessageTemplate
     return '', '', ''
   end
 
-  def self.get_email_message_content(receivers, project, role)
+  def self.get_email_message_content(receiver, project, role)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::Permission"]
     end

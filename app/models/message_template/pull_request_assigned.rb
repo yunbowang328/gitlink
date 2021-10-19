@@ -19,7 +19,7 @@ class MessageTemplate::PullRequestAssigned < MessageTemplate
   def self.get_message_content(receivers, operator, pull_request)
     receivers.each do |receiver|
       if receiver.user_template_message_setting.present? 
-        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["CreateOrAssign::PullRequestAssigned"]
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["Normal::PullRequestAssigned"]
       end
     end
     return '', '', '' if receivers.blank?
@@ -35,7 +35,7 @@ class MessageTemplate::PullRequestAssigned < MessageTemplate
 
   def self.get_email_message_content(receiver, operator, pull_request)
     if receiver.user_template_message_setting.present? 
-      return '', '', '' unless receiver.user_template_message_setting.email_body["CreateOrAssign::PullRequestAssigned"]
+      return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::PullRequestAssigned"]
     end
     project = pull_request&.project
     owner = project&.owner 

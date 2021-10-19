@@ -28,7 +28,7 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_notification_body 
     {
-      "Normal::Permission": true,
+      # "Normal::Permission": true,
       "Normal::Project": true,
       "Normal::Organization": true,
       "Normal::IssueAssigned": true,
@@ -42,7 +42,7 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_email_body 
     {
-      "Normal::Permission": true,
+      # "Normal::Permission": true,
       "Normal::Project": true,
       "Normal::Organization": true,
       "Normal::IssueAssigned": true,

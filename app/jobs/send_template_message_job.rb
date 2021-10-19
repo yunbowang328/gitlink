@@ -193,7 +193,7 @@ class SendTemplateMessageJob < ApplicationJob
       receivers_string, content, notification_url = MessageTemplate::ProjectRole.get_message_content(receivers, project, role)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, user_id: user.id, project_id: project.id, role: role})
       receivers.find_each do |receiver|
-        receivers_email_string, email_title, email_content = MessageTemplate::ProjectRole.get_email_message_content(receivers, project, role)
+        receivers_email_string, email_title, email_content = MessageTemplate::ProjectRole.get_email_message_content(receiver, project, role)
         Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
       end
     when 'ProjectSettingChanged'

@@ -19,7 +19,7 @@ class MessageTemplate::IssueAssigned < MessageTemplate
   def self.get_message_content(receivers, operator, issue)
     receivers.each do |receiver|
       if receiver.user_template_message_setting.present? 
-        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["CreateOrAssign::IssueAssigned"]
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["Normal::IssueAssigned"]
       end
     end
     return '', '', '' if receivers.blank?
@@ -35,7 +35,7 @@ class MessageTemplate::IssueAssigned < MessageTemplate
 
   def self.get_email_message_content(receiver, operator, issue)
     if receiver.user_template_message_setting.present? 
-      return '', '', '' unless receiver.user_template_message_setting.email_body["CreateOrAssign::IssueAssigned"]
+      return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::IssueAssigned"]
     end
     project = issue&.project
     owner = project&.owner 

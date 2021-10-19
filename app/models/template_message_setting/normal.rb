@@ -24,7 +24,7 @@ class TemplateMessageSetting::Normal < TemplateMessageSetting
   end
 
   def self.build_init_data
-    self.find_or_create_by(name: "账号有权限变更", key: "Permission")
+    # self.find_or_create_by(name: "账号有权限变更", key: "Permission")
     self.find_or_create_by(name: "被拉入或移出组织", key: "Organization")
     self.find_or_create_by(name: "被拉入或移出项目", key: "Project")
     self.find_or_create_by(name: "有新的易修指派给我", key: "IssueAssigned")

@@ -22,10 +22,10 @@ class MessageTemplate::ProjectIssue < MessageTemplate
         managers = managers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["ManageProject::Issue"]
       end
     end
-    return '', '', '' if receivers.blank?
     project = issue&.project 
     owner = project&.owner 
     receivers = managers + followers
+    return '', '', '' if receivers.blank?
     content = sys_notice.gsub('{nickname1}', operator&.real_name).gsub('{nickname2}', owner&.real_name).gsub('{repository}', project&.name).gsub('{title}', issue&.subject)
     url = notification_url.gsub('{owner}', owner&.login).gsub('{identifier}', project&.identifier).gsub('{id}', issue&.id.to_s)
     
