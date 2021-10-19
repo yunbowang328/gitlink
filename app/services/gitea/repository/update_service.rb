@@ -19,7 +19,8 @@ class Gitea::Repository::UpdateService < Gitea::ClientService
   end
 
   def call
-    patch(url, data_params)
+    response = patch(url, data_params)
+    render_200_response(response)
   end
 
   private
