@@ -25,6 +25,7 @@ class TemplateMessageSetting::CreateOrAssign < TemplateMessageSetting
   end
 
   def self.build_init_data
-
+    self.find_or_create_by(name: "易修状态变更", key: "IssueChanged")
+    self.find_or_create_by(name: "合并请求状态变更", key: "PullRequestChanged")
   end
 end

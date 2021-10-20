@@ -28,11 +28,13 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_notification_body 
     {
-      # "Normal::Permission": true,
+      "Normal::Permission": true,
       "Normal::Project": true,
       "Normal::Organization": true,
       "Normal::IssueAssigned": true,
       "Normal::PullRequestAssigned": true,
+      "CreateOrAssign::IssueChanged": true,
+      "CreateOrAssign::PullRequestChanged": true,
       "ManageProject::Issue": true,
       "ManageProject::PullRequest": true,
       "ManageProject::Member": true,
@@ -42,11 +44,13 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_email_body 
     {
-      # "Normal::Permission": true,
+      "Normal::Permission": true,
       "Normal::Project": true,
       "Normal::Organization": true,
       "Normal::IssueAssigned": true,
       "Normal::PullRequestAssigned": true,
+      "CreateOrAssign::IssueChanged": true,
+      "CreateOrAssign::PullRequestChanged": true,
       "ManageProject::Issue": true,
       "ManageProject::PullRequest": true,
       "ManageProject::Member": true,

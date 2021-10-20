@@ -38,10 +38,12 @@ class MessageTemplate::ProjectRole < MessageTemplate
     title = email_title
     title.gsub!('{repository}', project&.name)
     title.gsub!('{role}', role)
+    title.gsub!('{nickname}', project&.owner&.real_name)
     content = email 
     content.gsub!('{receiver}', receiver&.real_name)
     content.gsub!('{baseurl}', base_url)
     content.gsub!('{login}', project&.owner&.login)
+    content.gsub!('{nickname}', project&.owner&.real_name)
     content.gsub!('{identifier}', project&.identifier)
     content.gsub!('{repository}', project&.name)
     content.gsub!('{role}', role)

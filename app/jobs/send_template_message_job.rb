@@ -45,8 +45,12 @@ class SendTemplateMessageJob < ApplicationJob
       issue = Issue.find_by_id(issue_id)
       return unless operator.present? && issue.present?
       receivers = User.where(id: [issue&.assigned_to_id, issue&.author_id]).where.not(id: operator&.id)
-      receivers_string, content, notification_url = MessageTemplate::IssueChanged.get_message_content(receivers, operator, issue, change_params)
+      receivers_string, content, notification_url = MessageTemplate::IssueChanged.get_message_content(receivers, operator, issue, change_params.symbolize_keys)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, issue_id: issue.id, change_params: change_params.symbolize_keys})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::IssueChanged.get_email_message_content(receiver, operator, issue, change_params)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
     when 'IssueCreatorExpire'
       issue_id = args[0]
       issue = Issue.find_by_id(issue_id)
@@ -61,6 +65,10 @@ class SendTemplateMessageJob < ApplicationJob
       receivers = User.where(id: [issue_assigned_to_id, issue_author_id]).where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::IssueDeleted.get_message_content(receivers, operator, issue_title)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, issue_title: issue_title})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::IssueDeleted.get_email_message_content(receiver, operator, issue_title)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
     when 'OrganizationJoined'
       user_id, organization_id = args[0], args[1]
       user = User.find_by_id(user_id)
@@ -203,7 +211,7 @@ class SendTemplateMessageJob < ApplicationJob
       return unless operator.present? && project.present?
       receivers = project.all_managers.where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::ProjectSettingChanged.get_message_content(receivers, operator, project, change_params.symbolize_keys)
-      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, project_id: project.id, change_params: change_params})
+      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, project_id: project.id, change_params: change_params.symbolize_keys})
       receivers.find_each do |receiver|
         receivers_email_string, email_title, email_content = MessageTemplate::ProjectSettingChanged.get_email_message_content(receiver, operator, project, change_params.symbolize_keys)
         Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
@@ -238,6 +246,10 @@ class SendTemplateMessageJob < ApplicationJob
       receivers = User.where(id: [issue&.assigned_to_id, pull_request&.user_id]).where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::PullRequestChanged.get_message_content(receivers, operator, pull_request, change_params.symbolize_keys)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id, change_params: change_params})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::PullRequestChanged.get_email_message_content(receiver, operator, pull_request, change_params.symbolize_keys)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
     when 'PullRequestClosed'
       operator_id, pull_request_id = args[0], args[1]
       operator = User.find_by_id(operator_id)
@@ -246,6 +258,10 @@ class SendTemplateMessageJob < ApplicationJob
       receivers = User.where(id: [pull_request&.issue&.assigned_to_id, pull_request&.user_id]).where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::PullRequestClosed.get_message_content(receivers, operator, pull_request)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::PullRequestClosed.get_email_message_content(receiver, operator, pull_request)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
     when 'PullRequestMerged'
       operator_id, pull_request_id = args[0], args[1]
       operator = User.find_by_id(operator_id)
@@ -254,6 +270,10 @@ class SendTemplateMessageJob < ApplicationJob
       receivers = User.where(id: [pull_request&.issue&.assigned_to_id, pull_request&.user_id]).where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::PullRequestMerged.get_message_content(receivers, operator, pull_request)
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::PullRequestMerged.get_email_message_content(receiver, operator, pull_request)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
     end
   end
 end
