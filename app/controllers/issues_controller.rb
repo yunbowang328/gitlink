@@ -9,7 +9,7 @@ class IssuesController < ApplicationController
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
-  before_action :check_token_enough, only: [:create, :update]
+  before_action :check_token_enough, :find_atme_receivers, only: [:create, :update]
 
   include ApplicationHelper
   include TagChosenHelper
@@ -142,6 +142,10 @@ class IssuesController < ApplicationController
       end
 
       @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
+
+      Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+      AtmeService.call(current_user, @atme_receivers, @issue) if @atme_receivers.size > 0
+
       render json: {status: 0, message: "创建成", id: @issue.id}
     else
       normal_status(-1, "创建失败")
@@ -244,6 +248,10 @@ class IssuesController < ApplicationController
           post_to_chain(change_type, change_token.abs, current_user.try(:login))
         end
         @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id) if @issue.previous_changes.present? 
+
+        Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+        AtmeService.call(current_user, @atme_receivers, @issue) if @atme_receivers.size > 0
+
         normal_status(0, "更新成功")
       else
         normal_status(-1, "更新失败")
