@@ -17,6 +17,12 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
 
   # MessageTemplate::ProjectSettingChanged.get_message_content(User.where(login: 'yystopf'), User.last, Project.last, {description: '测试修改项目简介', category: '大数据', language: 'Ruby', permission: '公有', navbar: '易修, 合并请求'})
   def self.get_message_content(receivers, operator, project, change_params)
+    receivers.each do |receiver|
+      if receiver.user_template_message_setting.present? 
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["ManageProject::SettingChanged"]
+      end
+    end
+    return '', '', '' if receivers.blank?
     return '', '', '' if change_params.blank?
     owner = project&.owner
     content = sys_notice.gsub('{nickname1}', operator&.real_name).gsub('{nickname2}', owner&.real_name).gsub('{repository}', project&.name)
@@ -33,6 +39,18 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
       content.gsub!('{name}', change_params[:name][1])
     else
       content.gsub!(/({ifname})(.*)({endname})/, '') 
+    end
+    # 项目标识更改
+    if change_params[:identifier].present?
+      if change_count > 1
+        content.sub!('{ifidentifier}', '<br/>') 
+      else
+        content.sub!('{ifidentifier}', '') 
+      end
+      content.sub!('{endidentifier}', '')
+      content.gsub!('{identifier}', change_params[:identifier][1])
+    else
+      content.gsub!(/({ifidentifier})(.*)({endidentifier})/, '') 
     end
     # 项目简介更改
     if change_params[:description].present?
@@ -141,6 +159,9 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, operator, project, change_params)
+    if receiver.user_template_message_setting.present? 
+      return '', '', '' unless receiver.user_template_message_setting.email_body["ManageProject::SettingChanged"]
+    end
     return '', '', '' if change_params.blank?
     owner = project&.owner
     title = email_title
@@ -168,6 +189,18 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
       content.gsub!('{name}', change_params[:name][1])
     else
       content.gsub!(/({ifname})(.*)({endname})/, '') 
+    end
+    # 项目标识更改
+    if change_params[:identifier].present?
+      if change_count > 1
+        content.sub!('{ifidentifier}', '<br/>') 
+      else
+        content.sub!('{ifidentifier}', '') 
+      end
+      content.sub!('{endidentifier}', '')
+      content.gsub!('{identifier}', change_params[:identifier][1])
+    else
+      content.gsub!(/({ifidentifier})(.*)({endidentifier})/, '') 
     end
     # 项目简介更改
     if change_params[:description].present?
