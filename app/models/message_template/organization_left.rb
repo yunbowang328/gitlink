@@ -17,6 +17,12 @@ class MessageTemplate::OrganizationLeft < MessageTemplate
 
   # MessageTemplate::OrganizationLeft.get_message_content(User.where(login: 'yystopf'), Organization.last)
   def self.get_message_content(receivers, organization)
+    receivers.each do |receiver|
+      if receiver.user_template_message_setting.present? 
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["Normal::Organization"]
+      end
+    end
+    return '', '', '' if receivers.blank?
     content = sys_notice.gsub('{organization}', organization&.real_name)
     url = notification_url.gsub('{login}', organization&.name)
     return receivers_string(receivers), content, url
@@ -26,6 +32,9 @@ class MessageTemplate::OrganizationLeft < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, organization)
+    if receiver.user_template_message_setting.present? 
+      return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::Organization"]
+    end
     title = email_title
     title.gsub!('{organization}', organization&.real_name)
     content = email 
