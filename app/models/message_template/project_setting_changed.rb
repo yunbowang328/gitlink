@@ -40,6 +40,18 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
     else
       content.gsub!(/({ifname})(.*)({endname})/, '') 
     end
+    # 项目标识更改
+    if change_params[:identifier].present?
+      if change_count > 1
+        content.sub!('{ifidentifier}', '<br/>') 
+      else
+        content.sub!('{ifidentifier}', '') 
+      end
+      content.sub!('{endidentifier}', '')
+      content.gsub!('{identifier}', change_params[:identifier][1])
+    else
+      content.gsub!(/({ifidentifier})(.*)({endidentifier})/, '') 
+    end
     # 项目简介更改
     if change_params[:description].present?
       if change_params[:description][1].blank?
