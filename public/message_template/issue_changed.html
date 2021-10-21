@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>管理的仓库有新的合并请求</title>
+  <title>有新的易修指派给我</title>
   <style type="text/css">
       body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{ margin:0; padding:0;}
       body,table,input,textarea,select,button { font-family: "微软雅黑","宋体"; font-size:12px;line-height:1.5; background:#eaebec;}
@@ -31,7 +31,17 @@
     <div style="width: 558px; border-left:1px solid #ddd;border-right:1px solid #ddd; background:#fff; padding:20px; color:#333; line-height: 1.9;">
       <p style="font-size: 14px; color:#333;">
         {receiver}，您好！<br/>
-        <a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>在 {nickname2}/{repository} 提交了一个合并请求：<a href="{baseurl}/{login2}/{identifier}/pulls/{id}" style="font-weight:bold;color:#3b94d6;">{title}</a><br/>
+        在项目 <a href="{baseurl}/{login2}/{identifier}" style="font-weight:bold;color:#3b94d6;">{nickname2}/{repository}</a> 的易修 <a href="{baseurl}/{login2}/{identifier}/issues/{id}" style="font-weight:bold;color:#3b94d6;">{title}</a> 中：
+        {ifassigner}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将负责人从 {assigner1} 修改为 {assigner2}{endassigner}
+        {ifstatus}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将状态从 {status1} 修改为 {status2}{endstatus}
+        {iftracker}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将类型从 {tracker1} 修改为 {tracker2}{endtracker}
+        {ifpriority}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将优先级从 {priority1} 修改为 {priority2}{endpriority}
+        {ifmilestone}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将里程碑从 {milestone1} 修改为 {milestone2}{endmilestone}
+        {iftag}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将标记从 {tag1} 修改为 {tag2}{endtag}
+        {ifdoneratio}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将完成度从 {doneratio1} 修改为 {doneratio2}{enddoneratio}
+        {ifbranch}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将指定分支从 {branch1} 修改为 {branch2}{endbranch}
+        {ifstartdate}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将开始日期从 {startdate1} 修改为 {startdate2}{endstartdate}
+        {ifduedate}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将结束日期从 {duedate1} 修改为 {duedate2}{endduedate}
       </p>
       <div style="width: 100%; border-top: 1px solid #ddd; margin:10px 0;"></div>
       <img src="https://www.trustie.net/images/wechat/trustie_QR.jpg" width="120" height="120" >

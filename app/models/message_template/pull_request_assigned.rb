@@ -17,6 +17,12 @@ class MessageTemplate::PullRequestAssigned < MessageTemplate
 
   # MessageTemplate::PullRequestAssigned.get_message_content(User.where(login: 'yystopf'), User.last, PullRequest.last)
   def self.get_message_content(receivers, operator, pull_request)
+    receivers.each do |receiver|
+      if receiver.user_template_message_setting.present? 
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["Normal::PullRequestAssigned"]
+      end
+    end
+    return '', '', '' if receivers.blank?
     project = pull_request&.project 
     owner = project&.owner 
     content = sys_notice.gsub('{nickname1}', operator&.real_name).gsub('{nickname2}', owner&.real_name).gsub('{repository}', project&.name).gsub('{title}', pull_request&.title)
@@ -28,6 +34,9 @@ class MessageTemplate::PullRequestAssigned < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, operator, pull_request)
+    if receiver.user_template_message_setting.present? 
+      return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::PullRequestAssigned"]
+    end
     project = pull_request&.project
     owner = project&.owner 
     title = email_title
