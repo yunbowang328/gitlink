@@ -23,7 +23,7 @@ class MessageTemplate::ProjectRole < MessageTemplate
       end
     end
     return '', '', '' if receivers.blank?
-    content = sys_notice.gsub('{repository}', project&.name).gsub('{role}', role)
+    content = sys_notice.gsub('{nickname}', project&.owner&.real_name).gsub('{repository}', project&.name).gsub('{role}', role)
     url = notification_url.gsub('{owner}', project&.owner&.login).gsub('{identifier}', project&.identifier)
     return receivers_string(receivers), content, url
   rescue => e
