@@ -10,11 +10,9 @@ class Repositories::DetailService < ApplicationService
   def call
     return {
       repo: repo_suitable,
-      release: release_suitable,
-      branch: branch_suitable,
-      tag: tag_suitable,
       contributor: contributor_suitable,
-      language: language_suitable
+      language: language_suitable,
+      branch_tag_total_count: branch_tag_total_count
     }
   rescue 
     return {
@@ -30,23 +28,12 @@ class Repositories::DetailService < ApplicationService
   end
 
   private
+  def branch_tag_total_count
+    Gitea::Repository::GetBranchAndTagTotalNumService.call(@owner.login, @repo.identifier, @owner.gitea_token)
+  end
+  
   def repo_suitable
     Gitea::Repository::GetService.call(@owner, @repo.identifier)
-  end
-
-  def release_suitable
-    releases = Gitea::Versions::ListService.call(@owner.gitea_token, @owner.try(:login), @repo.try(:identifier), {page: 1, limit: 1})
-    releases.is_a?(Hash) && releases[:status] == -1 ? [] : releases
-  end
-
-  def branch_suitable
-    branches = Gitea::Repository::Branches::ListService.call(@owner, @repo.identifier)
-    branches.is_a?(Hash) && branches.key?(:status) ? [] : branches
-  end
-
-  def tag_suitable
-    tags = Gitea::Repository::Tags::ListService.call(@owner&.gitea_token, @owner.login, @repo.identifier)
-    tags.is_a?(Hash) && tags[:status] == -1 ? [] : tags
   end
 
   def contributor_suitable
