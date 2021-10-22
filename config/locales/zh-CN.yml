@@ -31,7 +31,7 @@ zh-CN:
     branch_name: 分支
     close_pr: 合并
     merge: 合并
-    issue_tags_value: 标签
+    issue_tags_value: 标记
     lock_issue: 锁定工单
     unlock_issue: 解锁工单
     destroy_issue_depend: 删除依赖
@@ -55,7 +55,7 @@ zh-CN:
     f: 否
     true: 是
     false: 否
-    issue_tag_ids: 标签
+    issue_tag_ids: 标记
     issue_type: 分类
     token: 悬赏金额
     close_issue: 工单

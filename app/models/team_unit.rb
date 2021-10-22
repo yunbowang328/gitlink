@@ -20,7 +20,7 @@ class TeamUnit < ApplicationRecord
   belongs_to :organization
   belongs_to :team
 
-  enum unit_type: {code: 1, issues: 2, pulls: 3, releases: 4}
+  enum unit_type: {code: 1, issues: 2, pulls: 3, wiki: 4, releases: 5}
 
   validates :unit_type, uniqueness: { scope: [:organization_id, :team_id]}
 

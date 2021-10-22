@@ -1,5 +1,6 @@
 class ForksController < ApplicationController
   before_action :require_login
+  before_action :require_profile_completed, only: [:create]
   before_action :load_project
   before_action :authenticate_project!, :authenticate_user!
 

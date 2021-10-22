@@ -24,6 +24,7 @@ class Watcher < ApplicationRecord
 
   after_save :reset_cache_data
   after_destroy :reset_cache_data
+  after_create :send_create_message_to_notice_system
 
   def reset_cache_data 
     if self.watchable.is_a?(User)
@@ -33,6 +34,10 @@ class Watcher < ApplicationRecord
       self.reset_user_cache_async_job(self.watchable&.owner)
     end
     self.reset_platform_cache_async_job
+  end
+
+  def send_create_message_to_notice_system
+    SendTemplateMessageJob.perform_later('FollowTip', self.id) if self.watchable.is_a?(User) if Site.has_notice_menu?
   end
 
 end

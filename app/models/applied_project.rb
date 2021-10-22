@@ -1,14 +1,19 @@
 # == Schema Information
 #
-# Table name: applied_projects
+# Table name: forge_applied_projects
 #
 #  id         :integer          not null, primary key
-#  project_id :integer          not null
-#  user_id    :integer          not null
+#  project_id :integer
+#  user_id    :integer
 #  role       :integer          default("0")
 #  status     :integer          default("0")
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_forge_applied_projects_on_project_id  (project_id)
+#  index_forge_applied_projects_on_user_id     (user_id)
 #
 
 class AppliedProject < ApplicationRecord

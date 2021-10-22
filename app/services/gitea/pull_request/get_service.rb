@@ -3,7 +3,7 @@ class Gitea::PullRequest::GetService < Gitea::ClientService
   attr_reader :owner, :repo, :number, :token
 
   #eq:
-  # Gitea::PullRequest::GetService.call(user.login, repository.identifier, pull.gpid, user.gitea_token)
+  # Gitea::PullRequest::GetService.call(user.login, repository.identifier, pull.gitea_number, user.gitea_token)
   def initialize(owner, repo, number, token=nil)
     @owner  = owner
     @repo   = repo

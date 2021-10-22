@@ -1,5 +1,6 @@
 class Organizations::OrganizationsController < Organizations::BaseController
   before_action :require_login, except: [:index, :show, :recommend]
+  before_action :require_profile_completed, only: [:create]
   before_action :convert_image!, only: [:create, :update]
   before_action :load_organization, only: [:show, :update, :destroy]
   before_action :check_user_can_edit_org, only: [:update, :destroy]
@@ -25,6 +26,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def create
     ActiveRecord::Base.transaction do
+      tip_exception("无法使用以下关键词：#{organization_params[:name]}，请重新命名") if ReversedKeyword.is_reversed(organization_params[:name]).present?
       Organizations::CreateForm.new(organization_params).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
@@ -41,7 +43,8 @@ class Organizations::OrganizationsController < Organizations::BaseController
       @organization.login = organization_params[:name] if organization_params[:name].present?
       @organization.nickname = organization_params[:nickname] if organization_params[:nickname].present?
       @organization.save!
-      @organization.organization_extension.update_attributes!(organization_params.except(:name, :nickname))
+      sync_organization_extension!
+      
       Gitea::Organization::UpdateService.call(@organization.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
@@ -95,4 +98,18 @@ class Organizations::OrganizationsController < Organizations::BaseController
     %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
   end
 
+  def set_max_repo_creation
+    organization_params[:max_repo_creation].blank? ? -1 : organization_params[:max_repo_creation]
+  end
+
+  def organization_extension_params
+    organization_params
+    .except(:name, :nickname)
+    .merge(max_repo_creation: set_max_repo_creation)
+  end
+  
+  def sync_organization_extension!
+    @organization.organization_extension.update_attributes!(organization_extension_params)
+  end
+  
 end

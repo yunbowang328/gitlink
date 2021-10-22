@@ -7,7 +7,7 @@ class IssueTagsController < ApplicationController
 
 
   def index
-    issue_tags = @project.issue_tags.order("#{order_name} #{order_type}")
+    issue_tags = @project.issue_tags.reorder("#{order_name} #{order_type}")
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
     @page  = params[:page]  || 1
     @limit = params[:limit] || 15

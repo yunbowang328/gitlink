@@ -108,6 +108,7 @@ class Gitea::ClientService < ApplicationService
   def full_url(api_rest, action='post')
     url = [api_url, api_rest].join('').freeze
     url = action === 'get' ? url : URI.escape(url)
+    url = URI.escape(url) unless url.ascii_only?
     puts "[gitea] request url: #{url}"
     return url
   end

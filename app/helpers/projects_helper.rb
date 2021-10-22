@@ -13,12 +13,16 @@ module ProjectsHelper
     end
   end
 
-  def render_zip_url(project, archive_name)
-    [gitea_domain, project.owner.login, project.identifier, "archive", "#{archive_name}.zip"].join('/')
+  def render_zip_url(owner, repository, archive)
+    [base_url, archive_repositories_path(owner&.login, repository, "#{archive}.zip")].join
   end
 
-  def render_tar_url(project, archive_name)
-    [gitea_domain, project.owner.login, project.identifier, "archive", "#{archive_name}.tar.gz"].join('/')
+  def render_tar_url(owner, repository, archive)
+    [base_url, archive_repositories_path(owner&.login, repository, "#{archive}.tar.gz")].join
+  end
+
+  def render_download_file_url(owner, repository, filepath, ref)
+    [base_url, "/api/#{owner&.login}/#{repository.identifier}/raw?filepath=#{filepath}&ref=#{ref}"].join
   end
 
   def render_http_url(project)
@@ -34,11 +38,12 @@ module ProjectsHelper
   end
 
   def json_response(project, user)
-    repo = Repository.includes(:mirror).select(:id, :mirror_url, :source_clone_url).find_by(project: project)
+    repo = Repository.includes(:mirror).select(:id, :is_mirror, :mirror_url, :source_clone_url).find_by(project: project)
 
     tmp_json = {}
     unless project.common?
       tmp_json = tmp_json.merge({
+        is_mirror: repo.is_mirror ? true : false,
         mirror_status: repo.mirror_status,
         mirror_num: repo.mirror_num,
         mirror_url: repo.remote_mirror_url,
@@ -54,7 +59,11 @@ module ProjectsHelper
       repo_id: repo.id,
       open_devops: (user.blank? || user.is_a?(AnonymousUser)) ? false : project.open_devops?,
       type: project.numerical_for_project_type,
-      author: render_owner(project)
+      author: render_owner(project),
+      project_category_id: project.project_category_id,
+      project_language_id: project.project_language_id,
+      license_id: project.license_id,
+      ignore_id: project.ignore_id
     }).compact
 
     render json: tmp_json

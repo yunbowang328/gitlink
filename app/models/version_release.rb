@@ -17,6 +17,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  repository_id    :integer
+#  sha              :string(255)
 #
 # Indexes
 #
@@ -29,4 +30,9 @@ class VersionRelease < ApplicationRecord
   has_many :project_trends, as: :trend, dependent: :destroy
   scope :releases_size, ->{where(draft: false, prerelease: false).size}
   has_many :attachments, as: :container, dependent: :destroy
+
+  def update_sha
+    git_release = Gitea::Versions::GetService.call(user.gitea_token, repository&.owner&.login, repository&.identifier, version_gid)
+    self.update(sha: git_release["sha"])
+  end
 end

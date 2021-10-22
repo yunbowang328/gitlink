@@ -246,6 +246,14 @@ class ApplicationController < ActionController::Base
 		tip_exception(401, "请登录后再操作") unless User.current.logged?
 	end
 
+	def require_profile_completed
+		tip_exception(411, "请完善资料后再操作") unless User.current.profile_is_completed?
+	end
+
+	def require_user_profile_completed(user)
+		tip_exception(412, "请用户完善资料后再操作") unless user.profile_is_completed?
+	end
+
 	# 异常提醒
 	def tip_exception(status = -1, message)
 		raise Educoder::TipException.new(status, message)
@@ -272,7 +280,7 @@ class ApplicationController < ActionController::Base
 
 	# 资料是否完善
 	def check_account
-		if !current_user.profile_completed?
+		if !current_user. profile_is_completed?
 			#info_url = '/account/profile'
 			tip_exception(402, nil)
 		end
@@ -754,10 +762,10 @@ class ApplicationController < ActionController::Base
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"
 			@project
-    elsif @project && current_user.is_a?(AnonymousUser)
-			logger.info "###########：This is AnonymousUser"
-			@project = nil if !@project.is_public?
-			render_forbidden and return
+    # elsif @project && current_user.is_a?(AnonymousUser)
+		# 	logger.info "###########：This is AnonymousUser"
+		# 	@project = nil if !@project.is_public?
+		# 	render_forbidden and return
     else
 			logger.info "###########：project not found"
       @project = nil
@@ -771,11 +779,12 @@ class ApplicationController < ActionController::Base
 	end
 
 	def base_url
-		request.base_url
+		Rails.application.config_for(:configuration)['platform_url'] || request.base_url
 	end
 
 	def convert_image!
-		@image = params[:image] || user_params[:image]
+		@image = params[:image] 
+		@image = @image.nil? && params[:user].present? ? params[:user][:image] : @image
     return unless @image.present?
     max_size = EduSetting.get('upload_avatar_max_size') || 2 * 1024 * 1024 # 2M
     if @image.class == ActionDispatch::Http::UploadedFile

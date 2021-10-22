@@ -1,6 +1,8 @@
 class PullRequestsController < ApplicationController
   before_action :require_login, except: [:index, :show, :files, :commits]
+  before_action :require_profile_completed, only: [:create]
   before_action :load_repository
+  before_action :check_menu_authorize
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
   before_action :load_pull_request, only: [:files, :commits]
   include TagChosenHelper
@@ -8,7 +10,6 @@ class PullRequestsController < ApplicationController
 
 
   def index
-    return render_not_found unless @project.has_menu_permission("pulls")
     # @issues = Gitea::PullRequest::ListService.new(@user,@repository.try(:identifier)).call   #通过gitea获取
     issues = @project.issues.issue_pull_request.issue_index_includes.includes(pull_request: :user)
     issues = issues.where(is_private: false) unless current_user.present? && (current_user.admin? || @project.member?(current_user))
@@ -19,6 +20,7 @@ class PullRequestsController < ApplicationController
     @close_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::CLOSED})
     @merged_issues = @filter_issues.joins(:pull_request).where(pull_requests: {status: PullRequest::MERGED})
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
+    @user_admin_or_developer = current_user.present? && (current_user.admin || @project.all_developers.include?(current_user))
 
     scopes = Issues::ListQueryService.call(issues,params.delete_if{|k,v| v.blank?}, "PullRequest")
     @issues_size = scopes.size
@@ -56,8 +58,9 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
-        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"])
-        render_ok
+        @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id) if Site.has_notice_menu?
+        SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id) if Site.has_notice_menu?
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
         raise ActiveRecord::Rollback
@@ -66,21 +69,22 @@ class PullRequestsController < ApplicationController
   end
 
   def edit
-    @fork_project_user_name = @project&.fork_project&.owner.try(:show_real_name)
-    @fork_project_user = @project&.fork_project&.owner.try(:login)
-    @fork_project_identifier = @project&.fork_project&.repository.try(:identifier)
+    @fork_project_user_name = @pull_request&.fork_project&.owner.try(:show_real_name)
+    @fork_project_user = @pull_request&.fork_project&.owner.try(:login)
+    @fork_project_identifier = @pull_request&.fork_project&.repository.try(:identifier)
   end
 
   def update
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
-      normal_status(-1, "标签不能为空")
+      normal_status(-1, "标记不能为空")
     else
       ActiveRecord::Base.transaction do
         begin
           merge_params
 
+          @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
           if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
             @issue&.issue_tags_relates&.destroy_all
             params[:issue_tag_ids].each do |tag|
@@ -91,7 +95,7 @@ class PullRequestsController < ApplicationController
           if @issue.update_attributes(@issue_params)
             if @pull_request.update_attributes(@local_params.compact)
               gitea_pull = Gitea::PullRequest::UpdateService.call(@owner.login, @repository.identifier,
-                  @pull_request.gpid, @requests_params, current_user.gitea_token)
+                  @pull_request.gitea_number, @requests_params, current_user.gitea_token)
 
               if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
@@ -114,6 +118,8 @@ class PullRequestsController < ApplicationController
           normal_status(-1, e.message)
           raise ActiveRecord::Rollback
         end
+        SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value)) if Site.has_notice_menu?
+        SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
       end
     end
 
@@ -123,7 +129,13 @@ class PullRequestsController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         colsed = PullRequests::CloseService.call(@owner, @repository, @pull_request, current_user)
-        colsed === true ? normal_status(1, "已拒绝") : normal_status(-1, '合并失败')
+        if colsed === true 
+          @pull_request.project_trends.create!(user: current_user, project: @project,action_type: ProjectTrend::CLOSE)
+          SendTemplateMessageJob.perform_later('PullRequestClosed', current_user.id, @pull_request.id) if Site.has_notice_menu?
+          normal_status(1, "已拒绝") 
+        else
+          normal_status(-1, '合并失败')
+        end
       rescue => e
         normal_status(-1, e.message)
         raise ActiveRecord::Rollback
@@ -139,7 +151,7 @@ class PullRequestsController < ApplicationController
     @issue_user = @issue.user
     @issue_assign_to = @issue.get_assign_user
     @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, 
-      @repository.identifier, @pull_request.gpid, current_user&.gitea_token)
+      @repository.identifier, @pull_request.gitea_number, current_user&.gitea_token)
   end
 
   def pr_merge
@@ -150,11 +162,20 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
-          result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+          @gitea_pull = Gitea::PullRequest::GetService.call(@owner.login, @repository.identifier, @pull_request.gitea_number, current_user&.gitea_token)
 
-          if result.status == 200 && @pull_request.merge!
-            @pull_request.project_trend_status!
+          if @gitea_pull["merged_by"].present?
+            success_condition = true
+          else
+            result = PullRequests::MergeService.call(@owner, @repository, @pull_request, current_user, params)
+            success_condition = result.status == 200
+          end
+
+          if success_condition && @pull_request.merge!
+            # @pull_request.project_trend_status!
+            @pull_request.project_trends.create!(user: current_user, project: @project,action_type: ProjectTrend::MERGE)
             @issue&.custom_journal_detail("merge", "", "该合并请求已被合并", current_user&.id)
+            SendTemplateMessageJob.perform_later('PullRequestMerged', current_user.id, @pull_request.id) if Site.has_notice_menu?
             normal_status(1, "合并成功")
           else
             normal_status(-1, result.message)
@@ -181,7 +202,7 @@ class PullRequestsController < ApplicationController
       if can_merge.present?
         render json: {
           status: -2,
-          message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
+          message: "在这些分支之间的合并请求已存在：<a href='/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}''>#{can_merge.first.try(:title)}</a>",
         }
       else
         normal_status(0, "可以合并")
@@ -191,12 +212,12 @@ class PullRequestsController < ApplicationController
 
 
   def files
-    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
+    @files_result = Gitea::PullRequest::FilesService.call(@owner.login, @project.identifier, @pull_request.gitea_number, current_user&.gitea_token)
     # render json: @files_result
   end
 
   def commits
-    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gpid, current_user&.gitea_token)
+    @commits_result = Gitea::PullRequest::CommitsService.call(@owner.login, @project.identifier, @pull_request.gitea_number, current_user&.gitea_token)
     # render json: @commits_result
   end
 
@@ -251,5 +272,9 @@ class PullRequestsController < ApplicationController
       tracker_id: 2,
       status_id: 1,
     }
+  end
+
+  def check_menu_authorize
+    return render_not_found unless @project.has_menu_permission("pulls")
   end
 end

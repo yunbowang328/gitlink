@@ -15,8 +15,11 @@ class Projects::ForkService < ApplicationService
             :rep_identifier, :project_category_id, :project_language_id,
             :license_id, :ignore_id, {repository: [:identifier, :hidden]}]
 
+      result = Gitea::Repository::ForkService.new(@project.owner, @target_owner, @project.identifier, @organization).call
+
       clone_project.owner = @target_owner
       clone_project.forked_from_project_id = @project.id
+      clone_project.gpid = result['id']
       clone_project.save!
 
       new_repository = clone_project.repository
@@ -25,8 +28,6 @@ class Projects::ForkService < ApplicationService
       new_repository.save!
 
       ProjectUnit.init_types(clone_project.id)
-
-      result = Gitea::Repository::ForkService.new(@project.owner, @target_owner, @project.identifier, @organization).call
 
       @project.update_column('forked_count', @project&.forked_count.to_i + 1)
       new_repository.update_column('url', result['clone_url']) if result

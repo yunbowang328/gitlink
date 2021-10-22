@@ -37,7 +37,7 @@ class Organizations::Teams::CreateService < ApplicationService
   end
 
   def authorize
-    params[:authorize].present? ? params[:authorize] : "common"
+    params[:authorize].present? ? params[:authorize] : "read"
   end
 
   def includes_all_project
@@ -54,7 +54,7 @@ class Organizations::Teams::CreateService < ApplicationService
   end
 
   def units_params
-    %w(admin owner).include?(authorize) ? %w(code issues pulls releases) : params[:unit_types]
+    %w(code issues pulls wiki releases)
   end
 
   def create_units

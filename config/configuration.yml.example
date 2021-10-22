@@ -1,6 +1,7 @@
 default: &default
   # 用户登入的时候设置/登出的时候清空
   autologin_cookie_name: 'autologin_trustie'
+  platform_url: 'http://localhost:3000'
 
 
   #附件上传路径
@@ -56,6 +57,11 @@ default: &default
       domain: 'https://testgit.trustie.net'
       base_url: '/api/v1'
 
+  notice: 
+    platform: ''
+    write_domain: ''
+    read_domain: ''
+    base_url: ''
 
 production:
   <<: *default

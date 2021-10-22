@@ -1,11 +1,6 @@
 json.content @project.content
 json.website @project.website
 json.lesson_url @project.lesson_url
-if @result[:readme].blank?
-  json.readme nil
-else
-  json.readme @result[:readme].merge(content: readme_render_decode64_content(@result[:readme]["content"], nil))
-end
 json.identifier render_identifier(@project)
 json.invite_code @project.invite_code
 json.name @project.name
@@ -56,28 +51,8 @@ if @result[:repo]
   json.private @result[:repo]['private']
 end
 json.license_name @project.license_name
-json.release_versions do
-  json.list @result[:release].each do |release|
-    forge_version = VersionRelease.find_by(version_gid: release["id"])
-    json.id forge_version&.id
-    json.name release["name"]
-    json.tag_name release["tag_name"]
-    json.created_at format_time(release["created_at"].to_time)
-  end
-  json.total_count @repository&.version_releases.size
-end
-json.branches do
-  json.list @result[:branch].each do |branch|
-    json.name branch["name"]
-  end
-  json.total_count @result[:branch].size
-end
-json.tags do
-  json.list @result[:tag].each do |tag|
-    json.name tag["name"]
-  end
-  json.total_count @result[:tag].size
-end
+json.branches_count @result[:branch_tag_total_count]['branch_count'] || 0
+json.tags_count @result[:branch_tag_total_count]['tag_count'] || 0
 json.contributors do
   total_count = @result[:contributor].size
   json.list @result[:contributor].each do |contributor|
@@ -95,6 +70,6 @@ json.contributors do
   end
   json.total_count total_count
 end
-json.languages @result[:language]
+json.languages @result[:language].blank? ? nil : @result[:language]
 
 json.partial! 'author', locals: { user: @project.owner }

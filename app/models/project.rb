@@ -1,3 +1,4 @@
+
 # == Schema Information
 #
 # Table name: projects
@@ -64,15 +65,17 @@
 #  index_projects_on_invite_code             (invite_code)
 #  index_projects_on_is_public               (is_public)
 #  index_projects_on_lft                     (lft)
+#  index_projects_on_license_id              (license_id)
 #  index_projects_on_name                    (name)
 #  index_projects_on_platform                (platform)
+#  index_projects_on_project_category_id     (project_category_id)
+#  index_projects_on_project_language_id     (project_language_id)
 #  index_projects_on_project_type            (project_type)
 #  index_projects_on_recommend               (recommend)
 #  index_projects_on_rgt                     (rgt)
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
-
 
 
 
@@ -98,10 +101,12 @@ class Project < ApplicationRecord
   belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
+  belongs_to :forked_from_project, class_name: 'Project', optional: true, foreign_key: :forked_from_project_id
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
   has_many :forked_users, class_name: 'ForkUser', foreign_key: :fork_project_id, dependent: :destroy
+  has_many :forked_projects, class_name: 'Project', foreign_key: :forked_from_project_id
   has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
@@ -120,9 +125,10 @@ class Project < ApplicationRecord
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
+  has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
 
-  after_save :check_project_members, :reset_cache_data
-  before_save :set_invite_code
+  after_save :check_project_members
+  before_save :set_invite_code, :reset_cache_data, :reset_unmember_followed
   after_destroy :reset_cache_data
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
@@ -131,6 +137,18 @@ class Project < ApplicationRecord
   delegate :content, to: :project_detail, allow_nil: true
   delegate :name, to: :license, prefix: true, allow_nil: true
 
+  def self.all_visible(user_id=nil)
+    user_projects_sql = Project.joins(:owner).where(users: {type: 'User'}).to_sql
+    org_public_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension).where(organization_extensions: {visibility: 'common'})).to_sql
+    if user_id.present?
+      org_limit_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension).where(organization_extensions: {visibility: 'limited'})).to_sql
+      org_privacy_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension, :organization_users).where(organization_extensions: {visibility: 'privacy'}, organization_users: {user_id: user_id})).to_sql
+      return Project.from("( #{ user_projects_sql } UNION #{ org_public_projects_sql } UNION #{ org_limit_projects_sql } UNION #{org_privacy_projects_sql} ) AS projects").visible
+    else
+      return Project.from("( #{ user_projects_sql } UNION #{ org_public_projects_sql } ) AS projects").visible
+    end
+  end
+
   def reset_cache_data 
     if changes[:user_id].present?
       first_owner = Owner.find_by_id(changes[:user_id].first) 
@@ -138,6 +156,12 @@ class Project < ApplicationRecord
     end
     self.reset_platform_cache_async_job
     self.reset_user_cache_async_job(self.owner)
+  end
+
+  def reset_unmember_followed
+    if changes[:is_public].present? && changes[:is_public] == [true, false]
+      self.watchers.where.not(user_id: self.all_collaborators).destroy_all
+    end
   end
 
   def set_invite_code
