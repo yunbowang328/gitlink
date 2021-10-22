@@ -1268,11 +1268,17 @@ a.shixun-task-btn {
 
 
 /*-----------实训配置、评测脚本-------------*/
+@font-face {
+  font-family: "iconfont"; /* Project id 2340181 */
+  src: url('iconfont.woff2?t=1631773579834') format('woff2'),
+       url('iconfont.woff?t=1631773579834') format('woff'),
+       url('iconfont.ttf?t=1631773579834') format('truetype');
+}
 html body {
   font-size: 14px;
   line-height: 2.0;
   background: #fafafa;
-  font-family: "Microsoft YaHei", "SimSun";
+  font-family: "iconfont";
   color: #05101a;
   height: 100%;
   position: relative;
