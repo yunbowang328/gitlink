@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include Acceleratorable
 
-  before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
+  before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend about menu_list sonar_url]
   before_action :require_profile_completed, only: [:create, :migrate]
   before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
@@ -58,14 +58,14 @@ class ProjectsController < ApplicationController
   def migrate
     Projects::MigrateForm.new(mirror_params).validate!
 
-    @project = 
+    @project =
       if enable_accelerator?(mirror_params[:clone_addr])
         source_clone_url = mirror_params[:clone_addr]
         uid_logger("########## 已动加速器 ##########")
         result = Gitea::Accelerator::MigrateService.call(mirror_params)
         if result[:status] == :success
           Rails.logger.info "########## 加速镜像成功 ########## "
-          Projects::MigrateService.call(current_user, 
+          Projects::MigrateService.call(current_user,
             mirror_params.merge(source_clone_url: source_clone_url, 
               clone_addr: accelerator_url(mirror_params[:repository_name])))
         else
@@ -117,7 +117,7 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       # TODO:
       # 临时特殊处理修改website、lesson_url操作方法
-      if project_params.has_key?("website") 
+      if project_params.has_key?("website")
         @project.update(project_params)
       elsif project_params.has_key?("default_branch")
         @project.update(project_params)
@@ -126,11 +126,11 @@ class ProjectsController < ApplicationController
         }
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
       else
-        validate_params = project_params.slice(:name, :description, 
+        validate_params = project_params.slice(:name, :description,
           :project_category_id, :project_language_id, :private, :identifier)
-  
+
         Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id, project_identifier: @project.identifier)).validate!
-  
+
         private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
         new_project_params = project_params.except(:private).merge(is_public: !private)
@@ -225,6 +225,14 @@ class ProjectsController < ApplicationController
     end
   end
 
+  def sonar_url
+    token = request.headers["HTTP_SONAR_TOKEN"]
+    playod = JWT.decode(token,EducoderOauth.client_id)[0]
+    data = HashWithIndifferentAccess.new playod
+    return normal_status(-1, "sonar_url不能为空") if data["sonar_url"].blank?
+    @project.update(sonar_url:data["sonar_url"])
+    render :json => { status: 0, message: "更新成功"}
+  end
 
   private
   def project_params
