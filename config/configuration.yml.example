@@ -1,6 +1,7 @@
 default: &default
   # 用户登入的时候设置/登出的时候清空
   autologin_cookie_name: 'autologin_trustie'
+  platform_url: 'http://localhost:3000'
 
 
   #附件上传路径
@@ -43,6 +44,11 @@ default: &default
       cate_id: '-1'
       callback_url: 'callback_url'
       signature_key: 'test12345678'
+    educoder: 
+      client_id: 'e9ce4d5ba1698d6f7d01d8ee2959776c7a6d743ebe94da2341e288fd2fbf60aa'
+      client_secret: '6ff84dd75eddd859c5bd0e7a791b58bc5ad1ba4fbb30bc9db37cb0baf9f33012'
+      base_url: 'https://test-data.educoder.net'
+      redirect_uri: 'https://testforgeplus.trustie.net/api/auth/educoder/callback'
 
   gitea:
     access_key_id: ''
@@ -56,6 +62,11 @@ default: &default
       domain: 'https://testgit.trustie.net'
       base_url: '/api/v1'
 
+  notice: 
+    platform: ''
+    write_domain: ''
+    read_domain: ''
+    base_url: ''
 
 production:
   <<: *default

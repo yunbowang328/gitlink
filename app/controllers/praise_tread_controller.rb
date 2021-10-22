@@ -1,5 +1,6 @@
 class PraiseTreadController < ApplicationController
   before_action :require_login, except: %i[index]
+  before_action :require_profile_completed, only: [:like]
   before_action :find_project_with_id
 
   def index

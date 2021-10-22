@@ -24,13 +24,14 @@ class Projects::ApplyTransferService < ApplicationService
     raise Error, '仓库标识不正确' if @project.identifier != params[:identifier]
     raise Error, '该仓库正在迁移' if @project.is_transfering
     raise Error, '新拥有者不存在' unless @owner.present?
+    raise Error, '新拥有者资料不完善' if @owner.is_a?(User) && !@owner.profile_is_completed?
     raise Error, '新拥有者已经存在同名仓库！' if Project.where(user_id: @owner.id, identifier: params[:identifier]).present?
     raise Error, '未拥有转移权限' unless is_permit_owner
   end
 
   def is_permit_owner
     return true unless @owner.is_a?(Organization)
-    return @owner.is_owner?(@user)
+    return @owner.is_admin?(@user)
   end
 
   def create_apply 

@@ -33,7 +33,7 @@ class Gitea::Repository::MigrateService < Gitea::ClientService
   def call
     response = post(url, request_params)
 
-    render_201_response(response)
+    render_response(response)
   end
 
   private

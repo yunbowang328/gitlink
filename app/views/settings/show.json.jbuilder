@@ -56,4 +56,13 @@ json.setting do
   end
 
   json.common @common
+  json.third_party @third_party
+
+  if @top_system_notification.present?
+    json.system_notification do 
+      json.(@top_system_notification, :id, :subject, :sub_subject, :content)
+    end
+  else
+    json.system_notification nil
+  end
 end

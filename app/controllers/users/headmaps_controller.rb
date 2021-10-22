@@ -1,7 +1,7 @@
 class Users::HeadmapsController < Users::BaseController
   def index 
     result = Gitea::User::HeadmapService.call(observed_user.login, start_stamp, end_stamp)
-    @headmaps = result[2]
+    @headmaps = result[2].blank? ? [] : result[2]
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)

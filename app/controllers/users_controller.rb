@@ -74,7 +74,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    return render_not_found unless @user = User.find_by_id(params[:id]) || User.find_by(login: params[:id])
+    return render_not_found unless @user = User.find_by(login: params[:id]) || User.find_by_id(params[:id]) 
     return render_forbidden unless User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
     Util.write_file(@image, avatar_path(@user)) if user_params[:image].present?
     @user.attributes = user_params.except(:image)
@@ -91,6 +91,12 @@ class UsersController < ApplicationController
   def get_user_info
     begin
       @user = current_user
+      begin
+        result = Notice::Read::CountService.call(current_user.id)
+        @message_unread_total = result.nil? ? 0 : result[2]["unread_notification"]
+      rescue 
+        @message_unread_total = 0
+      end
       # TODO 等消息上线再打开注释
       #@tidding_count = unviewed_tiddings(current_user) if current_user.present?
     rescue Exception => e
@@ -267,7 +273,7 @@ class UsersController < ApplicationController
 
     interactor = Gitea::User::UpdateInteractor.call(user.login, sync_params)
     if interactor.success?
-      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_EDIT_INFO)
+      user.update!(password: params[:password], mail: params[:email], status: User::STATUS_ACTIVE)
       render_ok
     else
       render_error(interactor.error)

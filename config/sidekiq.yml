@@ -8,3 +8,4 @@
   - [notify, 100]
   - [mailers, 101]
   - [cache, 10]
+  - [message, 20]

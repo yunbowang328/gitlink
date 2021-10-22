@@ -43,7 +43,7 @@ class Users::UpdateAccountService < ApplicationService
       end
 
       # 表示资料完整
-      user.profile_completed = true
+      # user.profile_completed = true
 
       extension.save!
       user.save!

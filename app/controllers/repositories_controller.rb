@@ -1,13 +1,15 @@
 class RepositoriesController < ApplicationController
+  include RepositoriesHelper
   include ApplicationHelper
   include OperateProjectAbilityAble
   include Repository::LanguagesPercentagable
 
   before_action :require_login, only: %i[edit update create_file update_file delete_file sync_mirror]
+  before_action :require_profile_completed, only: [:create_file]
   before_action :load_repository
-  before_action :authorizate!, except: [:sync_mirror, :tags, :commit]
+  before_action :authorizate!, except: [:sync_mirror, :tags, :commit, :archive]
   before_action :authorizate_user_can_edit_repo!, only: %i[sync_mirror]
-  before_action :get_ref, only: %i[entries sub_entries top_counts file]
+  before_action :get_ref, only: %i[entries sub_entries top_counts file archive]
   before_action :get_latest_commit, only: %i[entries sub_entries top_counts]
   before_action :get_statistics, only: %i[top_counts]
 
@@ -53,16 +55,6 @@ class RepositoriesController < ApplicationController
       @entries = Gitea::Repository::Entries::ListService.new(@owner, @project.identifier, ref: @ref).call
       @entries = @entries.present? ? @entries.sort_by{ |hash| hash['type'] } : []
       @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
-
-      # TODO
-      # 临时处理readme文件问题
-      result = Gitea::Repository::Readme::GetService.call(@owner.login, @project.identifier, @ref, @owner&.gitea_token)
-      @readme = 
-      if result[:status] == :success
-        result[:body]
-      else
-        {}
-      end
     end
   end
 
@@ -72,6 +64,7 @@ class RepositoriesController < ApplicationController
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
 
     if @project.educoder?
       if params[:type] === 'file'
@@ -102,9 +95,20 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
-      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    if params[:filepath].present?
+      file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+      @hash_commit = Gitea::Repository::Commits::FileListService.new(@owner.login, @project.identifier, file_path_uri,
+        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    else
+      @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
+        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    end
   end
+
+  def commits_slice 
+    @hash_commit = Gitea::Repository::Commits::ListSliceService.call(@owner.login, @project.identifier,
+      sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token)
+  end 
 
   def commit
     @sha         = params[:sha]
@@ -119,7 +123,11 @@ class RepositoriesController < ApplicationController
   end
 
   def contributors
-    @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
+    if params[:filepath].present? 
+      @contributors = []
+    else
+      @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
+    end
   end
 
   def edit
@@ -182,14 +190,44 @@ class RepositoriesController < ApplicationController
   end
 
   def readme
-    result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
-
+    if params[:filepath].present?
+      result = Gitea::Repository::Readme::DirService.call(@owner.login, @repository.identifier, params[:filepath], params[:ref], current_user&.gitea_token)
+    else
+      result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
+    end
     @readme = result[:status] === :success ? result[:body] : nil
-    render json: @readme
+    @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref])
+    render json: @readme.slice("type", "encoding", "size", "name", "path", "content", "sha")
+  rescue 
+    render json: nil
   end
 
   def languages
     render json: languages_precentagable
+  end
+
+  def archive
+    domain  = Gitea.gitea_config[:domain]
+    api_url = Gitea.gitea_config[:base_url]
+    archive_url = "/repos/#{@owner.login}/#{@repository.identifier}/archive/#{params[:archive]}"
+
+    file_path = [domain, api_url, archive_url].join
+    file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("?") if @repository.hidden?
+
+    return render_not_found if !request.format.zip? && !request.format.gzip?
+
+    redirect_to file_path
+  end
+  
+  def raw 
+    domain  = Gitea.gitea_config[:domain]
+    api_url = Gitea.gitea_config[:base_url]
+
+    url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{params[:filepath]}?ref=#{params[:ref]}"
+    file_path = [domain, api_url, url].join
+    file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") if @repository.hidden?
+
+    redirect_to URI.escape(file_path)
   end
 
   private
@@ -212,8 +250,14 @@ class RepositoriesController < ApplicationController
 
   # TODO 获取最新commit信息
   def project_commits
-    Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
-      sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    if params[:filepath].present?
+      file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+      Gitea::Repository::Commits::FileListService.new(@project.owner.login, @project.identifier, file_path_uri,
+        sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    else
+      Gitea::Repository::Commits::ListService.new(@project.owner.login, @project.identifier,
+        sha: get_ref, page: 1, limit: 1, token: current_user&.gitea_token).call
+    end
   end
 
   def get_statistics
@@ -266,7 +310,7 @@ class RepositoriesController < ApplicationController
 
     # uploadPushInfo
   end
-
+  
   def create_new_pr(params)
     if params[:new_branch].present? && params[:new_branch] != params[:branch]
       local_params = {
@@ -303,7 +347,7 @@ class RepositoriesController < ApplicationController
         local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: @pull_issue.id))
         if local_requests.save
           gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @owner.login, @project.try(:identifier), requests_params).call
-          if gitea_request[:status] == :success && local_requests.update_attributes(gpid: gitea_request["body"]["number"])
+          if gitea_request[:status] == :success && local_requests.update_attributes(gitea_number: gitea_request["body"]["number"])
             local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
           end
         end

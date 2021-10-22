@@ -71,6 +71,8 @@ Rails.application.routes.draw do
       # end
     end
 
+    resources :public_keys, only: [:index, :create, :destroy]
+
     resources :statistic, only: [:index] do
       collection do
         get :platform_profile
@@ -105,7 +107,7 @@ Rails.application.routes.draw do
     put    'commons/unhidden',    to: 'commons#unhidden'
     delete 'commons/delete',      to: 'commons#delete'
 
-    resources :owners, only: [:index]
+    resources :owners, only: [:index, :show]
 
     scope module: :organizations do
       resources :organizations, except: [:edit, :new] do
@@ -147,6 +149,8 @@ Rails.application.routes.draw do
       end
       resources :issue_depends, only: [:create, :destroy]
     end
+
+    resources :template_message_settings, only: [:index]
 
     resources :applied_projects, only: [:create]
 
@@ -261,6 +265,8 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        get 'template_message_settings', to: 'template_message_settings#current_setting'
+        post 'template_message_settings/update_setting', to: 'template_message_settings#update_setting'
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
           member do 
@@ -298,6 +304,15 @@ Rails.application.routes.draw do
         # resources :recent_contacts, only: [:index]
         # resource :private_message_details, only: [:show]
         # resource :unread_message_info, only: [:show]
+
+        # 通知中心
+        resources :messages, only: [:index, :create] do 
+          collection do 
+            post :read
+
+          end
+        end
+        delete 'messages', to: 'messages#delete'
       end
 
       resources :tidings, only: [:index]
@@ -346,6 +361,7 @@ Rails.application.routes.draw do
 
     get '/auth/qq/callback', to: 'oauth/qq#create'
     get '/auth/wechat/callback', to: 'oauth/wechat#create'
+    get '/auth/educoder/callback', to: 'oauth/educoder#create'
     resource :bind_user, only: [:create]
 
     resources :hot_keywords, only: [:index]
@@ -404,6 +420,7 @@ Rails.application.routes.draw do
         member do
           get :menu_list
           get :branches
+          get :branches_slice
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
@@ -416,10 +433,10 @@ Rails.application.routes.draw do
         member do
           get :files
           get :detail
-          get :archive
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
+          get :commits_slice
           get :tags
           get :contributors
           post :create_file
@@ -431,6 +448,8 @@ Rails.application.routes.draw do
           get 'commits/:sha', to: 'repositories#commit', as: 'commit'
           get 'readme'
           get 'languages'
+          get 'archive/:archive', to: 'repositories#archive', as: "archive", constraints: { archive: /.+/, format: /(zip|gzip)/ }
+          get 'raw', to: 'repositories#raw', as: "raw"
         end
       end
 
@@ -513,7 +532,7 @@ Rails.application.routes.draw do
       resources :forks, only: [:create]
       resources :project_trends, :path => :activity, only: [:index, :create]
       resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
-      resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+      resources :version_releases, :path => :releases, only: [:index,:new, :show, :create, :edit, :update, :destroy]
 
       scope module: :ci do
         scope do
@@ -567,6 +586,12 @@ Rails.application.routes.draw do
           collection do 
             get :organizations
             post :cancel
+          end
+        end
+        resources :webhooks, except: [:show, :new] do 
+          member do 
+            get :tasks 
+            post :test
           end
         end
         scope do
@@ -642,10 +667,19 @@ Rails.application.routes.draw do
         get :visits_static
       end
     end
+    resources :sites
+    resources :edu_settings
     resources :project_languages
     resources :project_categories
     resources :project_licenses
     resources :project_ignores
+    resources :reversed_keywords
+    resources :system_notifications 
+    resources :message_templates, only: [:index, :edit, :update] do 
+      collection do 
+        get :init_data
+      end
+    end
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do

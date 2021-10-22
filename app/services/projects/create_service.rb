@@ -8,6 +8,7 @@ class Projects::CreateService < ApplicationService
 
   def call
     Rails.logger.info("#############__________project_params______###########{project_params}")
+    raise Error, "user_id不正确." unless authroize_user_id_success
 
     @project = Project.new(project_params)
     ActiveRecord::Base.transaction do
@@ -27,6 +28,10 @@ class Projects::CreateService < ApplicationService
 
   private
 
+  def authroize_user_id_success 
+    (user.id == params[:user_id].to_i) || (user.organizations.find_by_id(params[:user_id]).present?)
+  end
+
   def project_params
     {
       name: params[:name],
@@ -38,7 +43,7 @@ class Projects::CreateService < ApplicationService
       ignore_id: params[:ignore_id],
       license_id: params[:license_id],
       website: params[:website],
-      identifier: params[:repository_name]  #新增,hs
+      identifier: params[:repository_name]
     }
   end
 

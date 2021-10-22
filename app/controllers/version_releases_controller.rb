@@ -1,14 +1,14 @@
 class VersionReleasesController < ApplicationController
   before_action :load_repository
   before_action :set_user
-  before_action :require_login, except: [:index]
-  before_action :find_version , only: [:edit, :update, :destroy]
+  before_action :require_login, except: [:index, :show]
+  before_action :check_release_authorize, except: [:index, :show]
+  before_action :find_version , only: [:show, :edit, :update, :destroy]
 
   def index
-    version_releases = Gitea::Versions::ListService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier)).call
-    @version_releases = version_releases
-    @user_permission = current_user.present? && (current_user == @user || current_user.admin?)
-    @forge_releases = @repository.version_releases.select(:id,:version_gid, :created_at).includes(:attachments)
+    @version_releases = kaminari_paginate(@repository.version_releases.order(created_at: :desc))
+    @user_permission = current_user.present? && (@repository.project.all_developers.include?(current_user) || current_user.admin?)
+    @user_admin_permission = current_user.present? && (@repository.project.all_managers.include?(current_user) || current_user.admin?)
   end
 
   def new
@@ -20,6 +20,10 @@ class VersionReleasesController < ApplicationController
         @all_branches.push(b["name"])
       end
     end
+  end
+
+  def show 
+    # @release = Gitea::Versions::GetService.call(current_user.gitea_token, @user&.login, @repository&.identifier, @version&.version_gid)
   end
 
   def create
@@ -37,13 +41,14 @@ class VersionReleasesController < ApplicationController
           version_params = releases_params
           version_release = VersionRelease.new(version_params.merge(user_id: current_user.id, repository_id: @repository.id))
           if version_release.save!
-            git_version_release = Gitea::Versions::CreateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params).call
+            git_version_release = Gitea::Versions::CreateService.new(current_user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params).call
             if git_version_release
               update_params = {
                 tarball_url: git_version_release["tarball_url"],
                 zipball_url: git_version_release["zipball_url"],
                 url: git_version_release["url"],
                 version_gid: git_version_release["id"],
+                sha: git_version_release["sha"]
               }
               version_release.update_attributes!(update_params)
               version_release.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
@@ -81,7 +86,7 @@ class VersionReleasesController < ApplicationController
 
           if @version.update_attributes!(version_params)
             create_attachments(params[:attachment_ids], @version) if params[:attachment_ids].present?
-            git_version_release = Gitea::Versions::UpdateService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
+            git_version_release = Gitea::Versions::UpdateService.new(current_user.gitea_token, @user.try(:login), @repository.try(:identifier), version_params, @version.try(:version_gid)).call
             unless git_version_release
               raise Error, "更新失败"
             end
@@ -102,7 +107,7 @@ class VersionReleasesController < ApplicationController
     ActiveRecord::Base.transaction do
       begin
         if @version.destroy
-          git_version_release = Gitea::Versions::DeleteService.new(@user.gitea_token, @user.try(:login), @repository.try(:identifier), @version.try(:version_gid)).call
+          git_version_release = Gitea::Versions::DeleteService.new(current_user.gitea_token, @user.try(:login), @repository.try(:identifier), @version.try(:version_gid)).call
 
           if git_version_release.status == 204
             normal_status(0, "删除成功")
@@ -155,6 +160,10 @@ class VersionReleasesController < ApplicationController
         attachment.save
       end
     end
+  end
+
+  def check_release_authorize
+    return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.manager?(current_user)
   end
 
 end

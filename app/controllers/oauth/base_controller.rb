@@ -2,6 +2,7 @@ class Oauth::BaseController < ActionController::Base
   include RenderHelper
   include LoginHelper
   include ControllerRescueHandler
+  include LoggerHelper
   # include LaboratoryHelper
 
   skip_before_action :verify_authenticity_token
@@ -11,6 +12,18 @@ class Oauth::BaseController < ActionController::Base
   end
 
   private
+  def tip_exception(status = -1, message)
+		raise Educoder::TipException.new(status, message)
+  end
+  
+  def tip_show_exception(status = -2, message)
+		raise Educoder::TipException.new(status, message)
+  end
+  
+  def tip_show(exception)
+		uid_logger("Tip show status is #{exception.status}, message is #{exception.message}")
+		render json: exception.tip_json
+	end
 
   def session_user_id
     # session[:user_id]
@@ -47,5 +60,14 @@ class Oauth::BaseController < ActionController::Base
   def set_session_unionid(unionid)
     Rails.logger.info("[wechat] set session unionid: #{unionid}")
     session[:unionid] = unionid
+  end
+
+  def session_edulogin
+    session[:edulogin]
+  end
+
+  def set_session_edulogin(login)
+    Rails.logger.info("[educoder] set sesstion edulogin: #{login}")
+    session[:edulogin] = login
   end
 end

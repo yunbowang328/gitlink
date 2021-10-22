@@ -1,11 +1,12 @@
 class VersionsController < ApplicationController
   before_action :require_login, except: [:index, :show]
+  before_action :require_profile_completed, only: [:create]
   before_action :load_repository
+  before_action :check_menu_authorize
   before_action :check_issue_permission, except: [:show, :index]
   before_action :set_version, only: [:edit, :update, :destroy, :show,:update_status]
 
   def index
-    return render_not_found unless @project.has_menu_permission("versions")
     @user_admin_or_member = current_user.present? && (current_user.admin || @project.member?(current_user))
     status = params[:status]
     versions = @project.versions.version_includes
@@ -25,17 +26,13 @@ class VersionsController < ApplicationController
   end
 
   def show
-    version_issues = @version.issues.issue_includes
+    version_issues = @version.issues.issue_issue.issue_includes
 
     status_type = params[:status_type] || "1"
     # @close_issues_size = version_issues.where(status_id: 5).size
     # @open_issues_size = version_issues.size - @close_issues_size
 
-    if status_type.to_s == "1"  #表示开启中的
-      version_issues = version_issues.where.not(status_id: 5)
-    else
-      version_issues = version_issues.where(status_id: 5)
-    end
+   
     version_issues = version_issues.where(author_id: params[:author_id]) if params[:author_id].present? && params[:author_id].to_s != "all"
     version_issues = version_issues.where(assigned_to_id: params[:assigned_to_id]) if params[:assigned_to_id].present? && params[:assigned_to_id].to_s != "all"
     version_issues = version_issues.where(tracker_id: params[:tracker_id]) if params[:tracker_id].present? && params[:tracker_id].to_s != "all"
@@ -47,10 +44,26 @@ class VersionsController < ApplicationController
     version_issues = version_issues.joins(:issue_tags).where(issue_tags: {id: params[:issue_tag_id].to_i}) if params[:issue_tag_id].present? && params[:issue_tag_id].to_s != "all"
 
     version_issues = version_issues.reorder("#{order_name} #{order_type}")
+    has_filter_params = (params[:author_id].present? && params[:author_id].to_s != "all") ||
+                        (params[:assigned_to_id].present? && params[:assigned_to_id].to_s != "all") ||
+                        (params[:tracker_id].present? && params[:tracker_id].to_s != "all")  ||
+                        (params[:status_id].present? && params[:status_id].to_s != "all") || 
+                        (params[:priority_id].present? && params[:priority_id].to_s != "all") || 
+                        (params[:fixed_version_id].present? && params[:fixed_version_id].to_s != "all") || 
+                        (params[:done_ratio].present? && params[:done_ratio].to_s != "all") || 
+                        (params[:issue_type].present? && params[:issue_type].to_s != "all") || 
+                        (params[:issue_tag_id].present? && params[:issue_tag_id].to_s != "all")
+    @version_close_issues_size = has_filter_params ? version_issues.closed.size : @version.issues.issue_issue.issue_includes.closed.size
+    @version_issues_size = has_filter_params ? version_issues.size : @version.issues.issue_issue.issue_includes.size
+    if status_type.to_s == "1"  #表示开启中的
+      version_issues = version_issues.where.not(status_id: 5)
+    else
+      version_issues = version_issues.where(status_id: 5)
+    end
 
     @page  = params[:page]  || 1
     @limit = params[:limit] || 15
-    @version_issues_size = version_issues.size
+    # @version_issues_size = version_issues.size
     @version_issues = version_issues.page(@page).per(@limit)
   end
 
@@ -168,6 +181,10 @@ class VersionsController < ApplicationController
 
    def order_type
     %w(desc asc).include?(params[:order_type]) ? params[:order_type] : 'desc'
+   end
+
+   def check_menu_authorize
+    return render_not_found unless @project.has_menu_permission("versions")
    end
 
 end

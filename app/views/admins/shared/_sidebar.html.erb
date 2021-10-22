@@ -29,6 +29,7 @@
       <% end %>
     </li>
 
+    <li><%= sidebar_item(admins_reversed_keywords_path, '系统保留关键词', icon: 'key', controller: 'admins-reversed_keywords') %></li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
 
     <!-- <li>
@@ -41,6 +42,14 @@
         <li><%= sidebar_item(admins_faqs_path, 'FAQ', icon: 'question-circle', controller: 'admins-faqs') %></li>
       <% end %>
     </li> -->
+    <li>
+      <%= sidebar_item_group('#setting-system', '系统配置', icon: 'wrench') do %>
+        <li><%= sidebar_item(admins_sites_path, 'setting接口配置', icon: 'deaf', controller: 'admins-sites') %></li>
+        <li><%= sidebar_item(admins_edu_settings_path, '全局变量配置', icon: 'pencil-square', controller: 'admins-edu_settings') %></li>
+        <li><%= sidebar_item(admins_system_notifications_path, '系统通知配置', icon: 'bell', controller: 'admins-system_notifications') %></li>
+        <li><%= sidebar_item(admins_message_templates_path, '消息模版配置', icon: 'folder', controller: 'admins-message_templates') %></li>
+      <% end %>
+    </li>
     <li>
       <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>

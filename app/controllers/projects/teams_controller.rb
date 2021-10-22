@@ -14,7 +14,7 @@ class Projects::TeamsController < Projects::BaseController
   def create
     ActiveRecord::Base.transaction do
       @team_project = TeamProject.build(@owner.id, @operate_team.id, @project.id)
-      Gitea::Organization::TeamProject::CreateService.call(@owner.gitea_token, @operate_team.gtid, @owner.login, @project.identifier)
+      Gitea::Organization::TeamProject::CreateService.call(current_user.gitea_token, @operate_team.gtid, @owner.login, @project.identifier)
       render_ok
     end
   rescue Exception => e
@@ -25,7 +25,7 @@ class Projects::TeamsController < Projects::BaseController
   def destroy
     ActiveRecord::Base.transaction do
       @team_project.destroy!
-      Gitea::Organization::TeamProject::DeleteService.call(@owner.gitea_token, @operate_team.gtid, @owner.login, @project.identifier)
+      Gitea::Organization::TeamProject::DeleteService.call(current_user.gitea_token, @operate_team.gtid, @owner.login, @project.identifier)
       render_ok
     end
   rescue Exception => e
