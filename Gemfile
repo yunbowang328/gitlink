@@ -63,6 +63,7 @@ end
 
 group :development do
   gem 'prettier'
+  gem 'pry-rails', '~> 0.3.9'
   gem 'rubocop', '~> 0.52.0'
   gem 'solargraph', '~> 0.38.0'
   gem 'awesome_print'

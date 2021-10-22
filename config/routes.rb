@@ -305,7 +305,7 @@ Rails.application.routes.draw do
         # resource :unread_message_info, only: [:show]
 
         # 通知中心
-        resources :messages, only: [:index, :create] do 
+        resources :messages, only: [:index, :create] do
           collection do 
             post :read
 
@@ -422,6 +422,7 @@ Rails.application.routes.draw do
           get :branches
           get :branches_slice
           get :simple
+          post :sonar_url
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
           get :members, to: 'projects#fork_users'
@@ -674,9 +675,9 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
-    resources :system_notifications 
-    resources :message_templates, only: [:index, :edit, :update] do 
-      collection do 
+    resources :system_notifications
+    resources :message_templates, only: [:index, :edit, :update] do
+      collection do
         get :init_data
       end
     end
