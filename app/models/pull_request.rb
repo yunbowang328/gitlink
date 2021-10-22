@@ -37,7 +37,7 @@ class PullRequest < ApplicationRecord
   has_many :pull_request_tags, foreign_key: :pull_request_id
   has_many :project_trends, as: :trend, dependent: :destroy
   has_many :attachments, as: :container, dependent: :destroy
-  has_one :gitea_pull, foreign_key: :id, primary_key: :gitea_number, class_name: 'Gitea::Pull'
+  has_one :gitea_pull, foreign_key: :id, primary_key: :gitea_id, class_name: 'Gitea::Pull'
 
   scope :merged_and_closed, ->{where.not(status: 0)}
   scope :opening, -> {where(status: 0)}

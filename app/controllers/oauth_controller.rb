@@ -61,6 +61,7 @@ class OauthController < ApplicationController
     login = params[:login]
     email = params[:mail]
     password = params[:password]
+    lastname = params[:lastname]
     callback_url =  params[:callback_url]
     platform = params[:plathform] || 'educoder'
 
@@ -72,8 +73,11 @@ class OauthController < ApplicationController
       if result[:message].blank?
         logger.info "[Oauth educoer] ====auto_register success"
         user = User.find result[:user][:id]
-        successful_authentication(user)
+        user.update_column(:lastname, params[:lastname])
+        autosync_register_trustie(login, password, email, lastname)
+        
         OpenUsers::Educoder.create!(user: user, uid: user.login)
+        successful_authentication(user)
 
         render json: { callback_url: callback_url }
         # redirect_to callback_url

@@ -4,6 +4,7 @@ class SettingsController < ApplicationController
     get_add_menu
     get_common_menu
     get_personal_menu
+    get_third_party
     get_top_system_notification
   end
 
@@ -40,6 +41,14 @@ class SettingsController < ApplicationController
       end
     end
 
+    def get_third_party
+      @third_party = []
+      @third_party << {
+        name: 'educoder',
+        url: EducoderOauth.oauth_url
+      }
+    end
+    
     def get_top_system_notification
       @top_system_notification = SystemNotification.is_top.first
     end

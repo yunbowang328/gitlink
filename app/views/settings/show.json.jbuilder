@@ -56,6 +56,7 @@ json.setting do
   end
 
   json.common @common
+  json.third_party @third_party
 
   if @top_system_notification.present?
     json.system_notification do 
