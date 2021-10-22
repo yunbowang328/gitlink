@@ -37,13 +37,11 @@ public/react/yarn.lock
 
 # Ignore react node_modules
 public/system/*
-public/react/*
 /public/react/.cache
 /public/react/node_modules/
 /public/react/config/stats.json
 /public/react/stats.json
 /public/react/.idea/*
-/public/react/build/*
 /public/h5build
 /public/npm-debug.log
 
