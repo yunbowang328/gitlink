@@ -37,7 +37,7 @@ class Watcher < ApplicationRecord
   end
 
   def send_create_message_to_notice_system
-    SendTemplateMessageJob.perform_later('FollowTip', self.id) if self.watchable.is_a?(User)
+    SendTemplateMessageJob.perform_later('FollowTip', self.id) if self.watchable.is_a?(User) if Site.has_notice_menu?
   end
 
 end

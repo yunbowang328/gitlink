@@ -18,16 +18,16 @@ class Users::MessagesController < Users::BaseController
       Notice::Write::CreateAtmeForm.new(atme_params).validate!
       case atme_params[:atmeable_type]
       when 'Issue'
-        SendTemplateMessageJob.perform_now('IssueAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+        SendTemplateMessageJob.perform_now('IssueAtme', @receivers, current_user.id, atme_params[:atmeable_id]) if Site.has_notice_menu?
       when 'PullRequest'
-        SendTemplateMessageJob.perform_now('PullRequestAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+        SendTemplateMessageJob.perform_now('PullRequestAtme', @receivers, current_user.id, atme_params[:atmeable_id]) if Site.has_notice_menu?
       when 'Journal'
         journal = Journal.find_by_id(atme_params[:atmeable_id])
         if journal.present?
           if journal&.issue&.pull_request.present?
-            SendTemplateMessageJob.perform_now('PullRequestAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+            SendTemplateMessageJob.perform_now('PullRequestAtme', @receivers, current_user.id, atme_params[:atmeable_id]) if Site.has_notice_menu?
           else
-            SendTemplateMessageJob.perform_now('IssueAtme', @receivers, current_user.id, atme_params[:atmeable_id])
+            SendTemplateMessageJob.perform_now('IssueAtme', @receivers, current_user.id, atme_params[:atmeable_id]) if Site.has_notice_menu?
           end
         end
       end

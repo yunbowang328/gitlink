@@ -36,10 +36,10 @@ class OrganizationUser < ApplicationRecord
   end
 
   def send_create_message_to_notice_system
-    SendTemplateMessageJob.perform_later('OrganizationJoined', self.user_id, self.organization_id)
+    SendTemplateMessageJob.perform_later('OrganizationJoined', self.user_id, self.organization_id) if Site.has_notice_menu?
   end
 
   def send_destroy_message_to_notice_system 
-    SendTemplateMessageJob.perform_later('OrganizationLeft', self.user_id, self.organization_id)
+    SendTemplateMessageJob.perform_later('OrganizationLeft', self.user_id, self.organization_id) if Site.has_notice_menu?
   end
 end

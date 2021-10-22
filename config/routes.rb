@@ -150,6 +150,8 @@ Rails.application.routes.draw do
       resources :issue_depends, only: [:create, :destroy]
     end
 
+    resources :template_message_settings, only: [:index]
+
     resources :applied_projects, only: [:create]
 
     resources :project_categories, only: [:index, :show] do
@@ -263,6 +265,8 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        get 'template_message_settings', to: 'template_message_settings#current_setting'
+        post 'template_message_settings/update_setting', to: 'template_message_settings#update_setting'
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
           member do 
@@ -670,6 +674,7 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
+    resources :system_notifications 
     resources :message_templates, only: [:index, :edit, :update] do 
       collection do 
         get :init_data

@@ -17,6 +17,12 @@ class MessageTemplate::OrganizationRole < MessageTemplate
 
   # MessageTemplate::OrganizationRole.get_message_content(User.where(login: 'yystopf'), Organization.last, '管理员')
   def self.get_message_content(receivers, organization, role)
+    receivers.each do |receiver|
+      if receiver.user_template_message_setting.present? 
+        receivers = receivers.where.not(id: receiver.id) unless receiver.user_template_message_setting.notification_body["Normal::Permission"]
+      end
+    end
+    return '', '', '' if receivers.blank?
     content = sys_notice.gsub('{organization}', organization&.real_name).gsub('{role}', role)
     url = notification_url.gsub('{login}', organization&.login)
     return receivers_string(receivers), content, url
@@ -26,6 +32,9 @@ class MessageTemplate::OrganizationRole < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, organization, role) 
+    if receiver.user_template_message_setting.present? 
+      return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::Permission"]
+    end
     title = email_title
     title.gsub!('{organization}', organization&.real_name)
     title.gsub!('{role}', role)

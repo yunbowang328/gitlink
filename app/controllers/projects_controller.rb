@@ -127,9 +127,9 @@ class ProjectsController < ApplicationController
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
       else
         validate_params = project_params.slice(:name, :description, 
-          :project_category_id, :project_language_id, :private)
+          :project_category_id, :project_language_id, :private, :identifier)
   
-        Projects::UpdateForm.new(validate_params).validate!
+        Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id, project_identifier: @project.identifier)).validate!
   
         private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
@@ -139,14 +139,13 @@ class ProjectsController < ApplicationController
         gitea_params = {
           private: private,
           default_branch: @project.default_branch,
-          website: @project.website
+          website: @project.website,
+          name: @project.identifier
         }
-        if [true, false].include? private
-          Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
-          @project.repository.update_column(:hidden, private)
-        end
+        gitea_repo = Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
+        @project.repository.update_attributes({hidden: gitea_repo["private"], identifier: gitea_repo["name"]})
       end
-      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public))
+      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public, :identifier)) if Site.has_notice_menu?
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -229,7 +228,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url, :default_branch,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url, :default_branch, :identifier,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 
