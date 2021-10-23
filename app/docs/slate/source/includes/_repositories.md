@@ -274,6 +274,124 @@ await octokit.request('GET /api/yystopf/ceshi/detail.json')
 }
 ```
 
+## 仓库标签列表
+仓库标签列表
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/yystopf/csfjkkj/tags.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/csfjkkj/tags.json')
+```
+
+### HTTP 请求
+`GET /api/:owner/:repo/tags.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner             |是| |string |用户登录名  |
+|repo             |是| |string |项目标识identifier  |
+|page             |否| 1 | integer | 页码 |
+|limit            |否| 20| integer | 每页个数 |
+
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|id             |int   |标签id |
+|name           |string|标签名称|
+|zipball_url    |string|标签zip包下载地址|
+|tarball_url    |string|标签tar包下载地址|
+|tagger         |object|打标签的人|
+|time_ago       |string|打标签的时间| 
+|created_at_unix|string|打标签的时间戳|
+|message        |string|标签信息|
+|commit         |object|标签最后一个commit|
+|commit.sha     |string|commit的id|
+|commit.message |string|commit的提交信息|
+|commit.time_ago|string|commit的提交时间|
+|commit.created_at_unix|string|commit的提交时间戳|
+|commit.committer|object|commit的提交者|
+|commit.author|object|commit的作者|
+
+
+> 返回的JSON示例:
+
+```json
+[
+    {
+        "name": "v2.0.0",
+        "id": "c7d0873ee41796d1a0e193063095ccf539a9bf31",
+        "zipball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.zip",
+        "tarball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v2.0.0.tar.gz",
+        "tagger": {
+            "id": 4,
+            "login": "testforge1",
+            "name": "testforge1",
+            "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+        },
+        "time_ago": "1天前",
+        "created_at_unix": 1632376903,
+        "message": "jdfkls",
+        "commit": {
+            "sha": "08fe383f1e5ebe2e2a384a8ea3ee890a758c7cd7",
+            "message": "add\n",
+            "time_ago": "1天前",
+            "created_at_unix": 1632376186,
+            "committer": {
+                "id": 4,
+                "login": "testforge1",
+                "name": "testforge1",
+                "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+            },
+            "author": {
+                "id": 4,
+                "login": "testforge1",
+                "name": "testforge1",
+                "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+            }
+        }
+    },
+    {
+        "name": "v1.0.0",
+        "id": "12168ad39c3ef201a445a2db181a3e43d50e40dd",
+        "zipball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.zip",
+        "tarball_url": "http://localhost:3000/api/yystopf/csfjkkj/archive/v1.0.0.tar.gz",
+        "tagger": {
+            "id": null,
+            "login": "viletyy",
+            "name": "viletyy",
+            "image_url": "system/lets/letter_avatars/2/V/39_141_222/120.png"
+        },
+        "time_ago": "10天前",
+        "created_at_unix": 1631588042,
+        "message": "dfks",
+        "commit": {
+            "sha": "5291b5e45a377c1f7710cc6647259887ed7aaccf",
+            "message": "ADD file via upload\n",
+            "time_ago": "21天前",
+            "created_at_unix": 1630648417,
+            "committer": {
+                "id": null,
+                "login": "yystopf",
+                "name": "yystopf",
+                "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+            },
+            "author": {
+                "id": null,
+                "login": "yystopf",
+                "name": "yystopf",
+                "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+            }
+        }
+    }
+]
+```
+
 ## 编辑仓库信息
 编辑仓库信息
 
@@ -867,6 +985,128 @@ await octokit.request('GET /api/jasder/jasder_test/sub_entries.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 获取仓库README文件
+获取仓库README文件
+
+> 示例:
+
+```shell
+curl -X GET \
+-d "ref=master" \
+-d "filepath=lib" \
+http://localhost:3000/api/yystopf/csfjkkj/readme.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/csfjkkj/readme.json')
+```
+
+### HTTP 请求
+`GET /api/:owner/:repo/readme.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner             |是| |string |用户登录名  |
+|repo             |是| |string |项目标识identifier  |
+|ref             |否| | string |分支名称、tag名称或是提交记录id，默认为默认分支  |
+|filepath        |否| | string |子目录名称，默认为空 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type           |string|文件类型， file:文件，dir：文件目录
+|encoding       |string   |编码 |
+|size           |int|文件夹或文件大小 单位B
+|name           |string|文件夹或文件名称|
+|path           |string|文件夹或文件相对路径|
+|content        |string|文件内容
+|sha            |string|文件commitid
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "type": "file",
+    "encoding": "base64",
+    "size": 24,
+    "name": "README.md",
+    "path": "lib/README.md",
+    "content": "ZGZhc2RhZGpmIGRrZnNsCgpzZGZkZnMK",
+    "sha": "860962cd21c60b1a9e07d723080c87c32c18d44a"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 获取仓库贡献者
+获取仓库贡献者
+
+> 示例:
+
+```shell
+curl -X GET \
+-d "ref=master" \
+-d "filepath=lib" \
+http://localhost:3000/api/yystopf/csfjkkj/contributors.json
+```
+
+```javascript
+await octokit.request('GET /api/yystopf/csfjkkj/contributors.json')
+```
+
+### HTTP 请求
+`GET /api/:owner/:repo/contributors.json`
+
+### 请求参数:
+参数    | 必选 | 默认 | 类型 | 字段说明
+--------- | ------- | ------- | -------- | ----------
+|owner             |是| |string |用户登录名  |
+|repo             |是| |string |项目标识identifier  |
+|ref             |否| | string |分支名称、tag名称或是提交记录id，默认为整个仓库  |
+|filepath        |否| | string |子目录名称，默认为空 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_count    |integer|贡献者数量|
+|contributions  |integer|贡献数量|
+|login          |string |用户登录名 |
+|type           |string|用户类型 |
+|name           |string|用户昵称|
+|image_url      |string|用户头像|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "contributors": [
+        {
+            "contributions": 5,
+            "login": "testforge2",
+            "type": "User",
+            "name": "testforge2",
+            "image_url": "system/lets/letter_avatars/2/T/236_177_85/120.png"
+        },
+        {
+            "contributions": 79,
+            "login": "yystopf",
+            "type": "User",
+            "name": "yystopf",
+            "image_url": "system/lets/letter_avatars/2/Y/241_125_89/120.png"
+        }
+    ],
+    "total_count": 2
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
 
 ## 获取仓库webhooks列表
 获取仓库webhooks列表

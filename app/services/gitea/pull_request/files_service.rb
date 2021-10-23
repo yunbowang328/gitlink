@@ -24,7 +24,7 @@ class Gitea::PullRequest::FilesService < Gitea::ClientService
   def params
     Hash.new.merge(token: token)
   end
-
+  
   def url
     "/repos/#{owner}/#{repo}/pulls/#{pull_number}/files".freeze
   end

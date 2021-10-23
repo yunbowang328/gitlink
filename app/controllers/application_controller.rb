@@ -247,11 +247,11 @@ class ApplicationController < ActionController::Base
 	end
 
 	def require_profile_completed
-		tip_exception(411, "请完善资料后再操作") unless User.current.profile_completed
+		tip_exception(411, "请完善资料后再操作") unless User.current.profile_is_completed?
 	end
 
 	def require_user_profile_completed(user)
-		tip_exception(412, "请用户完善资料后再操作") unless user.profile_completed
+		tip_exception(412, "请用户完善资料后再操作") unless user.profile_is_completed?
 	end
 
 	# 异常提醒
@@ -280,7 +280,7 @@ class ApplicationController < ActionController::Base
 
 	# 资料是否完善
 	def check_account
-		if !current_user.profile_completed?
+		if !current_user. profile_is_completed?
 			#info_url = '/account/profile'
 			tip_exception(402, nil)
 		end
@@ -762,10 +762,10 @@ class ApplicationController < ActionController::Base
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"
 			@project
-    elsif @project && current_user.is_a?(AnonymousUser)
-			logger.info "###########：This is AnonymousUser"
-			@project = nil if !@project.is_public?
-			render_forbidden and return
+    # elsif @project && current_user.is_a?(AnonymousUser)
+		# 	logger.info "###########：This is AnonymousUser"
+		# 	@project = nil if !@project.is_public?
+		# 	render_forbidden and return
     else
 			logger.info "###########：project not found"
       @project = nil

@@ -31,9 +31,9 @@ class MainController < ApplicationController
 
     # TODO: 这块之后需要整合，者架构重新变化，统一跳转到index后再路由分发
     if params[:path] && params[:path]&.include?("h5educoderbuild") && params[:path].split("/").first == "h5educoderbuild"
-      render file: 'public/h5educoderbuild/index.html', :layout => false
+      render file: 'public/h5educoderbuild/index.html', :layout => false, :content_type=> 'text/html'
     else
-      render file: 'public/react/build/index.html', :layout => false
+      render file: 'public/react/build/index.html', :layout => false, :content_type=> 'text/html'
     end
 
   end

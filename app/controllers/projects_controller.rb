@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include Acceleratorable
 
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
+  before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :require_profile_completed, only: [:create, :migrate]
   before_action :load_repository, except: %i[index group_type_list migrate create recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
@@ -28,7 +28,7 @@ class ProjectsController < ApplicationController
   end
 
   def index
-    scope = Projects::ListQuery.call(params)
+    scope = current_user.logged? ? Projects::ListQuery.call(params, current_user.id) : Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)
     @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
@@ -46,7 +46,6 @@ class ProjectsController < ApplicationController
 
   def create
     ActiveRecord::Base.transaction do
-      tip_exception("无法使用以下关键词：#{project_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(project_params[:repository_name]).present?
       Projects::CreateForm.new(project_params).validate!
       @project = Projects::CreateService.new(current_user, project_params).call
 
@@ -64,7 +63,6 @@ class ProjectsController < ApplicationController
   end
 
   def migrate
-    tip_exception("无法使用以下关键词：#{mirror_params[:repository_name]}，请重新命名") if ReversedKeyword.is_reversed(mirror_params[:repository_name]).present?
     Projects::MigrateForm.new(mirror_params).validate!
 
     @project = 
@@ -93,6 +91,13 @@ class ProjectsController < ApplicationController
 
     result = Gitea::Repository::Branches::ListService.call(@owner, @project.identifier)
     @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
+  end
+
+  def branches_slice
+    return @branches = [] unless @project.forge?
+
+    slice_result = Gitea::Repository::Branches::ListSliceService.call(@owner, @project.identifier)
+    @branches_slice = slice_result.is_a?(Hash) && slice_result.key?(:status) ? [] : slice_result
   end
 
   def group_type_list
@@ -129,9 +134,9 @@ class ProjectsController < ApplicationController
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
       else
         validate_params = project_params.slice(:name, :description, 
-          :project_category_id, :project_language_id, :private)
+          :project_category_id, :project_language_id, :private, :identifier)
   
-        Projects::UpdateForm.new(validate_params).validate!
+        Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id, project_identifier: @project.identifier)).validate!
   
         private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
@@ -141,13 +146,13 @@ class ProjectsController < ApplicationController
         gitea_params = {
           private: private,
           default_branch: @project.default_branch,
-          website: @project.website
+          website: @project.website,
+          name: @project.identifier
         }
-        if [true, false].include? private
-          Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
-          @project.repository.update_column(:hidden, private)
-        end
+        gitea_repo = Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
+        @project.repository.update_attributes({hidden: gitea_repo["private"], identifier: gitea_repo["name"]})
       end
+      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public, :identifier)) if Site.has_notice_menu?
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -230,7 +235,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url, :default_branch,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url, :default_branch, :identifier,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 

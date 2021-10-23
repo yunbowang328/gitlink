@@ -22,6 +22,9 @@ class OrganizationUser < ApplicationRecord
 
   validates :user_id, uniqueness: {scope: :organization_id}
 
+  after_create :send_create_message_to_notice_system
+  after_destroy :send_destroy_message_to_notice_system
+
   def self.build(organization_id, user_id)
     org_user = self.find_by(organization_id: organization_id, user_id: user_id)
     return org_user unless org_user.nil?
@@ -30,5 +33,13 @@ class OrganizationUser < ApplicationRecord
 
   def teams
     organization.teams.joins(:team_users).where(team_users: {user_id: user_id})
+  end
+
+  def send_create_message_to_notice_system
+    SendTemplateMessageJob.perform_later('OrganizationJoined', self.user_id, self.organization_id) if Site.has_notice_menu?
+  end
+
+  def send_destroy_message_to_notice_system 
+    SendTemplateMessageJob.perform_later('OrganizationLeft', self.user_id, self.organization_id) if Site.has_notice_menu?
   end
 end

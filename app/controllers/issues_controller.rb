@@ -15,7 +15,7 @@ class IssuesController < ApplicationController
   include TagChosenHelper
 
   def index
-    @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
+    @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user) || @project.is_public?)
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
 
@@ -111,6 +111,8 @@ class IssuesController < ApplicationController
     Issues::CreateForm.new({subject:issue_params[:subject]}).validate!
     @issue = Issue.new(issue_params)
     if @issue.save!
+      SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @issue&.id) if Site.has_notice_menu?
+      SendTemplateMessageJob.perform_later('ProjectIssue', current_user.id, @issue&.id) if Site.has_notice_menu?
       if params[:attachment_ids].present?
         params[:attachment_ids].each do |id|
           attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
@@ -158,6 +160,7 @@ class IssuesController < ApplicationController
   def update
     last_token = @issue.token
     last_status_id = @issue.status_id
+    @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
     if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
       @issue&.issue_tags_relates&.destroy_all
       params[:issue_tag_ids].each do |tag|
@@ -202,6 +205,26 @@ class IssuesController < ApplicationController
       issue_params = issue_send_params(params).except(:issue_classify, :author_id, :project_id)
       Issues::UpdateForm.new({subject:issue_params[:subject]}).validate!
       if @issue.update_attributes(issue_params)
+        if @issue&.pull_request.present?
+          SendTemplateMessageJob.perform_later('PullRequestChanged', current_user.id, @issue&.pull_request&.id, @issue.previous_changes.slice(:assigned_to_id, :priority_id, :fixed_version_id, :issue_tags_value)) if Site.has_notice_menu?
+          SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @issue&.pull_request&.id ) if @issue.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
+        else
+          previous_changes = @issue.previous_changes.slice(:status_id, :assigned_to_id, :tracker_id, :priority_id, :fixed_version_id, :done_ratio, :issue_tags_value, :branch_name)
+          if @issue.previous_changes[:start_date].present? 
+            previous_changes.merge!(start_date: [@issue.previous_changes[:start_date][0].to_s,  @issue.previous_changes[:start_date][1].to_s])
+          end
+          if @issue.previous_changes[:due_date].present? 
+            previous_changes.merge!(due_date: [@issue.previous_changes[:due_date][0].to_s,  @issue.previous_changes[:due_date][1].to_s])
+          end
+          if @issue.previous_changes[:status_id].present? && @issue.previous_changes[:status_id][1] == 5
+            @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: ProjectTrend::CLOSE)
+          end
+          if @issue.previous_changes[:status_id].present? && @issue.previous_changes[:status_id][0] == 5
+            @issue.project_trends.where(action_type: ProjectTrend::CLOSE).destroy_all
+          end
+          SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, @issue&.id, previous_changes) if Site.has_notice_menu?
+          SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @issue&.id) if @issue.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
+        end
         if params[:status_id].to_i == 5  #任务由非关闭状态到关闭状态时
           @issue.issue_times.update_all(end_time: Time.now)
           @issue.update_closed_issues_count_in_project!
@@ -253,6 +276,7 @@ class IssuesController < ApplicationController
       status_id = @issue.status_id
       token = @issue.token
       login =  @issue.user.try(:login)
+      SendTemplateMessageJob.perform_later('IssueDeleted', current_user.id, @issue&.subject, @issue.assigned_to_id, @issue.author_id) if Site.has_notice_menu?
       if @issue.destroy
         if issue_type == "2" && status_id != 5
           post_to_chain("add", token, login)
@@ -272,8 +296,12 @@ class IssuesController < ApplicationController
   def clean
     #批量删除，暂时只能删除未悬赏的
     issue_ids = params[:ids]
-    if issue_ids.present?
-      if Issue.where(id: issue_ids, issue_type: "1").destroy_all
+    issues = Issue.where(id: issue_ids, issue_type: "1")
+    if issues.present?
+      issues.find_each do |i|
+        SendTemplateMessageJob.perform_later('IssueDeleted', current_user.id, i&.subject, i.assigned_to_id, i.author_id) if Site.has_notice_menu?
+      end
+      if issues.destroy_all
         normal_status(0, "删除成功")
       else
         normal_status(-1, "删除失败")
@@ -307,7 +335,24 @@ class IssuesController < ApplicationController
       if update_hash.blank?
         normal_status(-1, "请选择批量更新内容")
       elsif issues&.update(update_hash)
-        issues.map{|i| i.create_journal_detail(false, [], [], current_user&.id) if i.previous_changes.present?}
+        issues.each do |i|
+          i.create_journal_detail(false, [], [], current_user&.id) if i.previous_changes.present?
+          previous_changes = i.previous_changes.slice(:status_id, :assigned_to_id, :tracker_id, :priority_id, :fixed_version_id, :done_ratio, :issue_tags_value, :branch_name)
+          if i.previous_changes[:start_date].present? 
+            previous_changes.merge!(start_date: [i.previous_changes[:start_date][0].to_s,  i.previous_changes[:start_date][1].to_s])
+          end
+          if i.previous_changes[:due_date].present? 
+            previous_changes.merge!(due_date: [i.previous_changes[:due_date][0].to_s,  i.previous_changes[:due_date][1].to_s])
+          end
+          if i.previous_changes[:status_id].present? && i.previous_changes[:status_id][1] == 5
+            i.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: ProjectTrend::CLOSE)
+          end
+          if i.previous_changes[:status_id].present? && i.previous_changes[:status_id][0] == 5
+            i.project_trends.where(action_type: ProjectTrend::CLOSE).destroy_all
+          end
+          SendTemplateMessageJob.perform_later('IssueChanged', current_user.id, i&.id, previous_changes) if Site.has_notice_menu?
+          SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, i&.id) if i.previous_changes[:assigned_to_id].present? && Site.has_notice_menu?
+        end
         normal_status(0, "批量更新成功")
       else
         normal_status(-1, "批量更新失败")
@@ -321,6 +366,8 @@ class IssuesController < ApplicationController
     @new_issue = @issue.dup
     @new_issue.author_id = current_user.id
     if @new_issue.save
+      SendTemplateMessageJob.perform_later('IssueAssigned', current_user.id, @new_issue&.id) if Site.has_notice_menu?
+      SendTemplateMessageJob.perform_later('ProjectIssue', current_user.id, @new_issue&.id) if Site.has_notice_menu?
       issue_tags = @issue.issue_tags.pluck(:id)
       if issue_tags.present?
         issue_tags.each do |tag|
@@ -398,27 +445,27 @@ class IssuesController < ApplicationController
 
   def check_project_public
     unless @project.is_public || @project.member?(current_user) || current_user.admin? || (@project.user_id == current_user.id)
-      normal_status(-1, "您没有权限")
+      return render_forbidden
     end
   end
 
   def set_issue
     @issue = Issue.find_by_id(params[:id])
     if @issue.blank?
-      normal_status(-1, "标签不存在")
-    elsif @issue.is_lock &&!(@project.member?(current_user) || current_user.admin?)
-      normal_status(-1, "您没有权限")
+      return render_not_found
+    elsif !(@project.is_public || (current_user.present? && (@project.member?(current_user) || current_user&.admin? || (@project.user_id == current_user&.id))))
+      return render_forbidden
     end
   end
 
   def check_issue_permission
     unless @project.is_public || (current_user.present? && (@project.member?(current_user) || current_user&.admin? || (@project.user_id == current_user&.id)))
-      normal_status(-1, "您没有权限")
+      return render_forbidden
     end
   end
 
   def operate_issue_permission
-    return render_forbidden("您没有权限进行此操作.") unless current_user.admin? || @project.member?(current_user)
+    return render_forbidden("您没有权限进行此操作.") unless current_user.present? && current_user.logged? && (current_user.admin? || @project.member?(current_user) || @project.is_public?)
   end
 
   def export_issues(issues)

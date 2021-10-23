@@ -17,17 +17,24 @@ class Site < ApplicationRecord
   # common: 普通链接
   enum site_type: { add: 0, personal: 1, common: 2 }
 
+  scope :by_search,     -> (keyword){ where("name LIKE :keyword OR url LIKE :keyword", keyword: "%#{strip_param(keyword)}%") unless strip_param(keyword).blank? }
+  scope :by_site_type,  -> (site_type){ where(site_type: strip_param(site_type)) unless strip_param(site_type).blank? }
+
   def self.set_default_menu
     set_add_menu!
     set_personal_menu!
     set_common_menu!
   end
 
+  def self.has_notice_menu?
+    self.common.where(key: 'notice').present?
+  end
+
   private
     def self.set_add_menu!
       adds= [
-        {name: '新建镜像项目', key: 'add_mirror_project', url: '/projects/mirror/new'},
-        {name: '新建托管项目', key: 'add_common', url: '/projects/deposit/new'},
+        {name: '新建项目', key: 'add_mirror_project', url: '/projects/mirror/new'},
+        {name: '导入项目', key: 'add_common', url: '/projects/deposit/new'},
         {name: '新建组织', key: 'add_r', url: '/organize/new'}]
 
       adds.each { |ele|
