@@ -1,6 +1,7 @@
 json.content @project.content
 json.website @project.website
 json.lesson_url @project.lesson_url
+json.sonar_url @project.sonar_url
 json.identifier render_identifier(@project)
 json.invite_code @project.invite_code
 json.name @project.name
