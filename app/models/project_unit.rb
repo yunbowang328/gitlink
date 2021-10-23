@@ -32,9 +32,13 @@ class ProjectUnit < ApplicationRecord
     types.delete("pulls") if project.sync_mirror?
     # 默认code类型自动创建
     types << "code"
+    before_units = project.project_units.pluck(:unit_type).sort
     project.project_units.where.not(unit_type: types).each(&:destroy!)
     types.each do |type|
       project.project_units.find_or_create_by!(unit_type: type)
     end
+    after_units = project.project_units.pluck(:unit_type).sort
+    return before_units, after_units
   end
+
 end

@@ -1,0 +1,39 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="5%">序号</th>
+    <th width="10%">类型</th>
+    <th width="35%">系统消息模版</th>
+    <th width="30%">邮件模版</th>
+    <th width="25%">通知地址</th>
+    <th width="10%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if message_templates.present? %>
+    <% message_templates.each_with_index do |message_template_type, index| %>
+      <% message_template = message_template_type.constantize.last%>
+      <tr class="project-language-item-<%= message_template.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td><%= message_template.simple_type %></td>
+        <td>
+            <%= message_template.sys_notice.to_s.truncate(200) %>
+        </td>
+        <td>
+            <%= message_template.email.to_s.truncate(100) %>
+        </td>
+        <td>
+          <%= message_template.notification_url.to_s.truncate(200) %>
+        </td>
+        <td class="action-container">
+        <%= link_to "编辑", edit_admins_message_template_path(message_template),remote: true, class: "action" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: message_templates } %>

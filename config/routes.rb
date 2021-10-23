@@ -150,6 +150,8 @@ Rails.application.routes.draw do
       resources :issue_depends, only: [:create, :destroy]
     end
 
+    resources :template_message_settings, only: [:index]
+
     resources :applied_projects, only: [:create]
 
     resources :project_categories, only: [:index, :show] do
@@ -265,6 +267,8 @@ Rails.application.routes.draw do
       end
 
       scope module: :users do
+        get 'template_message_settings', to: 'template_message_settings#current_setting'
+        post 'template_message_settings/update_setting', to: 'template_message_settings#update_setting'
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
           member do 
@@ -302,6 +306,15 @@ Rails.application.routes.draw do
         # resources :recent_contacts, only: [:index]
         # resource :private_message_details, only: [:show]
         # resource :unread_message_info, only: [:show]
+
+        # 通知中心
+        resources :messages, only: [:index, :create] do 
+          collection do 
+            post :read
+
+          end
+        end
+        delete 'messages', to: 'messages#delete'
       end
 
       resources :tidings, only: [:index]
@@ -409,6 +422,7 @@ Rails.application.routes.draw do
         member do
           get :menu_list
           get :branches
+          get :branches_slice
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
@@ -424,6 +438,7 @@ Rails.application.routes.draw do
           get :entries
           match :sub_entries, :via => [:get, :put]
           get :commits
+          get :commits_slice
           get :tags
           get :contributors
           post :create_file
@@ -519,7 +534,7 @@ Rails.application.routes.draw do
       resources :forks, only: [:create]
       resources :project_trends, :path => :activity, only: [:index, :create]
       resources :issue_tags, :path => :labels, only: [:create, :edit, :update, :destroy, :index]
-      resources :version_releases, :path => :releases, only: [:index,:new, :create, :edit, :update, :destroy]
+      resources :version_releases, :path => :releases, only: [:index,:new, :show, :create, :edit, :update, :destroy]
 
       scope module: :ci do
         scope do
@@ -661,6 +676,12 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
+    resources :system_notifications 
+    resources :message_templates, only: [:index, :edit, :update] do 
+      collection do 
+        get :init_data
+      end
+    end
     resources :major_informations, only: [:index]
     resources :ec_templates, only: [:index, :destroy] do
       collection do

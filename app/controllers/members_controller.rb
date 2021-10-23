@@ -17,7 +17,8 @@ class MembersController < ApplicationController
       end
     end
     interactor = Projects::AddMemberInteractor.call(@project.owner, @project, @user)
-    
+    SendTemplateMessageJob.perform_later('ProjectJoined', current_user.id, @user.id, @project.id) if Site.has_notice_menu?
+    SendTemplateMessageJob.perform_later('ProjectMemberJoined', current_user.id, @user.id, @project.id) if Site.has_notice_menu?
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -37,6 +38,8 @@ class MembersController < ApplicationController
 
   def remove
     interactor = Projects::DeleteMemberInteractor.call(@project.owner, @project, @user)
+    SendTemplateMessageJob.perform_later('ProjectLeft', current_user.id, @user.id, @project.id) if Site.has_notice_menu?
+    SendTemplateMessageJob.perform_later('ProjectMemberLeft', current_user.id, @user.id, @project.id) if Site.has_notice_menu?
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -45,6 +48,7 @@ class MembersController < ApplicationController
 
   def change_role
     interactor = Projects::ChangeMemberRoleInteractor.call(@project.owner, @project, @user, params[:role])
+    SendTemplateMessageJob.perform_later('ProjectRole', current_user.id, @user.id, @project.id, message_role_name) if Site.has_notice_menu?
     render_response(interactor)
   rescue Exception => e
     uid_logger_error(e.message)
@@ -74,5 +78,15 @@ class MembersController < ApplicationController
 
   def check_user_profile_completed
     require_user_profile_completed(@user)
+  end
+
+  def message_role_name 
+    case params[:role]
+    when 'Manager' then '管理员'
+    when 'Developer' then '开发者'
+    when 'Reporter' then '报告者'
+    else 
+      ''
+    end
   end
 end

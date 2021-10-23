@@ -5,6 +5,6 @@ class Issues::UpdateForm
 
   validates :subject, presence: { message: "不能为空" }
 
-  validates :subject, length: { maximum: 80, too_long: "不能超过80个字符" }
+  validates :subject, length: { maximum: 200, too_long: "不能超过200个字符" }
 
 end

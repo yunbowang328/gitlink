@@ -26,9 +26,9 @@ if @project.forge?
   end
 
   json.author do
-    json.partial! 'commit_author', user: render_commit_author(commit['author']), name: commit['commit']['author']['name']
+    json.partial! 'commit_author', user: render_commit_author(commit['commit']['author']), name: commit['commit']['author']['name']
   end
   json.committer do
-    json.partial! 'commit_author', user: render_commit_author(commit['committer']), name: commit['commit']['committer']['name']
+    json.partial! 'commit_author', user: render_commit_author(commit['commit']['committer']), name: commit['commit']['committer']['name']
   end
 end
