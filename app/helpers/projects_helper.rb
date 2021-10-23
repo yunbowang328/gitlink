@@ -54,7 +54,6 @@ module ProjectsHelper
     tmp_json = tmp_json.merge({
       identifier: render_identifier(project),
       name: project.name,
-      sonar_url: project.sonar_url,
       platform: project.platform,
       id: project.id,
       repo_id: repo.id,
