@@ -28,12 +28,12 @@ class Watcher < ApplicationRecord
 
   def reset_cache_data 
     if self.watchable.is_a?(User)
-      self.reset_user_cache_async_job(self.watchable)
+      CacheAsyncResetJob.perform_later("user_statistic_service", self.watchable_id)
     end
     if self.watchable.is_a?(Project)
-      self.reset_user_cache_async_job(self.watchable&.owner)
+      CacheAsyncResetJob.perform_later("user_statistic_service", self.watchable&.user_id)
     end
-    self.reset_platform_cache_async_job
+    CacheAsyncResetJob.perform_later("platform_statistic_service")
   end
 
   def send_create_message_to_notice_system

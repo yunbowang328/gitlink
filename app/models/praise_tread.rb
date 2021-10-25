@@ -26,9 +26,9 @@ class PraiseTread < ApplicationRecord
   after_destroy :reset_cache_data
 
   def reset_cache_data 
-    self.reset_platform_cache_async_job
+    CacheAsyncResetJob.perform_later("platform_statistic_service")
     if self.praise_tread_object.is_a?(Project)
-      self.reset_user_cache_async_job(self.praise_tread_object&.owner)
+      CacheAsyncResetJob.perform_later("user_statistic_service", self.praise_tread_object&.user_id)
     end
   end
 

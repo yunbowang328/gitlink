@@ -46,8 +46,8 @@ class PullRequest < ApplicationRecord
   after_destroy :reset_cache_data
 
   def reset_cache_data 
-    self.reset_platform_cache_async_job
-    self.reset_user_cache_async_job(self.user)
+    CacheAsyncResetJob.perform_later("platform_statistic_service")
+    CacheAsyncResetJob.perform_later("user_statistic_service", self.user_id)
   end
 
   def fork_project

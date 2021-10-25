@@ -151,11 +151,10 @@ class Project < ApplicationRecord
 
   def reset_cache_data 
     if changes[:user_id].present?
-      first_owner = Owner.find_by_id(changes[:user_id].first) 
-      self.reset_user_cache_async_job(first_owner)
+      CacheAsyncResetJob.perform_later("user_statistic_service", changes[:user_id].first)
     end
-    self.reset_platform_cache_async_job
-    self.reset_user_cache_async_job(self.owner)
+    CacheAsyncResetJob.perform_later("platform_statistic_service")
+    CacheAsyncResetJob.perform_later("user_statistic_service", self.user_id)
   end
 
   def reset_unmember_followed
