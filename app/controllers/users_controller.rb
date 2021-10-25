@@ -191,7 +191,7 @@ class UsersController < ApplicationController
   def trustie_related_projects
     projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
     projects_json = []
-    domain_url = EduSetting.get('host_name') + '/projects'
+    domain_url = EduSetting.get('host_name')
     if projects.present?
       projects.each do |p|
         project_url = "/#{p.owner.login}/#{p.identifier}"
