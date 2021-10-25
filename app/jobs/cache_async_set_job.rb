@@ -3,8 +3,6 @@ class CacheAsyncResetJob < ApplicationJob
 
   def perform(type, id, params={})
     case type 
-    when "owner_common_service"
-      Cache::V2::OwnerCommonService.new(id, params).call
     when "platform_statistic_service"
       Cache::V2::PlatformStatisticService.new(params).call
     when "project_common_service"

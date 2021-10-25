@@ -1,10 +1,8 @@
 class CacheAsyncResetJob < ApplicationJob
   queue_as :cache
 
-  def perform(type, id, params={})
+  def perform(type, id)
     case type 
-    when "owner_common_service"
-      Cache::V2::OwnerCommonService.new(id).reset
     when "platform_statistic_service"
       Cache::V2::PlatformStatisticService.new.reset
     when "project_common_service"

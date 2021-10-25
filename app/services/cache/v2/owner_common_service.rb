@@ -3,10 +3,10 @@ class Cache::V2::OwnerCommonService < ApplicationService
   attr_reader :owner_id, :login, :name, :avatar_url, :email
   attr_accessor :owner
 
-  def initialize(owner_id, params={})
-    @owner_id = owner_id
+  def initialize(login, email, params={})
+    @login = login
+    @email = email
     @name = params[:name]
-    @email = params[:email]
   end
 
   def read  
@@ -24,11 +24,11 @@ class Cache::V2::OwnerCommonService < ApplicationService
 
   private 
   def load_owner 
-    @owner = User.find_by_id(@owner_id)
+    @owner = User.find_by(login: @login)
   end
 
   def owner_common_key
-    "v2-owner-common:#{@owner_id}"
+    "v2-owner-common:#{@login}-#{@email.to_s}"
   end
 
   def owner_common
@@ -58,6 +58,9 @@ class Cache::V2::OwnerCommonService < ApplicationService
 
     $redis_cache.hgetall(owner_common_key)
   end
+  def reset_owner_id
+    $redis_cache.hset(owner_common_key, "id", owner&.id) 
+  end
 
   def reset_owner_type 
     $redis_cache.hset(owner_common_key, "type", owner&.type) 
@@ -79,6 +82,7 @@ class Cache::V2::OwnerCommonService < ApplicationService
   def reset_owner_common
     load_owner
     $redis_cache.del(owner_common_key)
+    reset_owner_id
     reset_owner_type
     reset_owner_login
     reset_owner_email
