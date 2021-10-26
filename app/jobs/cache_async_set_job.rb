@@ -1,7 +1,7 @@
-class CacheAsyncResetJob < ApplicationJob
+class CacheAsyncSetJob < ApplicationJob
   queue_as :cache
 
-  def perform(type, id=nil, params={})
+  def perform(type, params={}, id=nil)
     case type 
     when "platform_statistic_service"
       Cache::V2::PlatformStatisticService.new(params).call

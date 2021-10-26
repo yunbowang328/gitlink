@@ -1,5 +1,5 @@
 class Cache::V2::ProjectCommonService < ApplicationService 
-  attr_reader :project_id, :owner_id, :name, :identifier, :visits, :watchers, :praises, :forks, :issues, :pullrequests
+  attr_reader :project_id, :owner_id, :name, :identifier, :description, :visits, :watchers, :praises, :forks, :issues, :pullrequests
   attr_accessor :project
 
   def initialize(project_id, params={})
@@ -7,6 +7,7 @@ class Cache::V2::ProjectCommonService < ApplicationService
     @owner_id = params[:owner_id]
     @name = params[:name]
     @identifier = params[:identifier]
+    @description = params[:description]
     @visits = params[:visits]
     @watchers = params[:watchers]
     @praises = params[:praises]
@@ -46,6 +47,10 @@ class Cache::V2::ProjectCommonService < ApplicationService
 
   def identifier_key
     "identifier"
+  end
+
+  def description_key 
+    "description"
   end
 
   def visits_key 
@@ -102,13 +107,22 @@ class Cache::V2::ProjectCommonService < ApplicationService
         $redis_cache.hset(project_common_key, identifier_key, @identifier) 
       end
     end
+    if @description.present?
+      if $redis_cache.hget(project_common_key, description_key).nil?
+        reset_project_description
+      else
+        $redis_cache.hset(project_common_key, description_key, @description) 
+      end
+    end
     if @visits.present?
       if $redis_cache.hget(project_common_key, visits_key).nil?
         reset_project_visits
+        Cache::V2::ProjectRankService.call(@project_id, {visits: @visits})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {visits: @visits})
       else
         $redis_cache.hincrby(project_common_key, visits_key, @visits) 
         Cache::V2::ProjectRankService.call(@project_id, {visits: @visits})
-        Cache::V2::ProjectDateRankService.call(@project_id, {visits: @visits})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {visits: @visits})
       end
     end
     if @watchers.present?
@@ -121,37 +135,45 @@ class Cache::V2::ProjectCommonService < ApplicationService
     if @praises.present?
       if $redis_cache.hget(project_common_key, praises_key).nil?
         reset_project_praises
+        Cache::V2::ProjectRankService.call(@project_id, {praises: @praises})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {praises: @praises})
       else
         $redis_cache.hincrby(project_common_key, praises_key, @praises) 
         Cache::V2::ProjectRankService.call(@project_id, {praises: @praises})
-        Cache::V2::ProjectDateRankService.call(@project_id, {praises: @praises})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {praises: @praises})
       end
     end
     if @forks.present?
       if $redis_cache.hget(project_common_key, forks_key).nil?
         reset_project_forks
+        Cache::V2::ProjectRankService.call(@project_id, {forks: @forks})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {forks: @forks})
       else
         $redis_cache.hincrby(project_common_key, forks_key, @forks) 
         Cache::V2::ProjectRankService.call(@project_id, {forks: @forks})
-        Cache::V2::ProjectDateRankService.call(@project_id, {forks: @forks})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {forks: @forks})
       end
     end
     if @issues.present?
       if $redis_cache.hget(project_common_key, issues_key).nil?
         reset_project_issues
+        Cache::V2::ProjectRankService.call(@project_id, {issues: @issues})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {issues: @issues})
       else
         $redis_cache.hincrby(project_common_key, issues_key, @issues) 
         Cache::V2::ProjectRankService.call(@project_id, {issues: @issues})
-        Cache::V2::ProjectDateRankService.call(@project_id, {issues: @issues})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {issues: @issues})
       end
     end
     if @pullrequests.present?
       if $redis_cache.hget(project_common_key, pullrequests_key).nil?
         reset_project_pullrequests
+        Cache::V2::ProjectRankService.call(@project_id, {pullrequests: @pullrequests})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {pullrequests: @pullrequests})
       else
         $redis_cache.hincrby(project_common_key, pullrequests_key, @pullrequests) 
         Cache::V2::ProjectRankService.call(@project_id, {pullrequests: @pullrequests})
-        Cache::V2::ProjectDateRankService.call(@project_id, {pullrequests: @pullrequests})
+        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {pullrequests: @pullrequests})
       end
     end
     $redis_cache.hgetall(project_common_key)
@@ -167,6 +189,10 @@ class Cache::V2::ProjectCommonService < ApplicationService
 
   def reset_project_identifier
     $redis_cache.hset(project_common_key, identifier_key, @project&.identifier)
+  end
+
+  def reset_project_description
+    $redis_cache.hset(project_common_key, description_key, @project&.description)
   end
 
   def reset_project_visits
@@ -186,7 +212,7 @@ class Cache::V2::ProjectCommonService < ApplicationService
   end
 
   def reset_project_issues
-    $redis_cache.hset(project_common_key, issues_key, Issue.where(project_id: @project_id).count)
+    $redis_cache.hset(project_common_key, issues_key, Issue.issue_issue.where(project_id: @project_id).count)
   end
 
   def reset_project_pullrequests
@@ -199,6 +225,7 @@ class Cache::V2::ProjectCommonService < ApplicationService
     reset_project_owner_id
     reset_project_name
     reset_project_identifier
+    reset_project_description
     reset_project_visits
     reset_project_watchers
     reset_project_praises

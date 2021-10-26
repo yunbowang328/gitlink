@@ -4,6 +4,7 @@ class Cache::V2::ProjectDateRankService < ApplicationService
 
   def initialize(project_id, rank_date=Date.today, params={})
     @project_id = project_id
+    @rank_date = rank_date
     @visits = params[:visits]
     @praises = params[:praises]
     @forks = params[:forks]
@@ -21,7 +22,7 @@ class Cache::V2::ProjectDateRankService < ApplicationService
 
   private 
   def project_rank_key
-    "v2-project-rank-#{rank_date.to_s}"
+    "v2-project-rank-#{@rank_date.to_s}"
   end
 
   def project_rank

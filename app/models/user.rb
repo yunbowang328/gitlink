@@ -188,7 +188,7 @@ class User < Owner
            :show_email, :show_location, :show_department,
            :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
-  before_save :update_hashed_password, :set_lastname
+  before_save :update_hashed_password, :set_lastname, :reset_cache_data
   after_create do
     SyncTrustieJob.perform_later("user", 1) if allow_sync_to_trustie?
   end
@@ -204,6 +204,10 @@ class User < Owner
   validates_length_of :mail, maximum: MAIL_LENGTH_LMIT
   validate :validate_sensitive_string
   validate :validate_password_length
+
+  def reset_cache_data
+    Cache::V2::OwnerCommonService.new(self.login, self.mail).reset
+  end
 
   # 用户参与的所有项目
   def full_member_projects 

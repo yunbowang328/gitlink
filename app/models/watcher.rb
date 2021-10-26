@@ -22,18 +22,36 @@ class Watcher < ApplicationRecord
 
   scope :watching_users, ->(watchable_id){ where("watchable_type = ? and user_id = ?",'User',watchable_id)}
 
-  after_save :reset_cache_data
-  after_destroy :reset_cache_data
-  after_create :send_create_message_to_notice_system
+  after_create :send_create_message_to_notice_system, :incre_project_common, :incre_user_statistic, :incre_platform_statistic
+  after_destroy :decre_project_common, :decre_user_statistic, :decre_platform_statistic
 
-  def reset_cache_data 
-    if self.watchable.is_a?(User)
-      CacheAsyncResetJob.perform_later("user_statistic_service", self.watchable_id)
-    end
-    if self.watchable.is_a?(Project)
-      CacheAsyncResetJob.perform_later("user_statistic_service", self.watchable&.user_id)
-    end
-    CacheAsyncResetJob.perform_later("platform_statistic_service")
+
+  def incre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {watchers: 1}, self.watchable_id) if self.watchable_type == "Project"
+  end
+
+  def decre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {watchers: -1}, self.watchable_id) if self.watchable_type == "Project"
+  end
+
+  def incre_user_statistic 
+    CacheAsyncSetJob.perform_later("user_statistic_service", {follow_count: 1}, self.watchable_id) if self.watchable_type == "User"
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_watcher_count: 1}, self.watchable&.user_id) if self.watchable_type == "Project"
+  end
+
+  def decre_user_statistic
+    CacheAsyncSetJob.perform_later("user_statistic_service", {follow_count: -1}, self.watchable_id) if self.watchable_type == "User"
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_watcher_count: -1}, self.watchable&.user_id) if self.watchable_type == "Project"
+  end
+
+  def incre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {follow_count: 1}) if self.watchable_type == "User"
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_watcher_count: 1}) if self.watchable_type == "Project"
+  end
+
+  def decre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {follow_count: -1}) if self.watchable_type == "User"
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_watcher_count: -1}) if self.watchable_type == "Project"
   end
 
   def send_create_message_to_notice_system
