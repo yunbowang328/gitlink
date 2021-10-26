@@ -93,7 +93,8 @@ class Cache::V2::UserDateRankService < ApplicationService
     fork_count = $redis_cache.hget(user_date_statistic_key, "fork-count") || 0
     project_watchers_count = $redis_cache.hget(user_date_statistic_key, "project-watcher-count") || 0
     project_praises_count = $redis_cache.hget(user_date_statistic_key, "project-praise-count") || 0
-    project_languages_count = $redis_cache.hget(user_date_statistic_key, "project-language").nil? ? 0 : $redis_cache.hget(user_date_statistic_key, "project-language").length
+    project_language = $redis_cache.hget(user_date_statistic_key, "project-language") 
+    project_languages_count = project_language.nil? || project_language == "{}" ? 0 : JSON.parse(project_language).length
     # 影响力
     influence = (60.0 + follow_count.to_i / (follow_count.to_i + 20.0) * 40.0).to_i 
 
@@ -110,8 +111,8 @@ class Cache::V2::UserDateRankService < ApplicationService
     language = (60.0 + project_languages_count.to_i / (project_languages_count.to_i + 5.0) * 40.0).to_i
 
     score = influence+ contribution + activity + experience + language
-
-    $redis_cache.zadd(user_rank_key, score, @user_id) if score.to_i > 300
+    $redis_cache.zrem(user_rank_key, @user_id)
+    $redis_cache.zadd(user_rank_key, score-300, @user_id) if score > 300
 
     $redis_cache.zscore(user_rank_key, @user_id)
   end

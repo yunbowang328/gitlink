@@ -120,7 +120,10 @@ class Cache::V2::ProjectCommonService < ApplicationService
         Cache::V2::ProjectRankService.call(@project_id, {visits: @visits})
         Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {visits: @visits})
       else
-        $redis_cache.hincrby(project_common_key, visits_key, @visits) 
+        puts project_common_key
+        puts visits_key
+        puts @visits
+        $redis_cache.hincrby(project_common_key, visits_key, @visits.to_s) 
         Cache::V2::ProjectRankService.call(@project_id, {visits: @visits})
         Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {visits: @visits})
       end
@@ -196,7 +199,7 @@ class Cache::V2::ProjectCommonService < ApplicationService
   end
 
   def reset_project_visits
-    $redis_cache.hset(project_common_key, visits_key, @project&.visits)
+    $redis_cache.hset(project_common_key, visits_key, @project&.visits || 0)
   end
 
   def reset_project_watchers

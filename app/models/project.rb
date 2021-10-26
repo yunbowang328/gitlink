@@ -127,9 +127,10 @@ class Project < ApplicationRecord
   has_many :has_pinned_users, through: :pinned_projects, source: :user
   has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
   after_create :init_project_common, :incre_user_statistic, :incre_platform_statistic
-  after_save :check_project_members
-  before_save :set_invite_code, :reset_cache_data, :reset_unmember_followed
-  after_destroy :decre_project_common, :decre_user_statistic, :decre_platform_statistic
+  after_save :check_project_members, :reset_cache_data
+  before_save :set_invite_code, :reset_unmember_followed
+  before_destroy :decre_project_common
+  after_destroy :decre_user_statistic, :decre_platform_statistic
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }

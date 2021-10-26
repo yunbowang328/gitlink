@@ -37,6 +37,7 @@ class Cache::V2::ProjectRankService < ApplicationService
   end
 
   def set_project_rank
+    load_project_common
     if $redis_cache.zscore(project_rank_key, @project_id).blank?
       reset_project_rank
       return
@@ -56,16 +57,21 @@ class Cache::V2::ProjectRankService < ApplicationService
     if @pullrequests.present?
       $redis_cache.zincrby(project_rank_key, @pullrequests.to_i * 10, @project_id) 
     end
+    reset_user_project_rank
 
     $redis_cache.zscore(project_rank_key, @project_id)
   end
 
   def reset_project_rank
     load_project_common
-    $redis_cache.zrem(project_rank_key, @project_id)
     score = @project_common["visits"].to_i * 1 + @project_common["praises"].to_i * 5 + @project_common["forks"].to_i * 5 + @project_common["issues"].to_i * 10 + @project_common["pullrequests"].to_i * 10
-    $redis_cache.zincrby(project_rank_key, score, @project_id) 
+    $redis_cache.zadd(project_rank_key, score, @project_id) 
+    reset_user_project_rank
 
     $redis_cache.zscore(project_rank_key, @project_id)
+  end
+
+  def reset_user_project_rank
+    $redis_cache.zadd("v2-user-project-rank:#{@project_common["owner_id"]}", $redis_cache.zscore(project_rank_key, @project_id), @project_id)
   end
 end

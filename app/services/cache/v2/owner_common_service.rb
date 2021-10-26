@@ -31,6 +31,10 @@ class Cache::V2::OwnerCommonService < ApplicationService
     "v2-owner-common:#{@login}-#{@email.to_s}"
   end
 
+  def owner_common_key_by_id
+    "v2-owner-common:#{@owner.id}"
+  end
+
   def owner_common
     $redis_cache.hgetall(owner_common_key).blank? ? reset_owner_common : $redis_cache.hgetall(owner_common_key)
   end
@@ -46,6 +50,9 @@ class Cache::V2::OwnerCommonService < ApplicationService
       else
         $redis_cache.hset(owner_common_key, "name", @name) 
         $redis_cache.hset(owner_common_key, "avatar_url", url_to_avatar(owner)) 
+
+        $redis_cache.hset(owner_common_key_by_id, "name", @name) 
+        $redis_cache.hset(owner_common_key_by_id, "avatar_url", url_to_avatar(owner)) 
       end
     end
     if @email.present?
@@ -53,6 +60,7 @@ class Cache::V2::OwnerCommonService < ApplicationService
         reset_owner_email
       else
         $redis_cache.hset(owner_common_key, "email", @email) 
+        $redis_cache.hset(owner_common_key_by_id, "email", @email) 
       end
     end
 
@@ -60,23 +68,29 @@ class Cache::V2::OwnerCommonService < ApplicationService
   end
   def reset_owner_id
     $redis_cache.hset(owner_common_key, "id", owner&.id) 
+    $redis_cache.hset(owner_common_key_by_id, "id", owner&.id) 
   end
 
   def reset_owner_type 
     $redis_cache.hset(owner_common_key, "type", owner&.type) 
+    $redis_cache.hset(owner_common_key_by_id, "type", owner&.type) 
   end
 
   def reset_owner_login 
     $redis_cache.hset(owner_common_key, "login", owner&.login) 
+    $redis_cache.hset(owner_common_key_by_id, "login", owner&.login) 
   end
 
   def reset_owner_email 
     $redis_cache.hset(owner_common_key, "email", owner&.mail) 
+    $redis_cache.hset(owner_common_key_by_id, "email", owner&.mail) 
   end
 
   def reset_owner_name 
     $redis_cache.hset(owner_common_key, "name", owner&.real_name) 
     $redis_cache.hset(owner_common_key, "avatar_url", url_to_avatar(owner)) 
+    $redis_cache.hset(owner_common_key_by_id, "name", owner&.real_name) 
+    $redis_cache.hset(owner_common_key_by_id, "avatar_url", url_to_avatar(owner)) 
   end
 
   def reset_owner_common
