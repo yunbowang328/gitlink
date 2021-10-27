@@ -9,7 +9,7 @@ class AccountsController < ApplicationController
   # 其他平台同步注册的用户
   def remote_register
     username = params[:username]&.gsub(/\s+/, "")
-    tip_exception("无法使用以下关键词：#{username}，请重新命名") if ReversedKeyword.is_reversed(username).present?
+    tip_exception("无法使用以下关键词：#{username}，请重新命名") if ReversedKeyword.check_exists?(username)
     email = params[:email]&.gsub(/\s+/, "")
     password = params[:password]
     platform = (params[:platform] || 'forge')&.gsub(/\s+/, "")

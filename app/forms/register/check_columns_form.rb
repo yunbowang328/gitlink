@@ -20,7 +20,7 @@ module Register
     def check_login
       raise("登录名格式有误") unless strip_value =~ CustomRegexp::LOGIN
 
-      login_exist = Owner.exists?(login: strip_value) || ReversedKeyword.exists?(identifier: strip_value)
+      login_exist = Owner.exists?(login: strip_value) || ReversedKeyword.check_exists?(strip_value)
       raise('登录名已被使用') if login_exist
     end
 
