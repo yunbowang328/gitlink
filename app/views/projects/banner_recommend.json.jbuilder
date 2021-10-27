@@ -5,6 +5,7 @@ json.projects do
     json.id project.id
     json.identifier project.identifier
     json.name project.name
+    json.description project.description
     json.visits project.visits
     json.author do
       json.name owner.try(:show_real_name)
