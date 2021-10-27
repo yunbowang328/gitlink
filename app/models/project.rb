@@ -190,6 +190,14 @@ class Project < ApplicationRecord
     CacheAsyncSetJob.perform_later("platform_statistic_service", {project_count: -1, project_language_count_key: self.project_language&.name, project_language_count: -1})
   end
 
+  def is_full_public
+    owner = self.owner
+    if owner.is_a?(Organization)
+      return self.is_public && owner&.visibility == "common"
+    else
+      return self.is_public
+    end
+  end
 
   def reset_unmember_followed
     if changes[:is_public].present? && changes[:is_public] == [true, false]

@@ -86,6 +86,8 @@ class Cache::V2::ProjectCommonService < ApplicationService
       reset_project_common
       return
     end
+    load_project
+    return unless @project.is_full_public
     if @owner_id.present?
       if $redis_cache.hget(project_common_key, owner_id_key).nil?
         reset_project_owner_id
@@ -224,6 +226,7 @@ class Cache::V2::ProjectCommonService < ApplicationService
 
   def reset_project_common
     load_project
+    return unless @project.is_full_public
     $redis_cache.del(project_common_key)
     reset_project_owner_id
     reset_project_name
