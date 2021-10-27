@@ -130,7 +130,7 @@ class Project < ApplicationRecord
   has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
   after_create :init_project_common, :incre_user_statistic, :incre_platform_statistic
   after_save :check_project_members, :reset_cache_data
-  before_save :set_invite_code, :reset_unmember_followed
+  before_save :set_invite_code, :reset_unmember_followed, :set_recommend_and_is_pinned
   before_destroy :decre_project_common
   after_destroy :decre_user_statistic, :decre_platform_statistic
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
@@ -211,6 +211,16 @@ class Project < ApplicationRecord
   def set_invite_code
     if self.invite_code.nil?
       self.invite_code= self.generate_dcode('invite_code', 6)
+    end
+  end
+
+  def set_recommend_and_is_pinned
+    self.recommend = self.recommend_index.zero? ? false : true
+    # 私有项目不允许设置精选和推荐
+    unless self.is_public
+      self.recommend = false
+      self.recommend_index = 0
+      self.is_pinned = false 
     end
   end
 

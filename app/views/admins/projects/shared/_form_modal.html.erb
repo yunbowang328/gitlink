@@ -1,4 +1,4 @@
-<div class="modal fade project-category-change-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade project-change-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -7,19 +7,13 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-       <%= form_for @project_category, url: {controller: "project_categories", action: "#{type}"} do |p| %>
+       <%= form_for @project, url: {controller: "projects", action: "#{type}"} do |p| %>
         <div class="modal-body">
           <div class="form-group">
             <label>
-              分类名称 <span class="ml10 color-orange mr20">*</span>
+              推荐等级 
             </label>
-            <%= p.text_field :name,class: "form-control input-lg",placeholder: "分类名称",required: true, maxlength: 64%>
-          </div>
-          <div class="form-group">
-            <label>
-              精选级别
-            </label>
-            <%= p.number_field :pinned_index,class: "form-control input-lg",placeholder: "精选级别",required: true%>
+            <%= p.number_field :recommend_index,class: "form-control input-lg"%>
           </div>
         </div>
         <div class="modal-footer">

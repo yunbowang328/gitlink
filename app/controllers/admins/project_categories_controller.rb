@@ -22,7 +22,7 @@ class Admins::ProjectCategoriesController < Admins::BaseController
     max_position_items = ProjectCategory.select(:id, :position).pluck(:position).reject!(&:blank?) 
     max_position =  max_position_items.present? ? max_position_items.max.to_i : 0
 
-    @project_category = ProjectCategory.new(name: @name,position: max_position)
+    @project_category = ProjectCategory.new(name: @name,position: max_position, pinned_index: params[:project_category][:pinned_index].to_i)
     if @project_category.save
       redirect_to admins_project_categories_path
       flash[:success] = '创建成功'
@@ -33,7 +33,7 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   end
 
   def update 
-    if @project_category.update_attribute(:name, @name)
+    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i})
       redirect_to admins_project_categories_path
       flash[:success] = '更新成功'
     else 
@@ -43,7 +43,7 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   end
 
   def destroy 
-    if @project_language.destroy 
+    if @project_category.destroy 
       redirect_to admins_project_categories_path
       flash[:success] = "删除成功"
     else 

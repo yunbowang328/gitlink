@@ -909,7 +909,7 @@ Rails.application.routes.draw do
 
     resources :courses, only: [:index, :destroy, :update]
 
-    resources :projects, only: [:index, :destroy]
+    resources :projects, only: [:index, :edit, :update, :destroy]
 
     resources :disciplines, only: [:index, :create, :edit, :update, :destroy] do
       post :adjust_position, on: :member

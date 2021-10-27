@@ -3,6 +3,7 @@
   <tr>
     <th width="5%">序号</th>
     <th width="30%">名称</th>
+    <th width="20%"><%= sort_tag('精选', name: 'pinned_index', path: admins_project_categories_path) %></th>
     <th width="20%"><%= sort_tag('项目数', name: 'projects_count', path: admins_project_categories_path) %></th>
     <th width="20%"><%= sort_tag('创建时间', name: 'created_at', path: admins_project_categories_path) %></th>
     <th width="25%">操作</th>
@@ -16,6 +17,7 @@
         <td>
           <%= link_to(project_category.name, "/projects?category_id=#{project_category.id}", target: '_blank') %>
         </td>
+        <td><%= project_category.pinned_index == 0 ? "" : "√" %></td>
         <td><%= project_category.projects_count %></td>
         <td><%= project_category.created_at&.strftime('%Y-%m-%d %H:%M') %></td>
         <td class="action-container">
