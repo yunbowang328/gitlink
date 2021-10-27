@@ -197,6 +197,7 @@ Rails.application.routes.draw do
         post :remote_login
         post :remote_password
         post :change_password
+        post :check
       end
     end
 

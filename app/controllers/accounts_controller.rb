@@ -323,7 +323,15 @@ class AccountsController < ApplicationController
   def phone_mail_type value
     value =~ /^1\d{10}$/ ? 1 : 0
   end
-
+  
+  # check user's login or email or phone is used
+  # params[:value]  手机号或者邮箱号或者登录名
+  # params[:type] 为事件类型 1：登录名(login) 2：email(邮箱) 3：phone(手机号)
+  def check
+    Register::CheckColumnsForm.new(check_params).validate!
+    render_ok
+  end
+  
   private
 
   # type 事件类型 1：用户注册 2：忘记密码 3: 绑定手机 4: 绑定邮箱, 5: 验证手机号是否有效 # 如果有新的继续后面加
@@ -368,5 +376,9 @@ class AccountsController < ApplicationController
 
   def account_params 
     params.require(:account).permit(:login, :password)
+  end
+
+  def check_params
+    params.permit(:type, :value)
   end
 end
