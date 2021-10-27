@@ -55,8 +55,9 @@
 #  platform               :integer          default("0")
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
-#  order_index            :integer          default("0")
 #  lesson_url             :string(255)
+#  is_pinned              :boolean          default("0")
+#  recommend_index        :integer          default("0")
 #
 # Indexes
 #
@@ -76,6 +77,7 @@
 #  index_projects_on_status                  (status)
 #  index_projects_on_updated_on              (updated_on)
 #
+
 
 
 
@@ -134,6 +136,7 @@ class Project < ApplicationRecord
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
+  scope :pinned, -> {where(is_pinned: true)}
 
   delegate :content, to: :project_detail, allow_nil: true
   delegate :name, to: :license, prefix: true, allow_nil: true

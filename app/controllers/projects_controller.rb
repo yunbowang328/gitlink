@@ -6,7 +6,7 @@ class ProjectsController < ApplicationController
 
   before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
   before_action :require_profile_completed, only: [:create, :migrate]
-  before_action :load_repository, except: %i[index group_type_list migrate create recommend]
+  before_action :load_repository, except: %i[index group_type_list migrate create recommend banner_recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
 
@@ -30,8 +30,8 @@ class ProjectsController < ApplicationController
   def index
     scope = current_user.logged? ? Projects::ListQuery.call(params, current_user.id) : Projects::ListQuery.call(params)
 
-    # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
+    @projects = kaminari_paginate(scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units))
+    # @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
 
     category_id = params[:category_id]
     @total_count =
@@ -197,6 +197,10 @@ class ProjectsController < ApplicationController
 
   def recommend
     @projects = Project.recommend.includes(:repository, :project_category, :owner).order(visits: :desc)
+  end
+
+  def banner_recommend
+    @projects = Project.recommend.where.not(recommend_index: 0).includes(:project_category, :owner, :project_language).order(recommend_index: :desc)
   end
 
   def about

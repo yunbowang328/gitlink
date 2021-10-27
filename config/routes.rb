@@ -159,6 +159,7 @@ Rails.application.routes.draw do
 
     resources :project_categories, only: [:index, :show] do
       get :group_list, on: :collection
+      get :pinned_index, on: :collection
     end
     resources :project_languages, only: [:index, :show]
     resources :ignores, only: [:index, :show]
@@ -184,6 +185,7 @@ Rails.application.routes.draw do
         post :migrate
         get :group_type_list
         get :recommend
+        get :banner_recommend
       end
     end
 
