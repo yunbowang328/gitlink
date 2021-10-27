@@ -20,6 +20,7 @@ $(document).on('turbolinks:load', function(){
     $('.project-list-container').on('click', '.recommend-action', function(){
       var $closeAction = $(this);
       var $uncloseAction = $closeAction.siblings('.unrecommend-action');
+      var $editAction = $closeAction.siblings('.edit-recommend-action');
 
       var keywordID = $closeAction.data('id');
       customConfirm({
@@ -39,6 +40,7 @@ $(document).on('turbolinks:load', function(){
               showSuccessNotify();
               $closeAction.hide();
               $uncloseAction.show();
+              $editAction.show();
               $(".project-item-"+keywordID).children('td').eq(5).text("√")
             }
           });
