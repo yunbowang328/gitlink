@@ -7,7 +7,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-       <%= form_for @project_category, url: {controller: "project_categories", action: "#{type}"} do |p| %>
+       <%= form_for @project_category, url: {controller: "project_categories", action: "#{type}"}, html: { enctype: 'multipart/form-data' } do |p| %>
         <div class="modal-body">
           <div class="form-group">
             <label>
@@ -17,9 +17,22 @@
           </div>
           <div class="form-group">
             <label>
-              精选级别
+              精选等级
             </label>
-            <%= p.number_field :pinned_index,class: "form-control input-lg",placeholder: "精选级别",required: true%>
+            <%= p.number_field :pinned_index,class: "form-control input-lg",placeholder: "精选等级",required: true%>
+          </div>
+          <div class="logo-item">
+            <% logo_img = @project_category.logo_url %>
+            <div class="logo-item-left mr-3 <%= logo_img ? 'has-img' : '' %>">
+              <img class="logo-item-img nav-logo-img" src="<%= logo_img %>" style="<%= logo_img.present? ? '' : 'display: none' %>"/>
+              <%= file_field_tag(:logo, accept: 'image/png,image/jpg,image/jpeg',style: "display: none", value: params[:logo]) %>
+              <label for="logo" class="logo-item-upload" data-toggle="tooltip" data-title="选择图片"></label>
+            </div>
+            <div class="logo-item-right">
+              <div class="logo-item-title flex-1">网站导航logo</div>
+              <div>格式：PNG、JPG</div>
+              <div>尺寸：高度38px以内，宽等比例缩放</div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

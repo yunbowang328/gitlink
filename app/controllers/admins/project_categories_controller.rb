@@ -33,7 +33,7 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   end
 
   def update 
-    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i})
+    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i}) && save_image_file(params[:logo], 'logo')
       redirect_to admins_project_categories_path
       flash[:success] = '更新成功'
     else 
@@ -79,5 +79,13 @@ class Admins::ProjectCategoriesController < Admins::BaseController
       redirect_to admins_project_categories_path
       flash[:danger] = '分类已存在'
     end
+  end
+
+  def save_image_file(file, type)
+    return unless file.present? && file.is_a?(ActionDispatch::Http::UploadedFile)
+
+    file_path = Util::FileManage.source_disk_filename(@project_category, type)
+    File.delete(file_path) if File.exist?(file_path) # 删除之前的文件
+    Util.write_file(file, file_path)
   end
 end

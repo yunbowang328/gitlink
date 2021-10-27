@@ -99,3 +99,38 @@ $(document).on("turbolinks:before-cache", function () {
 
 $(function () {
 });
+
+$(document).on('turbolinks:load', function() {
+  
+  $('.logo-item-left').on("change", 'input[type="file"]', function () {
+    var $fileInput = $(this);
+    var file = this.files[0];
+    var imageType = /image.*/;
+    if (file && file.type.match(imageType)) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var $box = $fileInput.parent();
+        $box.find('img').attr('src', reader.result).css('display', 'block');
+        $box.addClass('has-img');
+      };
+      reader.readAsDataURL(file);
+    } else {
+    }
+  });
+
+  $('.attachment-item-left').on("change", 'input[type="file"]', function () {
+    var $fileInput = $(this);
+    var file = this.files[0];
+    var imageType = /image.*/;
+    if (file && file.type.match(imageType)) {
+      var reader = new FileReader();
+      reader.onload = function () {
+        var $box = $fileInput.parent();
+        $box.find('img').attr('src', reader.result).css('display', 'block');
+        $box.addClass('has-img');
+      };
+      reader.readAsDataURL(file);
+    } else {
+    }
+  });
+})
