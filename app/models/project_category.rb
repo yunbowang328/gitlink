@@ -20,4 +20,7 @@ class ProjectCategory < ApplicationRecord
   include Projectable
   has_ancestry
 
+  def logo_url
+    ""
+  end
 end
