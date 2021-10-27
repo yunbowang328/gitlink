@@ -133,7 +133,7 @@ class Project < ApplicationRecord
   before_save :set_invite_code, :reset_unmember_followed, :set_recommend_and_is_pinned
   before_destroy :decre_project_common
   after_destroy :decre_user_statistic, :decre_platform_statistic
-  scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
+  scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :description, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
   scope :pinned, -> {where(is_pinned: true)}
