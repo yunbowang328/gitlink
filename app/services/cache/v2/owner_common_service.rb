@@ -24,7 +24,7 @@ class Cache::V2::OwnerCommonService < ApplicationService
 
   private 
   def load_owner 
-    @owner = User.find_by(login: @login)
+    @owner = Owner.find_by(login: @login)
   end
 
   def owner_common_key
