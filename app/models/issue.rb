@@ -74,13 +74,32 @@ class Issue < ApplicationRecord
   scope :issue_pull_request, ->{where(issue_classify: "pull_request")}
   scope :issue_index_includes, ->{includes(:tracker, :priority, :version, :issue_status, :journals,:issue_tags,user: :user_extension)}
   scope :closed, ->{where(status_id: 5)}
+  after_create :incre_project_common, :incre_user_statistic, :incre_platform_statistic
   after_update :change_versions_count
-  after_save :reset_cache_data
-  after_destroy :update_closed_issues_count_in_project!, :reset_cache_data
+  after_destroy :update_closed_issues_count_in_project!, :decre_project_common, :decre_user_statistic, :decre_platform_statistic
 
-  def reset_cache_data 
-    self.reset_platform_cache_async_job
-    self.reset_user_cache_async_job(self.user)
+  def incre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {issues: 1}, self.project_id)
+  end
+
+  def decre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {issues: -1}, self.project_id)
+  end
+
+  def incre_user_statistic 
+    CacheAsyncSetJob.perform_later("user_statistic_service", {issue_count: 1}, self.author_id)
+  end
+
+  def decre_user_statistic
+    CacheAsyncSetJob.perform_later("user_statistic_service", {issue_count: -1}, self.author_id)
+  end
+
+  def incre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {issue_count: 1})
+  end
+
+  def decre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {issue_count: -1})
   end
 
   def get_assign_user

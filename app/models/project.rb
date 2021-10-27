@@ -126,10 +126,11 @@ class Project < ApplicationRecord
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
   has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
-
-  after_save :check_project_members
-  before_save :set_invite_code, :reset_cache_data, :reset_unmember_followed
-  after_destroy :reset_cache_data
+  after_create :init_project_common, :incre_user_statistic, :incre_platform_statistic
+  after_save :check_project_members, :reset_cache_data
+  before_save :set_invite_code, :reset_unmember_followed
+  before_destroy :decre_project_common
+  after_destroy :decre_user_statistic, :decre_platform_statistic
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
@@ -150,12 +151,52 @@ class Project < ApplicationRecord
   end
 
   def reset_cache_data 
+    CacheAsyncResetJob.perform_later("project_common_service", self.id)
     if changes[:user_id].present?
-      first_owner = Owner.find_by_id(changes[:user_id].first) 
-      self.reset_user_cache_async_job(first_owner)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: -1}, changes[:user_id].first)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: 1}, changes[:user_id].last)
     end
-    self.reset_platform_cache_async_job
-    self.reset_user_cache_async_job(self.owner)
+    if changes[:project_language_id].present?
+      first_language = ProjectLanguage.find_by_id(changes[:project_language_id].first)
+      last_language = ProjectLanguage.find_by_id(changes[:project_language_id].last)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_language_count_key: first_language&.name, project_language_count: -1}, self.user_id)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_language_count_key: last_language&.name, project_language_count: 1}, self.user_id)
+      CacheAsyncSetJob.perform_later("platform_statistic_service", {project_language_count_key: first_language&.name, project_language_count: -1})
+      CacheAsyncSetJob.perform_later("platform_statistic_service", {project_language_count_key: last_language&.name, project_language_count: 1})
+    end
+  end
+
+  def init_project_common
+    CacheAsyncResetJob.perform_later("project_common_service", self.id)
+  end
+
+  def decre_project_common
+    $redis_cache.del("v2-project-common:#{self.id}")
+  end
+
+  def incre_user_statistic 
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: 1, project_language_count_key: self.project_language&.name, project_language_count: 1}, self.user_id)
+  end
+
+  def decre_user_statistic
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: -1, project_language_count_key: self.project_language&.name, project_language_count: -1}, self.user_id)
+  end
+
+  def incre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_count: 1, project_language_count_key: self.project_language&.name, project_language_count: 1})
+  end
+
+  def decre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_count: -1, project_language_count_key: self.project_language&.name, project_language_count: -1})
+  end
+
+  def is_full_public
+    owner = self.owner
+    if owner.is_a?(Organization)
+      return self.is_public && owner&.visibility == "common"
+    else
+      return self.is_public
+    end
   end
 
   def reset_unmember_followed

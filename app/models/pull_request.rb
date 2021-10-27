@@ -42,12 +42,31 @@ class PullRequest < ApplicationRecord
   scope :merged_and_closed, ->{where.not(status: 0)}
   scope :opening, -> {where(status: 0)}
 
-  after_save :reset_cache_data
-  after_destroy :reset_cache_data
+  after_create :incre_project_common, :incre_user_statistic, :incre_platform_statistic
+  after_destroy :decre_project_common, :decre_user_statistic, :decre_platform_statistic
 
-  def reset_cache_data 
-    self.reset_platform_cache_async_job
-    self.reset_user_cache_async_job(self.user)
+  def incre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {pullrequests: 1}, self.project_id)
+  end
+
+  def decre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {pullrequests: -1}, self.project_id)
+  end
+
+  def incre_user_statistic 
+    CacheAsyncSetJob.perform_later("user_statistic_service", {pullrequest_count: 1}, self.user_id)
+  end
+
+  def decre_user_statistic
+    CacheAsyncSetJob.perform_later("user_statistic_service", {pullrequest_count: -1}, self.user_id)
+  end
+
+  def incre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {pullrequest_count: 1})
+  end
+
+  def decre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {pullrequest_count: -1})
   end
 
   def fork_project

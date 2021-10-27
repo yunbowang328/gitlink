@@ -81,6 +81,12 @@ class Organization < Owner
 
   scope :with_visibility, ->(visibility) { joins(:organization_extension).where(organization_extensions: {visibility: visibility}) if visibility.present? }
 
+  after_save :reset_cache_data
+
+  def reset_cache_data
+    Cache::V2::OwnerCommonService.new(self.login, self.mail).reset
+  end
+
   def self.build(name, nickname, gitea_token=nil)
     self.create!(login: name, nickname: nickname, gitea_token: gitea_token)
   end
