@@ -2,7 +2,7 @@ class ProjectRankController < ApplicationController
   # 根据时间获取热门项目
   def index 
     $redis_cache.zunionstore("recent-days-project-rank", get_timeable_key_names)
-    @project_rank = $redis_cache.zrevrange("recent-days-project-rank", 0, 5, withscores: true)
+    @project_rank = $redis_cache.zrevrange("recent-days-project-rank", 0, 4, withscores: true)
   rescue Exception => e
     @project_rack = []
   end
