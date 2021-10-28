@@ -5,7 +5,7 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   def index 
     sort_by = ProjectCategory.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
     sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
-    q = ProjectCategory.ransack(name_cont: params[:name])
+    q = ProjectCategory.includes(:projects).ransack(name_cont: params[:name])
     project_categories = q.result(distinct: true).order("#{sort_by} #{sort_direction}")
     @project_categories = paginate(project_categories)
     
