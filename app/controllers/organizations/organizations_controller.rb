@@ -81,7 +81,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   end
 
   def group_size 
-    params.fetch(:group_size, 4)
+    params.fetch(:group_size, 4).to_i
   end
 
   def password
