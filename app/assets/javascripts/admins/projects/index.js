@@ -52,6 +52,7 @@ $(document).on('turbolinks:load', function(){
     $('.project-list-container').on('click', '.unrecommend-action', function(){
       var $uncloseAction = $(this);
       var $closeAction = $uncloseAction.siblings('.recommend-action');
+      var $editAction = $closeAction.siblings('.edit-recommend-action');
 
       var keywordID = $uncloseAction.data('id');
       customConfirm({
@@ -64,13 +65,14 @@ $(document).on('turbolinks:load', function(){
             data: {
               project: {
                 recommend: false,
-                recommend: 1
+                recommend_index: 0
               }
             },
             success: function() {
               showSuccessNotify();
               $closeAction.show();
               $uncloseAction.hide();
+              $editAction.hide();
               $(".project-item-"+keywordID).children('td').eq(5).text("")
             }
           });
