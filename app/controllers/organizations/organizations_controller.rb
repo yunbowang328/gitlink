@@ -69,8 +69,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def recommend
     recommend = %W(xuos Huawei_Technology openatom_foundation pkecosystem TensorLayer)
     
-    @organizations = Organization.with_visibility(%w(common))
-      .where(login: recommend).select(:id, :login, :firstname, :lastname, :nickname)
+    @organizations = Organization.includes(:organization_extension).where(organization_extensions: {recommend: true}).to_a.each_slice(group_size).to_a
   end
 
   private
@@ -79,6 +78,10 @@ class Organizations::OrganizationsController < Organizations::BaseController
     params.permit(:name, :description, :website, :location,
                   :repo_admin_change_team_access, :visibility,
                   :max_repo_creation, :nickname)
+  end
+
+  def group_size 
+    params.fetch(:group_size, 4).to_i
   end
 
   def password
