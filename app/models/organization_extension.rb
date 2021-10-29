@@ -15,6 +15,7 @@
 #  num_projects                  :integer          default("0")
 #  num_users                     :integer          default("0")
 #  num_teams                     :integer          default("0")
+#  recommend                     :boolean          default("0")
 #
 # Indexes
 #
@@ -30,6 +31,8 @@ class OrganizationExtension < ApplicationRecord
 
   enum visibility: {common: 0, limited: 1, privacy: 2}
 
+  before_save :set_recommend
+
   def self.build(organization_id, description, website, location, repo_admin_change_team_access, visibility, max_repo_creation)
     self.create!(organization_id: organization_id,
                  description: description,
@@ -38,5 +41,10 @@ class OrganizationExtension < ApplicationRecord
                  repo_admin_change_team_access: repo_admin_change_team_access,
                  visibility: visibility,
                  max_repo_creation: max_repo_creation)
+  end
+
+  private 
+  def set_recommend
+    self.recommend = false unless self.common?
   end
 end

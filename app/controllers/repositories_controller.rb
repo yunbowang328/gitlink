@@ -48,7 +48,7 @@ class RepositoriesController < ApplicationController
 
   def entries
     @project.increment!(:visits)
-
+    CacheAsyncSetJob.perform_later("project_common_service", {visits: 1}, @project.id)
     if @project.educoder?
       @entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder.repo_name)
     else
