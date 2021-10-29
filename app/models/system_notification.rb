@@ -17,4 +17,8 @@ class SystemNotification < ApplicationRecord
 
   scope :is_top, lambda { where(is_top: true) }
 
+  def read_member?(user_id)
+    self.system_notification_histories.where(user_id: user_id).present? ? true : false
+  end
+
 end
