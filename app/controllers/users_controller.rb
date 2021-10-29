@@ -51,6 +51,8 @@ class UsersController < ApplicationController
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size
+      # 为了缓存活跃用户的基本信息，后续删除
+      Cache::V2::OwnerCommonService.new(@user.login, @user.mail).read
   end
 
   def watch_users
@@ -191,7 +193,7 @@ class UsersController < ApplicationController
   def trustie_related_projects
     projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
     projects_json = []
-    domain_url = EduSetting.get('host_name') + '/projects'
+    domain_url = EduSetting.get('host_name')
     if projects.present?
       projects.each do |p|
         project_url = "/#{p.owner.login}/#{p.identifier}"

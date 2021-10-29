@@ -1,4 +1,4 @@
-json.total_count @total_count
+json.total_count @projects.total_count
 json.projects @projects do |project|
   # json.partial! "/projects/project_detail", project: project
   json.id project.id
