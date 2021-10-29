@@ -2,7 +2,7 @@ class UserRankController < ApplicationController
   # 根据时间获取热门开发者
   def index 
     $redis_cache.zunionstore("recent-days-user-rank", get_timeable_key_names)
-    @user_rank = $redis_cache.zrevrange("recent-days-user-rank", 0, 5, withscores: true)
+    @user_rank = $redis_cache.zrevrange("recent-days-user-rank", 0, 3, withscores: true)
   rescue Exception => e
     @user_rank = []
   end
