@@ -11,7 +11,8 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def call
-    q = Project.visible.by_name_or_identifier(params[:search])
+    q = params[:pinned].present? ? Project.pinned : Project
+    q = q.visible.by_name_or_identifier(params[:search])
 
     scope = q
       .with_project_type(params[:project_type])
