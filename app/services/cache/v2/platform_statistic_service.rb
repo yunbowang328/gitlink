@@ -64,7 +64,9 @@ class Cache::V2::PlatformStatisticService < ApplicationService
   end
 
   def platform_statistic
-    $redis_cache.hgetall(platform_statistic_key).blank? ? reset_platform_statistic : $redis_cache.hgetall(platform_statistic_key)
+    result = $redis_cache.hgetall(platform_statistic_key)
+
+    result.blank? ? reset_platform_statistic : result
   end
 
   def set_platform_statistic

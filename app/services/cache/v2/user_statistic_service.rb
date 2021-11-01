@@ -12,6 +12,7 @@ class Cache::V2::UserStatisticService < ApplicationService
     @project_praise_count = params[:project_praise_count]
     @project_watcher_count = params[:project_watcher_count]
     @pullrequest_count = params[:pullrequest_count]
+    Cache::V2::OwnerCommonService.new(user_id).read
   end
 
   def read 
@@ -65,7 +66,8 @@ class Cache::V2::UserStatisticService < ApplicationService
   end
 
   def user_statistic
-    $redis_cache.hgetall(user_statistic_key).blank? ? reset_user_statistic : $redis_cache.hgetall(user_statistic_key)
+    result = $redis_cache.hgetall(user_statistic_key)
+    result.blank? ? reset_user_statistic : result
   end
 
   def set_user_statistic
