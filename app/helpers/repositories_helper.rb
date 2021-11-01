@@ -36,7 +36,13 @@ module RepositoriesHelper
   end
 
   def render_cache_commit_author(author_json)
-    find_user_in_redis_cache(author_json['name'], author_json['email'])
+    Rails.logger.info author_json['Email'] 
+    if author_json["name"].present? && author_json["email"].present?
+      return find_user_in_redis_cache(author_json['name'], author_json['email']) 
+    end
+    if author_json["Name"].present? && author_json["Email"].present?
+      return find_user_in_redis_cache(author_json['Name'], author_json['Email']) 
+    end
   end
 
   def readme_render_decode64_content(str, path)
