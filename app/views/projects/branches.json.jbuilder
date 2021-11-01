@@ -12,10 +12,10 @@ json.array! @branches do |branch|
     json.timestamp render_unix_time(branch['commit']['timestamp'])
     json.time_from_now time_from_now(branch['commit']['timestamp'])
     json.author do 
-      json.partial! 'repositories/commit_author', user: render_commit_author(branch['commit']['author']), name: branch['commit']['author']['name']
+      json.partial! 'repositories/commit_author', user: render_cache_commit_author(branch['commit']['author']), name: branch['commit']['author']['name']
     end
     json.committer do 
-      json.partial! 'repositories/commit_author', user: render_commit_author(branch['commit']['committer']), name: branch['commit']['committer']['name']
+      json.partial! 'repositories/commit_author', user: render_cache_commit_author(branch['commit']['committer']), name: branch['commit']['committer']['name']
     end
   end
 end

@@ -35,6 +35,10 @@ module RepositoriesHelper
     end
   end
 
+  def render_cache_commit_author(author_json)
+    find_user_in_redis_cache(author_json['name'], author_json['email'])
+  end
+
   def readme_render_decode64_content(str, path)
     return nil if str.blank?
     begin

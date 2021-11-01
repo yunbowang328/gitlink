@@ -5,7 +5,7 @@ json.array! @tags do |tag|
     json.zipball_url render_zip_url(@owner, @repository, tag['name'])
     json.tarball_url render_tar_url(@owner, @repository, tag['name'])
     json.tagger do 
-      json.partial! 'commit_author', user: render_commit_author(tag['tagger']), name: tag['tagger']['name']
+      json.partial! 'commit_author', user: render_cache_commit_author(tag['tagger']), name: tag['tagger']['name']
     end
     json.time_ago time_from_now(tag['tagger']['date'].to_time)
     json.created_at_unix tag['tagger']['date'].to_time.to_i
@@ -16,10 +16,10 @@ json.array! @tags do |tag|
       json.time_ago time_from_now(tag['commit']['commiter']['date'].to_time)
       json.created_at_unix tag['commit']['commiter']['date'].to_time.to_i
       json.committer do 
-        json.partial! 'commit_author', user: render_commit_author(tag['commit']['commiter']), name: tag['commit']['commiter']['name']
+        json.partial! 'commit_author', user: render_cache_commit_author(tag['commit']['commiter']), name: tag['commit']['commiter']['name']
       end
       json.author do 
-        json.partial! 'commit_author', user: render_commit_author(tag['commit']['author']), name: tag['commit']['author']['name']
+        json.partial! 'commit_author', user: render_cache_commit_author(tag['commit']['author']), name: tag['commit']['author']['name']
       end
     end
   end
