@@ -5,6 +5,10 @@ class ProjectCategoriesController < ApplicationController
     @project_categories = q.result(distinct: true)
   end
 
+  def pinned_index
+    @project_categories = ProjectCategory.where.not(pinned_index: 0).order(pinned_index: :desc)
+  end
+
   def group_list
     @project_categories = ProjectCategory.where('projects_count > 0').order(projects_count: :desc)
     # projects = Project.no_anomory_projects.visible

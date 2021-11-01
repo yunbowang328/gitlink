@@ -21,15 +21,31 @@ class PraiseTread < ApplicationRecord
   belongs_to :praise_tread_object, polymorphic: true, counter_cache: :praises_count
   has_many :tidings, :as => :container, :dependent => :destroy
 
-  after_create :send_tiding
-  after_save :reset_cache_data
-  after_destroy :reset_cache_data
+  after_create :send_tiding, :incre_project_common, :incre_user_statistic, :incre_platform_statistic
+  after_destroy :decre_project_common, :decre_user_statistic, :decre_platform_statistic
 
-  def reset_cache_data 
-    self.reset_platform_cache_async_job
-    if self.praise_tread_object.is_a?(Project)
-      self.reset_user_cache_async_job(self.praise_tread_object&.owner)
-    end
+  def incre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {praises: 1}, self.praise_tread_object_id) if self.praise_tread_object_type == "Project"
+  end
+
+  def decre_project_common
+    CacheAsyncSetJob.perform_later("project_common_service", {praises: -1}, self.praise_tread_object_id) if self.praise_tread_object_type == "Project"
+  end
+
+  def incre_user_statistic 
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_praise_count: 1}, self.praise_tread_object&.user_id) if self.praise_tread_object_type == "Project"
+  end
+
+  def decre_user_statistic
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_praise_count: -1}, self.praise_tread_object&.user_id) if self.praise_tread_object_type == "Project"
+  end
+
+  def incre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_praise_count: 1}) if self.praise_tread_object_type == "Project"
+  end
+
+  def decre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_praise_count: -1}) if self.praise_tread_object_type == "Project"
   end
 
   def send_tiding
