@@ -3,8 +3,8 @@ module RenderHelper
     render json: { status: 0, message: 'success' }.merge(data)
   end
 
-  def render_error(status = -1, message = '')
-    render json: { status: status, message: message }
+  def render_error(message = '')
+    render json: { status: -1, message: message }
   end
 
   def render_not_acceptable(message = '请求已拒绝')

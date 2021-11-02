@@ -139,15 +139,15 @@ class AccountsController < ApplicationController
         tip_exception(-1, interactor.error)
       end
     rescue Register::BaseForm::EmailError => e
-      render_error(-2, e.message)
+      render_result(-2, e.message)
     rescue Register::BaseForm::LoginError => e
-      render_error(-3, e.message)
+      render_result(-3, e.message)
     rescue Register::BaseForm::PhoneError => e
-      render_error(-4, e.message)
+      render_result(-4, e.message)
     rescue Register::BaseForm::PasswordFormatError => e
-      render_error(-5, e.message)
+      render_result(-5, e.message)
     rescue Register::BaseForm::VerifiCodeError => e
-      render_error(-6, e.message)
+      render_result(-6, e.message)
     rescue Exception => e
       Gitea::User::DeleteService.call(user.login) unless user.nil?
       uid_logger_error(e.message)
