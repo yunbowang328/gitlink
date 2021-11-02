@@ -4,7 +4,6 @@ class CreateTopics < ActiveRecord::Migration[5.2]
       t.string :type
       t.string :title 
       t.integer :uuid
-      t.string :image_url
       t.string :url
       t.integer :order_index
     end

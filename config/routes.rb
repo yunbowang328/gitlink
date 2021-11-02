@@ -677,6 +677,16 @@ Rails.application.routes.draw do
   namespace :admins do
     mount Sidekiq::Web => '/sidekiq'
     get '/', to: 'dashboards#index'
+    namespace :topic do 
+      resources :activity_forums
+      resources :banners 
+      resources :cards 
+      resources :cooperators
+      resources :excellent_projects
+      resources :experience_forums
+      resources :pinned_forums
+    end
+
     resources :project_statistics, only: [:index] do
       collection do
         get :visits_static

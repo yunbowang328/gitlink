@@ -14,4 +14,16 @@
 class Topic < ApplicationRecord
 
   default_scope { order(order_index: :desc)}
+
+  def image
+    image_url('image')
+  end
+
+  private
+
+  def image_url(type)
+    return nil unless Util::FileManage.exists?(self, type)
+    Util::FileManage.source_disk_file_url(self, type)
+  end
+
 end
