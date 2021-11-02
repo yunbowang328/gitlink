@@ -202,6 +202,7 @@ Rails.application.routes.draw do
         post :remote_login
         post :remote_password
         post :change_password
+        post :check
       end
     end
 
@@ -272,6 +273,7 @@ Rails.application.routes.draw do
       scope module: :users do
         get 'template_message_settings', to: 'template_message_settings#current_setting'
         post 'template_message_settings/update_setting', to: 'template_message_settings#update_setting'
+        resources :system_notification_histories, only: [:create]
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
           member do 
@@ -679,7 +681,11 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
-    resources :system_notifications 
+    resources :system_notifications do 
+      member do 
+        get :history
+      end
+    end
     resources :message_templates, only: [:index, :edit, :update] do 
       collection do 
         get :init_data

@@ -173,6 +173,9 @@ class User < Owner
 
   has_one :user_template_message_setting, dependent: :destroy
 
+  has_many :system_notification_histories
+  has_many :system_notifications, through: :system_notification_histories
+  
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|

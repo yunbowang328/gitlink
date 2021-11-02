@@ -60,6 +60,7 @@ json.setting do
   if @top_system_notification.present?
     json.system_notification do 
       json.(@top_system_notification, :id, :subject, :sub_subject, :content)
+      json.is_read @top_system_notification.read_member?(current_user&.id)
     end
   else
     json.system_notification nil

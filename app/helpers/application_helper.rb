@@ -455,5 +455,11 @@ module ApplicationHelper
       sidebar_item(url, "数据统计", icon: 'bar-chart', controller: 'root')
     end
   end
+
+  # 1 手机类型；0 邮箱类型
+  # 注意新版的login是自动名生成的
+  def phone_mail_type value
+    value =~ /^1\d{10}$/ ? 1 : 0
+  end
   
 end
