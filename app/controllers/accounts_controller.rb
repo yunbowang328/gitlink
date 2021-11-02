@@ -1,4 +1,5 @@
 class AccountsController < ApplicationController
+  include ApplicationHelper
 
   #skip_before_action :check_account, :only => [:logout]
 
@@ -109,60 +110,46 @@ class AccountsController < ApplicationController
   # 用户注册
   # 注意：用户注册需要兼顾本地版，本地版是不需要验证码及激活码以及使用授权的，注册完成即可使用
   # params[:login] 邮箱或者手机号
+  # params[:namespace] 登录名
   # params[:code]  验证码
   # code_type 1：注册手机验证码  8：邮箱注册验证码
-  # 本地forge注册入口
+  # 本地forge注册入口需要重新更改逻辑
   def register
+    # type只可能是1或者8
+    user = nil
     begin
-      # 查询验证码是否正确;type只可能是1或者8
-      type = phone_mail_type(params[:login].strip)
-      # code = params[:code].strip
+      Register::Form.new(register_params).validate!
 
-      if type == 1
-        uid_logger("start register by phone:  type is #{type}")
-        pre = 'p'
-        email = nil
-        phone = params[:login]
-        # verifi_code = VerificationCode.where(phone: phone, code: code, code_type: 1).last
-        # TODO: 暂时限定邮箱注册
-        return normal_status(-1, '只支持邮箱注册')
-      else
-        uid_logger("start register by email:  type is #{type}")
-        pre = 'm'
-        email = params[:login]
-        phone = nil
-        return normal_status(-1, "该邮箱已注册") if User.exists?(mail: params[:login])
-        return normal_status(-1, "邮箱格式错误") unless params[:login] =~ CustomRegexp::EMAIL
-        # verifi_code = VerificationCode.where(email: email, code: code, code_type: 8).last
-      end
-      # uid_logger("start register:  verifi_code is #{verifi_code}, code is #{code}, time is #{Time.now.to_i - verifi_code.try(:created_at).to_i}")
-      # check_code = (verifi_code.try(:code) == code.strip && (Time.now.to_i - verifi_code.created_at.to_i) <= 10*60)
-      # todo 上线前请删除万能验证码"513231"
-      return normal_status(-1, "8~16位密码，支持字母数字和符号") unless params[:password] =~ CustomRegexp::PASSWORD
+      user = Users::RegisterService.call(register_params)
+      password = register_params[:password].strip
 
-      code = generate_identifier User, 8, pre
-      login = pre + code
-      @user = User.new(admin: false, login: login, mail: email, phone: phone, type: "User")
-      @user.password = params[:password]
-      # 现在因为是验证码，所以在注册的时候就可以激活
-      @user.activate
-      # 必须要用save操作，密码的保存是在users中
-
-      interactor = Gitea::RegisterInteractor.call({username: login, email: email, password: params[:password]})
+      # gitea用户注册, email, username, password
+      interactor = Gitea::RegisterInteractor.call({username: user.login, email: user.mail, password: password})
       if interactor.success?
         gitea_user = interactor.result
-        result = Gitea::User::GenerateTokenService.new(login, params[:password]).call
-        @user.gitea_token = result['sha1']
-        @user.gitea_uid = gitea_user[:body]['id']
-        if @user.save!
-          UserExtension.create!(user_id: @user.id)
-          successful_authentication(@user)
-          normal_status("注册成功")
+        result = Gitea::User::GenerateTokenService.call(user.login, password)
+        user.gitea_token = result['sha1']
+        user.gitea_uid = gitea_user[:body]['id']
+        if user.save!
+          UserExtension.create!(user_id: user.id)
+          successful_authentication(user)
+          render_ok
         end
       else
         tip_exception(-1, interactor.error)
       end
+    rescue Register::BaseForm::EmailError => e
+      render_error(-2, e.message)
+    rescue Register::BaseForm::LoginError => e
+      render_error(-3, e.message)
+    rescue Register::BaseForm::PhoneError => e
+      render_error(-4, e.message)
+    rescue Register::BaseForm::PasswordFormatError => e
+      render_error(-5, e.message)
+    rescue Register::BaseForm::VerifiCodeError => e
+      render_error(-6, e.message)
     rescue Exception => e
+      Gitea::User::DeleteService.call(user.login) unless user.nil?
       uid_logger_error(e.message)
       tip_exception(-1, e.message)
     end
@@ -297,7 +284,7 @@ class AccountsController < ApplicationController
 
   # 发送验证码
   # params[:login]  手机号或者邮箱号
-  # params[:type]为事件通知类型 1：用户注册注册 2：忘记密码 3: 绑定手机 4: 绑定邮箱, 5: 验收手机号有效 # 如果有新的继续后面加
+  # params[:type]为事件通知类型 1：用户注册 2：忘记密码 3: 绑定手机 4: 绑定邮箱, 5: 验收手机号有效 # 如果有新的继续后面加
   # 发送验证码：send_type 1：注册手机验证码 2：找回密码手机验证码 3：找回密码邮箱验证码 4：绑定手机 5：绑定邮箱
   # 6：手机验证码登录 7：邮箱验证码登录 8：邮箱注册验证码 9: 验收手机号有效
   def get_verification_code
@@ -311,19 +298,14 @@ class AccountsController < ApplicationController
     sign = Digest::MD5.hexdigest("#{OPENKEY}#{value}")
     tip_exception(501, "请求不合理") if sign != params[:smscode]
 
+    logger.info "########### 验证码：#{verification_code}"
     logger.info("########get_verification_code: login_type： #{login_type}， send_type：#{send_type}, ")
 
     # 记录验证码
     check_verification_code(verification_code, send_type, value)
-    sucess_status
+    render_ok
   end
 
-  # 1 手机类型；0 邮箱类型
-  # 注意新版的login是自动名生成的
-  def phone_mail_type value
-    value =~ /^1\d{10}$/ ? 1 : 0
-  end
-  
   # check user's login or email or phone is used
   # params[:value]  手机号或者邮箱号或者登录名
   # params[:type] 为事件类型 1：登录名(login) 2：email(邮箱) 3：phone(手机号)
@@ -381,4 +363,9 @@ class AccountsController < ApplicationController
   def check_params
     params.permit(:type, :value)
   end
+
+  def register_params
+    params.permit(:login, :namespace, :password, :code)
+  end
+  
 end
