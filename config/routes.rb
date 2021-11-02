@@ -24,6 +24,16 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    namespace :topic do 
+      resources :activity_forums, only: [:index]
+      resources :banners, only: [:index]
+      resources :cards, only: [:index]
+      resources :cooperators, only: [:index]
+      resources :excellent_projects, only: [:index]
+      resources :experience_forums, only: [:index]
+      resources :pinned_forums, only: [:index]
+    end
+
     namespace :ci  do
       resources :languages, only: [:index, :show] do
         collection do
