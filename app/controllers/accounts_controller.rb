@@ -1,8 +1,6 @@
 class AccountsController < ApplicationController
   include ApplicationHelper
 
-  #skip_before_action :check_account, :only => [:logout]
-
   def index
     render json: session
   end
@@ -208,28 +206,25 @@ class AccountsController < ApplicationController
   # 忘记密码
   def reset_password
     begin
-      code = params[:code]
-      login_type = phone_mail_type(params[:login].strip)
-      # 获取验证码
-      if login_type == 1
-        phone = params[:login]
-        verifi_code = VerificationCode.where(phone: phone, code: code, code_type: 2).last
-        user = User.find_by_phone(phone)
-      else
-        email = params[:login]
-        verifi_code = VerificationCode.where(email: email, code: code, code_type: 3).last
-        user = User.find_by_mail(email)     #这里有问题，应该是为email,而不是mail  6.13-hs
-      end
-      return normal_status(-2, "验证码不正确") if verifi_code.try(:code) != code.strip
-      return normal_status(-2, "验证码已失效") if !verifi_code&.effective?
-      return normal_status(-1, "8~16位密码，支持字母数字和符号") unless params[:new_password] =~ CustomRegexp::PASSWORD
+      Accounts::ResetPasswordForm.new(reset_password_params).validate!
 
-      user.password, user.password_confirmation = params[:new_password], params[:new_password_confirmation]
-      ActiveRecord::Base.transaction do
-        user.save!
-        LimitForbidControl::UserLogin.new(user).clear
-      end
-      sucess_status
+      user = find_user
+      return render_error('未找到相关账号') if user.blank?
+
+      user = Accounts::ResetPasswordService.call(user, reset_password_params)
+      LimitForbidControl::UserLogin.new(user).clear if user.save!
+
+      render_ok
+    rescue Register::BaseForm::EmailError => e
+      render_result(-2, e.message)
+    rescue Register::BaseForm::PhoneError => e
+      render_result(-4, e.message)
+    rescue Register::BaseForm::PasswordFormatError => e
+      render_result(-5, e.message)
+    rescue Register::BaseForm::PasswordConfirmationError => e
+      render_result(-7, e.message)
+    rescue Register::BaseForm::VerifiCodeError => e
+      render_result(-6, e.message)
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
@@ -368,6 +363,15 @@ class AccountsController < ApplicationController
 
   def register_params
     params.permit(:login, :namespace, :password, :password_confirmation, :code)
+  end
+
+  def reset_password_params
+    params.permit(:login, :password, :password_confirmation, :code)
+  end
+  
+  def find_user
+    phone_or_mail = strip(reset_password_params[:login])
+    User.where("phone = :search OR mail = :search", search: phone_or_mail).last
   end
   
 end
