@@ -225,6 +225,8 @@ class AccountsController < ApplicationController
       render_result(-7, e.message)
     rescue Register::BaseForm::VerifiCodeError => e
       render_result(-6, e.message)
+    rescue ActiveRecord::Rollback => e
+      render_result(-1, "服务器异常")
     rescue Exception => e
       uid_logger_error(e.message)
       tip_exception(e.message)
