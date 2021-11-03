@@ -1,0 +1,1 @@
+json.(banner, :id, :title, :image)

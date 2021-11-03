@@ -15,8 +15,29 @@ class Topic < ApplicationRecord
 
   default_scope { order(order_index: :desc)}
 
+  scope :with_single_type, ->(type){where(type: trans_simpletype_to_classtype(type))}
+
   def image
     image_url('image')
+  end
+
+  def self.trans_simpletype_to_classtype(type)
+    case type 
+    when 'activity_forum'
+      'Topic::ActivityForum'
+    when 'banner'
+      'Topic::Banner'
+    when 'card'
+      'Topic::Card'
+    when 'cooperator'
+      'Topic::Cooperator'
+    when 'excellent_project'
+      'Topic::ExcellentProject'
+    when 'experience_forum'
+      'Topic::ExperienceForum'
+    when 'pinned_forum'
+      'Topic::PinnedForum'
+    end
   end
 
   private
