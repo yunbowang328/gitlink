@@ -146,6 +146,8 @@ class AccountsController < ApplicationController
       render_result(-4, e.message)
     rescue Register::BaseForm::PasswordFormatError => e
       render_result(-5, e.message)
+    rescue Register::BaseForm::PasswordConfirmationError => e
+      render_result(-7, e.message)
     rescue Register::BaseForm::VerifiCodeError => e
       render_result(-6, e.message)
     rescue Exception => e
@@ -365,7 +367,7 @@ class AccountsController < ApplicationController
   end
 
   def register_params
-    params.permit(:login, :namespace, :password, :code)
+    params.permit(:login, :namespace, :password, :password_confirmation, :code)
   end
   
 end
