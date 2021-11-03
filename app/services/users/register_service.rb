@@ -12,7 +12,8 @@ class Users::RegisterService < ApplicationService
     namespace = strip(@namespace)
     password  = strip(@password)
 
-    Rails.logger.info "Users::RegisterService params:   ##### #{params} "
+    Rails.logger.info "Users::RegisterService params:   
+      ##### code: #{code} login: #{login} namespace: #{namespace}  password: #{password} "
 
     email, phone = 
       if register_type == 1
@@ -50,9 +51,4 @@ class Users::RegisterService < ApplicationService
   def register_type
     phone_mail_type(@login)
   end
-
-  def phone_mail_type value
-    value =~ /^1\d{10}$/ ? 1 : 0
-  end
-  
 end

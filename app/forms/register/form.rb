@@ -10,7 +10,9 @@ module Register
     
     def check!
       Rails.logger.info "Register::Form params: code: #{code}; login: #{login}; 
-        namespace: #{namespace}; password: #{password}; password_confirmation: #{password_confirmation}; type: #{type}"
+        namespace: #{namespace}; password: #{password}; password_confirmation: #{password_confirmation}"
+      
+      type = phone_mail_type(strip(login))
       db_verifi_code = 
         if type == 1
           check_phone(login)

@@ -461,5 +461,9 @@ module ApplicationHelper
   def phone_mail_type value
     value =~ /^1\d{10}$/ ? 1 : 0
   end
+
+  def strip(str)
+    str.to_s.strip.presence
+  end
   
 end
