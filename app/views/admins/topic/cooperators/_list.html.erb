@@ -16,7 +16,7 @@
         <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
         <td><%= cooperator.title %></td>
         <td><%= cooperator.url %></td>
-        <td><img style="height:50px" src="<%= cooperator.image %>" /></td>
+        <td><img style="width:150px" src="<%= cooperator.image %>" /></td>
         <td><%= cooperator.order_index %></td>
         <td class="action-container">
           <%= link_to "编辑", edit_admins_topic_cooperator_path(cooperator), remote: true, class: "action" %>

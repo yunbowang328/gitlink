@@ -682,7 +682,7 @@ class ApplicationController < ActionController::Base
 
 	def kaminari_paginate(relation)
 		limit = params[:limit] || params[:per_page]
-		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+		limit = (limit.to_i.zero? || limit.to_i > 20) ? 20 : limit.to_i
 		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
 
 		relation.page(page).per(limit)
@@ -690,7 +690,7 @@ class ApplicationController < ActionController::Base
 
 	def kaminari_array_paginate(relation)
 		limit = params[:limit] || params[:per_page]
-		limit = (limit.to_i.zero? || limit.to_i > 15) ? 15 : limit.to_i
+		limit = (limit.to_i.zero? || limit.to_i > 20) ? 20 : limit.to_i
 		page  = params[:page].to_i.zero? ? 1 : params[:page].to_i
 
 		Kaminari.paginate_array(relation).page(page).per(limit)

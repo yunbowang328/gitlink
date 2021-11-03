@@ -14,7 +14,7 @@
       <tr class="banner-item-<%= banner.id %>">
         <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
         <td><%= banner.title %></td>
-        <td><img style="height:50px" src="<%= banner.image %>" /></td>
+        <td><img style="width:150px" src="<%= banner.image %>" /></td>
         <td><%= banner.order_index %></td>
         <td class="action-container">
           <%= link_to "编辑", edit_admins_topic_banner_path(banner), remote: true, class: "action" %>

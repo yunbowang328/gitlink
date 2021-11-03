@@ -2,7 +2,7 @@ class Admins::Topic::CooperatorsController < Admins::Topic::BaseController
   before_action :find_cooperator, only: [:edit, :update, :destroy]
 
   def index 
-    @cooperators = kaminari_paginate(::Topic::Cooperator)
+    @cooperators = paginate(::Topic::Cooperator)
   end
 
   def new 
