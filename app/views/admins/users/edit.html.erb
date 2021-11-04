@@ -7,8 +7,8 @@
 
 <div class="box user-edit-container">
   <div class="user-info mb-4 row">
-    <%= link_to "/users/#{@user.login}", class: 'user-info-avatar col-md-1', target: '_blank', data: { toggle: 'tooltip', title: '个人中心' } do %>
-      <img src="/images/<%= url_to_avatar(@user) %>" class="rounded-circle" width="80" height="80" />
+    <%= link_to "/#{@user.login}", class: 'user-info-avatar col-md-1', target: '_blank', data: { toggle: 'tooltip', title: '个人中心' } do %>
+      <img src="/<%= url_to_avatar(@user) %>" class="rounded-circle" width="80" height="80" />
     <% end %>
     <div class="d-flex flex-column justify-content-between col-md-3 user-info-content">
       <div class="user-info-name flex"><%= @user.real_name %> | <%= @user.id %> | <%= @user.login %></div>
@@ -50,6 +50,10 @@
 
     <div><h6>基本信息</h6></div>
     <div class="form-group px-2">
+      <div class="form-row">
+        <%= f.input :login, label: '登录名', wrapper_html: { class: 'col-md-3' }, input_html: {  readonly: true, class: 'col-md-11', value: @user.login } %>
+      </div>
+
       <div class="form-row">
         <%= f.input :lastname, label: '姓名', wrapper_html: { class: 'col-md-3' }, input_html: {  class: 'col-md-11', value: @user.only_real_name } %>
       </div>
@@ -109,7 +113,6 @@
         <div class="d-flex">
           <%= f.input :professional_certification, as: :boolean, label: '职业认证', checked_value: 1, unchecked_value: 0 %>
           <%= f.input :authentication, as: :boolean, label: '实名认证', wrapper_html: { class: 'ml-3' }, checked_value: 1, unchecked_value: 0 %>
-          <%= f.input :is_shixun_marker, as: :boolean, label: '实训制作', wrapper_html: { class: 'ml-3' }, checked_value: 1, unchecked_value: 0 %>
         </div>
       </div>
 

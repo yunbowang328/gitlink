@@ -116,8 +116,6 @@ class User < Owner
   enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
-  has_many :composes, dependent: :destroy
-  has_many :compose_users, dependent: :destroy
   has_one :user_extension, dependent: :destroy
   has_many :open_users, dependent: :destroy
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
@@ -434,6 +432,7 @@ class User < Owner
 
   def activate!
     update_attribute(:status, STATUS_ACTIVE)
+    prohibit_gitea_user_login!(false)
   end
 
   def register!
@@ -442,6 +441,12 @@ class User < Owner
 
   def lock!
     update_attribute(:status, STATUS_LOCKED)
+    prohibit_gitea_user_login!
+  end
+
+  def prohibit_gitea_user_login!(prohibit_login = true)
+    Gitea::User::UpdateInteractor.call(self.login, 
+      {email: self.mail, prohibit_login: prohibit_login})
   end
 
   # 课程用户身份
