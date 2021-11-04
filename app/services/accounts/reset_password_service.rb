@@ -16,6 +16,13 @@ module Accounts
         ##### password: #{@password} password_confirmation: #{@password_confirmation}"
         
       @user.password, @user.password_confirmation = password, password_confirmation
+
+      sync_params = {
+        password: password,
+        email: @user.mail
+      }
+      interactor = Gitea::User::UpdateInteractor.call(@user.login, sync_params)
+      raise ActiveRecord::Rollback unless interactor.success?
       
       @user
     end
