@@ -391,6 +391,7 @@ class User < Owner
 
   def activate!
     update_attribute(:status, STATUS_ACTIVE)
+    prohibit_gitea_user_login!(false)
   end
 
   def register!
@@ -399,6 +400,12 @@ class User < Owner
 
   def lock!
     update_attribute(:status, STATUS_LOCKED)
+    prohibit_gitea_user_login!
+  end
+
+  def prohibit_gitea_user_login!(prohibit_login = true)
+    Gitea::User::UpdateInteractor.call(self.login, 
+      {email: self.mail, prohibit_login: prohibit_login})
   end
 
   # 课程用户身份
