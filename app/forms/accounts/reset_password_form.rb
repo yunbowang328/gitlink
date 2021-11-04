@@ -17,11 +17,10 @@ module Accounts
       db_verifi_code = 
         if type == 1
           check_phone_format(login)
-          VerificationCode.where(phone: login, code: code, code_type: 1).last
+          VerificationCode.where(phone: login, code: code, code_type: 2).last
         elsif type == 0
-          Rails.logger.info "9999999999 #{login}"
           check_email_format(login)
-          VerificationCode.where(email: login, code: code, code_type: 8).last
+          VerificationCode.where(email: login, code: code, code_type: 3).last
         end
       
       check_password(password)
