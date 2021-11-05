@@ -633,7 +633,7 @@ class User < Owner
   def ec_school
     school_id_hash = ActiveRecord::Base.connection.exec_query("SELECT `ec_school_users`.`school_id` FROM `ec_school_users` WHERE `ec_school_users`.`user_id` = #{self.id}").first || 
         ActiveRecord::Base.connection.exec_query("SELECT `ec_major_schools`.`school_id` FROM `ec_major_schools` INNER JOIN `ec_major_school_users` ON `ec_major_schools`.`id` = `ec_major_school_users`.`ec_major_school_id` WHERE`ec_major_school_users`.`user_id` = #{self.id}").first ||
-        ActiveRecord::Base.connection.exec_query("SELECT  `ec_major_schools`.* FROM `ec_major_schools` INNER JOIN `ec_years` ON `ec_years`.`ec_major_school_id` = `ec_major_schools`.`id` INNER JOIN `ec_courses` ON `ec_courses`.`ec_year_id` = `ec_years`.`id` INNER JOIN `ec_course_users` ON `ec_course_users`.`ec_course_id` = `ec_courses`.`id` WHERE `ec_course_users`.`user_id` = #{self.id}").first
+        ActiveRecord::Base.connection.exec_query("SELECT `ec_major_schools`.`school_id` FROM `ec_major_schools` INNER JOIN `ec_years` ON `ec_years`.`ec_major_school_id` = `ec_major_schools`.`id` INNER JOIN `ec_courses` ON `ec_courses`.`ec_year_id` = `ec_years`.`id` INNER JOIN `ec_course_users` ON `ec_course_users`.`ec_course_id` = `ec_courses`.`id` WHERE `ec_course_users`.`user_id` = #{self.id}").first
     if school_id_hash.nil?
       return nil 
     else 
