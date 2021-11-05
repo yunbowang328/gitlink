@@ -207,7 +207,7 @@ class User < Owner
   validate :validate_password_length
 
   def reset_cache_data
-    Cache::V2::OwnerCommonService.new(self.login, self.mail).reset
+    Cache::V2::OwnerCommonService.new(self.id).reset
   end
 
   # 用户参与的所有项目

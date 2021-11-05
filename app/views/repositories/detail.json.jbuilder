@@ -56,17 +56,7 @@ json.tags_count @result[:branch_tag_total_count]['tag_count'] || 0
 json.contributors do
   total_count = @result[:contributor].size
   json.list @result[:contributor].each do |contributor|
-    user = User.find_by(gitea_uid: contributor["id"])
-    if contributor["login"] == "root" || user.nil?
-      total_count -= 1
-      next
-    end
-    json.contributions contributor["contributions"]
-    json.gid contributor["id"]
-    json.login user.login
-    json.type user&.type
-    json.name user.real_name
-    json.image_url url_to_avatar(user)
+    json.partial! 'contributor', locals: { contributor: contributor }
   end
   json.total_count total_count
 end

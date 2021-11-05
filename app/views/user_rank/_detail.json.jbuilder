@@ -1,4 +1,6 @@
 owner_common = $redis_cache.hgetall("v2-owner-common:#{item[0]}")
+deleted_data = $redis_cache.smembers("v2-project-rank-deleted")
+$redis_cache.zrem("v2-user-project-rank:#{item[0]}", delete_data) unless deleted_data.blank?
 popular_project = $redis_cache.zrevrange("v2-user-project-rank:#{item[0]}", 0, 1, withscores: true)[0]
 json.id item[0]
 json.score item[1]

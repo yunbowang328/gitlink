@@ -23,6 +23,10 @@ class Cache::V2::ProjectRankService < ApplicationService
     reset_project_rank
   end
 
+  def clear 
+    clear_project_rank
+  end
+
   private 
   def load_project_common
     @project_common = Cache::V2::ProjectCommonService.new(@project_id).read
@@ -33,7 +37,8 @@ class Cache::V2::ProjectRankService < ApplicationService
   end
 
   def project_rank
-    $redis_cache.zscore(project_rank_key, @project_id).blank? ? reset_project_rank : $redis_cache.zscore(project_rank_key, @project_id)
+    result = $redis_cache.zscore(project_rank_key, @project_id)
+    result.blank? ? reset_project_rank : result
   end
 
   def set_project_rank
@@ -41,23 +46,24 @@ class Cache::V2::ProjectRankService < ApplicationService
     if $redis_cache.zscore(project_rank_key, @project_id).blank?
       reset_project_rank
       return
+    else
+      if @visits.present?
+        $redis_cache.zincrby(project_rank_key, @visits.to_i * 1, @project_id) 
+      end
+      if @praises.present?
+        $redis_cache.zincrby(project_rank_key, @praises.to_i * 5, @project_id) 
+      end
+      if @forks.present?
+        $redis_cache.zincrby(project_rank_key, @forks.to_i * 5, @project_id) 
+      end
+      if @issues.present?
+        $redis_cache.zincrby(project_rank_key, @issues.to_i * 10, @project_id) 
+      end
+      if @pullrequests.present?
+        $redis_cache.zincrby(project_rank_key, @pullrequests.to_i * 10, @project_id) 
+      end
+      reset_user_project_rank
     end
-    if @visits.present?
-      $redis_cache.zincrby(project_rank_key, @visits.to_i * 1, @project_id) 
-    end
-    if @praises.present?
-      $redis_cache.zincrby(project_rank_key, @praises.to_i * 5, @project_id) 
-    end
-    if @forks.present?
-      $redis_cache.zincrby(project_rank_key, @forks.to_i * 5, @project_id) 
-    end
-    if @issues.present?
-      $redis_cache.zincrby(project_rank_key, @issues.to_i * 10, @project_id) 
-    end
-    if @pullrequests.present?
-      $redis_cache.zincrby(project_rank_key, @pullrequests.to_i * 10, @project_id) 
-    end
-    reset_user_project_rank
 
     $redis_cache.zscore(project_rank_key, @project_id)
   end
@@ -73,5 +79,9 @@ class Cache::V2::ProjectRankService < ApplicationService
 
   def reset_user_project_rank
     $redis_cache.zadd("v2-user-project-rank:#{@project_common["owner_id"]}", $redis_cache.zscore(project_rank_key, @project_id), @project_id)
+  end
+
+  def clear_project_rank
+    $redis_cache.sadd('v2-project-rank-deleted', @project_id)
   end
 end

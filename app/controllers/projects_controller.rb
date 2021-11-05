@@ -191,7 +191,7 @@ class ProjectsController < ApplicationController
 
   def simple
     # 为了缓存活跃项目的基本信息，后续删除
-    Cache::V2::ProjectCommonService.new(@project.id).reset
+    Cache::V2::ProjectCommonService.new(@project.id).read
     json_response(@project, current_user)
   end
 
