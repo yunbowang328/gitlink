@@ -64,4 +64,10 @@ json.setting do
   else
     json.system_notification nil
   end
+
+  if current_user.ec_school.blank?
+    json.engineer_url nil 
+  else 
+    json.engineer_url "#{EduSetting.get('engineer_education')}/ecs/department?school_id=#{current_user.ec_school}"
+  end
 end
