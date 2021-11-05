@@ -1,12 +1,13 @@
 class Cache::V2::OwnerCommonService < ApplicationService 
   include AvatarHelper
-  attr_reader :owner_id, :login, :name, :avatar_url, :email
-  attr_accessor :owner
+  attr_reader :owner_id, :name
+  attr_accessor :owner, :login, :email
 
-  def initialize(login, email, params={})
-    @login = login
-    @email = email
+  def initialize(owner_id, params={})
+    @owner_id = owner_id
+    @email = params[:email]
     @name = params[:name]
+    @avatar_url = params[:avatar_url]
   end
 
   def read  
@@ -14,7 +15,6 @@ class Cache::V2::OwnerCommonService < ApplicationService
   end
 
   def call 
-    load_owner
     set_owner_common
   end
 
@@ -22,9 +22,15 @@ class Cache::V2::OwnerCommonService < ApplicationService
     reset_owner_common
   end
 
+  def clear 
+    clear_owner_common
+  end
+
   private 
   def load_owner 
-    @owner = Owner.find_by(login: @login)
+    @owner = Owner.find_by_id @owner_id
+    @login = @owner&.login
+    @email ||= @owner&.mail
   end
 
   def owner_common_key
@@ -32,35 +38,47 @@ class Cache::V2::OwnerCommonService < ApplicationService
   end
 
   def owner_common_key_by_id
-    "v2-owner-common:#{@owner.id}"
+    "v2-owner-common:#{@owner&.id}"
   end
 
   def owner_common
-    $redis_cache.hgetall(owner_common_key).blank? ? reset_owner_common : $redis_cache.hgetall(owner_common_key)
+    result = $redis_cache.hgetall(owner_common_key_by_id)
+    result.blank? ? reset_owner_common : result
   end
 
   def set_owner_common
-    if $redis_cache.hgetall(owner_common_key).blank?
+    if $redis_cache.hgetall(owner_common_key_by_id).blank?
       reset_owner_common
       return
-    end
-    if @name.present?
-      if $redis_cache.hget(owner_common_key, "name").nil?
-        reset_owner_name
-      else
-        $redis_cache.hset(owner_common_key, "name", @name) 
-        $redis_cache.hset(owner_common_key, "avatar_url", url_to_avatar(owner)) 
-
-        $redis_cache.hset(owner_common_key_by_id, "name", @name) 
-        $redis_cache.hset(owner_common_key_by_id, "avatar_url", url_to_avatar(owner)) 
+    else
+      load_owner
+      return if @owner.nil?
+      if @name.present?
+        if $redis_cache.hget(owner_common_key, "name").nil?
+          reset_owner_name
+        else
+          $redis_cache.hset(owner_common_key, "name", @name)   
+          $redis_cache.hset(owner_common_key_by_id, "name", @name) 
+        end
       end
-    end
-    if @email.present?
-      if $redis_cache.hget(owner_common_key, "email").nil?
-        reset_owner_email
-      else
-        $redis_cache.hset(owner_common_key, "email", @email) 
-        $redis_cache.hset(owner_common_key_by_id, "email", @email) 
+      if @email.present?
+        if $redis_cache.hget(owner_common_key, "email").nil?
+          reset_owner_email
+        else
+          # 更改邮箱这里把旧数据删除
+          $redis_cache.del("v2-owner-common:#{@login}-*")
+          $redis_cache.hset(owner_common_key, "email", @email) 
+          $redis_cache.hset(owner_common_key_by_id, "email", @email) 
+        end    
+      end
+      if @avatar_url.present?
+        if $redis_cache.hget(owner_common_key, "avatar_url").nil?
+          reset_owner_avatar_url
+        else
+          $redis_cache.hset(owner_common_key, "avatar_url", @avatar_url) 
+          $redis_cache.hset(owner_common_key_by_id, "avatar_url", @avatar_url)
+        end
+
       end
     end
 
@@ -88,20 +106,30 @@ class Cache::V2::OwnerCommonService < ApplicationService
 
   def reset_owner_name 
     $redis_cache.hset(owner_common_key, "name", owner&.real_name) 
-    $redis_cache.hset(owner_common_key, "avatar_url", url_to_avatar(owner)) 
     $redis_cache.hset(owner_common_key_by_id, "name", owner&.real_name) 
+  end
+
+  def reset_owner_avatar_url 
+    $redis_cache.hset(owner_common_key, "avatar_url", url_to_avatar(owner)) 
     $redis_cache.hset(owner_common_key_by_id, "avatar_url", url_to_avatar(owner)) 
   end
 
   def reset_owner_common
-    load_owner
-    $redis_cache.del(owner_common_key)
+    clear_owner_common
     reset_owner_id
     reset_owner_type
     reset_owner_login
     reset_owner_email
     reset_owner_name
+    reset_owner_avatar_url
 
     $redis_cache.hgetall(owner_common_key)
+  end
+
+  def clear_owner_common
+    load_owner
+    return if @owner.nil?
+    $redis_cache.del(owner_common_key)
+    $redis_cache.del(owner_common_key_by_id)
   end
 end

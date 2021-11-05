@@ -84,7 +84,7 @@ class Organization < Owner
   after_save :reset_cache_data
 
   def reset_cache_data
-    Cache::V2::OwnerCommonService.new(self.login, self.mail).reset
+    Cache::V2::OwnerCommonService.new(self.id).reset
   end
 
   def self.build(name, nickname, gitea_token=nil)

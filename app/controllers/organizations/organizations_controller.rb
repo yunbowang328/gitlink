@@ -22,7 +22,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
     @can_create_project = @organization.can_create_project?(current_user.id)
     @is_admin = can_edit_org?
     @is_member = @organization.is_member?(current_user.id)
-    Cache::V2::OwnerCommonService.new(@organization.login, @organization.mail).read
+    Cache::V2::OwnerCommonService.new(@organization.id).read
   end
 
   def create

@@ -28,6 +28,10 @@ class Cache::V2::ProjectCommonService < ApplicationService
     reset_project_common
   end
 
+  def clear 
+    clear_project_common
+  end
+
   private 
   def load_project
     @project = Project.find_by_id(project_id)
@@ -78,109 +82,75 @@ class Cache::V2::ProjectCommonService < ApplicationService
   end
 
   def project_common
-    $redis_cache.hgetall(project_common_key).blank? ? reset_project_common : $redis_cache.hgetall(project_common_key)
+    result = $redis_cache.hgetall(project_common_key)
+    result.blank? ? reset_project_common : result
   end
 
   def set_project_common
     if $redis_cache.hgetall(project_common_key).blank?
       reset_project_common
       return
-    end
-    load_project
-    return unless @project.is_full_public
-    if @owner_id.present?
-      if $redis_cache.hget(project_common_key, owner_id_key).nil?
-        reset_project_owner_id
-      else
-        $redis_cache.hset(project_common_key, owner_id_key, @owner_id) 
+    else
+      load_project
+      return unless @project.is_full_public
+      if @owner_id.present?
+        if $redis_cache.hget(project_common_key, owner_id_key).nil?
+          reset_project_owner_id
+        else
+          $redis_cache.hset(project_common_key, owner_id_key, @owner_id) 
+        end
       end
-    end
-    if @name.present?
-      if $redis_cache.hget(project_common_key, name_key).nil?
-        reset_project_name
-      else
-        $redis_cache.hset(project_common_key, name_key, @name) 
+      if @name.present?
+        if $redis_cache.hget(project_common_key, name_key).nil?
+          reset_project_name
+        else
+          $redis_cache.hset(project_common_key, name_key, @name) 
+        end
       end
-    end
-    if @identifier.present?
-      if $redis_cache.hget(project_common_key, identifier_key).nil?
-        reset_project_identifier
-      else
-        $redis_cache.hset(project_common_key, identifier_key, @identifier) 
+      if @identifier.present?
+        if $redis_cache.hget(project_common_key, identifier_key).nil?
+          reset_project_identifier
+        else
+          $redis_cache.hset(project_common_key, identifier_key, @identifier) 
+        end
       end
-    end
-    if @description.present?
-      if $redis_cache.hget(project_common_key, description_key).nil?
-        reset_project_description
-      else
-        $redis_cache.hset(project_common_key, description_key, @description) 
+      if @description.present?
+        if $redis_cache.hget(project_common_key, description_key).nil?
+          reset_project_description
+        else
+          $redis_cache.hset(project_common_key, description_key, @description) 
+        end
       end
-    end
-    if @visits.present?
-      if $redis_cache.hget(project_common_key, visits_key).nil?
-        reset_project_visits
-        Cache::V2::ProjectRankService.call(@project_id, {visits: @visits})
-        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {visits: @visits})
-      else
-        puts project_common_key
-        puts visits_key
-        puts @visits
+      if @visits.present?
         $redis_cache.hincrby(project_common_key, visits_key, @visits.to_s) 
         Cache::V2::ProjectRankService.call(@project_id, {visits: @visits})
         Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {visits: @visits})
       end
-    end
-    if @watchers.present?
-      if $redis_cache.hget(project_common_key, watchers_key).nil?
-        reset_project_watchers
-      else
+      if @watchers.present?
         $redis_cache.hincrby(project_common_key, watchers_key, @watchers) 
       end
-    end
-    if @praises.present?
-      if $redis_cache.hget(project_common_key, praises_key).nil?
-        reset_project_praises
-        Cache::V2::ProjectRankService.call(@project_id, {praises: @praises})
-        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {praises: @praises})
-      else
+      if @praises.present?
         $redis_cache.hincrby(project_common_key, praises_key, @praises) 
-        Cache::V2::ProjectRankService.call(@project_id, {praises: @praises})
-        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {praises: @praises})
+          Cache::V2::ProjectRankService.call(@project_id, {praises: @praises})
+          Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {praises: @praises})
       end
-    end
-    if @forks.present?
-      if $redis_cache.hget(project_common_key, forks_key).nil?
-        reset_project_forks
-        Cache::V2::ProjectRankService.call(@project_id, {forks: @forks})
-        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {forks: @forks})
-      else
+      if @forks.present?
         $redis_cache.hincrby(project_common_key, forks_key, @forks) 
         Cache::V2::ProjectRankService.call(@project_id, {forks: @forks})
         Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {forks: @forks})
       end
-    end
-    if @issues.present?
-      if $redis_cache.hget(project_common_key, issues_key).nil?
-        reset_project_issues
-        Cache::V2::ProjectRankService.call(@project_id, {issues: @issues})
-        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {issues: @issues})
-      else
+      if @issues.present?
         $redis_cache.hincrby(project_common_key, issues_key, @issues) 
         Cache::V2::ProjectRankService.call(@project_id, {issues: @issues})
         Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {issues: @issues})
       end
-    end
-    if @pullrequests.present?
-      if $redis_cache.hget(project_common_key, pullrequests_key).nil?
-        reset_project_pullrequests
-        Cache::V2::ProjectRankService.call(@project_id, {pullrequests: @pullrequests})
-        Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {pullrequests: @pullrequests})
-      else
+      if @pullrequests.present?
         $redis_cache.hincrby(project_common_key, pullrequests_key, @pullrequests) 
         Cache::V2::ProjectRankService.call(@project_id, {pullrequests: @pullrequests})
         Cache::V2::ProjectDateRankService.call(@project_id, Date.today, {pullrequests: @pullrequests})
       end
     end
+    
     $redis_cache.hgetall(project_common_key)
   end
   
@@ -240,5 +210,10 @@ class Cache::V2::ProjectCommonService < ApplicationService
     reset_project_pullrequests
 
     $redis_cache.hgetall(project_common_key)
+  end
+
+  def clear_project_common
+    $redis_cache.del(project_common_key)
+    Cache::V2::ProjectRankService.new(@project_id).clear
   end
 end

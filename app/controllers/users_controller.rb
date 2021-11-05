@@ -52,7 +52,7 @@ class UsersController < ApplicationController
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size
       # 为了缓存活跃用户的基本信息，后续删除
-      Cache::V2::OwnerCommonService.new(@user.login, @user.mail).read
+      Cache::V2::OwnerCommonService.new(@user.id).read
   end
 
   def watch_users
