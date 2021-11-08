@@ -1,0 +1,6 @@
+zh-CN:
+  activerecord:
+    attributes:
+      system_notification_history:
+        system_notification: "系统通知"
+        system_notification_id: "系统通知"

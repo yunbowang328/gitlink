@@ -64,6 +64,51 @@ http://localhost:3000/api/accounts/remote_register  | jq
 ```
 ---
 
+#### 独立注册接口
+```
+POST accounts/register
+```
+*示例*
+```bash
+curl -X POST \
+-d "login=2456233122@qq.com" \
+-d "password=djs_D_00001" \
+-d "namespace=16895620" \
+-d "code=forge" \
+http://localhost:3000/api/accounts/remote_register  | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|login    |是|string   |邮箱或者手机号  |
+|namespace |是|string   |登录名 |
+|password |是|string   |密码  |
+|code |是|string   |验证码  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|user|json object |返回数据|
+|-- id            |int   |用户id |
+|-- token         |string|用户token|
+
+
+返回值
+```json
+{
+  "status": 0,
+  "message": "success",
+  "user": {
+    "id": 36400,
+    "token": "8c87a80d9cfacc92fcb2451845104f35119eda96"
+  }
+}
+```
+---
+
 #### 获取当前登录用户信息
 ```
 GET api/users/me

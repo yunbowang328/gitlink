@@ -70,48 +70,10 @@ class ApplicationController < ActionController::Base
 																									(current_user.professional_certification && (ue.teacher? || ue.professional?))
 	end
 
-	def shixun_marker
-		unless current_user.is_shixun_marker? || current_user.admin_or_business?
-			tip_exception(403, "..")
-		end
-	end
-
-	# 实训的访问权限
-	def shixun_access_allowed
-		if !current_user.shixun_permission(@shixun)
-			tip_exception(403, "..")
-		end
-	end
 
 	def admin_or_business?
 		User.current.admin? || User.current.business?
 	end
-
-	# 访问课堂时没权限直接弹加入课堂的弹框 ：409
-	def user_course_identity
-		@user_course_identity = current_user.course_identity(@course)
-		if @user_course_identity > Course::STUDENT && @course.is_public == 0
-			tip_exception(401, "..") unless User.current.logged?
-			check_account
-			tip_exception(@course.excellent ? 410 : 409, "您没有权限进入")
-		end
-		if @user_course_identity > Course::CREATOR && @user_course_identity <= Course::STUDENT && @course.tea_id != current_user.id
-			# 实名认证和职业认证的身份判断
-			tip_exception(411, "你的实名认证和职业认证审核未通过") if @course.authentication &&
-				@course.professional_certification && (!current_user.authentication && !current_user.professional_certification)
-			tip_exception(411, "你的实名认证审核未通过") if @course.authentication && !current_user.authentication
-			tip_exception(411, "你的职业认证审核未通过") if @course.professional_certification && !current_user.professional_certification
-		end
-		uid_logger("###############user_course_identity:#{@user_course_identity}")
-	end
-
-	# 题库的访问权限
-	def bank_visit_auth
-		tip_exception(-2,"未通过职业认证") if current_user.is_teacher? && !current_user.certification_teacher? && !current_user.admin_or_business? && @bank.user_id != current_user.id && @bank.is_public
-		tip_exception(403, "无权限") unless @bank.user_id == current_user.id || current_user.admin_or_business? ||
-			(current_user.certification_teacher? && @bank.is_public)
-	end
-
 
 	# 判断用户的邮箱或者手机是否可用
 	# params[:type] 1: 注册；2：忘记密码；3：绑定
@@ -120,16 +82,16 @@ class ApplicationController < ActionController::Base
 					 login =~ /^[a-zA-Z0-9]+([._\\]*[a-zA-Z0-9])$/
 			tip_exception(-2, "请输入正确的手机号或邮箱")
 		end
-		# 考虑到安全参数问题，多一次查询，去掉Union
-		user = User.where(phone: login).first ||  User.where(mail: login).first
-		if type.to_i == 1 && !user.nil?
+	
+		user_exist = Owner.exists?(phone: login) || Owner.exists?(mail: login)
+		if user_exist && type.to_i == 1
 			tip_exception(-2, "该手机号码或邮箱已被注册")
-		elsif type.to_i == 2 && user.nil?
+		elsif type.to_i == 2 && !user_exist
 			tip_exception(-2, "该手机号码或邮箱未注册")
-		elsif type.to_i == 3 && user.present?
+		elsif type.to_i == 3 && user_exist
 			tip_exception(-2, "该手机号码或邮箱已绑定")
 		end
-		sucess_status
+		render_ok
 	end
 
 	# 发送及记录激活码
@@ -186,26 +148,6 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
-	def find_course
-		return normal_status(2, '缺少course_id参数！') if params[:course_id].blank?
-		@course = Course.find(params[:course_id])
-		tip_exception(404, "") if @course.is_delete == 1 && !current_user.admin_or_business?
-	rescue Exception => e
-		tip_exception(e.message)
-	end
-
-	def course_manager
-		return normal_status(403, '只有课堂管理员才有权限') if @user_course_identity > Course::CREATOR
-	end
-
-	def find_board
-		return normal_status(2, "缺少board_id参数") if params[:board_id].blank?
-		@board = Board.find(params[:board_id])
-	rescue Exception => e
-		uid_logger_error(e.message)
-		tip_exception(e.message)
-	end
-
 	def validate_type(object_type)
 		normal_status(2, "参数") if params.has_key?(:sort_type) && !SORT_TYPE.include?(params[:sort_type].strip)
 	end
@@ -213,21 +155,6 @@ class ApplicationController < ActionController::Base
 	def set_pagination
 		@page  		 = params[:page] || 1
 		@page_size = params[:page_size] || 15
-	end
-
-	# 课堂教师权限
-	def teacher_allowed
-		logger.info("#####identity: #{current_user.course_identity(@course)}")
-		unless current_user.course_identity(@course) < Course::STUDENT
-			normal_status(403, "")
-		end
-	end
-
-	# 课堂教师、课堂管理员、超级管理员的权限(不包含助教)
-	def teacher_or_admin_allowed
-		unless current_user.course_identity(@course) < Course::ASSISTANT_PROFESSOR
-			normal_status(403, "")
-		end
 	end
 
 	def require_admin

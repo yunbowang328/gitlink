@@ -23,7 +23,11 @@ class BaseForm
   end
 
   def check_reversed_keyword(repository_name)
-    raise "项目标识已被占用." if ReversedKeyword.is_reversed(repository_name).exists?
+    raise "项目标识已被占用." if ReversedKeyword.check_exists?(repository_name)
   end
-  
+
+  private
+  def strip(str)
+    str.to_s.strip.presence
+  end
 end

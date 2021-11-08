@@ -82,6 +82,8 @@ class Gitea::ClientService < ApplicationService
         req.headers['Content-Type'] = 'application/json'
         req.response :logger # 显示日志
         req.adapter Faraday.default_adapter
+        req.options.timeout = 100           # open/read timeout in seconds
+        req.options.open_timeout = 10      # connection open timeout in seconds
         if token.blank?
           req.basic_auth(username, secret)
         else
