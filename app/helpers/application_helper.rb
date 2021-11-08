@@ -442,6 +442,14 @@ module ApplicationHelper
     User.find_by(gitea_uid: gitea_uid)
   end
 
+  def find_user_in_redis_cache(login, email)
+    $redis_cache.hgetall("v2-owner-common:#{login}-#{email}")
+  end
+
+  def find_user_in_redis_cache_by_id(id)
+    $redis_cache.hgetall("v2-owner-common:#{id}")
+  end
+
   def render_base64_decoded(str)
     return nil if str.blank?
     Base64.decode64 str

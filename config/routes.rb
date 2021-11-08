@@ -73,6 +73,9 @@ Rails.application.routes.draw do
 
     resources :public_keys, only: [:index, :create, :destroy]
 
+    resources :project_rank, only: [:index]
+    resources :user_rank, only: [:index]
+
     resources :statistic, only: [:index] do
       collection do
         get :platform_profile
@@ -156,6 +159,7 @@ Rails.application.routes.draw do
 
     resources :project_categories, only: [:index, :show] do
       get :group_list, on: :collection
+      get :pinned_index, on: :collection
     end
     resources :project_languages, only: [:index, :show]
     resources :ignores, only: [:index, :show]
@@ -181,6 +185,7 @@ Rails.application.routes.draw do
         post :migrate
         get :group_type_list
         get :recommend
+        get :banner_recommend
       end
     end
 
@@ -424,7 +429,7 @@ Rails.application.routes.draw do
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
-          get :members, to: 'projects#fork_users'
+          get :forks, to: 'projects#fork_users'
           match :about, :via => [:get, :put, :post]
         end
       end
@@ -580,6 +585,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
+        resources :members, only: [:index]
         resources :teams, only: [:index, :create, :destroy]
         resources :project_units, only: [:index, :create]
         resources :applied_transfer_projects, only: [:create] do 
@@ -904,7 +910,7 @@ Rails.application.routes.draw do
 
     resources :courses, only: [:index, :destroy, :update]
 
-    resources :projects, only: [:index, :destroy]
+    resources :projects, only: [:index, :edit, :update, :destroy]
 
     resources :disciplines, only: [:index, :create, :edit, :update, :destroy] do
       post :adjust_position, on: :member
