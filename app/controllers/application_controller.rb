@@ -26,7 +26,8 @@ class ApplicationController < ActionController::Base
   end
 
 	DCODES = %W(2 3 4 5 6 7 8 9 a b c f e f g h i j k l m n o p q r s t u v w x y z)
-	OPENKEY = "79e33abd4b6588941ab7622aed1e67e8"
+	OPENKEY = Rails.application.config_for(:configuration)['sign_key'] || "79e33abd4b6588941ab7622aed1e67e8"
+
 
 	helper_method :current_user, :base_url
 
@@ -333,11 +334,6 @@ class ApplicationController < ActionController::Base
 	def error_status(message = nil)
 		@status = -1
 		@message = message
-	end
-
-	# 实训等对应的仓库地址
-	def repo_ip_url(repo_path)
-		"#{edu_setting('git_address_ip')}/#{repo_path}"
 	end
 
 	def repo_url(repo_path)
@@ -741,35 +737,8 @@ class ApplicationController < ActionController::Base
 		render json: exception.tip_json
 	end
 
-	def render_parameter_missing
-		render json: { status: -1, message: '参数缺失' }
-	end
-
 	def set_export_cookies
 		cookies[:fileDownload] = true
-	end
-
-	# 149课程的评审用户数据创建（包含创建课堂学生）
-	def open_class_user
-		user = User.find_by(login: "OpenClassUser")
-		unless user
-			ActiveRecord::Base.transaction do
-				user_params = {status: 1, login: "OpenClassUser", lastname: "开放课程",
-											 nickname: "开放课程", professional_certification: 1, certification: 1, grade: 0,
-											 password: "12345678", phone: "11122223333", profile_completed: 1}
-				user = User.create!(user_params)
-
-				UserExtension.create!(user_id: user.id, gender: 0, school_id: 3396, :identity => 1, :student_id => "openclassuser") # 3396
-
-				subject = Subject.find_by(id: 149)
-				if subject
-					subject.courses.each do |course|
-						CourseMember.create!(course_id: course.id, role: 3, user_id: user.id) if !course.course_members.exists?(user_id: user.id)
-					end
-				end
-			end
-		end
-		user
 	end
 
 	# 记录热门搜索关键字

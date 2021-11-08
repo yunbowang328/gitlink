@@ -2,13 +2,6 @@ module Register
   class BaseForm < ::BaseForm
     include ActiveModel::Model
     
-    Error = Class.new(StandardError)
-    EmailError = Class.new(Error)
-    LoginError = Class.new(Error)
-    PhoneError = Class.new(Error)
-    PasswordFormatError = Class.new(Error)
-    VerifiCodeError = Class.new(Error)
-    
     private
     def check_login(login)
       login = strip(login)
@@ -33,19 +26,5 @@ module Register
       phone_exist = Owner.exists?(phone: phone)
       raise PhoneError, '手机号已被使用' if phone_exist
     end
-
-    def check_password(password)
-      password = strip(password)
-      raise PasswordFormatError, "8~16位密码，支持字母数字和符号" unless password =~ CustomRegexp::PASSWORD
-    end
-
-    def check_verifi_code(verifi_code, code)
-      code = strip(code)
-      # return if code == "123123" # TODO 万能验证码，用于测试
-
-      raise VerifiCodeError, "验证码不正确" if verifi_code&.code != code
-      raise VerifiCodeError, "验证码已失效" if !verifi_code&.effective?
-    end
-    
   end
 end

@@ -18,4 +18,9 @@ class ApplicationService
   def str_to_boolean str
     ActiveModel::Type::Boolean.new.cast str
   end
+
+  def phone_mail_type value
+    value =~ /^1\d{10}$/ ? 1 : 0
+  end
+
 end
