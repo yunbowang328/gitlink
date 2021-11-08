@@ -5,6 +5,7 @@ class PullRequestsController < ApplicationController
   before_action :check_menu_authorize
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
   before_action :load_pull_request, only: [:files, :commits]
+  before_action :find_atme_receivers, only: [:create, :update]
   include TagChosenHelper
   include ApplicationHelper
 
@@ -61,6 +62,8 @@ class PullRequestsController < ApplicationController
         @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
         SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id) if Site.has_notice_menu?
         SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id) if Site.has_notice_menu?
+        Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+        AtmeService.call(current_user, @atme_receivers, @pull_request) if @atme_receivers.size > 0
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
         raise ActiveRecord::Rollback
@@ -106,6 +109,8 @@ class PullRequestsController < ApplicationController
                 if params[:status_id].to_i == 5
                   @issue.issue_times.update_all(end_time: Time.now)
                 end
+                Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+                AtmeService.call(current_user, @atme_receivers, @pull_request) if @atme_receivers.size > 0
                 normal_status(0, "PullRequest更新成功")
               else
                 normal_status(-1, "PullRequest更新失败")

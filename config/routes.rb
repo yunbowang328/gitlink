@@ -431,7 +431,7 @@ Rails.application.routes.draw do
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
-          get :members, to: 'projects#fork_users'
+          get :forks, to: 'projects#fork_users'
           match :about, :via => [:get, :put, :post]
         end
       end
@@ -587,6 +587,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
+        resources :members, only: [:index]
         resources :teams, only: [:index, :create, :destroy]
         resources :project_units, only: [:index, :create]
         resources :applied_transfer_projects, only: [:create] do 

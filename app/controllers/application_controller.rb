@@ -782,4 +782,8 @@ class ApplicationController < ActionController::Base
 		HotSearchKeyword.add(keyword)
 	end
 
+  def find_atme_receivers
+    @atme_receivers = User.where(login: params[:receivers_login])
+  end
+
 end
