@@ -68,6 +68,10 @@ default: &default
     read_domain: ''
     base_url: ''
 
+  forum:
+    domain: ''
+    base_url: '/api'
+
 production:
   <<: *default
   # 中间层地址

@@ -18,7 +18,7 @@
         <tr class="user-item-<%= user.id %>">
           <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
           <td class="text-left">
-            <%= link_to "/users/#{user.login}", target: '_blank' do %>
+            <%= link_to "/#{user.login}", target: '_blank' do %>
               <%= overflow_hidden_span user.real_name, width: 100 %>
             <% end %>
           </td>
@@ -44,7 +44,6 @@
             <div class="d-inline">
               <%= javascript_void_link('更多', class: 'action dropdown-toggle', 'data-toggle': 'dropdown', 'aria-haspopup': true, 'aria-expanded': false) %>
               <div class="dropdown-menu more-action-dropdown">
-                <%= javascript_void_link('奖励', class: 'dropdown-item reward-grade-action', data: { toggle: 'modal', target: '.admin-users-reward-grade-modal', id: user.id }) %>
 
                 <%= javascript_void_link '恢复禁密账号', class: 'dropdown-item reset-login-times-action', data: { id: user.id } %>
 
