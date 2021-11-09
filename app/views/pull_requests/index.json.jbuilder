@@ -21,7 +21,7 @@ json.issues do
     json.fork_project_id pr&.fork_project_id
     json.fork_project_identifier pr&.fork_project&.identifier
     json.fork_project_user pr&.fork_project&.owner.try(:login)
-
+    json.fork_project_user_name pr&.fork_project&.owner.try(:show_real_name)
     
     json.id issue.id
     json.name issue.subject
