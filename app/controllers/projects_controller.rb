@@ -61,11 +61,11 @@ class ProjectsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       # Projects::CreateForm.new(project_params).validate!
-      private = params[:private]
+      private = params[:private] || @project.is_public
       gitea_params = {
         private: private,
         default_branch: params[:default_branch]
-      }
+      }.compact
       if [true, false].include? private
         new_project_params = project_params.except(:private).merge(is_public: !private)
         Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
