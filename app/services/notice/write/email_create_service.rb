@@ -21,7 +21,7 @@ class Notice::Write::EmailCreateService < Notice::Write::ClientService
   end
 
   def request_subject
-    "Trustie: #{subject}"
+    "#{subject}"
   end
 
   def request_params
