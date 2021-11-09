@@ -48,5 +48,5 @@ json.setting do
   json.main_web_site_url main_web_site_url
   json.current_main_site_url current_main_site_url
 
-  json.api_urls @api_urls
+  json.api_urls Rails.application.config_for(:configuration)["api_urls"]
 end
