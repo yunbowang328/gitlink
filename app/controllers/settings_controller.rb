@@ -6,7 +6,7 @@ end
 
 def api_urls
   navigations = []
-  hash = Rails.application.config_for(:configuration)["api_url"]
+  hash = Rails.application.config_for(:configuration)["api_urls"]
   hash.each do |key, value|
     navigations << {"#{key}": value}
   end
