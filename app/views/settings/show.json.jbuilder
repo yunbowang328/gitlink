@@ -47,4 +47,6 @@ json.setting do
   json.main_site current_laboratory.main_site?
   json.main_web_site_url main_web_site_url
   json.current_main_site_url current_main_site_url
+
+  json.api_urls @api_urls
 end
