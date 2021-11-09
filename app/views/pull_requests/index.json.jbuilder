@@ -7,7 +7,8 @@ json.limit @limit
 json.user_admin_or_member @user_admin_or_member
 json.user_admin_or_developer @user_admin_or_developer
 json.project_name @project.name
-json.project_author_name @project.owner.try(:login)
+json.project_author @project.owner.try(:login)
+json.project_author_name @project.owner.try(:show_real_name)
 
 json.issues do
   json.array! @issues.to_a do |issue|
