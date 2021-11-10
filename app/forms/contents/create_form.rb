@@ -5,7 +5,7 @@ class Contents::CreateForm < BaseForm
 
   validate :check_branch
 
-  validate :dun_content_check
+  # validate :dun_content_check  敏感词过滤
 
   def check_branch
     raise "branch和new_branch必须存在一个 " if branch.blank? && new_branch.blank?
