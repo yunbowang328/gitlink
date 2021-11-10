@@ -182,7 +182,12 @@ class PullRequestsController < ApplicationController
           message: "在这些分支之间的合并请求已存在：<a href='/projects/#{@owner.login}/#{@project.identifier}/pulls/#{can_merge.first.id}/Messagecount''>#{can_merge.first.try(:title)}</a>",
         }
       else
-        normal_status(0, "可以合并")
+        compare_result = Repositories::CompareService.call(@owner, @project, params)
+        if compare_result['Diff'].blank?
+          normal_status(0, "可以合并")
+        else
+          normal_status(-2, "分支内容相同，无需创建合并请求")
+        end
       end
     end
   end
