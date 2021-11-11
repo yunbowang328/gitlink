@@ -33,12 +33,13 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   end
 
   def update 
-    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i}) && save_image_file(params[:logo], 'logo')
+    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i})
+      save_image_file(params[:logo], 'logo')
       redirect_to admins_project_categories_path
       flash[:success] = '更新成功'
     else 
       redirect_to admins_project_categories_path
-      flash[:success] = '更新失败'
+      flash[:danger] = '更新失败'
     end
   end
 

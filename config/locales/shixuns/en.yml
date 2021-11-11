@@ -1,7 +1,0 @@
-'en':
-  shixun:
-    status:
-      '0': editing
-      '1': applying
-      '2': published
-      '3': closed

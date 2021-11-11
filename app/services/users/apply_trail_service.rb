@@ -51,7 +51,7 @@ class Users::ApplyTrailService < ApplicationService
   end
 
   def send_trial_apply_notify!
-    Educoder::Sms.notify_admin(send_type:'user_apply_auth')
+    Gitlink::Sms.notify_admin(send_type:'user_apply_auth')
   rescue => ex
     Rails.logger.error('发送通知管理员短信失败')
     Rails.logger.error(ex.message)

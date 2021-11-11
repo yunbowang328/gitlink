@@ -13,7 +13,7 @@ namespace :sync do
 
       no = sprintf("%04d", i)
       phone = "#{rand_chart}160731#{no}"
-      mail = "#{rand_chart}#{no}@educoder.net"
+      mail = "#{rand_chart}#{no}@gitlink.org.cn"
       code = generate_identifier User, 8
       login = "m" + code
 

@@ -62,7 +62,7 @@ class Users::ApplyProfessionalAuthService < ApplicationService
   def sms_notify_admin
     sms_cache = Rails.cache.read('apply_pro_certification')
     if sms_cache.nil?
-      Educoder::Sms.notify_admin(send_type: 'apply_pro_certification')
+      Gitlink::Sms.notify_admin(send_type: 'apply_pro_certification')
       Rails.cache.write('apply_pro_certification', 1, expires_in: 5.minutes)
     end
   rescue => ex

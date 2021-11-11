@@ -105,7 +105,7 @@ class Token < ActiveRecord::Base
   end
 
   def self.generate_token_value
-    Educoder::Utils.random_hex(20)
+    Gitlink::Utils.random_hex(20)
   end
 
   def self.delete_user_all_tokens(user)

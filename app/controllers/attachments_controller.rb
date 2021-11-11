@@ -196,7 +196,7 @@ class AttachmentsController < ApplicationController
   end
 
   def file_save_to_ucloud(path, file, content_type)
-    ufile = Educoder::Ufile.new(
+    ufile = Gitlink::Ufile.new(
         ucloud_public_key: edu_setting('public_key'),
         ucloud_private_key: edu_setting('private_key'),
         ucloud_public_read: true,

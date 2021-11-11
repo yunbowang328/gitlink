@@ -21,7 +21,7 @@
                              style: 'text-transform:lowercase'%>
           <div class="input-group-append">
             <% rails_env = EduSetting.get('rails_env') %>
-            <span class="input-group-text font-14" id="site-prefix"><%= rails_env && rails_env != 'production' ? ".#{rails_env}.educoder.net" : '.educoder.net' %></span>
+            <span class="input-group-text font-14" id="site-prefix"><%= rails_env && rails_env != 'production' ? ".#{rails_env}.gitlink.org.cn" : '.gitlink.org.cn' %></span>
           </div>
         </div>
         <%# if @laboratory.errors && @laboratory.errors.key?(:identifier) %>
