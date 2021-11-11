@@ -4,7 +4,7 @@ module Admins::ProjectsHelper
     owner = project.owner
 
     if owner.is_a?(User)
-      link_to(project.owner&.real_name, "/users/#{project&.owner&.login}", target: '_blank')
+      link_to(project.owner&.real_name, "/#{project&.owner&.login}", target: '_blank')
     elsif owner.is_a?(Organization)
       link_to(project.owner&.real_name, "/organize/#{project&.owner&.login}", target: '_blank')
     else

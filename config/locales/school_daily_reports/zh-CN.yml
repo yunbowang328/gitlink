@@ -1,9 +1,0 @@
-zh-CN:
-  school_daily_report:
-    teacher_increase_count: 新增教师
-    student_increase_count: 新增学生
-    course_increase_count: 新增课堂
-    shixun_increase_count: 新增实训
-    shixun_homework_count: 新增实训作业
-    shixun_evaluate_count: 新增实训评测
-    active_user_count: 活跃用户

@@ -1,6 +1,6 @@
 default: &default
   # 用户登入的时候设置/登出的时候清空
-  autologin_cookie_name: 'autologin_trustie'
+  autologin_cookie_name: 'autologin_gitlink'
   platform_url: 'http://localhost:3000'
 
 
@@ -8,7 +8,7 @@ default: &default
   attachment_folder: '/tmp'
 
   # webssh相关
-  tomcat_webssh: 'https://testwebssh.educoder.net'
+  tomcat_webssh: 'https://testwebssh.gitlink.org.cn'
   webssh_username: ''
   webssh_password: ''
 
@@ -70,11 +70,11 @@ production:
   cloud_bridge: ''
   cloud_tomcat_php: ''
   bridge_secret_key: ''
-  cookie_domain: '.educoder.net'
+  cookie_domain: '.gitlink.org.cn'
 
   attachment_folder: ''
-  host_name: 'https://testeduplus2.educoder.net'
-  old_edu_host: 'http://testbdweb.educoder.net'
+  host_name: 'https://testeduplus2.gitlink.org.cn'
+  old_edu_host: 'http://testbdweb.gitlink.org.cn'
 
 development:
   <<: *default
@@ -86,5 +86,5 @@ development:
 test:
   <<: *default
   cloud_tomcat_php: 'http://10.9.63.225'
-  host_name: 'https://testeduplus2.educoder.net'
-  old_edu_host: 'http://testbdweb.educoder.net'
+  host_name: 'https://testeduplus2.gitlink.org.cn'
+  old_edu_host: 'http://testbdweb.gitlink.org.cn'

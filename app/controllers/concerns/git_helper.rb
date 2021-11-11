@@ -34,7 +34,7 @@ module GitHelper
 
     rescue Exception => e
       Rails.logger.error(e.message)
-      raise Educoder::TipException.new("文档内容获取异常")
+      raise Gitlink::TipException.new("文档内容获取异常")
     end
   end
 
@@ -64,7 +64,7 @@ module GitHelper
 
   # 版本库Fork功能
   def project_fork(container, original_rep_path, username)
-    raise Educoder::TipException.new("fork源路径为空,fork失败!") if original_rep_path.blank?
+    raise Gitlink::TipException.new("fork源路径为空,fork失败!") if original_rep_path.blank?
     # 将要生成的仓库名字
     new_repo_name = "#{username.try(:strip)}/#{container.try(:identifier)}#{ Time.now.strftime("%Y%m%d%H%M%S")}"
     # uid_logger("start fork container: repo_name is #{new_repo_name}")
