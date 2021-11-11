@@ -36,9 +36,9 @@ class SendTemplateMessageJob < ApplicationJob
       operator = User.find_by_id(operator_id)
       issue = Issue.find_by_id(issue_id)
       return unless operator.present? && issue.present?
-      receivers = receivers.where.not(id: operator&.id)
+      # receivers = receivers.where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::IssueAtme.get_message_content(receivers, operator, issue)
-      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, issue_id: issue.id}, 2)
+      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, issue_id: issue.id}, 2, operator_id)
     when 'IssueChanged'
       operator_id, issue_id, change_params = args[0], args[1], args[2]
       operator = User.find_by_id(operator_id)
@@ -234,9 +234,9 @@ class SendTemplateMessageJob < ApplicationJob
       operator = User.find_by_id(operator_id)
       pull_request = PullRequest.find_by_id(pull_request_id)
       return unless operator.present? && pull_request.present?
-      receivers = receivers.where.not(id: operator&.id)
+      # receivers = receivers.where.not(id: operator&.id)
       receivers_string, content, notification_url = MessageTemplate::PullRequestAtme.get_message_content(receivers, operator, pull_request)
-      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id}, 2)
+      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id}, 2, operator_id)
     when 'PullRequestChanged'
       operator_id, pull_request_id, change_params = args[0], args[1], args[2]
       operator = User.find_by_id(operator_id)
