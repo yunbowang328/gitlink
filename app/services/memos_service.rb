@@ -130,7 +130,7 @@ class MemosService
                        :filesize => memo_image.filesize} if memo_image
 
     user_praise = PraiseTread.is_user_praise(memo.id, "Memo", current_user.try(:id)).exists?
-    memo.update_column(:viewed_count, memo.viewed_count + 1)
+    memo.update_column(:viewed_count, memo.viewed_count + 1) if params[:only_data].blank?
     # 帖子的回复
     memos = memo.reply_for_memo
     unless current_user.try(:admin?) # 只有管理员和发布人能看到隐藏的回复
