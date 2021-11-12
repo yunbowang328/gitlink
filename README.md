@@ -115,7 +115,7 @@ rails db:migrate RAILS_ENV=development
 git clone -b standalone https://git.trustie.net/jasder/build.git
 ```
 
-#### 12. 启动redis(此处已mac系统为例)
+#### 12. 启动redis(此处以macOS系统为例)
 ```bash
 redis-server&
 ```
