@@ -82,6 +82,8 @@ class Gitea::ClientService < ApplicationService
         req.headers['Content-Type'] = 'application/json'
         req.response :logger # 显示日志
         req.adapter Faraday.default_adapter
+        req.options.timeout = 100           # open/read timeout in seconds
+        req.options.open_timeout = 10      # connection open timeout in seconds
         if token.blank?
           req.basic_auth(username, secret)
         else
@@ -108,6 +110,7 @@ class Gitea::ClientService < ApplicationService
   def full_url(api_rest, action='post')
     url = [api_url, api_rest].join('').freeze
     url = action === 'get' ? url : URI.escape(url)
+    url = URI.escape(url) unless url.ascii_only?
     puts "[gitea] request url: #{url}"
     return url
   end
@@ -212,6 +215,14 @@ class Gitea::ClientService < ApplicationService
       end
 
     [body, message]
+  end
+
+  def json_parse!(body)
+    return nil unless body.present?
+
+    body = JSON.parse(body)
+    body, message = fix_body(body)
+    body
   end
 
   def log_error(status, body)

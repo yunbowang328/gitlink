@@ -1,7 +1,7 @@
 <!--
  * @Date: 2021-03-01 10:35:21
  * @LastEditors: viletyy
- * @LastEditTime: 2021-06-11 16:28:51
+ * @LastEditTime: 2021-09-15 18:00:10
  * @FilePath: /forgeplus/app/docs/slate/source/includes/_users.md
 -->
 # Users
@@ -46,6 +46,305 @@ await octokit.request('GET /api/users/me.json')
 <aside class="success">
   Success Data.
 </aside>
+
+## 用户消息列表
+获取用户消息列表
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/:login/messages.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/messages.json')
+```
+
+### HTTP 请求
+`GET api/users/yystopf/messages.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type       | string  | 消息类型，不传为所有消息，notification为系统消息，atme为@我消息|
+|status     | integer | 是否已读，不传为所有消息，1为未读，2为已读 |
+|limit      | integer | 每页个数 |
+|page       | integer | 页码 |
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|total_count       | integer  | 消息总数 |
+|type     | string | 消息类型 |
+|unread_notification | integer | 未读系统通知数量 |
+|unread_atme | integer | 未读@我数量 |
+|messages.id | integer | 消息id |
+|messages.status | integer | 消息是否已读，1为未读，2为已读 |
+|messages.content | string | 消息内容 |
+|messages.notification_url | string | 消息跳转地址 |
+|messages.source | string | 消息来源 |
+|messages.timeago | string | 消息时间 |
+|messages.type | string | 消息类型，notification为系统消息，atme为@我消息|
+|sender | object | 消息发送者 |
+
+#### 消息来源source字段说明
+类型|说明
+--------- | -----------
+|IssueAssigned              | 有新指派给我的易修  | 
+|IssueAssignerExpire        | 我负责的易修截止日期到达最后一天  | 
+|IssueAtme                  | 在易修中@我  | 
+|IssueChanged               | 我创建或负责的易修状态变更  | 
+|IssueCreatorExpire         | 我创建的易修截止日期到达最后一天  | 
+|IssueDeleted               | 我创建或负责的易修删除  | 
+|IssueJournal               | 我创建或负责的易修有新的评论  | 
+|LoginIpTip                 | 登录异常提示  | 
+|OrganizationJoined         | 账号被拉入组织  | 
+|OrganizationLeft           | 账号被移出组织  | 
+|OrganizationRole           | 账号组织权限变更  | 
+|ProjectDeleted             | 我关注的仓库被删除  | 
+|ProjectFollowed            | 我管理的仓库被关注  | 
+|ProjectForked              | 我管理的仓库被复刻  | 
+|ProjectIssue               | 我管理/关注的仓库有新的易修  | 
+|ProjectJoined              | 账号被拉入项目  | 
+|ProjectLeft                | 账号被移出项目  | 
+|ProjectMemberJoined        | 我管理的仓库有成员加入  | 
+|ProjectMemberLeft          | 我管理的仓库有成员移出  | 
+|ProjectMilestone           | 我管理的仓库有新的里程碑  | 
+|ProjectPraised             | 我管理的仓库被点赞  | 
+|ProjectPullRequest         | 我管理/关注的仓库有新的合并请求  |
+|ProjectRole                | 账号仓库权限变更  | 
+|ProjectSettingChanged      | 我管理的仓库项目设置被更改  | 
+|ProjectTransfer            | 我关注的仓库被转移  | 
+|ProjectVersion             | 我关注的仓库有新的发行版  | 
+|PullRequestAssigned        | 有新指派给我的合并请求  | 
+|PullReuqestAtme            | 在合并请求中@我  | 
+|PullRequestChanged         | 我创建或负责的合并请求状态变更  | 
+|PullRequestClosed          | 我创建或负责的合并请求被关闭  |
+|PullRequestJournal         | 我创建或负责的合并请求有新的评论  |
+|PullRequestMerged          | 我创建或负责的合并请求被合并  | 
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "total_count": 5,
+    "type": "",
+    "unread_notification": 3,
+    "unread_atme": 2,
+    "messages": [
+        {
+            "id": 1,
+            "status": 1,
+            "content": "Atme Message Content 1",
+            "notification_url": "http://www.baidu.com",
+            "source": "PullRequestAtme",
+            "time_ago": "1天前",
+            "type": "atme",
+            "sender": {
+                "id": 5,
+                "type": "User",
+                "name": "testforge2",
+                "login": "testforge2",
+                "image_url": "system/lets/letter_avatars/2/T/236_177_85/120.png"
+            }
+        },
+        {
+            "id": 2,
+            "status": 0,
+            "content": "Atme Message Content 2",
+            "notification_url": "http://www.baidu.com",
+            "source": "IssueAtme",
+            "time_ago": "1天前",
+            "type": "atme",
+            "sender": {
+                "id": 4,
+                "type": "User",
+                "name": "testforge1",
+                "login": "testforge1",
+                "image_url": "system/lets/letter_avatars/2/T/19_237_174/120.png"
+            }
+        },
+        {
+            "id": 3,
+            "status": 1,
+            "content": "Notification Message Content 1",
+            "notification_url": "http://www.baidu.com",
+            "source": "IssueDelete",
+            "time_ago": "1天前",
+            "type": "notification"
+        },
+        {
+            "id": 4,
+            "status": 0,
+            "content": "Notification Message Content 2",
+            "notification_url": "http://www.baidu.com",
+            "source": "IssueChanged",
+            "time_ago": "1天前",
+            "type": "notification"
+        },
+        {
+            "id": 5,
+            "status": 0,
+            "content": "Notification Message Content 3",
+            "notification_url": "http://www.baidu.com",
+            "source": "ProjectJoined",
+            "time_ago": "1天前",
+            "type": "notification"
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 用户阅读系统通知
+用户阅读系统通知
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf/system_notification_histories.json
+```
+
+```javascript
+await octokit.request('GET /api/users/:login/system_notification_histories.json')
+```
+
+### HTTP 请求
+`POST /api/users/:login/system_notification_histories.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|system_notification_id       |integer   |阅读的系统通知id |
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+
+## 发送消息
+发送消息, 目前只支持atme
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/:login/messages.json
+```
+
+```javascript
+await octokit.request('POST /api/users/:login/messages.json')
+```
+
+### HTTP 请求
+`POST api/users/yystopf/messages.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type       | string  | 消息类型 |
+|receivers_login  | array   | 需要发送消息的用户名数组|
+|atmeable_type | string | atme消息对象，是从哪里@我的，比如评论：Journal、易修：Issue、合并请求：PullRequest |
+|atmeable_id | integer | atme消息对象id |
+
+> 请求的JSON示例:
+
+```json
+{
+    "type": "atme",
+    "receivers_login": ["yystopf", "testforge1"],
+    "atmeable_type": "Journal",
+    "atmeable_id": 67
+}
+```
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 阅读消息
+阅读消息
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/:login/messages/read.json
+```
+
+```javascript
+await octokit.request('POST /api/users/:login/messages/read.json')
+```
+
+### HTTP 请求
+`POST api/users/yystopf/messages/read.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type       | string  | 消息类型，不传为所有消息，notification为系统消息，atme为@我消息|
+|ids        | array   | 消息id数组，包含-1则把所有未读消息标记为已读|
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 删除消息
+删除消息
+
+> 示例:
+
+```shell
+curl -X DELETE http://localhost:3000/api/users/:login/messages.json
+```
+
+```javascript
+await octokit.request('DELETE /api/users/:login/messages.json')
+```
+
+### HTTP 请求
+`DELETE api/users/yystopf/messages.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type       | string  | 消息类型，atme为@我消息|
+|ids        | array   | 消息id数组，包含-1则把所有消息删除|
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "success"
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
 
 ## 更改用户信息
 更改用户信息
@@ -103,6 +402,290 @@ await octokit.request('PATCH/PUT /api/users/:login.json')
     "message": "success"
 }
 ```
+
+## 获取平台消息设置配置信息
+获取平台消息设置配置信息
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/template_message_settings.json
+```
+
+```javascript
+await octokit.request('GET /api/template_message_settings.json')
+```
+
+### HTTP 请求
+`GET /api/template_message_settings.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|type                 |string   |消息配置类型 |
+|type_name            |string   |消息配置类型含义|
+|total_settings_count |int      |配置条数|
+|settings.name        |string   |配置名称|
+|settings.key         |string   |配置标识|
+|settings.notification_disabled |boolean  |站内信设置是否禁用|
+|settings.email_disabled        |boolean  |邮件设置是否禁用|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "响应成功",
+    "setting_types": [
+        {
+            "type": "TemplateMessageSetting::Normal",
+            "type_name": "",
+            "total_settings_count": 3,
+            "settings": [
+                {
+                    "name": "被拉入或移出组织",
+                    "key": "Organization",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "被拉入或移出项目",
+                    "key": "Project",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有权限变更",
+                    "key": "Permission",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        },
+        {
+            "type": "TemplateMessageSetting::CreateOrAssign",
+            "type_name": "我创建的或负责的",
+            "total_settings_count": 4,
+            "settings": [
+                {
+                    "name": "易修被指派",
+                    "key": "IssueAssigned",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "合并请求被指派",
+                    "key": "PullRequestAssigned",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        },
+        {
+            "type": "TemplateMessageSetting::ManageProject",
+            "type_name": "我管理的仓库",
+            "total_settings_count": 4,
+            "settings": [
+                {
+                    "name": "有新的易修",
+                    "key": "Issue",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有新的合并请求",
+                    "key": "PullRequest",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "有成员变动",
+                    "key": "Member",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                },
+                {
+                    "name": "设置更改",
+                    "key": "SettingChanged",
+                    "notification_disabled": true,
+                    "email_disabled": false
+                }
+            ]
+        }
+    ]
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 获取用户消息设置配置信息
+获取用户消息设置配置信息
+
+> 示例:
+
+```shell
+curl -X GET http://localhost:3000/api/users/yystopf/template_message_settings.json
+```
+
+```javascript
+await octokit.request('GET /api/uses/yystopf/template_message_settings.json')
+```
+
+### HTTP 请求
+`GET /api/users/:user_id/template_message_settings.json`
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|notification_body    |string   |站内信配置 |
+|email_body           |string   |邮件配置|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "响应成功",
+    "user": {
+        "id": 2,
+        "type": "User",
+        "name": "heh",
+        "login": "yystopf",
+        "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
+    },
+    "notification_body": {
+        "CreateOrAssign::IssueAssigned": true,
+        "CreateOrAssign::PullRequestAssigned": true,
+        "ManageProject::Issue": true,
+        "ManageProject::PullRequest": true,
+        "ManageProject::Member": true,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": true,
+        "Normal::Project": true,
+        "Normal::Permission": true
+    },
+    "email_body": {
+        "CreateOrAssign::IssueAssigned": false,
+        "CreateOrAssign::PullRequestAssigned": false,
+        "ManageProject::Issue": false,
+        "ManageProject::PullRequest": false,
+        "ManageProject::Member": false,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": false,
+        "Normal::Project": true,
+        "Normal::Permission": false
+    }
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
+## 重新设置用户消息设置配置信息
+重新设置用户消息设置配置信息
+
+> 示例:
+
+```shell
+curl -X POST http://localhost:3000/api/users/yystopf/template_message_settings/update_setting.json
+```
+
+```javascript
+await octokit.request('POST /api/uses/yystopf/template_message_settings/update_setting.json')
+```
+
+### HTTP 请求
+`POST /api/users/:user_id/template_message_settings/update_setting.json`
+
+### 请求字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|notification_body    |string   |站内信配置 |
+|email_body           |string   |邮件配置|
+
+
+> 请求的JSON示例:
+
+```json
+{
+    "setting": {
+        "notification_body": {
+            "CreateOrAssign::IssueAssigned": true,
+            "CreateOrAssign::PullRequestAssigned": true,
+            "ManageProject::Issue": true,
+            "ManageProject::PullRequest": true,
+            "ManageProject::Member": true,
+            "ManageProject::SettingChanged": true,
+            "Normal::Organization": true,
+            "Normal::Project": true,
+            "Normal::Permission": true
+        },
+        "email_body": {
+            "CreateOrAssign::IssueAssigned": false,
+            "CreateOrAssign::PullRequestAssigned": false,
+            "ManageProject::Issue": false,
+            "ManageProject::PullRequest": false,
+            "ManageProject::Member": false,
+            "ManageProject::SettingChanged": true,
+            "Normal::Organization": false,
+            "Normal::Project": "t",
+            "Normal::Permission": false
+        }
+   }
+}
+```
+
+### 返回字段说明:
+参数  | 类型 | 字段说明
+--------- | ----------- | -----------
+|notification_body    |string   |站内信配置 |
+|email_body           |string   |邮件配置|
+
+
+> 返回的JSON示例:
+
+```json
+{
+    "status": 0,
+    "message": "响应成功",
+    "user": {
+        "id": 2,
+        "type": "User",
+        "name": "heh",
+        "login": "yystopf",
+        "image_url": "system/lets/letter_avatars/2/H/188_239_142/120.png"
+    },
+    "notification_body": {
+        "CreateOrAssign::IssueAssigned": true,
+        "CreateOrAssign::PullRequestAssigned": true,
+        "ManageProject::Issue": true,
+        "ManageProject::PullRequest": true,
+        "ManageProject::Member": true,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": true,
+        "Normal::Project": true,
+        "Normal::Permission": true
+    },
+    "email_body": {
+        "CreateOrAssign::IssueAssigned": false,
+        "CreateOrAssign::PullRequestAssigned": false,
+        "ManageProject::Issue": false,
+        "ManageProject::PullRequest": false,
+        "ManageProject::Member": false,
+        "ManageProject::SettingChanged": true,
+        "Normal::Organization": false,
+        "Normal::Project": true,
+        "Normal::Permission": false
+    }
+}
+```
+<aside class="success">
+  Success Data.
+</aside>
+
 ## 获取用户星标项目
 获取用户星标项目
 

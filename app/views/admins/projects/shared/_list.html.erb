@@ -1,19 +1,20 @@
 <table class="table table-hover text-center subject-list-table">
   <thead class="thead-light">
     <tr>
-      <th width="4%">序号</th>
-      <th width="4%">ID</th>
-      <th width="15%" class="text-left">项目名称</th>
-      <th width="6%">公开</th>
-      <th width="5%">issue</th>
+      <th width="5%">序号</th>
+      <th width="6%">ID</th>
+      <th width="20%" class="text-left">项目名称</th>
+      <th width="5%">公开</th>
+      <th width="5%">精选</th>
+      <th width="5%">推荐</th>
+      <th width="5%">Issues</th>
       <th width="5%">资源</th>
-      <th width="6%">版本库</th>
-      <th width="8%">PullRequest</th>
+      <th width="5%">Pulls</th>
       <th width="6%">里程碑</th>
-      <th width="10%">成员</th>
-      <th width="10%">管理员</th>
-      <th width="11%"><%= sort_tag('创建时间', name: 'created_on', path: admins_projects_path) %></th>
-      <th width="10%">操作</th>
+      <th width="5%">成员</th>
+      <th width="12%">管理员</th>
+      <th width="15%"><%= sort_tag('创建时间', name: 'created_on', path: admins_projects_path) %></th>
+      <th width="25%">操作</th>
     </tr>
   </thead>
   <tbody>
@@ -23,13 +24,14 @@
       <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
       <td><%= project.id %></td>
       <td class="text-left">
-        <%= link_to(project.name, "/projects/#{project&.owner&.login}/#{project.identifier}", target: '_blank') %>
+        <%= link_to(project.name, "/#{project&.owner&.login}/#{project.identifier}", target: '_blank') %>
       </td>
       <td><%= project.is_public ? '√' : '' %></td>
+      <td><%= project.is_pinned ? '√' : '' %></td>
+      <td><%= project.recommend ? '√' : '' %></td>
       <td><%= project.issues.size %></td>
       <td><%= project.attachments.size %></td>
-      <td><%= project&.project_score.try(:changeset_num).to_i %></td>
-      <td><%= project&.project_score.try(:pull_request_num).to_i %></td>
+      <td><%= project&.pull_requests_count %></td>
       <td><%= project.versions.size %></td>
       <td><%= project.members.size %></td>
       <td>
@@ -37,8 +39,15 @@
       </td>
       <td><%= project.created_on&.strftime('%Y-%m-%d %H:%M') %></td>
       <td class="action-container">
+          <% if project.is_public %>
+            <%= javascript_void_link '精选', class: 'action pinned-action', data: { id: project.id }, style: project.is_pinned ? 'display: none;' : '' %>
+            <%= javascript_void_link '取消精选', class: 'action unpinned-action', data: { id: project.id }, style: project.is_pinned ? '' : 'display: none;' %>
+            <%= javascript_void_link '推荐', class: 'action recommend-action', data: { id: project.id }, style: project.recommend ? 'display: none;' : '' %>
+            <%= javascript_void_link '取消推荐', class: 'action unrecommend-action', data: { id: project.id }, style: project.recommend ? '' : 'display: none;' %>
+            <%= link_to "设置推荐等级", edit_admins_project_path(project.id), remote: true, class: "action edit-recommend-action", style: project.recommend ? '' : 'display: none;' %>
+          <% end %>
           <%= link_to "删除", admins_project_path(project.id), method: :delete, data:{confirm: "确认删除的吗？"}, class: "delete-project-action" %>
-      </td>
+      </td> 
     </tr>
     <% end %>
     <% else %>

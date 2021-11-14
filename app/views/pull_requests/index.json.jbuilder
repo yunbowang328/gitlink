@@ -5,8 +5,10 @@ json.merged_issues_size @merged_issues.size
 json.search_count @issues_size
 json.limit @limit
 json.user_admin_or_member @user_admin_or_member
+json.user_admin_or_developer @user_admin_or_developer
 json.project_name @project.name
-json.project_author_name @project.owner.try(:login)
+json.project_author @project.owner.try(:login)
+json.project_author_name @project.owner.try(:show_real_name)
 
 json.issues do
   json.array! @issues.to_a do |issue|
@@ -20,7 +22,7 @@ json.issues do
     json.fork_project_id pr&.fork_project_id
     json.fork_project_identifier pr&.fork_project&.identifier
     json.fork_project_user pr&.fork_project&.owner.try(:login)
-
+    json.fork_project_user_name pr&.fork_project&.owner.try(:show_real_name)
     
     json.id issue.id
     json.name issue.subject

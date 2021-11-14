@@ -17,11 +17,11 @@ class ApplicationRecord < ActiveRecord::Base
     Rails.env.production? && EduSetting.get('host_name') == 'https://www.educoder.net'
   end
 
-  def reset_user_cache_async_job(user)
-    ResetUserCacheJob.perform_later(user)
+  def self.strip_param(key)
+    key.to_s.strip.presence
   end
 
-  def reset_platform_cache_async_job
-    ResetPlatformCacheJob.perform_later
+  def strip_param(key)
+    key.to_s.strip.presence
   end
 end

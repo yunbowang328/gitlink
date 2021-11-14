@@ -1,6 +1,6 @@
 # 所有的方法请按首字母的顺序依次列出
 module ApplicationHelper
-  include Educoder::I18n
+  include Gitlink::I18n
   include GitHelper
 
   ONE_MINUTE = 60 * 1000
@@ -434,6 +434,22 @@ module ApplicationHelper
     User.find_by_login login
   end
 
+  def find_user_by_login_and_mail(login, mail)
+    User.find_by(login: login, mail: mail)
+  end
+
+  def find_user_by_gitea_uid(gitea_uid)
+    User.find_by(gitea_uid: gitea_uid)
+  end
+
+  def find_user_in_redis_cache(login, email)
+    $redis_cache.hgetall("v2-owner-common:#{login}-#{email}")
+  end
+
+  def find_user_in_redis_cache_by_id(id)
+    $redis_cache.hgetall("v2-owner-common:#{id}")
+  end
+
   def render_base64_decoded(str)
     return nil if str.blank?
     Base64.decode64 str
@@ -446,6 +462,12 @@ module ApplicationHelper
     content_tag(:li) do
       sidebar_item(url, "数据统计", icon: 'bar-chart', controller: 'root')
     end
+  end
+
+  # 1 手机类型；0 邮箱类型
+  # 注意新版的login是自动名生成的
+  def phone_mail_type value
+    value =~ /^1\d{10}$/ ? 1 : 0
   end
   
 end

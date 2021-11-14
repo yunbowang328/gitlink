@@ -66,11 +66,12 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-      address:              'smtp.exmail.qq.com',
-      port:                  25,
-      domain:               'smtp.qq.com',
-      user_name:            'educoder@trustie.org',
-      password:             'mAZc9EWbe2Kawaqo2',
-      authentication:       'login',
-      enable_starttls_auto: true  }
+    address:              'smtp.exmail.qq.com',
+    port:                  25,
+    domain:               'smtp.qq.com',
+    user_name:            'gitlink@gitlink.org.cn',
+    password:             'mAZc9EWbe2Kawaqo2',
+    authentication:       'login',
+    enable_starttls_auto: true  
+  }
 end

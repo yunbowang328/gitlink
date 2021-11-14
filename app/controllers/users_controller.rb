@@ -51,6 +51,8 @@ class UsersController < ApplicationController
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size
+      # 为了缓存活跃用户的基本信息，后续删除
+      Cache::V2::OwnerCommonService.new(@user.id).read
   end
 
   def watch_users
@@ -74,7 +76,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    return render_not_found unless @user = User.find_by_id(params[:id]) || User.find_by(login: params[:id])
+    return render_not_found unless @user = User.find_by(login: params[:id]) || User.find_by_id(params[:id]) 
     return render_forbidden unless User.current.logged? && (current_user&.admin? || current_user.id == @user.id)
     Util.write_file(@image, avatar_path(@user)) if user_params[:image].present?
     @user.attributes = user_params.except(:image)
@@ -91,6 +93,12 @@ class UsersController < ApplicationController
   def get_user_info
     begin
       @user = current_user
+      begin
+        result = Notice::Read::CountService.call(current_user.id)
+        @message_unread_total = result.nil? ? 0 : result[2]["unread_notification"]
+      rescue 
+        @message_unread_total = 0
+      end
       # TODO 等消息上线再打开注释
       #@tidding_count = unviewed_tiddings(current_user) if current_user.present?
     rescue Exception => e
@@ -185,7 +193,7 @@ class UsersController < ApplicationController
   def trustie_related_projects
     projects = Project.includes(:owner, :members, :project_score).where(id: params[:ids]).order("updated_on desc")
     projects_json = []
-    domain_url = EduSetting.get('host_name') + '/projects'
+    domain_url = EduSetting.get('host_name')
     if projects.present?
       projects.each do |p|
         project_url = "/#{p.owner.login}/#{p.identifier}"

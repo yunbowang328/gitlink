@@ -70,48 +70,10 @@ class ApplicationController < ActionController::Base
 																									(current_user.professional_certification && (ue.teacher? || ue.professional?))
 	end
 
-	def shixun_marker
-		unless current_user.is_shixun_marker? || current_user.admin_or_business?
-			tip_exception(403, "..")
-		end
-	end
-
-	# 实训的访问权限
-	def shixun_access_allowed
-		if !current_user.shixun_permission(@shixun)
-			tip_exception(403, "..")
-		end
-	end
 
 	def admin_or_business?
 		User.current.admin? || User.current.business?
 	end
-
-	# 访问课堂时没权限直接弹加入课堂的弹框 ：409
-	def user_course_identity
-		@user_course_identity = current_user.course_identity(@course)
-		if @user_course_identity > Course::STUDENT && @course.is_public == 0
-			tip_exception(401, "..") unless User.current.logged?
-			check_account
-			tip_exception(@course.excellent ? 410 : 409, "您没有权限进入")
-		end
-		if @user_course_identity > Course::CREATOR && @user_course_identity <= Course::STUDENT && @course.tea_id != current_user.id
-			# 实名认证和职业认证的身份判断
-			tip_exception(411, "你的实名认证和职业认证审核未通过") if @course.authentication &&
-				@course.professional_certification && (!current_user.authentication && !current_user.professional_certification)
-			tip_exception(411, "你的实名认证审核未通过") if @course.authentication && !current_user.authentication
-			tip_exception(411, "你的职业认证审核未通过") if @course.professional_certification && !current_user.professional_certification
-		end
-		uid_logger("###############user_course_identity:#{@user_course_identity}")
-	end
-
-	# 题库的访问权限
-	def bank_visit_auth
-		tip_exception(-2,"未通过职业认证") if current_user.is_teacher? && !current_user.certification_teacher? && !current_user.admin_or_business? && @bank.user_id != current_user.id && @bank.is_public
-		tip_exception(403, "无权限") unless @bank.user_id == current_user.id || current_user.admin_or_business? ||
-			(current_user.certification_teacher? && @bank.is_public)
-	end
-
 
 	# 判断用户的邮箱或者手机是否可用
 	# params[:type] 1: 注册；2：忘记密码；3：绑定
@@ -120,16 +82,16 @@ class ApplicationController < ActionController::Base
 					 login =~ /^[a-zA-Z0-9]+([._\\]*[a-zA-Z0-9])$/
 			tip_exception(-2, "请输入正确的手机号或邮箱")
 		end
-		# 考虑到安全参数问题，多一次查询，去掉Union
-		user = User.where(phone: login).first ||  User.where(mail: login).first
-		if type.to_i == 1 && !user.nil?
+	
+		user_exist = Owner.exists?(phone: login) || Owner.exists?(mail: login)
+		if user_exist && type.to_i == 1
 			tip_exception(-2, "该手机号码或邮箱已被注册")
-		elsif type.to_i == 2 && user.nil?
+		elsif type.to_i == 2 && !user_exist
 			tip_exception(-2, "该手机号码或邮箱未注册")
-		elsif type.to_i == 3 && user.present?
+		elsif type.to_i == 3 && user_exist
 			tip_exception(-2, "该手机号码或邮箱已绑定")
 		end
-		sucess_status
+		render_ok
 	end
 
 	# 发送及记录激活码
@@ -140,7 +102,7 @@ class ApplicationController < ActionController::Base
 		when 1, 2, 4, 9
 			# 手机类型的发送
 			sigle_para = {phone: value}
-			status = Educoder::Sms.send(mobile: value, code: code)
+			status = Gitlink::Sms.send(mobile: value, code: code)
 			tip_exception(-2, code_msg(status)) if status != 0
 		when 8, 3, 5
 			# 邮箱类型的发送
@@ -186,26 +148,6 @@ class ApplicationController < ActionController::Base
 		end
 	end
 
-	def find_course
-		return normal_status(2, '缺少course_id参数！') if params[:course_id].blank?
-		@course = Course.find(params[:course_id])
-		tip_exception(404, "") if @course.is_delete == 1 && !current_user.admin_or_business?
-	rescue Exception => e
-		tip_exception(e.message)
-	end
-
-	def course_manager
-		return normal_status(403, '只有课堂管理员才有权限') if @user_course_identity > Course::CREATOR
-	end
-
-	def find_board
-		return normal_status(2, "缺少board_id参数") if params[:board_id].blank?
-		@board = Board.find(params[:board_id])
-	rescue Exception => e
-		uid_logger_error(e.message)
-		tip_exception(e.message)
-	end
-
 	def validate_type(object_type)
 		normal_status(2, "参数") if params.has_key?(:sort_type) && !SORT_TYPE.include?(params[:sort_type].strip)
 	end
@@ -213,21 +155,6 @@ class ApplicationController < ActionController::Base
 	def set_pagination
 		@page  		 = params[:page] || 1
 		@page_size = params[:page_size] || 15
-	end
-
-	# 课堂教师权限
-	def teacher_allowed
-		logger.info("#####identity: #{current_user.course_identity(@course)}")
-		unless current_user.course_identity(@course) < Course::STUDENT
-			normal_status(403, "")
-		end
-	end
-
-	# 课堂教师、课堂管理员、超级管理员的权限(不包含助教)
-	def teacher_or_admin_allowed
-		unless current_user.course_identity(@course) < Course::ASSISTANT_PROFESSOR
-			normal_status(403, "")
-		end
 	end
 
 	def require_admin
@@ -246,9 +173,17 @@ class ApplicationController < ActionController::Base
 		tip_exception(401, "请登录后再操作") unless User.current.logged?
 	end
 
+	def require_profile_completed
+		tip_exception(411, "请完善资料后再操作") unless User.current.profile_is_completed?
+	end
+
+	def require_user_profile_completed(user)
+		tip_exception(412, "请用户完善资料后再操作") unless user.profile_is_completed?
+	end
+
 	# 异常提醒
 	def tip_exception(status = -1, message)
-		raise Educoder::TipException.new(status, message)
+		raise Gitlink::TipException.new(status, message)
 	end
 
 	def missing_template
@@ -257,7 +192,7 @@ class ApplicationController < ActionController::Base
 
 	# 弹框提醒
 	def tip_show_exception(status = -2, message)
-		raise Educoder::TipException.new(status, message)
+		raise Gitlink::TipException.new(status, message)
 	end
 
 	def normal_status(status = 0, message)
@@ -272,7 +207,7 @@ class ApplicationController < ActionController::Base
 
 	# 资料是否完善
 	def check_account
-		if !current_user.profile_completed?
+		if !current_user. profile_is_completed?
 			#info_url = '/account/profile'
 			tip_exception(402, nil)
 		end
@@ -337,18 +272,18 @@ class ApplicationController < ActionController::Base
 
 		# 测试版前端需求
 		logger.info("subdomain:#{request.subdomain}")
-		if request.subdomain != "www"
-			if params[:debug] == 'teacher' #todo 为了测试,记得讲debug删除
-				User.current = User.find 81403
-			elsif params[:debug] == 'student'
-				User.current = User.find 8686
-			elsif params[:debug] == 'admin'
-				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
-				user =  User.find 36480
-				User.current = user
-				cookies.signed[:user_id] = user.id
-			end
-		end
+		# if request.subdomain != "www"
+		# 	if params[:debug] == 'teacher' #todo 为了测试,记得讲debug删除
+		# 		User.current = User.find 81403
+		# 	elsif params[:debug] == 'student'
+		# 		User.current = User.find 8686
+		# 	elsif params[:debug] == 'admin'
+		# 		logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
+		# 		user =  User.find 36480
+		# 		User.current = user
+		# 		cookies.signed[:user_id] = user.id
+		# 	end
+		# end
 		# User.current = User.find 81403
 	end
 
@@ -438,7 +373,7 @@ class ApplicationController < ActionController::Base
 			JSON.parse(res)
 		rescue Exception => e
 			uid_logger_error("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new("实训平台繁忙（繁忙等级：84）")
+			raise Gitlink::TipException.new("实训平台繁忙（繁忙等级：84）")
 		end
 	end
 
@@ -457,7 +392,7 @@ class ApplicationController < ActionController::Base
 			end
 		rescue Exception => e
 			uid_logger("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new(message)
+			raise Gitlink::TipException.new(message)
 		end
 	end
 
@@ -481,7 +416,7 @@ class ApplicationController < ActionController::Base
 			end
 		rescue Exception => e
 			uid_logger("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new("服务器繁忙")
+			raise Gitlink::TipException.new("服务器繁忙")
 		end
 	end
 
@@ -653,8 +588,8 @@ class ApplicationController < ActionController::Base
 
 	# 获取Oauth Client
 	def get_client(site)
-		client_id = Rails.configuration.educoder['client_id']
-		client_secret = Rails.configuration.educoder['client_secret']
+		client_id = Rails.configuration.Gitlink['client_id']
+		client_secret = Rails.configuration.Gitlink['client_secret']
 
 		OAuth2::Client.new(client_id, client_secret, site: site)
 	end
@@ -754,10 +689,10 @@ class ApplicationController < ActionController::Base
     if @project and current_user.can_read_project?(@project)
 			logger.info "###########： has project and can read project"
 			@project
-    elsif @project && current_user.is_a?(AnonymousUser)
-			logger.info "###########：This is AnonymousUser"
-			@project = nil if !@project.is_public?
-			render_forbidden and return
+    # elsif @project && current_user.is_a?(AnonymousUser)
+		# 	logger.info "###########：This is AnonymousUser"
+		# 	@project = nil if !@project.is_public?
+		# 	render_forbidden and return
     else
 			logger.info "###########：project not found"
       @project = nil
@@ -771,11 +706,12 @@ class ApplicationController < ActionController::Base
 	end
 
 	def base_url
-		request.base_url
+		Rails.application.config_for(:configuration)['platform_url'] || request.base_url
 	end
 
 	def convert_image!
-		@image = params[:image] || user_params[:image]
+		@image = params[:image] 
+		@image = @image.nil? && params[:user].present? ? params[:user][:image] : @image
     return unless @image.present?
     max_size = EduSetting.get('upload_avatar_max_size') || 2 * 1024 * 1024 # 2M
     if @image.class == ActionDispatch::Http::UploadedFile
@@ -845,5 +781,9 @@ class ApplicationController < ActionController::Base
 
 		HotSearchKeyword.add(keyword)
 	end
+
+  def find_atme_receivers
+    @atme_receivers = User.where(login: params[:receivers_login])
+  end
 
 end

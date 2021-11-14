@@ -39,17 +39,15 @@
 #  business                   :boolean          default("0")
 #  profile_completed          :boolean          default("0")
 #  laboratory_id              :integer
-#  platform                   :string(255)      default("0")
-#  gitea_token                :string(255)
-#  gitea_uid                  :integer
 #  is_shixun_marker           :boolean          default("0")
+#  admin_visitable            :boolean          default("0")
+#  collaborator               :boolean          default("0")
+#  gitea_uid                  :integer
 #  is_sync_pwd                :boolean          default("1")
 #  watchers_count             :integer          default("0")
 #  devops_step                :integer          default("0")
-#  sponsor_certification      :integer          default("0")
-#  sponsor_num                :integer          default("0")
-#  sponsored_num              :integer          default("0")
-#  award_time                 :datetime
+#  gitea_token                :string(255)
+#  platform                   :string(255)
 #
 # Indexes
 #
@@ -57,8 +55,9 @@
 #  index_users_on_homepage_engineer  (homepage_engineer)
 #  index_users_on_homepage_teacher   (homepage_teacher)
 #  index_users_on_laboratory_id      (laboratory_id)
-#  index_users_on_login              (login)
-#  index_users_on_mail               (mail)
+#  index_users_on_login              (login) UNIQUE
+#  index_users_on_mail               (mail) UNIQUE
+#  index_users_on_phone              (phone) UNIQUE
 #  index_users_on_type               (type)
 #
 
@@ -117,8 +116,6 @@ class User < Owner
   enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
-  has_many :composes, dependent: :destroy
-  has_many :compose_users, dependent: :destroy
   has_one :user_extension, dependent: :destroy
   has_many :open_users, dependent: :destroy
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
@@ -170,7 +167,13 @@ class User < Owner
   accepts_nested_attributes_for :is_pinned_projects
   has_many :issues, dependent: :destroy, foreign_key: :author_id 
   has_many :pull_requests, dependent: :destroy
+  has_many :public_keys, class_name: "Gitea::PublicKey",primary_key: :gitea_uid, foreign_key: :owner_id, dependent: :destroy
 
+  has_one :user_template_message_setting, dependent: :destroy
+
+  has_many :system_notification_histories
+  has_many :system_notifications, through: :system_notification_histories
+  
   # Groups and active users
   scope :active, lambda { where(status: STATUS_ACTIVE) }
   scope :like, lambda { |keywords|
@@ -186,7 +189,8 @@ class User < Owner
            :show_email, :show_location, :show_department,
            :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
-  before_save :update_hashed_password
+  before_save :update_hashed_password, :set_lastname
+  after_save :reset_cache_data
   after_create do
     SyncTrustieJob.perform_later("user", 1) if allow_sync_to_trustie?
   end
@@ -202,6 +206,10 @@ class User < Owner
   validates_length_of :mail, maximum: MAIL_LENGTH_LMIT
   validate :validate_sensitive_string
   validate :validate_password_length
+
+  def reset_cache_data
+    Cache::V2::OwnerCommonService.new(self.id).reset
+  end
 
   # 用户参与的所有项目
   def full_member_projects 
@@ -424,6 +432,7 @@ class User < Owner
 
   def activate!
     update_attribute(:status, STATUS_ACTIVE)
+    prohibit_gitea_user_login!(false)
   end
 
   def register!
@@ -432,6 +441,12 @@ class User < Owner
 
   def lock!
     update_attribute(:status, STATUS_LOCKED)
+    prohibit_gitea_user_login!
+  end
+
+  def prohibit_gitea_user_login!(prohibit_login = true)
+    Gitea::User::UpdateInteractor.call(self.login, 
+      {email: self.mail, prohibit_login: prohibit_login})
   end
 
   # 课程用户身份
@@ -675,7 +690,7 @@ class User < Owner
   end
 
   def self.generate_salt
-    Educoder::Utils.random_hex(16)
+    Gitlink::Utils.random_hex(16)
   end
 
   # 全部已认证
@@ -757,6 +772,10 @@ class User < Owner
     laboratory_id.present? && laboratory_id != 1
   end
 
+  def profile_is_completed?
+    self.nickname.present? && self.gender.present? && self.mail.present? && self.custom_department.present?
+  end
+
   protected
   def validate_password_length
     # 管理员的初始密码是5位
@@ -778,6 +797,10 @@ class User < Owner
     return unless new_record?
 
     self.laboratory = Laboratory.current if laboratory_id.blank?
+  end
+
+  def set_lastname
+    self.lastname = self.nickname if changes[:nickname].present?
   end
 end
 

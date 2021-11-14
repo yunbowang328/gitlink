@@ -1,6 +1,7 @@
 class Organizations::TeamUsersController < Organizations::BaseController
   before_action :load_organization, :load_team
   before_action :load_operate_user, only: [:create, :destroy]
+  before_action :check_user_profile_completed, only: [:create]
   before_action :load_team_user, only: [:destroy]
   before_action :check_user_can_edit_org, only: [:create, :destroy]
 
@@ -17,6 +18,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user = TeamUser.build(@organization.id, @operate_user.id, @team.id)
       @organization_user = OrganizationUser.build(@organization.id, @operate_user.id)
+      SendTemplateMessageJob.perform_later('OrganizationRole', @operate_user.id, @organization.id, @team.authorize_name) if Site.has_notice_menu?
       Gitea::Organization::TeamUser::CreateService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
     end
   rescue Exception => e
@@ -29,6 +31,11 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
+      org_team_users = @organization.team_users.where(user_id: @operate_user.id)
+      unless org_team_users.present?
+        @organization.organization_users.find_by(user_id: @operate_user.id).destroy!
+        Gitea::Organization::OrganizationUser::DeleteService.call(@organization.gitea_token, @organization.login, @operate_user.login)
+      end
       render_ok
     end
   rescue Exception => e
@@ -43,6 +50,11 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, current_user.login)
+      org_team_users = @organization.team_users.where(user_id: current_user.id)
+      unless org_team_users.present?
+        @organization.organization_users.find_by(user_id: current_user.id).destroy!
+        Gitea::Organization::OrganizationUser::DeleteService.call(@organization.gitea_token, @organization.login, current_user.login)
+      end
       render_ok
     end
   rescue Exception => e
@@ -71,6 +83,10 @@ class Organizations::TeamUsersController < Organizations::BaseController
   def load_team_user
     @team_user = TeamUser.find_by(team_id: @team.id, user_id: @operate_user.id)
     tip_exception("组织团队成员不存在") if @team_user.nil?
+  end
+
+  def check_user_profile_completed
+    require_user_profile_completed(@operate_user)
   end
 
 end

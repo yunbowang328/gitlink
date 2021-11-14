@@ -64,6 +64,51 @@ http://localhost:3000/api/accounts/remote_register  | jq
 ```
 ---
 
+#### 独立注册接口
+```
+POST accounts/register
+```
+*示例*
+```bash
+curl -X POST \
+-d "login=2456233122@qq.com" \
+-d "password=djs_D_00001" \
+-d "namespace=16895620" \
+-d "code=forge" \
+http://localhost:3000/api/accounts/remote_register  | jq
+```
+*请求参数说明:*
+
+|参数名|必选|类型|说明|
+|-|-|-|-|
+|login    |是|string   |邮箱或者手机号  |
+|namespace |是|string   |登录名 |
+|password |是|string   |密码  |
+|code |是|string   |验证码  |
+
+
+*返回参数说明:*
+
+|参数名|类型|说明|
+|-|-|-|
+|user|json object |返回数据|
+|-- id            |int   |用户id |
+|-- token         |string|用户token|
+
+
+返回值
+```json
+{
+  "status": 0,
+  "message": "success",
+  "user": {
+    "id": 36400,
+    "token": "8c87a80d9cfacc92fcb2451845104f35119eda96"
+  }
+}
+```
+---
+
 #### 获取当前登录用户信息
 ```
 GET api/users/me
@@ -338,10 +383,10 @@ http://localhost:3000/api/projects/  | jq
 |-|-|-|-|
 |user_id            |是|int    |用户id或者组织id  |
 |name               |是|string |项目名称  |
-|description        |是|string |项目描述  |
+|description        |否|string |项目描述  |
 |repository_name    |是|string |仓库名称, 只含有数字、字母、下划线不能以下划线开头和结尾，且唯一  |
-|project_category_id|是|int    |项目类别id  |
-|project_language_id|是|int    |项目语言id  |
+|project_category_id|否|int    |项目类别id  |
+|project_language_id|否|int    |项目语言id  |
 |ignore_id          |否|int    |gitignore相关id  |
 |license_id         |否|int    |开源许可证id  |
 |private            |否|boolean|项目是否私有, true：为私有，false: 公开，默认为公开  |
@@ -374,9 +419,7 @@ curl -X POST \
 -d "user_id=36408" \
 -d "clone_addr=https://gitea.com/mx8090alex/golden.git" \
 -d "name=golden_mirror1" \
--d "description=golden_mirror" \
--d "project_category_id=1" \
--d "project_language_id=2" \
+-d "repository_name=golden_mirror1" \
 http://localhost:3000/api/projects/migrate.json  | jq
 ```
 *请求参数说明:*
@@ -388,8 +431,8 @@ http://localhost:3000/api/projects/migrate.json  | jq
 |clone_addr         |是|string |镜像项目clone地址  |
 |description        |否|string |项目描述  |
 |repository_name    |是|string |仓库名称, 只含有数字、字母、下划线不能以下划线开头和结尾，且唯一  |
-|project_category_id|是|int    |项目类别id  |
-|project_language_id|是|int    |项目语言id  |
+|project_category_id|否|int    |项目类别id  |
+|project_language_id|否|int    |项目语言id  |
 |is_mirror          |否|boolean|是否设置为镜像， true：是， false：否，默认为否  |
 |auth_username      |否|string|镜像源仓库的登录用户名  |
 |auth_password      |否|string|镜像源仓库的登录秘密  |

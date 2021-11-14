@@ -31,7 +31,7 @@ class Team < ApplicationRecord
 
   validates :name, uniqueness: {scope: :organization_id}
 
-  enum authorize: {common: 0, read: 1, write: 2, admin: 3, owner: 4}
+  enum authorize: {read: 1, write: 2, admin: 3, owner: 4}
 
   def self.build(organization_id, name, nickname, description, authorize, includes_all_project, can_create_org_project)
     self.create!(organization_id: organization_id,
@@ -52,6 +52,17 @@ class Team < ApplicationRecord
 
   def is_member?(user_id)
     team_users.where(user_id: user_id).present?
+  end
+
+  def authorize_name 
+    case self.authorize 
+    when 'read' then '报告者'
+    when 'write' then '开发者'
+    when 'admin' then '管理员'
+    when 'owner' then '拥有者'
+    else 
+      ''
+    end
   end
 
 end

@@ -8,7 +8,7 @@ class Gitea::PullRequest::OpenService < Gitea::PullRequest::UpdateService
   #   number: number of pull request
   #   token: token of gitea user
   # eq:
-  # Gitea::PullRequest::OpenService.new(owner.login, repo.identifier, pr.gpid, pr.base, current_user.gitea_token)
+  # Gitea::PullRequest::OpenService.new(owner.login, repo.identifier, pr.gitea_number, pr.base, current_user.gitea_token)
   def initialize(owner, repo, number, base, token=nil)
     open_pull_params = Hash.new.merge(base: base, state: 'open').compact
 

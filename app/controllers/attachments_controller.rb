@@ -32,8 +32,17 @@ class AttachmentsController < ApplicationController
   def get_file
     normal_status(-1, "参数缺失") if params[:download_url].blank?
     url = URI.encode(params[:download_url].to_s.gsub("http:", "https:"))
-    response = Faraday.get(url)
-    filename = params[:download_url].to_s.split("/").pop()
+    if url.starts_with?(base_url)
+      domain  = Gitea.gitea_config[:domain]
+      api_url = Gitea.gitea_config[:base_url]
+      url = url.split(base_url)[1].gsub("api", "repos").gsub('?filepath=', '/').gsub('&', '?')
+      request_url = [domain, api_url, url, "?ref=#{params[:ref]}&access_token=#{current_user&.gitea_token}"].join
+      response = Faraday.get(request_url)
+      filename = url.to_s.split("/").pop()
+    else
+      response = Faraday.get(url)
+      filename = params[:download_url].to_s.split("/").pop()
+    end
     send_data(response.body.force_encoding("UTF-8"),  filename: filename, type: "application/octet-stream", disposition: 'attachment')
   end
 
@@ -187,7 +196,7 @@ class AttachmentsController < ApplicationController
   end
 
   def file_save_to_ucloud(path, file, content_type)
-    ufile = Educoder::Ufile.new(
+    ufile = Gitlink::Ufile.new(
         ucloud_public_key: edu_setting('public_key'),
         ucloud_private_key: edu_setting('private_key'),
         ucloud_public_read: true,

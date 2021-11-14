@@ -9,6 +9,7 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  ancestry       :string(255)
+#  pinned_index     :integer          default("0")
 #
 # Indexes
 #
@@ -18,5 +19,16 @@
 class ProjectCategory < ApplicationRecord
   include Projectable
   has_ancestry
+
+  def logo_url
+    image_url('logo')
+  end
+
+  private
+
+  def image_url(type)
+    return nil unless Util::FileManage.exists?(self, type)
+    Util::FileManage.source_disk_file_url(self, type)
+  end
 
 end

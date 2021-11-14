@@ -6,16 +6,16 @@ module RepositoriesHelper
 
   def render_decode64_content(str)
     return nil if str.blank?
-    Base64.decode64(str).force_encoding("UTF-8")
+    Base64.decode64(str).force_encoding("UTF-8").encode("UTF-8", invalid: :replace)
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb png jpg gif tif psd svg RData rdata doc docx mpp vsdx dot)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
     default_type.include?(str&.downcase)
   end
 
   def image_type?(str)
-    default_type = %w(png jpg gif tif psd svg)
+    default_type = %w(png jpg gif tif psd svg bmp webp jpeg)
     default_type.include?(str&.downcase)
   end
 
@@ -26,8 +26,23 @@ module RepositoriesHelper
   end
 
   def render_commit_author(author_json)
-    return nil if author_json.blank?
-    find_user_by_login author_json['name']
+    return nil if author_json.blank? || (author_json["id"].blank? && author_json['name'].blank?)
+    if author_json["id"].present?
+      return find_user_by_gitea_uid author_json['id']
+    end
+    if author_json["id"].nil? && (author_json["name"].present? && author_json["email"].present?)
+      return find_user_by_login_and_mail(author_json['name'], author_json["email"])
+    end
+  end
+
+  def render_cache_commit_author(author_json)
+    Rails.logger.info author_json['Email'] 
+    if author_json["name"].present? && author_json["email"].present?
+      return find_user_in_redis_cache(author_json['name'], author_json['email']) 
+    end
+    if author_json["Name"].present? && author_json["Email"].present?
+      return find_user_in_redis_cache(author_json['Name'], author_json['Email']) 
+    end
   end
 
   def readme_render_decode64_content(str, path)
@@ -78,12 +93,53 @@ module RepositoriesHelper
 
   def decode64_content(entry, owner, repo, ref, path=nil)
     if is_readme?(entry['type'], entry['name'])
-      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, entry['path'], ref: ref)['content']
+      content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content']
       readme_render_decode64_content(content, path)
     else
-      file_type = entry['name'].to_s.split(".").last
-      return entry['content'] if download_type(file_type)
+      file_type = File.extname(entry['name'].to_s)[1..-1]
+      if image_type?(file_type)
+        return entry['content'].nil? ? Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content'] : entry['content']  
+      end
+      if download_type(file_type)
+        return entry['content']
+      end
       render_decode64_content(entry['content'])
     end
   end
+
+  def base64_to_image(path, content)
+    # generate to https://git.trusite.net/pawm36ozq/-/raw/branch/master/entrn.png"
+    content      = Base64.decode64(content)
+    File.open(path, 'wb') { |f| f.write(content) }
+  end
+  
+  def render_download_image_url(dir_path, file_path, content)
+    full_path = file_path.starts_with?("/") ? [dir_path, file_path].join("") : [dir_path, file_path].join("/")
+    file_name = full_path.split("/")[-1]
+    # 用户名/项目标识/文件路径
+    dir_path = generate_dir_path(full_path.split("/"+file_name)[0])
+
+    file_path = [dir_path, file_name].join('/')
+
+    puts "##### render_download_image_url file_path: #{file_path}"
+    base64_to_image(file_path, content)
+    file_path = file_path[6..-1]
+    File.join(base_url, file_path)
+  end
+  
+  def generate_dir_path(dir_path)
+    # tmp_dir_path
+    # eg: jasder/forgeplus/raw/branch/ref
+    dir_path = ["public", tmp_dir, dir_path].join('/')
+    puts "#### dir_path: #{dir_path}"
+    unless Dir.exists?(dir_path)
+      FileUtils.mkdir_p(dir_path) ##不成功这里会抛异常
+    end
+    dir_path
+  end
+
+  def tmp_dir
+    "repo"
+  end
+  
 end

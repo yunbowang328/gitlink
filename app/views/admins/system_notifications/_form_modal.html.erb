@@ -1,0 +1,40 @@
+<div class="modal fade system-notification-change-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><%= type == "create" ? "新增" : "编辑" %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+       <%= form_for @notification, url: {controller: "system_notifications", action: "#{type}"} do |p| %>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>
+              系统通知标题 <span class="ml10 color-orange mr20">*</span>
+            </label>
+            <%= p.text_field :subject, class: "form-control input-lg",required: true%>
+          </div>
+          <div class="form-group">
+            <label>
+              系统通知副标题 <span class="ml10 color-orange mr20">*</span>
+            </label>
+            <%= p.text_field :sub_subject, class: "form-control input-lg",required: true%>
+          </div>
+          <div class="form-group">
+          <label>
+            系统通知正文 
+          </label>
+          <div class="pl-0 my-3 setting-item-body" id="system-notification-content-editor">
+            <%= p.text_area :content, class:"form-control", style: 'display: none;', rows: "10", cols: "20", placeholer: "请输入系统通知正文" %>
+          </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+          <%= p.submit "确认", class: "btn btn-primary submit-btn" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

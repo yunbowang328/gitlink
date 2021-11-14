@@ -1,4 +1,5 @@
 class Projects::ProjectAppliesController < Projects::BaseController
+  before_action :require_profile_completed, only: [:create]
   def create
     project = Projects::ApplyJoinService.call(current_user, create_params)
     render_ok(project_id: project.id)

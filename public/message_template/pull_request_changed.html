@@ -1,0 +1,51 @@
+<html>
+<head>
+  <title>合并请求被更改</title>
+  <style type="text/css">
+      body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,form,fieldset,legend,button,input,textarea,th,td{ margin:0; padding:0;}
+      body,table,input,textarea,select,button { font-family: "微软雅黑","宋体"; font-size:12px;line-height:1.5; background:#eaebec;}
+      div,img,tr,td,table{ border:0;}
+      table,tr,td{border:0;}
+      ol,ul,li{ list-style-type:none}
+      .new_content{ background:#fff; width: 100%;}
+      .email-page-link{ }
+      .email-link-top{ }
+      .c_white{ color:#fff;}
+      .email-link-con{ }
+      .email-link-line{  }
+      .email-link-footer{ padding:15px; color:#333; line-height: 1.9; }
+      .c_grey02{ color: #888;}
+      .fb{ font-weight: normal;}
+      .f14{ }
+  </style>
+</head>
+
+<body style="background:#fff;">
+<div class="new_content">
+  <div style="width: 598px; background:#fff; margin:20px auto;">
+    <div style="height:50px; width: 578px; background:#3b94d6; padding:9px 10px 6px;border:1px solid #ddd; border-bottom:none;">
+      <a href="{baseurl}"><img src="{baseurl}/images/email_logo.png" height="45" ></a>
+      <p style="color:#fff; float:right; margin-top:15px;">确实开源，协同创新</p>
+      <div style="clear:both; overflow:hidden;"></div>
+    </div>
+    <div style="width: 558px; border-left:1px solid #ddd;border-right:1px solid #ddd; background:#fff; padding:20px; color:#333; line-height: 1.9;">
+      <p style="font-size: 14px; color:#333;">
+        {receiver}，您好！<br/>
+        在项目 <a href="{baseurl}/{login2}/{identifier}" style="font-weight:bold;color:#3b94d6;">{nickname2}/{repository}</a> 的合并请求 <a href="{baseurl}/{login2}/{identifier}/pulls/{id}" style="font-weight:bold;color:#3b94d6;">{title}</a> 中：
+        {ifassigner}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将负责人从 {assigner1} 修改为 {assigner2}{endassigner}
+        {ifmilestone}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将里程碑从 {milestone1} 修改为 {milestone2}{endmilestone}
+        {iftag}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将标记从 {tag1} 修改为 {tag2}{endtag}
+        {ifpriority}<a href="{baseurl}/{login1}" style="font-weight:bold;color:#3b94d6;">{nickname1}</a>将优先级从 {priority1} 修改为 {priority2}{endpriority}
+      </p>
+      <div style="width: 100%; border-top: 1px solid #ddd; margin:10px 0;"></div>
+    </div>
+    <div style="padding:20px; color:#333; line-height: 1.9;background: #eee;border:1px solid #ddd; border-top:none; width: 558px;">
+      <p style="color:#888; float:left;">如果您在使用中有任何的疑问和建议，欢迎您给我们反馈意见<br/>
+        QQ群：1071514693</p>
+      <p style="color:#888; float:right;font-weight: bold;font-size: 16px;">GitLink团队</p>
+      <div style="clear:both; overflow:hidden;"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

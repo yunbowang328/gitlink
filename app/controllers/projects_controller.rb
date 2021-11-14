@@ -4,8 +4,9 @@ class ProjectsController < ApplicationController
   include ProjectsHelper
   include Acceleratorable
 
-  before_action :require_login, except: %i[index branches group_type_list simple show fork_users praise_users watch_users recommend about menu_list]
-  before_action :load_project, except: %i[index group_type_list migrate create recommend]
+  before_action :require_login, except: %i[index branches branches_slice group_type_list simple show fork_users praise_users watch_users recommend banner_recommend about menu_list]
+  before_action :require_profile_completed, only: [:create, :migrate]
+  before_action :load_repository, except: %i[index group_type_list migrate create recommend banner_recommend]
   before_action :authorizate_user_can_edit_project!, only: %i[update]
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
 
@@ -16,20 +17,21 @@ class ProjectsController < ApplicationController
     menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
     menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
     menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
+    menu.append(menu_hash_by_name("wiki")) if @project.has_menu_permission("wiki")
     menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
     menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources")
     menu.append(menu_hash_by_name("activity"))
-    menu.append(menu_hash_by_name("setting")) if current_user.admin? || @project.manager?(current_user)
+    menu.append(menu_hash_by_name("settings")) if current_user.admin? || @project.manager?(current_user)
 
     render json: menu
   end
 
   def index
-    scope = Projects::ListQuery.call(params)
+    scope = current_user.logged? ? Projects::ListQuery.call(params, current_user.id) : Projects::ListQuery.call(params)
 
-    # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
+    @projects = kaminari_paginate(scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units))
+    # @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
 
     category_id = params[:category_id]
     @total_count =
@@ -84,6 +86,13 @@ class ProjectsController < ApplicationController
     @branches =  result.is_a?(Hash) && result.key?(:status) ? [] : result
   end
 
+  def branches_slice
+    return @branches = [] unless @project.forge?
+
+    slice_result = Gitea::Repository::Branches::ListSliceService.call(@owner, @project.identifier)
+    @branches_slice = slice_result.is_a?(Hash) && slice_result.key?(:status) ? [] : slice_result
+  end
+
   def group_type_list
     project_statics = ProjectStatistic.first
 
@@ -108,28 +117,35 @@ class ProjectsController < ApplicationController
     ActiveRecord::Base.transaction do
       # TODO:
       # 临时特殊处理修改website、lesson_url操作方法
-      if project_params.has_key?("website")
+      if project_params.has_key?("website") 
         @project.update(project_params)
+      elsif project_params.has_key?("default_branch")
+        @project.update(project_params)
+        gitea_params = {
+          default_branch: @project.default_branch
+        }
+        Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
       else
         validate_params = project_params.slice(:name, :description, 
-          :project_category_id, :project_language_id, :private)
+          :project_category_id, :project_language_id, :private, :identifier)
   
-        Projects::UpdateForm.new(validate_params).validate!
+        Projects::UpdateForm.new(validate_params.merge(user_id: @project.user_id, project_identifier: @project.identifier)).validate!
   
-        private = params[:private] || false
+        private = @project.forked_from_project.present? ? !@project.forked_from_project.is_public : params[:private] || false
 
         new_project_params = project_params.except(:private).merge(is_public: !private)
         @project.update_attributes!(new_project_params)
+        @project.forked_projects.update_all(is_public: @project.is_public)
         gitea_params = {
           private: private,
           default_branch: @project.default_branch,
-          website: @project.website
+          website: @project.website,
+          name: @project.identifier
         }
-        if [true, false].include? private
-          Gitea::Repository::UpdateService.call(@owner, @project.identifier, gitea_params)
-          @project.repository.update_column(:hidden, private)
-        end
+        gitea_repo = Gitea::Repository::UpdateService.call(@owner, @project&.repository&.identifier, gitea_params)
+        @project.repository.update_attributes({hidden: gitea_repo["private"], identifier: gitea_repo["name"]})
       end
+      SendTemplateMessageJob.perform_later('ProjectSettingChanged', current_user.id, @project&.id, @project.previous_changes.slice(:name, :description, :project_category_id, :project_language_id, :is_public, :identifier)) if Site.has_notice_menu?
     end
   rescue Exception => e
     uid_logger_error(e.message)
@@ -144,6 +160,7 @@ class ProjectsController < ApplicationController
       ActiveRecord::Base.transaction do
         Gitea::Repository::DeleteService.new(@project.owner, @project.identifier).call
         @project.destroy!
+        @project.forked_projects.update_all(forked_from_project_id: nil)
         render_ok
       end
     else
@@ -173,11 +190,17 @@ class ProjectsController < ApplicationController
   end
 
   def simple
+    # 为了缓存活跃项目的基本信息，后续删除
+    Cache::V2::ProjectCommonService.new(@project.id).read
     json_response(@project, current_user)
   end
 
   def recommend
     @projects = Project.recommend.includes(:repository, :project_category, :owner).order(visits: :desc)
+  end
+
+  def banner_recommend
+    @projects = Project.recommend.where.not(recommend_index: 0).includes(:project_category, :owner, :project_language).order(recommend_index: :desc)
   end
 
   def about
@@ -211,7 +234,7 @@ class ProjectsController < ApplicationController
 
   private
   def project_params
-    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url,
+    params.permit(:user_id, :name, :description, :repository_name, :website, :lesson_url, :default_branch, :identifier,
                   :project_category_id, :project_language_id, :license_id, :ignore_id, :private)
   end
 

@@ -43,7 +43,7 @@ class Users::UpdateAccountService < ApplicationService
       end
 
       # 表示资料完整
-      user.profile_completed = true
+      # user.profile_completed = true
 
       extension.save!
       user.save!
@@ -71,7 +71,7 @@ class Users::UpdateAccountService < ApplicationService
   end
 
   def sms_notify_admin name
-    Educoder::Sms.send(mobile:'17680641960', send_type:'teacher_register', name: name, user_name:'管理员')
+    Gitlink::Sms.send(mobile:'17680641960', send_type:'teacher_register', name: name, user_name:'管理员')
   rescue => ex
     Util.logger_error(ex)
   end

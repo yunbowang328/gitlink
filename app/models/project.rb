@@ -1,3 +1,4 @@
+
 # == Schema Information
 #
 # Table name: projects
@@ -54,8 +55,9 @@
 #  platform               :integer          default("0")
 #  default_branch         :string(255)      default("master")
 #  website                :string(255)
-#  order_index            :integer          default("0")
 #  lesson_url             :string(255)
+#  is_pinned              :boolean          default("0")
+#  recommend_index        :integer          default("0")
 #
 # Indexes
 #
@@ -64,8 +66,11 @@
 #  index_projects_on_invite_code             (invite_code)
 #  index_projects_on_is_public               (is_public)
 #  index_projects_on_lft                     (lft)
+#  index_projects_on_license_id              (license_id)
 #  index_projects_on_name                    (name)
 #  index_projects_on_platform                (platform)
+#  index_projects_on_project_category_id     (project_category_id)
+#  index_projects_on_project_language_id     (project_language_id)
 #  index_projects_on_project_type            (project_type)
 #  index_projects_on_recommend               (recommend)
 #  index_projects_on_rgt                     (rgt)
@@ -98,10 +103,12 @@ class Project < ApplicationRecord
   belongs_to :organization_extension, foreign_key: :user_id, primary_key: :organization_id, optional: true, counter_cache: :num_projects
   belongs_to :project_category, optional: true , :counter_cache => true
   belongs_to :project_language, optional: true , :counter_cache => true
+  belongs_to :forked_from_project, class_name: 'Project', optional: true, foreign_key: :forked_from_project_id
   has_many :project_trends, dependent: :destroy
   has_many :watchers, as: :watchable, dependent: :destroy
   has_many :fork_users, dependent: :destroy
   has_many :forked_users, class_name: 'ForkUser', foreign_key: :fork_project_id, dependent: :destroy
+  has_many :forked_projects, class_name: 'Project', foreign_key: :forked_from_project_id
   has_one :project_educoder, dependent: :destroy
 
   has_one :project_score, dependent: :destroy
@@ -120,29 +127,96 @@ class Project < ApplicationRecord
   has_one :applied_transfer_project,-> { order created_at: :desc }, dependent: :destroy
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
-
+  has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
+  after_create :incre_user_statistic, :incre_platform_statistic
   after_save :check_project_members, :reset_cache_data
-  before_save :set_invite_code
-  after_destroy :reset_cache_data
-  scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
+  before_save :set_invite_code, :reset_unmember_followed, :set_recommend_and_is_pinned
+  before_destroy :decre_project_common
+  after_destroy :decre_user_statistic, :decre_platform_statistic
+  scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :description, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
   scope :recommend,           -> { visible.project_statics_select.where(recommend: true) }
+  scope :pinned, -> {where(is_pinned: true)}
 
   delegate :content, to: :project_detail, allow_nil: true
   delegate :name, to: :license, prefix: true, allow_nil: true
 
-  def reset_cache_data 
-    if changes[:user_id].present?
-      first_owner = Owner.find_by_id(changes[:user_id].first) 
-      self.reset_user_cache_async_job(first_owner)
+  def self.all_visible(user_id=nil)
+    user_projects_sql = Project.joins(:owner).where(users: {type: 'User'}).to_sql
+    org_public_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension).where(organization_extensions: {visibility: 'common'})).to_sql
+    if user_id.present?
+      org_limit_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension).where(organization_extensions: {visibility: 'limited'})).to_sql
+      org_privacy_projects_sql = Project.joins(:owner).merge(Organization.joins(:organization_extension, :organization_users).where(organization_extensions: {visibility: 'privacy'}, organization_users: {user_id: user_id})).to_sql
+      return Project.from("( #{ user_projects_sql } UNION #{ org_public_projects_sql } UNION #{ org_limit_projects_sql } UNION #{org_privacy_projects_sql} ) AS projects").visible
+    else
+      return Project.from("( #{ user_projects_sql } UNION #{ org_public_projects_sql } ) AS projects").visible
     end
-    self.reset_platform_cache_async_job
-    self.reset_user_cache_async_job(self.owner)
+  end
+
+  def reset_cache_data 
+    CacheAsyncResetJob.perform_later("project_common_service", self.id)
+    if changes[:user_id].present?
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: -1}, changes[:user_id].first)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: 1}, changes[:user_id].last)
+    end
+    if changes[:project_language_id].present?
+      first_language = ProjectLanguage.find_by_id(changes[:project_language_id].first)
+      last_language = ProjectLanguage.find_by_id(changes[:project_language_id].last)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_language_count_key: first_language&.name, project_language_count: -1}, self.user_id)
+      CacheAsyncSetJob.perform_later("user_statistic_service", {project_language_count_key: last_language&.name, project_language_count: 1}, self.user_id)
+      CacheAsyncSetJob.perform_later("platform_statistic_service", {project_language_count_key: first_language&.name, project_language_count: -1})
+      CacheAsyncSetJob.perform_later("platform_statistic_service", {project_language_count_key: last_language&.name, project_language_count: 1})
+    end
+  end
+
+  def decre_project_common
+    CacheAsyncClearJob.perform_later('project_common_service', self.id)
+  end
+
+  def incre_user_statistic 
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: 1, project_language_count_key: self.project_language&.name, project_language_count: 1}, self.user_id)
+  end
+
+  def decre_user_statistic
+    CacheAsyncSetJob.perform_later("user_statistic_service", {project_count: -1, project_language_count_key: self.project_language&.name, project_language_count: -1}, self.user_id)
+  end
+
+  def incre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_count: 1, project_language_count_key: self.project_language&.name, project_language_count: 1})
+  end
+
+  def decre_platform_statistic
+    CacheAsyncSetJob.perform_later("platform_statistic_service", {project_count: -1, project_language_count_key: self.project_language&.name, project_language_count: -1})
+  end
+
+  def is_full_public
+    owner = self.owner
+    if owner.is_a?(Organization)
+      return self.is_public && owner&.visibility == "common"
+    else
+      return self.is_public
+    end
+  end
+
+  def reset_unmember_followed
+    if changes[:is_public].present? && changes[:is_public] == [true, false]
+      self.watchers.where.not(user_id: self.all_collaborators).destroy_all
+    end
   end
 
   def set_invite_code
     if self.invite_code.nil?
       self.invite_code= self.generate_dcode('invite_code', 6)
+    end
+  end
+
+  def set_recommend_and_is_pinned
+    self.recommend = self.recommend_index.zero? ? false : true
+    # 私有项目不允许设置精选和推荐
+    unless self.is_public
+      self.recommend = false
+      self.recommend_index = 0
+      self.is_pinned = false 
     end
   end
 
