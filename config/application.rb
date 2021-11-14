@@ -6,7 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Educoderplus
+module Gitlink
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
@@ -17,7 +17,7 @@ module Educoderplus
     # the framework and any gems in your application.
     #
     #
-    # config.educoder = config_for(:configuration)
+    # config.gitlink = config_for(:configuration)
 
     # Custom directories with classes and modules you want to be autoloadable.
 

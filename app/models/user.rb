@@ -117,8 +117,6 @@ class User < Owner
   enumerize :platform, in: [:forge, :educoder, :trustie, :military], default: :forge, scope: :shallow
 
   belongs_to :laboratory, optional: true
-  has_many :composes, dependent: :destroy
-  has_many :compose_users, dependent: :destroy
   has_one :user_extension, dependent: :destroy
   has_many :open_users, dependent: :destroy
   has_one :wechat_open_user, class_name: 'OpenUsers::Wechat'
@@ -174,6 +172,9 @@ class User < Owner
 
   has_one :user_template_message_setting, dependent: :destroy
 
+  has_many :system_notification_histories
+  has_many :system_notifications, through: :system_notification_histories
+  
   # Groups and active users
   scope :active, lambda { where(status: [STATUS_ACTIVE, STATUS_EDIT_INFO]) }
   scope :like, lambda { |keywords|
@@ -190,6 +191,7 @@ class User < Owner
            :technical_title, :province, :city, :custom_department, to: :user_extension, allow_nil: true
 
   before_save :update_hashed_password, :set_lastname
+  after_save :reset_cache_data
   after_create do
     SyncTrustieJob.perform_later("user", 1) if allow_sync_to_trustie?
   end
@@ -205,6 +207,10 @@ class User < Owner
   validates_length_of :mail, maximum: MAIL_LENGTH_LMIT
   validate :validate_sensitive_string
   validate :validate_password_length
+
+  def reset_cache_data
+    Cache::V2::OwnerCommonService.new(self.id).reset
+  end
 
   # 用户参与的所有项目
   def full_member_projects 
@@ -435,6 +441,7 @@ class User < Owner
 
   def activate!
     update_attribute(:status, STATUS_ACTIVE)
+    prohibit_gitea_user_login!(false)
   end
 
   def register!
@@ -443,6 +450,12 @@ class User < Owner
 
   def lock!
     update_attribute(:status, STATUS_LOCKED)
+    prohibit_gitea_user_login!
+  end
+
+  def prohibit_gitea_user_login!(prohibit_login = true)
+    Gitea::User::UpdateInteractor.call(self.login, 
+      {email: self.mail, prohibit_login: prohibit_login})
   end
 
   def need_edit_info!
@@ -690,7 +703,7 @@ class User < Owner
   end
 
   def self.generate_salt
-    Educoder::Utils.random_hex(16)
+    Gitlink::Utils.random_hex(16)
   end
 
   # 全部已认证

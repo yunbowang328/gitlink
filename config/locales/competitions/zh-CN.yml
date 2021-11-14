@@ -1,8 +1,0 @@
-'zh-CN':
-  activerecord:
-    models:
-      competition_module_md_content: ''
-    attributes:
-      competition_module_md_content:
-        name: '标题'
-        content: '内容'

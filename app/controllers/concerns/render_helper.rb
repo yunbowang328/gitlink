@@ -28,4 +28,8 @@ module RenderHelper
   def render_result(status=1, message='success')
     render json: { status: status, message: message }
   end
+
+  def render_parameter_missing
+		render json: { status: -1, message: '参数缺失' }
+	end
 end

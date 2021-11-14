@@ -36,10 +36,10 @@ module GitCommon
     begin
       @commits = GitService.commits(repo_path: @repo_path)
       logger.info("git first commit is #{@commits.try(:first)}")
-      raise Educoder::TipException.new("请先创建版本库") if @commits.nil?
+      raise Gitlink::TipException.new("请先创建版本库") if @commits.nil?
     rescue Exception => e
       uid_logger_error(e.message)
-      raise Educoder::TipException.new("提交记录异常")
+      raise Gitlink::TipException.new("提交记录异常")
     end
   end
 

@@ -15,19 +15,13 @@ class Admins::UpdateUserService < ApplicationService
     user.firstname = ''
     user.password = params[:password] if params[:password].present?
 
-    if params[:identity].to_s == 'student'
-      params[:technical_title] = nil
-    else
-      params[:student_id] = nil
-    end
     user.user_extension.assign_attributes(user_extension_attributes)
 
+    old_login = user.login
     ActiveRecord::Base.transaction do
       user.save!
       user.user_extension.save!
-      user.update!(is_shixun_marker: true) if user.is_certification_teacher
-
-      update_gitlab_password if params[:password].present?
+      update_gitea_user(old_login)
     end
 
     user
@@ -36,7 +30,7 @@ class Admins::UpdateUserService < ApplicationService
   private
 
   def user_attributes
-    params.slice(*%i[lastname nickname mail phone admin business is_test
+    params.slice(*%i[lastname nickname mail phone admin business is_test login
                      professional_certification authentication is_shixun_marker])
   end
 
@@ -44,10 +38,29 @@ class Admins::UpdateUserService < ApplicationService
     params.slice(*%i[gender identity technical_title student_id location location_city school_id department_id])
   end
 
-  def update_gitlab_password
-    return if user.gid.blank?
-    # 同步修改gitlab密码
-    Gitlab.client.edit_user(user.gid, password: params[:password])
+  def gitea_user_params
+    hash = {
+      password: params[:password].to_s.presence,
+      email: user.mail,
+      login_name: params[:login].to_s.presence,
+      admin: boolean_admin
+    }.compact
+
+    hash.delete_if {|_,v| v.to_s.strip == ''}
+  end
+
+  def boolean_admin
+    admin = params[:admin].to_s.presence
+    case admin
+    when "0" then false
+    when "1" then true
+    end
+  end
+
+  def update_gitea_user(old_login)
+    return if user.gitea_uid.blank?
+
+    Gitea::User::UpdateInteractor.call(old_login, gitea_user_params)
   rescue Exception => ex
     Util.logger_error(ex)
     raise Error, '保存失败'

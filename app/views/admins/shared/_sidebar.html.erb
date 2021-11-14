@@ -31,17 +31,23 @@
 
     <li><%= sidebar_item(admins_reversed_keywords_path, '系统保留关键词', icon: 'key', controller: 'admins-reversed_keywords') %></li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
-
-    <!-- <li>
+    <li>
+      <%= sidebar_item_group('#setting-index', '首页配置', icon: 'file') do %>
+        <li><%= sidebar_item(admins_topic_banners_path, 'banner管理', icon: 'image', controller: 'admins-topic-banners') %></li>
+        <li><%= sidebar_item(admins_topic_cards_path, '卡片管理', icon: 'archive', controller: 'admins-topic-cards') %></li>
+        <li><%= sidebar_item(admins_topic_activity_forums_path, '平台动态管理', icon: 'bell', controller: 'admins-topic-activity_forums') %></li>
+        <li><%= sidebar_item(admins_topic_excellent_projects_path, '优秀仓库管理', icon: 'git', controller: 'admins-topic-excellent_projects') %></li>
+        <li><%= sidebar_item(admins_topic_pinned_forums_path, '精选文章管理', icon: 'edit', controller: 'admins-topic-pinned_forums') %></li>
+        <li><%= sidebar_item(admins_topic_experience_forums_path, '经验分享管理', icon: 'edit', controller: 'admins-topic-experience_forums') %></li>
+        <li><%= sidebar_item(admins_topic_cooperators_path, '合作伙伴管理', icon: 'user', controller: 'admins-topic-cooperators') %></li>
+      <% end %>
+    </li>
+    
+    <li>
       <%= sidebar_item_group('#setting-submenu', '网站建设', icon: 'cogs') do %>
-        <li><%= sidebar_item(edit_admins_about_path, '关于我们', icon: 'smile-o', controller: 'admins-abouts') %></li>
-        <li><%= sidebar_item(edit_admins_contact_us_path, '联系我们', icon: 'commenting-o', controller: 'admins-contact_us') %></li>
-        <li><%= sidebar_item(admins_cooperatives_path, '合作伙伴', icon: 'handshake-o', controller: 'admins-cooperatives') %></li>
-        <li><%= sidebar_item(edit_admins_agreement_path, '服务协议', icon: 'file-text-o', controller: 'admins-agreements') %></li>
-        <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
         <li><%= sidebar_item(admins_faqs_path, 'FAQ', icon: 'question-circle', controller: 'admins-faqs') %></li>
       <% end %>
-    </li> -->
+    </li>
     <li>
       <%= sidebar_item_group('#setting-system', '系统配置', icon: 'wrench') do %>
         <li><%= sidebar_item(admins_sites_path, 'setting接口配置', icon: 'deaf', controller: 'admins-sites') %></li>

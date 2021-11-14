@@ -1,0 +1,33 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="5%">序号</th>
+    <th width="20%">标题</th>
+    <th width="20%">跳转地址</th>
+    <th width="10%">项目ID</th>
+    <th width="20%">排序等级</th>
+    <th width="25%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if excellent_projects.present? %>
+    <% excellent_projects.each_with_index do |excellent_project, index| %>
+      <tr class="excellent-project-item-<%= excellent_project.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td><%= excellent_project.title %></td>
+        <td><%= excellent_project.url %></td>
+        <td><%= excellent_project.uuid %></td>
+        <td><%= excellent_project.order_index %></td>
+        <td class="action-container">
+          <%= link_to "编辑", edit_admins_topic_excellent_project_path(excellent_project), remote: true, class: "action" %>
+          <%= link_to "删除", admins_topic_excellent_project_path(excellent_project), method: :delete, data:{confirm: "确认删除的吗？"}, class: "action" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: excellent_projects } %>

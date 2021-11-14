@@ -18,6 +18,10 @@ class ReversedKeyword < ApplicationRecord
 
   before_validation :set_identifier 
 
+  def self.check_exists?(identifier)
+    self.is_reversed(identifier).exists?
+  end
+  
   private 
 
   def set_identifier 
