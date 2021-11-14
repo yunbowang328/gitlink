@@ -103,7 +103,7 @@ class ApplicationController < ActionController::Base
 		when 1, 2, 4, 9
 			# 手机类型的发送
 			sigle_para = {phone: value}
-			status = Educoder::Sms.send(mobile: value, code: code)
+			status = Gitlink::Sms.send(mobile: value, code: code)
 			tip_exception(-2, code_msg(status)) if status != 0
 		when 8, 3, 5
 			# 邮箱类型的发送
@@ -184,7 +184,7 @@ class ApplicationController < ActionController::Base
 
 	# 异常提醒
 	def tip_exception(status = -1, message)
-		raise Educoder::TipException.new(status, message)
+		raise Gitlink::TipException.new(status, message)
 	end
 
 	def missing_template
@@ -193,7 +193,7 @@ class ApplicationController < ActionController::Base
 
 	# 弹框提醒
 	def tip_show_exception(status = -2, message)
-		raise Educoder::TipException.new(status, message)
+		raise Gitlink::TipException.new(status, message)
 	end
 
 	def normal_status(status = 0, message)
@@ -272,18 +272,18 @@ class ApplicationController < ActionController::Base
 
 		# 测试版前端需求
 		logger.info("subdomain:#{request.subdomain}")
-		if request.subdomain != "www"
-			if params[:debug] == 'teacher' #todo 为了测试,记得讲debug删除
-				User.current = User.find 81403
-			elsif params[:debug] == 'student'
-				User.current = User.find 8686
-			elsif params[:debug] == 'admin'
-				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
-				user =  User.find 36480
-				User.current = user
-				cookies.signed[:user_id] = user.id
-			end
-		end
+		# if request.subdomain != "www"
+		# 	if params[:debug] == 'teacher' #todo 为了测试,记得讲debug删除
+		# 		User.current = User.find 81403
+		# 	elsif params[:debug] == 'student'
+		# 		User.current = User.find 8686
+		# 	elsif params[:debug] == 'admin'
+		# 		logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
+		# 		user =  User.find 36480
+		# 		User.current = user
+		# 		cookies.signed[:user_id] = user.id
+		# 	end
+		# end
 		# User.current = User.find 81403
 	end
 
@@ -368,7 +368,7 @@ class ApplicationController < ActionController::Base
 			JSON.parse(res)
 		rescue Exception => e
 			uid_logger_error("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new("实训平台繁忙（繁忙等级：84）")
+			raise Gitlink::TipException.new("实训平台繁忙（繁忙等级：84）")
 		end
 	end
 
@@ -387,7 +387,7 @@ class ApplicationController < ActionController::Base
 			end
 		rescue Exception => e
 			uid_logger("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new(message)
+			raise Gitlink::TipException.new(message)
 		end
 	end
 
@@ -411,7 +411,7 @@ class ApplicationController < ActionController::Base
 			end
 		rescue Exception => e
 			uid_logger("--uri_exec: exception #{e.message}")
-			raise Educoder::TipException.new("服务器繁忙")
+			raise Gitlink::TipException.new("服务器繁忙")
 		end
 	end
 
@@ -583,8 +583,8 @@ class ApplicationController < ActionController::Base
 
 	# 获取Oauth Client
 	def get_client(site)
-		client_id = Rails.configuration.educoder['client_id']
-		client_secret = Rails.configuration.educoder['client_secret']
+		client_id = Rails.configuration.Gitlink['client_id']
+		client_secret = Rails.configuration.Gitlink['client_secret']
 
 		OAuth2::Client.new(client_id, client_secret, site: site)
 	end

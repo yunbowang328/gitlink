@@ -703,7 +703,7 @@ class User < Owner
   end
 
   def self.generate_salt
-    Educoder::Utils.random_hex(16)
+    Gitlink::Utils.random_hex(16)
   end
 
   # 全部已认证

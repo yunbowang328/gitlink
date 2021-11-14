@@ -1,6 +1,6 @@
 # 所有的方法请按首字母的顺序依次列出
 module ApplicationHelper
-  include Educoder::I18n
+  include Gitlink::I18n
   include GitHelper
 
   ONE_MINUTE = 60 * 1000

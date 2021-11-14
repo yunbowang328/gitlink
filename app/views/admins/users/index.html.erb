@@ -32,11 +32,7 @@
   <% end %>
 
   <%= javascript_void_link '导入用户', class: 'btn btn-secondary btn-sm', data: { toggle: 'modal', target: '.admin-import-user-modal'} %>
-  <%
-=begin%>
- <%= javascript_void_link '导入课堂成员', class: 'btn btn-secondary btn-sm ml-2', data: { toggle: 'modal', target: '.admin-import-course-member-modal'} %> 
-<%
-=end%>
+  
 </div>
 
 <div class="box admin-list-container users-list-container">
@@ -45,6 +41,3 @@
 
 <%= render partial: 'admins/users/shared/reward_grade_modal' %>
 <%= render partial: 'admins/users/shared/import_user_modal' %>
-
-<!-- TODO: move to course list page -->
-<%= render partial: 'admins/courses/shared/import_course_member_modal' %>
