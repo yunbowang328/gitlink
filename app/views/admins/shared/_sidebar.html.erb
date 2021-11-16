@@ -17,7 +17,7 @@
     <li>
       <%= sidebar_item_group('#user-submenu', '用户', icon: 'user') do %>
         <li><%= sidebar_item(admins_users_path, '用户列表', icon: 'user', controller: 'admins-users') %></li>
-        <li><%= sidebar_item(admins_phenglei_users_path, '风雷意向用户列表', icon: 'user', controller: 'admins-phenglei_users') %></li>
+        <!-- <li><%= sidebar_item(admins_phenglei_users_path, '风雷意向用户列表', icon: 'user', controller: 'admins-phenglei_users') %></li> -->
       <% end %>
     </li>
     <li>
@@ -27,13 +27,13 @@
         <li><%= sidebar_item(admins_project_categories_path, '分类列表', icon: 'sitemap', controller: 'admins-project_categories') %></li>
         <li><%= sidebar_item(admins_project_licenses_path, '开源许可证', icon: 'file-text-o', controller: 'admins-project_licenses') %></li>
         <li><%= sidebar_item(admins_project_ignores_path, '忽略文件', icon: 'git', controller: 'admins-project_ignores') %></li>
-        <li><%= sidebar_item(admins_apply_signatures_path, '特殊许可申请列表', icon: 'git', controller: 'admins-apply_signatures') %></li>
+        <!-- <li><%= sidebar_item(admins_apply_signatures_path, '特殊许可申请列表', icon: 'git', controller: 'admins-apply_signatures') %></li> -->
 
       <% end %>
     </li>
 
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
-
+    <!-- 
     <li>
       <%= sidebar_item_group('#setting-submenu', '网站建设', icon: 'cogs') do %>
         <li><%= sidebar_item(edit_admins_about_path, '关于我们', icon: 'smile-o', controller: 'admins-abouts') %></li>
@@ -43,6 +43,7 @@
         <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
       <% end %>
     </li>
+     -->
     <li>
     <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>
