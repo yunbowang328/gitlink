@@ -34,21 +34,24 @@ class MessageTemplate::ProjectRole < MessageTemplate
   def self.get_email_message_content(receiver, project, role)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::Permission"]
+      title = email_title
+      title.gsub!('{repository}', project&.name)
+      title.gsub!('{role}', role)
+      title.gsub!('{nickname}', project&.owner&.real_name)
+      content = email 
+      content.gsub!('{receiver}', receiver&.real_name)
+      content.gsub!('{baseurl}', base_url)
+      content.gsub!('{login}', project&.owner&.login)
+      content.gsub!('{nickname}', project&.owner&.real_name)
+      content.gsub!('{identifier}', project&.identifier)
+      content.gsub!('{repository}', project&.name)
+      content.gsub!('{role}', role)
+  
+      return receiver&.mail, title, content
+    else
+      return '', '', ''
     end
-    title = email_title
-    title.gsub!('{repository}', project&.name)
-    title.gsub!('{role}', role)
-    title.gsub!('{nickname}', project&.owner&.real_name)
-    content = email 
-    content.gsub!('{receiver}', receiver&.real_name)
-    content.gsub!('{baseurl}', base_url)
-    content.gsub!('{login}', project&.owner&.login)
-    content.gsub!('{nickname}', project&.owner&.real_name)
-    content.gsub!('{identifier}', project&.identifier)
-    content.gsub!('{repository}', project&.name)
-    content.gsub!('{role}', role)
 
-    return receiver&.mail, title, content
   rescue => e
     Rails.logger.info("MessageTemplate::ProjectRole.get_email_message_content [ERROR] #{e}")
     return '', '', ''

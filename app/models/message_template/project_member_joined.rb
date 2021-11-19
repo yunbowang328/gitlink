@@ -34,23 +34,25 @@ class MessageTemplate::ProjectMemberJoined < MessageTemplate
   def self.get_email_message_content(receiver, user, project)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["ManageProject::Member"]
-    end
-    title = email_title
-    title.gsub!('{nickname1}', user&.real_name)
-    title.gsub!('{nickname2}', project&.owner&.real_name)
-    title.gsub!('{repository}', project&.name)
-    
-    content = email
-    content.gsub!('{receiver}', receiver&.real_name)
-    content.gsub!('{baseurl}', base_url)
-    content.gsub!('{login1}', user&.login)
-    content.gsub!('{login2}', project&.owner&.login)
-    content.gsub!('{identifier}', project&.identifier)
-    content.gsub!('{nickname1}', user&.real_name)
-    content.gsub!('{nickname2}', project&.owner&.real_name)
-    content.gsub!('{repository}', project&.name)
+      title = email_title
+      title.gsub!('{nickname1}', user&.real_name)
+      title.gsub!('{nickname2}', project&.owner&.real_name)
+      title.gsub!('{repository}', project&.name)
+      
+      content = email
+      content.gsub!('{receiver}', receiver&.real_name)
+      content.gsub!('{baseurl}', base_url)
+      content.gsub!('{login1}', user&.login)
+      content.gsub!('{login2}', project&.owner&.login)
+      content.gsub!('{identifier}', project&.identifier)
+      content.gsub!('{nickname1}', user&.real_name)
+      content.gsub!('{nickname2}', project&.owner&.real_name)
+      content.gsub!('{repository}', project&.name)
 
-    return receiver&.mail, title, content
+      return receiver&.mail, title, content
+    else
+      return '', '', ''
+    end
   rescue => e
     Rails.logger.info("MessageTemplate::ProjectMemberJoined.get_email_message_content [ERROR] #{e}")
     return '', '', ''

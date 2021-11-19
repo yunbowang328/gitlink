@@ -44,17 +44,17 @@ class UserTemplateMessageSetting < ApplicationRecord
 
   def self.init_email_body 
     {
-      "Normal::Permission": true,
-      "Normal::Project": true,
-      "Normal::Organization": true,
-      "Normal::IssueAssigned": true,
-      "Normal::PullRequestAssigned": true,
-      "CreateOrAssign::IssueChanged": true,
-      "CreateOrAssign::PullRequestChanged": true,
-      "ManageProject::Issue": true,
-      "ManageProject::PullRequest": true,
-      "ManageProject::Member": true,
-      "ManageProject::SettingChanged": true,
+      "Normal::Permission": false,
+      "Normal::Project": false,
+      "Normal::Organization": false,
+      "Normal::IssueAssigned": false,
+      "Normal::PullRequestAssigned": false,
+      "CreateOrAssign::IssueChanged": false,
+      "CreateOrAssign::PullRequestChanged": false,
+      "ManageProject::Issue": false,
+      "ManageProject::PullRequest": false,
+      "ManageProject::Member": false,
+      "ManageProject::SettingChanged": false,
     }.stringify_keys!
   end
 
