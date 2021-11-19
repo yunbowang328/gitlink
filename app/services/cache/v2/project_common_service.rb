@@ -196,6 +196,7 @@ class Cache::V2::ProjectCommonService < ApplicationService
 
   def reset_project_common
     load_project
+    return unless @project.present?
     return unless @project.is_full_public
     $redis_cache.del(project_common_key)
     reset_project_owner_id
