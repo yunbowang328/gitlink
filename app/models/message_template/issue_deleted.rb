@@ -33,17 +33,19 @@ class MessageTemplate::IssueDeleted < MessageTemplate
   def self.get_email_message_content(receiver, operator, issue_title)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["CreateOrAssign::IssueChanged"]
-    end
-    title = email_title
-    title.gsub!('{title}', issue_title)
-    content = email
-    content.gsub!('{receiver}', receiver&.real_name)
-    content.gsub!('{nickname}', operator&.real_name)
-    content.gsub!('{login}', operator&.login)
-    content.gsub!('{baseurl}', base_url)
-    content.gsub!('{title}', issue_title)
+      title = email_title
+      title.gsub!('{title}', issue_title)
+      content = email
+      content.gsub!('{receiver}', receiver&.real_name)
+      content.gsub!('{nickname}', operator&.real_name)
+      content.gsub!('{login}', operator&.login)
+      content.gsub!('{baseurl}', base_url)
+      content.gsub!('{title}', issue_title)
 
-    return receiver&.mail, title, content
+      return receiver&.mail, title, content
+    else
+      return '', '', ''
+    end
   rescue => e
     Rails.logger.info("MessageTemplate::IssueDeleted.get_email_message_content [ERROR] #{e}")
     return '', '', ''

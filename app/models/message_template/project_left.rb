@@ -33,19 +33,22 @@ class MessageTemplate::ProjectLeft < MessageTemplate
   def self.get_email_message_content(receiver, project)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::Project"]
-    end
-    title = email_title
-    title.gsub!('{repository}', project&.name)
-    
-    content = email
-    content.gsub!('{receiver}', receiver&.real_name)
-    content.gsub!('{baseurl}', base_url)
-    content.gsub!('{login}', project&.owner&.login)
-    content.gsub!('{identifier}', project&.identifier)
-    content.gsub!('{nickname}', project&.owner&.real_name)
-    content.gsub!('{repository}', project&.name)
+      title = email_title
+      title.gsub!('{repository}', project&.name)
+      
+      content = email
+      content.gsub!('{receiver}', receiver&.real_name)
+      content.gsub!('{baseurl}', base_url)
+      content.gsub!('{login}', project&.owner&.login)
+      content.gsub!('{identifier}', project&.identifier)
+      content.gsub!('{nickname}', project&.owner&.real_name)
+      content.gsub!('{repository}', project&.name)
 
-    return receiver&.mail, title, content
+      return receiver&.mail, title, content
+    else
+      return '', '', ''
+    end
+    
   rescue => e
     Rails.logger.info("MessageTemplate::ProjectLeft.get_email_message_content [ERROR] #{e}")
     return '', '', ''
