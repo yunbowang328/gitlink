@@ -30,8 +30,8 @@ class ProjectsController < ApplicationController
   def index
     scope = current_user.logged? ? Projects::ListQuery.call(params, current_user.id) : Projects::ListQuery.call(params)
 
-    # @projects = kaminari_paginate(scope)
-    @projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
+    @projects = kaminari_paginate(scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units))
+    #@projects = paginate scope.includes(:project_category, :project_language, :repository, :project_educoder, :owner, :project_units)
 
     category_id = params[:category_id]
     @total_count =
