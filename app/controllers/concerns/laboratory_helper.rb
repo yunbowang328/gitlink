@@ -42,7 +42,7 @@ module LaboratoryHelper
       my_projects: "#{Rails.application.config_for(:configuration)['platform_url']}/users/#{current_user.try(:login)}/projects",
       my_organ: "#{Rails.application.config_for(:configuration)['platform_url']}/users/#{current_user.try(:login)}/user_organizations",
       default_url: Rails.application.config_for(:configuration)['platform_url'],
-      tiding_url: "#{Rails.application.config_for(:configuration)['platform_url']}/users/#{current_user.try(:login)}/user_messages",
+      tiding_url: "#{Rails.application.config_for(:configuration)['platform_url']}/settings/notice",
       register_url: "#{Rails.application.config_for(:configuration)['platform_url']}/login?login=false"
     }
   end
