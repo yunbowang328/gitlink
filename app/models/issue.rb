@@ -153,6 +153,10 @@ class Issue < ApplicationRecord
     end
   end
 
+  def is_collaborators?
+    self.assigned_to_id.present? ? self.project.members.where(user_id: self.assigned_to_id).present? : false
+  end
+
   def get_issue_tags_name
     if issue_tags.present?
       issue_tags.select(:name).uniq.pluck(:name).join(",")
