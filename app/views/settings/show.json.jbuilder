@@ -48,4 +48,13 @@ json.setting do
   json.old_projects_url @old_projects_url
 
 
+  json.add do
+    json.array! @add
+  end
+
+  json.personal do
+    json.array! @personal
+  end
+
+  json.common @common
 end
