@@ -41,7 +41,7 @@ module LaboratoryHelper
       my_courses: "https://www.trustie.net/users/#{current_user.try(:login)}/user_courselist",
       my_projects: "https://forgeplus.trustie.net/users/#{current_user.try(:login)}/projects",
       my_organ: "https://www.trustie.net/users/#{current_user.try(:login)}/user_organizations",
-      default_url: "https://www.trustie.net/",
+      default_url: Rails.application.config_for(:configuration)['platform_url'],
       tiding_url: "https://www.trustie.net/users/#{current_user.try(:login)}/user_messages",
       register_url: "https://www.trustie.net/login?login=false"
     }
