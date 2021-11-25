@@ -56,6 +56,7 @@ class PullRequestsController < ApplicationController
   end
 
   def create
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
@@ -78,6 +79,7 @@ class PullRequestsController < ApplicationController
   end
 
   def update
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
