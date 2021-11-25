@@ -197,7 +197,7 @@ class PullRequestsController < ApplicationController
   def check_can_merge
     target_head = params[:head]  #源分支
     target_base = params[:base]  #目标分支
-    is_original = params[:is_original]
+    is_original = params[:is_original] || false
     if target_head.blank? || target_base.blank?
       normal_status(-2, "请选择分支")
     elsif target_head === target_base && !is_original

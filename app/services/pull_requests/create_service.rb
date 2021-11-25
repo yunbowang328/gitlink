@@ -94,7 +94,7 @@ class PullRequests::CreateService < ApplicationService
       user: @current_user,
       issue: pull_issue,
       fork_project_id: @params[:fork_project_id],
-      is_original: @params[:is_original],
+      is_original: is_original,
       files_count: @params[:files_count] || 0,
       commits_count: @params[:commits_count] || 0
     })
@@ -145,11 +145,13 @@ class PullRequests::CreateService < ApplicationService
     raise "title参数不能为空" if @params[:title].blank?
     raise "head参数不能为空" if @params[:head].blank?
     raise "base参数不能为空" if @params[:base].blank?
-    puts @params[:head] 
-    puts @params[:base]
-    raise "分支内容相同，无需创建合并请求" if @params[:head] === @params[:base] && !@params[:is_original]
-    raise "合并请求已存在" if @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: @params[:is_original], fork_project_id: @params[:fork_project_id]).present?
+    raise "分支内容相同，无需创建合并请求" if @params[:head] === @params[:base] && !is_original
+    raise "合并请求已存在" if @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: is_original, fork_project_id: @params[:fork_project_id]).present?
     raise @pull_issue.errors.full_messages.join(", ") unless pull_issue.valid?
     raise @pull_request.errors.full_messages.join(", ") unless pull_request.valid?
+  end
+
+  def is_original
+    @params[:is_original] || false
   end
 end
