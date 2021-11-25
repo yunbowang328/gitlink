@@ -97,29 +97,37 @@ class AttachmentsController < ApplicationController
     upload_file = params["file"] || params["#{params[:file_param_name]}"]# 这里的file_param_name是为了方便其他插件名称
     raise "未上传文件" unless upload_file
 
-    folder = edu_setting('attachment_folder')
+    folder = file_storage_directory
     raise "存储目录未定义" unless folder.present?
     month_folder = current_month_folder
     save_path = File.join(folder, month_folder)
 
-    ext = SecureRandom.urlsafe_base64
+    ext = file_ext(upload_file.original_filename)
 
     local_path, digest = file_save_to_local(save_path, upload_file.tempfile, ext)
 
     content_type = upload_file.content_type.presence || 'application/octet-stream'
+    remote_path = nil # TODO 暂时本地上传，待域名配置后方可上传至云端
+
+    logger.info "local_path: #{local_path}"
+    logger.info "remote_path: #{remote_path}"
 
     disk_filename = local_path[save_path.size + 1, local_path.size]
 
-    @attachment = Attachment.where(disk_filename: disk_filename,author_id: current_user.id).first
+    @attachment = Attachment.where(disk_filename: disk_filename,
+                                   author_id: current_user.id,
+                                   cloud_url: remote_path).first
+
     if @attachment.blank?
       @attachment = Attachment.new
       @attachment.filename = upload_file.original_filename
-      @attachment.disk_filename = disk_filename
+      @attachment.disk_filename = local_path[save_path.size + 1, local_path.size]
       @attachment.filesize = upload_file.tempfile.size
       @attachment.content_type = content_type
       @attachment.digest = digest
       @attachment.author_id = current_user.id
       @attachment.disk_directory = month_folder
+      @attachment.cloud_url = remote_path
       @attachment.save!
       @status = 1
     else
