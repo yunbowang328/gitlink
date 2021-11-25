@@ -195,8 +195,9 @@ class RepositoriesController < ApplicationController
     else
       result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
     end
+    @path = Gitea.gitea_config[:domain]+"/#{@owner.login}/#{@repository.identifier}/raw/branch/#{params[:ref]}/"
     @readme = result[:status] === :success ? result[:body] : nil
-    @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref])
+    @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref], @path)
     render json: @readme.slice("type", "encoding", "size", "name", "path", "content", "sha")
   rescue 
     render json: nil
