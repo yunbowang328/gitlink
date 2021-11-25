@@ -148,8 +148,7 @@ class PullRequests::CreateService < ApplicationService
     puts @params[:head] 
     puts @params[:base]
     raise "分支内容相同，无需创建合并请求" if @params[:head] === @params[:base] && !@params[:is_original]
-    can_merge = @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: @params[:is_original], fork_project_id: @params[:fork_project_id]).blank?
-    raise "合并请求已存在" if can_merge
+    raise "合并请求已存在" if @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: @params[:is_original], fork_project_id: @params[:fork_project_id]).present?
     raise @pull_issue.errors.full_messages.join(", ") unless pull_issue.valid?
     raise @pull_request.errors.full_messages.join(", ") unless pull_request.valid?
   end
