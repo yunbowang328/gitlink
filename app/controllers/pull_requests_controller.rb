@@ -230,11 +230,11 @@ class PullRequestsController < ApplicationController
 
   private
   def load_pull_request
-    @pull_request = PullRequest.find params[:id]
+    @pull_request = @project.pull_requests.where(gitea_number: params[:id]).where.not(id: params[:id]).take || PullRequest.find_by_id(params[:id])
   end
 
   def find_pull_request
-    @pull_request = PullRequest.find_by_id(params[:id])
+    @pull_request = @project.pull_requests.where(gitea_number: params[:id]).where.not(id: params[:id]).take || PullRequest.find_by_id(params[:id])
     @issue = @pull_request&.issue
     if @pull_request.blank?
       normal_status(-1, "合并请求不存在")
