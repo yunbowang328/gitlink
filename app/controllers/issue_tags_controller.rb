@@ -2,7 +2,7 @@ class IssueTagsController < ApplicationController
   before_action :require_login, except: [:index]
   before_action :load_repository
   before_action :set_user
-  before_action :check_issue_permission, except: :index
+  before_action :check_issue_tags_permission
   before_action :set_issue_tag, only: [:edit, :update, :destroy]
 
 
@@ -122,9 +122,9 @@ class IssueTagsController < ApplicationController
     @user = @project.owner
   end
 
-  def check_issue_permission
-    unless @project.member?(current_user) || current_user.admin?
-      normal_status(-1, "您没有权限")
+  def check_issue_tags_permission
+    unless @project.manager?(current_user) || current_user.admin?
+      return render_forbidden('你不是管理员，没有权限操作')
     end
   end
 

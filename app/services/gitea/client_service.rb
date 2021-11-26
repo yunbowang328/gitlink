@@ -144,6 +144,8 @@ class Gitea::ClientService < ApplicationService
       {status: 403, message: '你没有权限操作!'}
     when 404
       {status: 404, message: '你访问的链接不存在!'}
+    when 500
+      {status: 500, message: ''}
     else
       if response&.body.blank?
         message = "请求失败"

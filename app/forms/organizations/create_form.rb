@@ -8,4 +8,11 @@ class Organizations::CreateForm < BaseForm
   validates :description, length: { maximum: 200 }
   validates :name, format: { with: NAME_REGEX, multiline: true, message: "只能含有数字、字母、下划线且不能以下划线开头和结尾" }
 
+  validate do 
+    check_name(name) unless name.blank?
+  end
+
+  def check_name(name)
+    raise "组织账号已被使用." if Owner.where(login: name.strip).exists?
+  end
 end

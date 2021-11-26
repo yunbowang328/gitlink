@@ -56,6 +56,7 @@ class PullRequestsController < ApplicationController
   end
 
   def create
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
@@ -78,6 +79,7 @@ class PullRequestsController < ApplicationController
   end
 
   def update
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
@@ -197,7 +199,7 @@ class PullRequestsController < ApplicationController
   def check_can_merge
     target_head = params[:head]  #源分支
     target_base = params[:base]  #目标分支
-    is_original = params[:is_original]
+    is_original = params[:is_original] || false
     if target_head.blank? || target_base.blank?
       normal_status(-2, "请选择分支")
     elsif target_head === target_base && !is_original
@@ -228,11 +230,11 @@ class PullRequestsController < ApplicationController
 
   private
   def load_pull_request
-    @pull_request = PullRequest.find params[:id]
+    @pull_request = @project.pull_requests.where(gitea_number: params[:id]).where.not(id: params[:id]).take || PullRequest.find_by_id(params[:id])
   end
 
   def find_pull_request
-    @pull_request = PullRequest.find_by_id(params[:id])
+    @pull_request = @project.pull_requests.where(gitea_number: params[:id]).where.not(id: params[:id]).take || PullRequest.find_by_id(params[:id])
     @issue = @pull_request&.issue
     if @pull_request.blank?
       normal_status(-1, "合并请求不存在")
