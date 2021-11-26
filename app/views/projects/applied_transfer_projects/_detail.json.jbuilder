@@ -1,13 +1,17 @@
 project = object.project
-json.project do 
-  json.id project.id
-  json.identifier project.identifier
-  json.name project.name
-  json.description project.description
-  json.is_public project.is_public
-  json.owner do 
-    json.partial! "/users/user_simple", locals: {user: project.owner}
+if project.present?
+  json.project do 
+    json.id project.id
+    json.identifier project.identifier
+    json.name project.name
+    json.description project.description
+    json.is_public project.is_public
+    json.owner do 
+      json.partial! "/users/user_simple", locals: {user: project.owner}
+    end
   end
+else
+  json.project nil 
 end
 json.user do 
   json.partial! "/users/user_simple", locals: {user: object.user}

@@ -36,26 +36,28 @@ class MessageTemplate::IssueAssigned < MessageTemplate
   def self.get_email_message_content(receiver, operator, issue)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::IssueAssigned"]
+      project = issue&.project
+      owner = project&.owner 
+      title = email_title
+      title.gsub!('{nickname1}', operator&.real_name)
+      title.gsub!('{nickname2}', owner&.real_name)
+      title.gsub!('{repository}', project&.name)
+      content = email
+      content.gsub!('{receiver}', receiver&.real_name)
+      content.gsub!('{nickname1}', operator&.real_name)
+      content.gsub!('{login1}', operator&.login)
+      content.gsub!('{nickname2}', owner&.real_name)
+      content.gsub!('{login2}', owner&.login)
+      content.gsub!('{identifier}', project&.identifier)
+      content.gsub!('{repository}', project&.name)
+      content.gsub!('{baseurl}', base_url)
+      content.gsub!('{title}', issue&.subject)
+      content.gsub!('{id}', issue&.id.to_s)
+  
+      return receiver&.mail, title, content
+    else
+      return '', '', ''
     end
-    project = issue&.project
-    owner = project&.owner 
-    title = email_title
-    title.gsub!('{nickname1}', operator&.real_name)
-    title.gsub!('{nickname2}', owner&.real_name)
-    title.gsub!('{repository}', project&.name)
-    content = email
-    content.gsub!('{receiver}', receiver&.real_name)
-    content.gsub!('{nickname1}', operator&.real_name)
-    content.gsub!('{login1}', operator&.login)
-    content.gsub!('{nickname2}', owner&.real_name)
-    content.gsub!('{login2}', owner&.login)
-    content.gsub!('{identifier}', project&.identifier)
-    content.gsub!('{repository}', project&.name)
-    content.gsub!('{baseurl}', base_url)
-    content.gsub!('{title}', issue&.subject)
-    content.gsub!('{id}', issue&.id.to_s)
-
-    return receiver&.mail, title, content
   rescue => e
     Rails.logger.info("MessageTemplate::IssueAssigned.get_email_message_content [ERROR] #{e}")
     return '', '', ''
