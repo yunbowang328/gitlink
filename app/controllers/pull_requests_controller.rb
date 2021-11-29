@@ -91,10 +91,16 @@ class PullRequestsController < ApplicationController
 
           @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
           if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
-            @issue&.issue_tags_relates&.destroy_all
-            params[:issue_tag_ids].each do |tag|
-              IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
-            end
+            if params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size > 1
+              return normal_status(-1, "最多只能创建一个标记。")
+            elsif params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size == 1
+              @issue&.issue_tags_relates&.destroy_all
+              params[:issue_tag_ids].each do |tag|
+                IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
+              end
+            else
+              return normal_status(-1, "请输入正确的标记。")
+            end 
           end
 
           if @issue.update_attributes(@issue_params)
@@ -104,9 +110,16 @@ class PullRequestsController < ApplicationController
 
               if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
-                  params[:issue_tag_ids].each do |tag|
-                    IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
-                  end
+                  if params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size > 1
+                    return normal_status(-1, "最多只能创建一个标记。")
+                  elsif params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size == 1
+                    @issue&.issue_tags_relates&.destroy_all
+                    params[:issue_tag_ids].each do |tag|
+                      IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
+                    end
+                  else
+                    return normal_status(-1, "请输入正确的标记。")
+                  end 
                 end
                 if params[:status_id].to_i == 5
                   @issue.issue_times.update_all(end_time: Time.now)

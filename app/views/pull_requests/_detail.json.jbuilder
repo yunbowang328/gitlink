@@ -1,5 +1,6 @@
 pr = issue.pull_request
 json.pull_request_id pr.id
+json.pull_request_number pr.gitea_number
 json.pull_request_status pr.status
 json.pull_request_head pr.head 
 json.pull_request_base pr.base

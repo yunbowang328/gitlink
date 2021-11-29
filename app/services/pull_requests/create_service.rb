@@ -58,8 +58,12 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def save_issue_tags_relates!
-    issue_tag_ids.each do |tag|
-      IssueTagsRelate.create!(issue_id: pull_issue.id, issue_tag_id: tag)
+    if issue_tag_ids.size > 1 
+      raise "最多只能创建一个标记。" 
+    else 
+      issue_tag_ids.each do |tag|
+        IssueTagsRelate.create!(issue_id: pull_issue.id, issue_tag_id: tag)
+      end
     end
   end
 
