@@ -13,6 +13,7 @@ class PullRequests::CreateService < ApplicationService
   def call
     ActiveRecord::Base.transaction do
       validate!
+      compare_head_base!
       save_pull_issue!
       save_pull_request!
       save_issue_tags_relates!
@@ -33,7 +34,7 @@ class PullRequests::CreateService < ApplicationService
       assigned_to_id: @params[:assigned_to_id],
       fixed_version_id: @params[:fixed_version_id],
       issue_tags_value: @params[:issue_tag_ids].present? ? @params[:issue_tag_ids].join(",") : "",
-      priority_id: @params[:priority_id] || "2",
+      priority_id: @params[:priority_id],
       issue_classify: "pull_request",
       issue_type: @params[:issue_type] || "1",
       tracker_id: 2,
@@ -153,6 +154,11 @@ class PullRequests::CreateService < ApplicationService
     raise "合并请求已存在" if @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: is_original, fork_project_id: @params[:fork_project_id]).present?
     raise @pull_issue.errors.full_messages.join(", ") unless pull_issue.valid?
     raise @pull_request.errors.full_messages.join(", ") unless pull_request.valid?
+  end
+
+  def compare_head_base!
+    compare_result = Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, @params[:base], @params[:head], @current_user.gitea_token)
+    raise '分支内容相同，无需创建合并请求' if compare_result["Commits"].blank? && compare_result["Diff"].blank?
   end
 
   def is_original

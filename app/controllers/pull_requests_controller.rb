@@ -70,6 +70,8 @@ class PullRequestsController < ApplicationController
         raise ActiveRecord::Rollback
       end
     end
+  rescue => e
+    normal_status(-1, e.message)
   end
 
   def edit
