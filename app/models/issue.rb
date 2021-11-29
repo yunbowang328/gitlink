@@ -11,7 +11,7 @@
 #  category_id          :integer
 #  status_id            :integer          not null
 #  assigned_to_id       :integer
-#  priority_id          :integer          not null
+#  priority_id          :integer
 #  fixed_version_id     :integer
 #  author_id            :integer          not null
 #  created_on           :datetime

@@ -29,7 +29,7 @@ class IssueTagsController < ApplicationController
 
     if title.present?
       if IssueTag.exists?(name: title, project_id: @project.id)
-        normal_status(-1, "标签已存在")
+        normal_status(-1, "项目标记已存在")
       else
         ActiveRecord::Base.transaction do
           begin
@@ -37,12 +37,12 @@ class IssueTagsController < ApplicationController
             if issue_tag.save
               # gitea_tag = Gitea::Labels::CreateService.new(current_user, @repository.try(:identifier), tag_params).call
               # if gitea_tag && issue_tag.update_attributes(gid: gitea_tag["id"], gitea_url: gitea_tag["url"])
-              #   normal_status(0, "标签创建成功")
+              normal_status(0, "项目标记创建成功！")
               # else
-              #   normal_status(-1, "标签创建失败")
+              #   normal_status(-1, "项目标记创建失败")
               # end
             else
-              normal_status(-1, "标签创建失败")
+              normal_status(-1, "项目标记创建失败")
             end
           rescue => e
             puts "create version release error: #{e.message}"
@@ -51,7 +51,7 @@ class IssueTagsController < ApplicationController
         end
       end
     else
-      normal_status(-1, "标签名称不能为空")
+      normal_status(-1, "项目标记名称不能为空")
     end
   end
 
@@ -71,19 +71,19 @@ class IssueTagsController < ApplicationController
     }
     if title.present?
       if IssueTag.exists?(name: title, project_id: @project.id) && (@issue_tag.name != title)
-        normal_status(-1, "标签已存在")
+        normal_status(-1, "项目标记已存在")
       else
         ActiveRecord::Base.transaction do
           begin
             if @issue_tag.update_attributes(tag_params)
               # gitea_tag = Gitea::Labels::UpdateService.new(current_user, @repository.try(:identifier),@issue_tag.try(:gid), tag_params).call
               # if gitea_tag
-              #   normal_status(0, "标签更新成功")
+              #   normal_status(0, "项目标记更新成功")
               # else
-              #   normal_status(-1, "标签更新失败")
+              #   normal_status(-1, "项目标记更新失败")
               # end
             else
-              normal_status(-1, "标签更新失败")
+              normal_status(-1, "项目标记更新失败")
             end
           rescue => e
             puts "create version release error: #{e.message}"
@@ -92,7 +92,7 @@ class IssueTagsController < ApplicationController
         end
       end
     else
-      normal_status(-1, "标签名称不能为空")
+      normal_status(-1, "项目标记名称不能为空")
     end
   end
 
@@ -102,12 +102,12 @@ class IssueTagsController < ApplicationController
         if @issue_tag.destroy
           # issue_tag = Gitea::Labels::DeleteService.new(@user, @repository.try(:identifier), @issue_tag.try(:gid)).call
           # if issue_tag
-          #   normal_status(0, "标签删除成功")
+          #   normal_status(0, "项目标记删除成功")
           # else
-          #   normal_status(-1, "标签删除失败")
+          #   normal_status(-1, "项目标记删除失败")
           # end
         else
-          normal_status(-1, "标签删除失败")
+          normal_status(-1, "项目标记删除失败")
         end
       rescue => e
         puts "create version release error: #{e.message}"
@@ -131,7 +131,7 @@ class IssueTagsController < ApplicationController
   def set_issue_tag
     @issue_tag = IssueTag.find_by_id(params[:id])
     unless @issue_tag.present?
-      normal_status(-1, "标签不存在")
+      normal_status(-1, "项目标记不存在")
     end
   end
 

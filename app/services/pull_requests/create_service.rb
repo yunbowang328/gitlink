@@ -13,6 +13,7 @@ class PullRequests::CreateService < ApplicationService
   def call
     ActiveRecord::Base.transaction do
       validate!
+      compare_head_base!
       save_pull_issue!
       save_pull_request!
       save_issue_tags_relates!
@@ -33,7 +34,7 @@ class PullRequests::CreateService < ApplicationService
       assigned_to_id: @params[:assigned_to_id],
       fixed_version_id: @params[:fixed_version_id],
       issue_tags_value: @params[:issue_tag_ids].present? ? @params[:issue_tag_ids].join(",") : "",
-      priority_id: @params[:priority_id] || "2",
+      priority_id: @params[:priority_id],
       issue_classify: "pull_request",
       issue_type: @params[:issue_type] || "1",
       tracker_id: 2,
@@ -58,8 +59,12 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def save_issue_tags_relates!
-    issue_tag_ids.each do |tag|
-      IssueTagsRelate.create!(issue_id: pull_issue.id, issue_tag_id: tag)
+    if issue_tag_ids.size > 1 
+      raise "最多只能创建一个标记。" 
+    else 
+      issue_tag_ids.each do |tag|
+        IssueTagsRelate.create!(issue_id: pull_issue.id, issue_tag_id: tag)
+      end
     end
   end
 
@@ -145,10 +150,17 @@ class PullRequests::CreateService < ApplicationService
     raise "title参数不能为空" if @params[:title].blank?
     raise "head参数不能为空" if @params[:head].blank?
     raise "base参数不能为空" if @params[:base].blank?
+    raise "fork_project_id参数错误" unless @project.forked_projects.pluck(:id).include?(@params[:fork_project_id])
     raise "分支内容相同，无需创建合并请求" if @params[:head] === @params[:base] && !is_original
     raise "合并请求已存在" if @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: is_original, fork_project_id: @params[:fork_project_id]).present?
     raise @pull_issue.errors.full_messages.join(", ") unless pull_issue.valid?
     raise @pull_request.errors.full_messages.join(", ") unless pull_request.valid?
+  end
+
+  def compare_head_base!
+    head = pull_request.is_original && @params[:merge_user_login] ? "#{@params[:merge_user_login]}/#{@project.identifier}:#{@params[:head]}" : @params[:head]
+    compare_result = Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, @params[:base], head, @current_user.gitea_token)
+    raise '分支内容相同，无需创建合并请求' if compare_result["Commits"].blank? && compare_result["Diff"].blank?
   end
 
   def is_original

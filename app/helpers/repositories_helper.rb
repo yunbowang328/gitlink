@@ -10,7 +10,7 @@ module RepositoriesHelper
   end
 
   def download_type(str)
-    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2)
+    default_type = %w(xlsx xls ppt pptx pdf zip 7z rar exe pdb obj idb RData rdata doc docx mpp vsdx dot otf eot ttf woff woff2 mp4 mov wmv flv mpeg avi avchd webm mkv)
     default_type.include?(str&.downcase)
   end
 
