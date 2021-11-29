@@ -150,7 +150,7 @@ class PullRequests::CreateService < ApplicationService
     raise "title参数不能为空" if @params[:title].blank?
     raise "head参数不能为空" if @params[:head].blank?
     raise "base参数不能为空" if @params[:base].blank?
-    raise "fork_project_id参数错误" unless @project.forked_projects.pluck(:id).include?(@params[:fork_project_id])
+    raise "fork_project_id参数错误" if is_original && !@project.forked_projects.pluck(:id).include?(@params[:fork_project_id].to_i)
     raise "分支内容相同，无需创建合并请求" if @params[:head] === @params[:base] && !is_original
     raise "合并请求已存在" if @project&.pull_requests.where(head: @params[:head], base: @params[:base], status: 0, is_original: is_original, fork_project_id: @params[:fork_project_id]).present?
     raise @pull_issue.errors.full_messages.join(", ") unless pull_issue.valid?
