@@ -340,7 +340,7 @@ class RepositoriesController < ApplicationController
         issue_type: "1",
         tracker_id: 2,
         status_id: 1,
-        priority_id: params[:priority_id]
+        priority_id: params[:priority_id] || "2"
       }
       @pull_issue = Issue.new(issue_params)
       if @pull_issue.save!
