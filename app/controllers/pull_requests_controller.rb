@@ -288,7 +288,7 @@ class PullRequestsController < ApplicationController
       assigned_to_id: params[:assigned_to_id],
       fixed_version_id: params[:fixed_version_id],
       issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
-      priority_id: params[:priority_id] || "2",
+      priority_id: params[:priority_id],
       issue_classify: "pull_request",
       issue_type: params[:issue_type] || "1",
       tracker_id: 2,
