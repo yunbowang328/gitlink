@@ -17,7 +17,7 @@ class IssueTagsController < ApplicationController
 
 
   def create
-    title = params[:name].to_s.strip.first(10)
+    title = params[:name].to_s.strip.first(15)
     desc = params[:description].to_s.first(30)
     color = params[:color] || "#ccc"
 
@@ -60,8 +60,8 @@ class IssueTagsController < ApplicationController
   end
 
   def update
-    title = params[:name]
-    desc = params[:description]
+    title = params[:name].to_s.strip.first(15)
+    desc = params[:description].to_s.first(30)
     color = params[:color] || "#ccc"
 
     tag_params = {
