@@ -3,6 +3,7 @@
     attributes:
       projects/update_form:
         name: 项目名称
+        identifier: 项目标识
         description: 项目简介
         project_category_id: 项目类别
         project_language_id: 项目语言

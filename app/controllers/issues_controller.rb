@@ -15,6 +15,7 @@ class IssuesController < ApplicationController
   include TagChosenHelper
 
   def index
+    @user_operate_issue = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user) || @project.is_public?)
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
