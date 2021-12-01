@@ -9,12 +9,13 @@ class IssuesController < ApplicationController
   before_action :check_project_public, only: [:index ,:show, :copy, :index_chosen, :close_issue]
 
   before_action :set_issue, only: [:edit, :update, :destroy, :show, :copy, :close_issue, :lock_issue]
-  before_action :check_token_enough, only: [:create, :update]
+  before_action :check_token_enough, :find_atme_receivers, only: [:create, :update]
 
   include ApplicationHelper
   include TagChosenHelper
 
   def index
+    @user_operate_issue = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user))
     @user_admin_or_member = current_user.present? && current_user.logged? && (current_user.admin || @project.member?(current_user) || @project.is_public?)
     issues = @project.issues.issue_issue.issue_index_includes
     issues = issues.where(is_private: false) unless @user_admin_or_member
@@ -125,9 +126,15 @@ class IssuesController < ApplicationController
         end
       end
       if params[:issue_tag_ids].present?
-        params[:issue_tag_ids].each do |tag|
-          IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
-        end
+        if params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size > 1
+          return normal_status(-1, "最多只能创建一个标记。")
+        elsif params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size == 1
+          params[:issue_tag_ids].each do |tag|
+            IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
+          end
+        else
+          return normal_status(-1, "请输入正确的标记。")
+        end 
       end
       if params[:assigned_to_id].present?
         Tiding.create!(user_id: params[:assigned_to_id], trigger_user_id: current_user.id,
@@ -142,7 +149,11 @@ class IssuesController < ApplicationController
       end
 
       @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
-      render json: {status: 0, message: "创建成", id: @issue.id}
+
+      Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+      AtmeService.call(current_user, @atme_receivers, @issue) if @atme_receivers.size > 0
+
+      render json: {status: 0, message: "创建成功", id: @issue.id}
     else
       normal_status(-1, "创建失败")
     end
@@ -161,11 +172,17 @@ class IssuesController < ApplicationController
     last_token = @issue.token
     last_status_id = @issue.status_id
     @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
-    if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
-      @issue&.issue_tags_relates&.destroy_all
-      params[:issue_tag_ids].each do |tag|
-        IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
-      end
+    if params[:issue_tag_ids].present? 
+      if params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size > 1
+        return normal_status(-1, "最多只能创建一个标记。")
+      elsif params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size == 1
+        @issue&.issue_tags_relates&.destroy_all
+        params[:issue_tag_ids].each do |tag|
+          IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
+        end
+      else
+        return normal_status(-1, "请输入正确的标记。")
+      end 
     end
 
     issue_files = params[:attachment_ids]
@@ -244,6 +261,10 @@ class IssuesController < ApplicationController
           post_to_chain(change_type, change_token.abs, current_user.try(:login))
         end
         @issue.create_journal_detail(change_files, issue_files, issue_file_ids, current_user&.id) if @issue.previous_changes.present? 
+
+        Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+        AtmeService.call(current_user, @atme_receivers, @issue) if @atme_receivers.size > 0
+
         normal_status(0, "更新成功")
       else
         normal_status(-1, "更新失败")

@@ -5,7 +5,7 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   def index 
     sort_by = ProjectCategory.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
     sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
-    q = ProjectCategory.includes(:projects).ransack(name_cont: params[:name])
+    q = ProjectCategory.ransack(name_cont: params[:name])
     project_categories = q.result(distinct: true).order("#{sort_by} #{sort_direction}")
     @project_categories = paginate(project_categories)
     
@@ -33,12 +33,13 @@ class Admins::ProjectCategoriesController < Admins::BaseController
   end
 
   def update 
-    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i}) && save_image_file(params[:logo], 'logo')
+    if @project_category.update_attributes({name: @name, pinned_index: params[:project_category][:pinned_index].to_i})
+      save_image_file(params[:logo], 'logo')
       redirect_to admins_project_categories_path
       flash[:success] = '更新成功'
     else 
       redirect_to admins_project_categories_path
-      flash[:success] = '更新失败'
+      flash[:danger] = '更新失败'
     end
   end
 

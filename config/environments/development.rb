@@ -71,8 +71,8 @@ Rails.application.configure do
       address:              'smtp.exmail.qq.com',
       port:                  25,
       domain:               'smtp.qq.com',
-      user_name:            'educoder@trustie.org',
-      password:             'mAZc9EWbe2Kawaqo2',
+      user_name:            'notification@trustie.org',
+      password:             'j4tFbs9eWdELiohb',
       authentication:       'login',
       enable_starttls_auto: true  }
 end

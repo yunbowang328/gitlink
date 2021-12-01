@@ -3,19 +3,11 @@ json.commits_count @compare_result['Commits']&.size
 json.commits do
   json.array! @compare_result['Commits'] do |commit|
     json.author do
-      # TODO: 获取头像地址待优化
-      forge_user = User.includes(:user_extension).find_by(login: commit['Author']['Name'])
-      json.login commit['Author']['Name']
-      json.name commit['Author']['Name']
-      json.image_url forge_user.nil? ? '' : url_to_avatar(forge_user)
+      json.partial! 'repositories/commit_author', locals: { user: render_cache_commit_author(commit['Committer']), name: commit['Committer']['Name'] }
     end
 
     json.committer do
-      # TODO: 获取头像地址待优化
-      forge_user = User.includes(:user_extension).find_by(login: commit['Committer']['Name'])
-      json.login commit['Committer']['Name']
-      json.name commit['Committer']['Name']
-      json.image_url forge_user.nil? ? '' : url_to_avatar(forge_user)
+      json.partial! 'repositories/commit_author', locals: { user: render_cache_commit_author(commit['Committer']), name: commit['Committer']['Name'] }
     end
     json.timestamp render_unix_time(commit['Committer']['When'])
     json.time_from_now time_from_now(commit['Committer']['When'])

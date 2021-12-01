@@ -1,9 +1,0 @@
-'zh-CN':
-  activerecord:
-    models:
-      ec_course_target: '课程目标'
-    attributes:
-      ec_course_target:
-        content: '内容'
-        standard_grade: '达成标准(分)'
-        weight: '权重'

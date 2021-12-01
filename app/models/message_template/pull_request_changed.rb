@@ -100,6 +100,7 @@ class MessageTemplate::PullRequestChanged < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, operator, pull_request, change_params)
+    return '', '', '' if change_params.blank?
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["CreateOrAssign::PullRequestChanged"]
       project = pull_request&.project

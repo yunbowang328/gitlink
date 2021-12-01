@@ -16,7 +16,7 @@ zh-CN:
       'agreed': '已同意'
   trend:
     Issue: 易修(Issue)
-    PullRequest: 合并请求
+    PullRequest: 合并请求(PR)
     VersionRelease: 版本发布
     create: 创建了
     journal: 回复了

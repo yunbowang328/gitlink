@@ -52,7 +52,7 @@ class Users::ApplyAuthenticationService < ApplicationService
   end
 
   def sms_notify_admin
-    Educoder::Sms.notify_admin(send_type: 'apply_auth')
+    Gitlink::Sms.notify_admin(send_type: 'apply_auth')
   rescue => ex
     Util.logger_error(ex)
   end

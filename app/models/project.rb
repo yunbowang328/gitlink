@@ -124,10 +124,10 @@ class Project < ApplicationRecord
   has_many :pinned_projects, dependent: :destroy 
   has_many :has_pinned_users, through: :pinned_projects, source: :user
   has_many :webhooks, class_name: "Gitea::Webhook", primary_key: :gpid, foreign_key: :repo_id
-  after_create :init_project_common, :incre_user_statistic, :incre_platform_statistic
+  after_create :incre_user_statistic, :incre_platform_statistic
   after_save :check_project_members, :reset_cache_data
   before_save :set_invite_code, :reset_unmember_followed, :set_recommend_and_is_pinned
-  before_destroy :decre_project_common
+  before_destroy :decre_project_common, :decre_forked_from_project_count
   after_destroy :decre_user_statistic, :decre_platform_statistic
   scope :project_statics_select, -> {select(:id,:name, :is_public, :identifier, :status, :project_type, :user_id, :forked_count, :description, :visits, :project_category_id, :project_language_id, :license_id, :ignore_id, :watchers_count, :created_on)}
   scope :no_anomory_projects, -> {where("projects.user_id is not null and projects.user_id != ?", 2)}
@@ -165,12 +165,16 @@ class Project < ApplicationRecord
     end
   end
 
-  def init_project_common
-    CacheAsyncResetJob.perform_later("project_common_service", self.id)
+  def decre_project_common
+    CacheAsyncClearJob.perform_later('project_common_service', self.id)
   end
 
-  def decre_project_common
-    $redis_cache.del("v2-project-common:#{self.id}")
+  def decre_forked_from_project_count
+    forked_project = self.forked_from_project
+    if forked_project.present?
+      forked_project.decrement(:forked_count, 1)
+      forked_project.save
+    end
   end
 
   def incre_user_statistic 

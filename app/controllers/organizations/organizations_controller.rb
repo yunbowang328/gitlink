@@ -22,12 +22,12 @@ class Organizations::OrganizationsController < Organizations::BaseController
     @can_create_project = @organization.can_create_project?(current_user.id)
     @is_admin = can_edit_org?
     @is_member = @organization.is_member?(current_user.id)
-    Cache::V2::OwnerCommonService.new(@organization.login, @organization.mail).read
+    Cache::V2::OwnerCommonService.new(@organization.id).read
   end
 
   def create
     ActiveRecord::Base.transaction do
-      tip_exception("无法使用以下关键词：#{organization_params[:name]}，请重新命名") if ReversedKeyword.is_reversed(organization_params[:name]).present?
+      tip_exception("无法使用以下关键词：#{organization_params[:name]}，请重新命名") if ReversedKeyword.check_exists?(organization_params[:name])
       Organizations::CreateForm.new(organization_params).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
@@ -46,7 +46,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
       @organization.save!
       sync_organization_extension!
       
-      Gitea::Organization::UpdateService.call(@organization.gitea_token, login, @organization.reload)
+      Gitea::Organization::UpdateService.call(current_user.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
   rescue Exception => e
@@ -57,10 +57,14 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def destroy
     tip_exception("密码不正确") unless current_user.check_password?(password)
     ActiveRecord::Base.transaction do
-      Gitea::Organization::DeleteService.call(@organization.gitea_token, @organization.login)
-      @organization.destroy!
+      gitea_status, gitea_message = Gitea::Organization::DeleteService.call(current_user.gitea_token, @organization.login)
+      if gitea_status == 204 
+        @organization.destroy!
+        render_ok
+      else 
+        tip_exception("当组织内含有仓库时，无法删除此组织")
+      end
     end
-    render_ok
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)

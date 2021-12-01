@@ -60,6 +60,6 @@ class Projects::CreateService < ApplicationService
   # end
 
   def repo_is_public
-    params[:private].blank? ? true : !params[:private]
+    params[:private].blank? ? true : !(ActiveModel::Type::Boolean.new.cast(params[:private]).nil? ? false : ActiveModel::Type::Boolean.new.cast(params[:private]))
   end
 end

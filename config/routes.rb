@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   resources :edu_settings
 
   scope '/api' do
+    resources :topics, only: [:index]
     namespace :ci  do
       resources :languages, only: [:index, :show] do
         collection do
@@ -202,6 +203,7 @@ Rails.application.routes.draw do
         post :remote_login
         post :remote_password
         post :change_password
+        post :check
       end
     end
 
@@ -272,6 +274,7 @@ Rails.application.routes.draw do
       scope module: :users do
         get 'template_message_settings', to: 'template_message_settings#current_setting'
         post 'template_message_settings/update_setting', to: 'template_message_settings#update_setting'
+        resources :system_notification_histories, only: [:create]
         resources :applied_messages, only: [:index]
         resources :applied_transfer_projects, only: [:index] do 
           member do 
@@ -429,7 +432,7 @@ Rails.application.routes.draw do
           get :simple
           get :watchers, to: 'projects#watch_users'
           get :stargazers, to: 'projects#praise_users'
-          get :members, to: 'projects#fork_users'
+          get :forks, to: 'projects#fork_users'
           match :about, :via => [:get, :put, :post]
         end
       end
@@ -585,6 +588,7 @@ Rails.application.routes.draw do
       end
 
       scope module: :projects do
+        resources :members, only: [:index]
         resources :teams, only: [:index, :create, :destroy]
         resources :project_units, only: [:index, :create]
         resources :applied_transfer_projects, only: [:create] do 
@@ -667,6 +671,16 @@ Rails.application.routes.draw do
   namespace :admins do
     mount Sidekiq::Web => '/sidekiq'
     get '/', to: 'dashboards#index'
+    namespace :topic do 
+      resources :activity_forums
+      resources :banners 
+      resources :cards 
+      resources :cooperators
+      resources :excellent_projects
+      resources :experience_forums
+      resources :pinned_forums
+    end
+
     resources :project_statistics, only: [:index] do
       collection do
         get :visits_static
@@ -679,7 +693,11 @@ Rails.application.routes.draw do
     resources :project_licenses
     resources :project_ignores
     resources :reversed_keywords
-    resources :system_notifications 
+    resources :system_notifications do 
+      member do 
+        get :history
+      end
+    end
     resources :message_templates, only: [:index, :edit, :update] do 
       collection do 
         get :init_data

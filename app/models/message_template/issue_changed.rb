@@ -188,6 +188,7 @@ class MessageTemplate::IssueChanged < MessageTemplate
   end
 
   def self.get_email_message_content(receiver, operator, issue, change_params)
+    return '', '', '' if change_params.blank?
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["CreateOrAssign::IssueChanged"]
       project = issue&.project

@@ -1,6 +1,6 @@
 class JournalsController < ApplicationController
   before_action :require_login, except: [:index, :get_children_journals]
-  before_action :require_profile_completed, only: [:create]
+  before_action :require_profile_completed, :find_atme_receivers, only: [:create]
   before_action :set_issue
   before_action :check_issue_permission
   before_action :set_journal, only: [:destroy, :edit, :update]
@@ -22,32 +22,35 @@ class JournalsController < ApplicationController
     if notes.blank?
       normal_status(-1, "评论内容不能为空")
     else
-      journal_params = {
-        journalized_id: @issue.id ,
-        journalized_type: "Issue",
-        user_id: current_user.id ,
-        notes: notes.to_s.strip,
-        parent_id: params[:parent_id]
-      }
-      journal = Journal.new journal_params
-      if journal.save
-        if params[:attachment_ids].present?
-          params[:attachment_ids].each do |id|
-            attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
-            unless attachment.blank?
-              attachment.container = journal
-              attachment.author_id = current_user.id
-              attachment.description = ""
-              attachment.save
+      ActiveRecord::Base.transaction do
+        journal_params = {
+          journalized_id: @issue.id ,
+          journalized_type: "Issue",
+          user_id: current_user.id ,
+          notes: notes.to_s.strip,
+          parent_id: params[:parent_id]
+        }
+        journal = Journal.new journal_params
+        if journal.save
+          if params[:attachment_ids].present?
+            params[:attachment_ids].each do |id|
+              attachment = Attachment.select(:id, :container_id, :container_type)&.find_by_id(id)
+              unless attachment.blank?
+                attachment.container = journal
+                attachment.author_id = current_user.id
+                attachment.description = ""
+                attachment.save
+              end
             end
           end
+          Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+          AtmeService.call(current_user, @atme_receivers, journal) if @atme_receivers.size > 0
+          # @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "journal")
+          render :json => { status: 0, message: "评论成功", id:  journal.id}
+          # normal_status(0, "评论成功")
+        else
+          normal_status(-1, "评论失败")
         end
-
-        # @issue.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "journal")
-        render :json => { status: 0, message: "评论成功", id:  journal.id}
-        # normal_status(0, "评论成功")
-      else
-        normal_status(-1, "评论失败")
       end
     end
   end

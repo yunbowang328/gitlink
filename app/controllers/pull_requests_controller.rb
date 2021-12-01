@@ -5,6 +5,7 @@ class PullRequestsController < ApplicationController
   before_action :check_menu_authorize
   before_action :find_pull_request, except: [:index, :new, :create, :check_can_merge,:get_branches,:create_merge_infos, :files, :commits]
   before_action :load_pull_request, only: [:files, :commits]
+  before_action :find_atme_receivers, only: [:create, :update]
   include TagChosenHelper
   include ApplicationHelper
 
@@ -55,17 +56,22 @@ class PullRequestsController < ApplicationController
   end
 
   def create
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
         @pull_request.bind_gitea_pull_request!(@gitea_pull_request[:body]["number"], @gitea_pull_request[:body]["id"])
         SendTemplateMessageJob.perform_later('PullRequestAssigned', current_user.id, @pull_request&.id) if Site.has_notice_menu?
         SendTemplateMessageJob.perform_later('ProjectPullRequest', current_user.id, @pull_request&.id) if Site.has_notice_menu?
+        Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+        AtmeService.call(current_user, @atme_receivers, @pull_request) if @atme_receivers.size > 0
       else
         render_error("create pull request error: #{@gitea_pull_request[:status]}")
         raise ActiveRecord::Rollback
       end
     end
+  rescue => e
+    normal_status(-1, e.message)
   end
 
   def edit
@@ -75,6 +81,7 @@ class PullRequestsController < ApplicationController
   end
 
   def update
+    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
     if params[:title].nil?
       normal_status(-1, "名称不能为空")
     elsif params[:issue_tag_ids].nil?
@@ -86,10 +93,16 @@ class PullRequestsController < ApplicationController
 
           @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
           if params[:issue_tag_ids].present? && !@issue&.issue_tags_relates.where(issue_tag_id: params[:issue_tag_ids]).exists?
-            @issue&.issue_tags_relates&.destroy_all
-            params[:issue_tag_ids].each do |tag|
-              IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
-            end
+            if params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size > 1
+              return normal_status(-1, "最多只能创建一个标记。")
+            elsif params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size == 1
+              @issue&.issue_tags_relates&.destroy_all
+              params[:issue_tag_ids].each do |tag|
+                IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
+              end
+            else
+              return normal_status(-1, "请输入正确的标记。")
+            end 
           end
 
           if @issue.update_attributes(@issue_params)
@@ -99,13 +112,22 @@ class PullRequestsController < ApplicationController
 
               if gitea_pull[:status] === :success
                 if params[:issue_tag_ids].present?
-                  params[:issue_tag_ids].each do |tag|
-                    IssueTagsRelate.create(issue_id: @issue.id, issue_tag_id: tag)
-                  end
+                  if params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size > 1
+                    return normal_status(-1, "最多只能创建一个标记。")
+                  elsif params[:issue_tag_ids].is_a?(Array) && params[:issue_tag_ids].size == 1
+                    @issue&.issue_tags_relates&.destroy_all
+                    params[:issue_tag_ids].each do |tag|
+                      IssueTagsRelate.create!(issue_id: @issue.id, issue_tag_id: tag)
+                    end
+                  else
+                    return normal_status(-1, "请输入正确的标记。")
+                  end 
                 end
                 if params[:status_id].to_i == 5
                   @issue.issue_times.update_all(end_time: Time.now)
                 end
+                Rails.logger.info "[ATME] maybe to at such users: #{@atme_receivers.pluck(:login)}"
+                AtmeService.call(current_user, @atme_receivers, @pull_request) if @atme_receivers.size > 0
                 normal_status(0, "PullRequest更新成功")
               else
                 normal_status(-1, "PullRequest更新失败")
@@ -192,7 +214,7 @@ class PullRequestsController < ApplicationController
   def check_can_merge
     target_head = params[:head]  #源分支
     target_base = params[:base]  #目标分支
-    is_original = params[:is_original]
+    is_original = params[:is_original] || false
     if target_head.blank? || target_base.blank?
       normal_status(-2, "请选择分支")
     elsif target_head === target_base && !is_original
@@ -223,11 +245,11 @@ class PullRequestsController < ApplicationController
 
   private
   def load_pull_request
-    @pull_request = PullRequest.find params[:id]
+    @pull_request = @project.pull_requests.where(gitea_number: params[:id]).where.not(id: params[:id]).take || PullRequest.find_by_id(params[:id])
   end
 
   def find_pull_request
-    @pull_request = PullRequest.find_by_id(params[:id])
+    @pull_request = @project.pull_requests.where(gitea_number: params[:id]).where.not(id: params[:id]).take || PullRequest.find_by_id(params[:id])
     @issue = @pull_request&.issue
     if @pull_request.blank?
       normal_status(-1, "合并请求不存在")
@@ -266,7 +288,7 @@ class PullRequestsController < ApplicationController
       assigned_to_id: params[:assigned_to_id],
       fixed_version_id: params[:fixed_version_id],
       issue_tags_value: params[:issue_tag_ids].present? ? params[:issue_tag_ids].join(",") : "",
-      priority_id: params[:priority_id] || "2",
+      priority_id: params[:priority_id],
       issue_classify: "pull_request",
       issue_type: params[:issue_type] || "1",
       tracker_id: 2,

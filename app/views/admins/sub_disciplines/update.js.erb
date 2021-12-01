@@ -1,6 +1,0 @@
-<% if @message.present? %>
-$.notify({ message: "<%= @message %>" });
-<% else %>
-$('.modal.admin-edit-sub-discipline-modal').modal("hide");
-$(".sub-discipline-list-container").html("<%= j(render :partial => 'admins/sub_disciplines/shared/list') %>");
-<% end %>

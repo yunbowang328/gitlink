@@ -20,7 +20,7 @@ module ControllerRescueHandler
     end
     # rescue_from ActionView::MissingTemplate, with: :object_not_found
     # rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
-    rescue_from Educoder::TipException, with: :tip_show
+    rescue_from Gitlink::TipException, with: :tip_show
     rescue_from ::ActionView::MissingTemplate, with: :missing_template
     rescue_from ActiveRecord::RecordNotFound, with: :object_not_found
     rescue_from ActionController::ParameterMissing, with: :render_parameter_missing

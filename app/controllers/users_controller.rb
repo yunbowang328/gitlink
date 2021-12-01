@@ -32,7 +32,8 @@ class UsersController < ApplicationController
         @waiting_applied_messages = @user.applied_messages.waiting
         @common_applied_transfer_projects = AppliedTransferProject.where(owner_id: @user.id).common + AppliedTransferProject.where(owner_id: Organization.joins(team_users: :team).where(team_users: {user_id: @user.id}, teams: {authorize: %w(admin owner)} )).common
         @common_applied_projects = AppliedProject.where(project_id: @user.full_admin_projects).common
-        @undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size + @common_applied_projects.size
+        #@undo_events = @waiting_applied_messages.size + @common_applied_transfer_projects.size + @common_applied_projects.size
+        @undo_events = @common_applied_transfer_projects.size + @common_applied_projects.size
       else 
         @waiting_applied_messages = AppliedMessage.none
         @common_applied_transfer_projects = AppliedTransferProject.none
@@ -52,7 +53,7 @@ class UsersController < ApplicationController
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size
       # 为了缓存活跃用户的基本信息，后续删除
-      Cache::V2::OwnerCommonService.new(@user.login, @user.mail).read
+      Cache::V2::OwnerCommonService.new(@user.id).read
   end
 
   def watch_users

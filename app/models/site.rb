@@ -65,7 +65,7 @@ class Site < ApplicationRecord
       commons = [
         {name: '通知', key: 'notice', url: '/users/current_user/user_messages'},
         {name: '找回密码', key: 'lost_password', url: '/account/lost_password'},
-        {name: '注册', key: 'register', url: '/login?login=false'}
+        {name: '注册', key: 'register', url: '/register'}
       ]
 
       commons.each { |ele|
