@@ -56,7 +56,7 @@ class PullRequestsController < ApplicationController
   end
 
   def create
-    return render_forbidden("你没有权限操作.") unless @project.operator?(current_user)
+    return normal_status(-1, "您不是目标分支开发者，没有权限，请联系目标分支作者.") unless @project.operator?(current_user)
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
