@@ -24,7 +24,7 @@ class Projects::ListQuery < ApplicationQuery
   end
 
   def filter_projects(collection)
-    collection = by_pinned(collection)
+    # collection = by_pinned(collection)
     collection = by_search(collection)
     collection = by_project_type(collection)
     collection = by_project_category(collection)
