@@ -1,4 +1,4 @@
-class PlatformStatisticsController < ApplicationController
+class Home::PlatformStatisticsController < ApplicationController
 
   def index
     @platform_statistic = PlatformStatistic.data 
