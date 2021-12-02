@@ -106,6 +106,7 @@ Rails.application.routes.draw do
       resources :platform_statistics, only: [:index] 
       resources :competitions, only:[:index]
       resources :platform_communicates, only: [:index]
+      resources :platform_people, only: [:index]
     end
     get 'home/index'
     get 'home/search'
