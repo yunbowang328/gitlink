@@ -105,6 +105,7 @@ Rails.application.routes.draw do
     namespace :home do 
       resources :platform_statistics, only: [:index] 
       resources :competitions, only:[:index]
+      resources :platform_communicates, only: [:index]
     end
     get 'home/index'
     get 'home/search'
