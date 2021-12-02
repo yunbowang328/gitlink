@@ -8,6 +8,7 @@ class ProjectsController < ApplicationController
   before_action :project_public?, only: %i[fork_users praise_users watch_users]
 
   def index
+    PlatformStatistic.data.increment!(:visits)
     scope = Projects::ListQuery.call(params)
 
     # @projects = kaminari_paginate(scope)

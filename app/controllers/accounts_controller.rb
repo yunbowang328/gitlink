@@ -16,6 +16,7 @@ class AccountsController < ApplicationController
     ActiveRecord::Base.transaction do
       result = autologin_register(username, email, password, platform)
       if result[:message].blank?
+        PlatformStatistic.data.increment!(:users_count)
         render_ok({user: result[:user]})
       else
         render_error(result[:message])

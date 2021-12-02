@@ -102,6 +102,7 @@ Rails.application.routes.draw do
         get :template_file
       end
     end
+    resources :platform_statistics, only: [:index] 
     get 'home/index'
     get 'home/search'
     get 'main/first_stamp'
