@@ -148,27 +148,27 @@ http://localhost:3000/
 
 ## 页面展示
 
-- 项目列表
+### 项目列表
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true)
 
-- 代码仓库
+### 代码仓库
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/repo.png?raw=true)
 
-- 任务管理
+### 任务管理
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/issues.png?raw=true)
 
-- 合并请求
+### 合并请求
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/PR.png?raw=true)
 
-- 引擎配置
+### 引擎配置
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/engine.png?raw=true)
 
-### API
+## API
 - [API文档](https://forgeplus.trustie.net/docs/api)
 - [API](showdoc.com.cn)
   账号：forgeplus@admin.com 密码：forge123
