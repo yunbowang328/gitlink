@@ -1,0 +1,33 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="5%">序号</th>
+    <th width="20%">标题</th>
+    <th width="20%">内容</th>
+    <th width="10%">帖子ID</th>
+    <th width="20%">标签</th>
+    <th width="25%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if communicates.present? %>
+    <% communicates.each_with_index do |c, index| %>
+      <tr class="platform-communicate-item-<%= c.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td><%= c.title %></td>
+        <td><%= c.content.truncate(50) %></td>
+        <td><%= c.fake_id %></td>
+        <td><%= c.tag_field %></td>
+        <td class="action-container">
+          <%= link_to "编辑", edit_admins_platform_communicate_path(c), remote: true, class: "action" %>
+          <%= link_to "删除", admins_platform_communicate_path(c), method: :delete, data:{confirm: "确认删除的吗？"}, class: "action" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: communicates } %>

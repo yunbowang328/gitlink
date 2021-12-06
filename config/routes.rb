@@ -864,6 +864,8 @@ Rails.application.routes.draw do
       post :batch_add, on: :collection
     end
     resources :apply_signatures, only: [:index, :update]
+    resources :platform_communicates
+    resources :platform_people
   end
 
 
