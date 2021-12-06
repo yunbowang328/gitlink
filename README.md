@@ -150,23 +150,23 @@ http://localhost:3000/
 
 - 项目列表
 
-![](docs/figs/project_list.png)
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true)
 
 - 代码仓库
 
-![](docs/figs/repo.png)
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/repo.png?raw=true)
 
 - 任务管理
 
-![](docs/figs/issues.png)
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/issues.png?raw=true)
 
 - 合并请求
 
-![](docs/figs/PR.png)
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/PR.png?raw=true)
 
 - 引擎配置
 
-![](docs/figs/engine.png)
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/engine.png?raw=true)
 
 ### API
 - [API文档](https://forgeplus.trustie.net/docs/api)
