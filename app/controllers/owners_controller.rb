@@ -12,7 +12,7 @@ class OwnersController < ApplicationController
 
   def show 
     @owner = Owner.find_by(login: params[:id]) || Owner.find_by(id: params[:id])
-    return render_not_found unless @owner.present?
+    # return render_not_found unless @owner.present?
     # 组织
     if @owner.is_a?(Organization)
       return render_forbidden("没有查看组织的权限") if org_limited_condition || org_privacy_condition
@@ -20,7 +20,7 @@ class OwnersController < ApplicationController
       @is_admin = current_user.admin? || @owner.is_owner?(current_user.id)
       @is_member = @owner.is_member?(current_user.id)
     # 用户
-    else 
+    elsif @owner.is_a?(User)
       #待办事项，现在未做
       if User.current.admin? || User.current.login == @owner.login 
         @waiting_applied_messages = @owner.applied_messages.waiting
@@ -45,7 +45,6 @@ class OwnersController < ApplicationController
       @projects_common_count = user_projects.common.size
       @projects_mirrior_count = user_projects.mirror.size
       @projects_sync_mirrior_count = user_projects.sync_mirror.size
-      puts @owner.as_json
     end
   end
 
