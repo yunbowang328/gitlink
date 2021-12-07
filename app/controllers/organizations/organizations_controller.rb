@@ -57,12 +57,14 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def destroy
     tip_exception("密码不正确") unless current_user.check_password?(password)
     ActiveRecord::Base.transaction do
-      gitea_status, gitea_message = Gitea::Organization::DeleteService.call(current_user.gitea_token, @organization.login)
-      if gitea_status == 204 
+      gitea_destroy = Gitea::Organization::DeleteService.call(current_user.gitea_token, @organization.login)
+      if gitea_destroy[:status] == 204 
         @organization.destroy!
         render_ok
-      else 
+      elsif gitea_destroy[:status] == 500
         tip_exception("当组织内含有仓库时，无法删除此组织")
+      else
+        tip_exception("")
       end
     end
   rescue Exception => e

@@ -64,7 +64,6 @@ class RepositoriesController < ApplicationController
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
 
     if @project.educoder?
       if params[:type] === 'file'
@@ -81,6 +80,7 @@ class RepositoriesController < ApplicationController
           "commits" => [{}]
         }
       else
+        @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
         @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
       end
     else
@@ -95,13 +95,17 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    if params[:filepath].present?
-      file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-      @hash_commit = Gitea::Repository::Commits::FileListService.new(@owner.login, @project.identifier, file_path_uri,
-        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    if @project.educoder?
+      @hash_commit = nil
     else
-      @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
-        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      if params[:filepath].present?
+        file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+        @hash_commit = Gitea::Repository::Commits::FileListService.new(@owner.login, @project.identifier, file_path_uri,
+                                                                       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      else
+        @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
+                                                                   sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      end
     end
   end
 
@@ -112,8 +116,13 @@ class RepositoriesController < ApplicationController
 
   def commit
     @sha         = params[:sha]
-    @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
-    @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
+    if @project.educoder?
+      @commit = {}
+      @commit_diff ={}
+    else
+      @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
+      @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
+    end
   end
 
   def tags
@@ -348,7 +357,7 @@ class RepositoriesController < ApplicationController
         local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: @pull_issue.id))
         if local_requests.save
           gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @owner.login, @project.try(:identifier), requests_params).call
-          if gitea_request[:status] == :success && local_requests.update_attributes(gitea_number: gitea_request["body"]["number"])
+          if gitea_request[:status] == :success && local_requests.update_attributes(gitea_number: gitea_request["body"]["number"], gpid: gitea_request["body"]["number"])
             local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
           end
         end
