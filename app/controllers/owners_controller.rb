@@ -12,7 +12,7 @@ class OwnersController < ApplicationController
 
   def show 
     @owner = Owner.find_by(login: params[:id]) || Owner.find_by(id: params[:id])
-    # return render_not_found unless @owner.present?
+    return render_ok(type: 'User') unless @owner.present?
     # 组织
     if @owner.is_a?(Organization)
       return render_forbidden("没有查看组织的权限") if org_limited_condition || org_privacy_condition
