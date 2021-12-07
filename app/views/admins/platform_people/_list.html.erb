@@ -1,0 +1,35 @@
+<table class="table table-hover text-center subject-list-table">
+  <thead class="thead-light">
+  <tr>
+    <th width="5%">序号</th>
+    <th width="20%">名称</th>
+    <th width="20%">头像</th>
+    <th width="20%">个人宣言</th>
+    <th width="20%">内容</th>
+    <th width="10%">用户标识</th>
+    <th width="25%">操作</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% if people.present? %>
+    <% people.each_with_index do |p, index| %>
+      <tr class="platform-person-item-<%= p.id %>">
+        <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
+        <td><%= p.name %></td>
+        <td><img style="width:150px" src="<%= p.image %>" /></td>
+        <td><%= p.announcement %></td>
+        <td><%= p.content.truncate(50) %></td>
+        <td><%= p.fake_login %></td>
+        <td class="action-container">
+          <%= link_to "编辑", edit_admins_platform_person_path(p), remote: true, class: "action" %>
+          <%= link_to "删除", admins_platform_person_path(p), method: :delete, data:{confirm: "确认删除的吗？"}, class: "action" %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <%= render 'admins/shared/no_data_for_table' %>
+  <% end %>
+  </tbody>
+</table>
+
+<%= render partial: 'admins/shared/paginate', locals: { objects: people } %>

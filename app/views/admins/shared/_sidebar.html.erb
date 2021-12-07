@@ -31,7 +31,12 @@
 
       <% end %>
     </li>
-
+    <li>
+      <%= sidebar_item_group('#homepage-submenu', '首页配置', icon: 'file') do %>
+        <li><%= sidebar_item(admins_platform_communicates_path, '社区动态', icon: 'edit', controller: 'admins-platform_communicates') %></li>
+        <li><%= sidebar_item(admins_platform_people_path, '论坛交流人物', icon: 'user', controller: 'admins-platform_people') %></li>
+      <% end %>
+    </li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
     <!-- 
     <li>
