@@ -80,10 +80,10 @@ class RepositoriesController < ApplicationController
           "commits" => [{}]
         }
       else
-        @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
         @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
       end
     else
+      @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
       interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: @ref)
       if interactor.success?
         result = interactor.result
