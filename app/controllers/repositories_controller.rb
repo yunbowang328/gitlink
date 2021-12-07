@@ -64,7 +64,6 @@ class RepositoriesController < ApplicationController
 
   def sub_entries
     file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-    @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
 
     if @project.educoder?
       if params[:type] === 'file'
@@ -84,6 +83,7 @@ class RepositoriesController < ApplicationController
         @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
       end
     else
+      @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
       interactor = Repositories::EntriesInteractor.call(@owner, @project.identifier, file_path_uri, ref: @ref)
       if interactor.success?
         result = interactor.result
