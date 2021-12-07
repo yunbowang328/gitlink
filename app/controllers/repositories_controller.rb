@@ -95,13 +95,17 @@ class RepositoriesController < ApplicationController
   end
 
   def commits
-    if params[:filepath].present?
-      file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
-      @hash_commit = Gitea::Repository::Commits::FileListService.new(@owner.login, @project.identifier, file_path_uri,
-        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+    if @project.educoder?
+      @hash_commit = nil
     else
-      @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
-        sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      if params[:filepath].present?
+        file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
+        @hash_commit = Gitea::Repository::Commits::FileListService.new(@owner.login, @project.identifier, file_path_uri,
+                                                                       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      else
+        @hash_commit = Gitea::Repository::Commits::ListService.new(@owner.login, @project.identifier,
+                                                                   sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token).call
+      end
     end
   end
 
@@ -112,8 +116,13 @@ class RepositoriesController < ApplicationController
 
   def commit
     @sha         = params[:sha]
-    @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
-    @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
+    if @project.educoder?
+      @commit = {}
+      @commit_diff ={}
+    else
+      @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
+      @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
+    end
   end
 
   def tags
@@ -195,8 +204,9 @@ class RepositoriesController < ApplicationController
     else
       result = Gitea::Repository::Readme::GetService.call(@owner.login, @repository.identifier, params[:ref], current_user&.gitea_token)
     end
+    @path = Gitea.gitea_config[:domain]+"/#{@owner.login}/#{@repository.identifier}/raw/branch/#{params[:ref]}/"
     @readme = result[:status] === :success ? result[:body] : nil
-    @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref])
+    @readme['content'] = decode64_content(@readme, @owner, @repository, params[:ref], @path)
     render json: @readme.slice("type", "encoding", "size", "name", "path", "content", "sha")
   rescue 
     render json: nil
