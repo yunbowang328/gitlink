@@ -64,6 +64,7 @@ class Issue < ApplicationRecord
   # has_many :memos
   has_many :journals, :as => :journalized, :dependent => :destroy
   has_many :journal_details, through: :journals
+  has_many :claims, :dependent => :destroy
   has_many :issue_tags_relates, dependent: :destroy
   has_many :issue_tags, through: :issue_tags_relates
   has_many :issue_times, dependent: :destroy
