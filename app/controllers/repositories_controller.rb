@@ -132,7 +132,7 @@ class RepositoriesController < ApplicationController
   end
 
   def contributors
-    if params[:filepath].present? 
+    if params[:filepath].present? || @project.educoder?
       @contributors = []
     else
       @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
@@ -213,7 +213,11 @@ class RepositoriesController < ApplicationController
   end
 
   def languages
-    render json: languages_precentagable
+    if @project.educoder? 
+      render json: {}
+    else
+      render json: languages_precentagable
+    end
   end
 
   def archive
