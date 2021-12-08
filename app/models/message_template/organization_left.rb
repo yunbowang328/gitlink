@@ -34,16 +34,19 @@ class MessageTemplate::OrganizationLeft < MessageTemplate
   def self.get_email_message_content(receiver, organization)
     if receiver.user_template_message_setting.present? 
       return '', '', '' unless receiver.user_template_message_setting.email_body["Normal::Organization"]
+      title = email_title
+      title.gsub!('{organization}', organization&.real_name)
+      content = email 
+      content.gsub!('{receiver}', receiver&.real_name)
+      content.gsub!('{baseurl}', base_url)
+      content.gsub!('{login}', organization&.login)
+      content.gsub!('{organization}', organization&.real_name)
+  
+      return receiver&.mail, title, content
+    else
+      return '', '', ''
     end
-    title = email_title
-    title.gsub!('{organization}', organization&.real_name)
-    content = email 
-    content.gsub!('{receiver}', receiver&.real_name)
-    content.gsub!('{baseurl}', base_url)
-    content.gsub!('{login}', organization&.login)
-    content.gsub!('{organization}', organization&.real_name)
 
-    return receiver&.mail, title, content
   rescue => e
     Rails.logger.info("MessageTemplate::OrganizationLeft.get_email_message_content [ERROR] #{e}")
     return '', '', ''

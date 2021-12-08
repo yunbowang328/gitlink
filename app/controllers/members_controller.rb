@@ -3,7 +3,7 @@ class MembersController < ApplicationController
   before_action :load_project
   before_action :find_user_with_id, only: %i[create remove change_role]
   before_action :check_user_profile_completed, only: [:create]
-  before_action :operate!, except: %i[index]
+  before_action :operate!
   before_action :check_member_exists!, only: %i[create]
   before_action :check_member_not_exists!, only: %i[remove change_role]
 

@@ -1,10 +1,10 @@
-json.type @owner.type
-if @owner.is_a?(Organization)
+json.type @owner.present? ? @owner.type : 'User'
+if @owner.present? && @owner.is_a?(Organization)
   json.partial! "organizations/organizations/detail", organization: @owner
   json.can_create_project @can_create_project
   json.is_admin @is_admin
   json.is_member @is_member
-else
+elsif @owner.present? && @owner.is_a?(User)
   json.partial! 'users/user', locals: { user: @owner }
   json.undo_messages @waiting_applied_messages.size 
   json.undo_transfer_projects @common_applied_transfer_projects.size
@@ -21,4 +21,6 @@ else
   json.city @owner.show_location ? @owner.city : nil
   json.custom_department @owner.show_department ? @owner.custom_department : nil
   json.description @owner.description
+else
+  json.nil
 end

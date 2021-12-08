@@ -5,6 +5,7 @@ json.done_ratio @issue.done_ratio.to_s + "%"
 json.issue_tags @issue.get_issue_tags
 json.cannot_edit_tags @cannot_edit_tags
 json.issue_current_user @issue.author_id == current_user.try(:id)
+json.assigned_to_id @issue.is_collaborators? ? @issue.assigned_to_id : nil
 # json.issue_chosen @issue_chosen
 # json.branches @all_branches
 json.attachments do

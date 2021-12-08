@@ -50,9 +50,8 @@ class BaseForm
   def check_verifi_code(verifi_code, code)
     code = strip(code)
     # return if code == "123123" # TODO 万能验证码，用于测试
-
-    raise VerifiCodeError, "验证码不正确" if verifi_code&.code != code
     raise VerifiCodeError, "验证码已失效" if !verifi_code&.effective?
+    raise VerifiCodeError, "验证码不正确" if verifi_code&.code != code
   end
 
   private

@@ -46,7 +46,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
       @organization.save!
       sync_organization_extension!
       
-      Gitea::Organization::UpdateService.call(@organization.gitea_token, login, @organization.reload)
+      Gitea::Organization::UpdateService.call(current_user.gitea_token, login, @organization.reload)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
   rescue Exception => e
@@ -57,10 +57,16 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def destroy
     tip_exception("密码不正确") unless current_user.check_password?(password)
     ActiveRecord::Base.transaction do
-      Gitea::Organization::DeleteService.call(@organization.gitea_token, @organization.login)
-      @organization.destroy!
+      gitea_destroy = Gitea::Organization::DeleteService.call(current_user.gitea_token, @organization.login)
+      if gitea_destroy[:status] == 204 
+        @organization.destroy!
+        render_ok
+      elsif gitea_destroy[:status] == 500
+        tip_exception("当组织内含有仓库时，无法删除此组织")
+      else
+        tip_exception("")
+      end
     end
-    render_ok
   rescue Exception => e
     uid_logger_error(e.message)
     tip_exception(e.message)

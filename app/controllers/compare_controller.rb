@@ -43,7 +43,7 @@ class CompareController < ApplicationController
 
   def load_compare_params
     @base = Addressable::URI.unescape(params[:base])
-    @head = params[:head].include?('json') ? params[:head]&.split('.json')[0] : params[:head]
+    @head = params[:head].include?('.json') ? params[:head][0..-6] : params[:head]
 
   end
 

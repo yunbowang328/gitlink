@@ -16,6 +16,6 @@ class Forum::Memos::GetService < Forum::ClientService
   end
 
   def url 
-    "/memos/#{memo_id}.json".freeze
+    "/memos/#{memo_id}.json?only_data=true".freeze
   end
 end
