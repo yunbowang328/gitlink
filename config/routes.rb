@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   # Serve websocket cable requests in-process
   mount ActionCable.server => '/cable'
 
+
   get 'attachments/entries/get_file', to: 'attachments#get_file'
   get 'attachments/download/:id', to: 'attachments#show'
   get 'attachments/download/:id/:filename', to: 'attachments#show'
@@ -146,6 +147,16 @@ Rails.application.routes.draw do
           get :get_children_journals
         end
       end
+
+      resources :claims, only: [:index] do
+        collection do
+          post :create
+          delete :destroy
+          get :index
+          put :update
+        end
+      end
+
       resources :issue_times, only: [:create] do
         collection do
           post :end_work
