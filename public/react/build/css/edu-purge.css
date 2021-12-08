@@ -3947,7 +3947,7 @@ html>body #ajax-indicator {
 }
 .head-nav {
   text-align: center;
-  height: 70px;
+  height: 58px;
   box-sizing: border-box;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3959,14 +3959,14 @@ html>body #ajax-indicator {
   position: absolute;
   top: 0px;
   z-index: 3;
-  height: 70px;
+  height: 58px;
   box-sizing: border-box;
 }
 
 .head-nav ul#header-nav li {
   float: left;
-  height: 70px;
-  line-height: 70px;
+  height: 58px;
+  line-height: 58px;
   cursor: pointer;
   position: relative;
   font-size: 16px;
@@ -3977,7 +3977,7 @@ html>body #ajax-indicator {
   display: block;
   height: 100%;
   width: 100%;
-  color: #333;
+  color: #fff;
   font-size: 16px;
 }
 
@@ -3987,10 +3987,6 @@ html>body #ajax-indicator {
 
 .head-nav ul#header-nav li:last-child {
   margin-right: 0px
-}
-
-.head-nav ul#header-nav li.active{
-  /* background-color: #3B3B3B; */
 }
 
 
@@ -6711,13 +6707,10 @@ p{
   right: 0px;
   top:4px;
   color: #999;
-<<<<<<< HEAD
-=======
 }
 .ant-input, .ant-input .ant-input-suffix{
   background-color: #fff!important;
 }
 .has-error .ant-input{
   background-color: #FEF1F0!important;
->>>>>>> pre_develop
 }

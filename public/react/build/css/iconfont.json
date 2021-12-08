@@ -6,6 +6,181 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "25748537",
+      "name": "知识图谱",
+      "font_class": "zhishitupu",
+      "unicode": "e8fc",
+      "unicode_decimal": 59644
+    },
+    {
+      "icon_id": "25748551",
+      "name": "计算机",
+      "font_class": "jisuanji1",
+      "unicode": "e8fd",
+      "unicode_decimal": 59645
+    },
+    {
+      "icon_id": "25748553",
+      "name": "电子",
+      "font_class": "dianzi1",
+      "unicode": "e8ff",
+      "unicode_decimal": 59647
+    },
+    {
+      "icon_id": "25748554",
+      "name": "军事理论",
+      "font_class": "junshililun1",
+      "unicode": "e900",
+      "unicode_decimal": 59648
+    },
+    {
+      "icon_id": "25748555",
+      "name": "软件工程",
+      "font_class": "ruanjiangongcheng1",
+      "unicode": "e901",
+      "unicode_decimal": 59649
+    },
+    {
+      "icon_id": "25748556",
+      "name": "医学",
+      "font_class": "yixue1",
+      "unicode": "e902",
+      "unicode_decimal": 59650
+    },
+    {
+      "icon_id": "25748558",
+      "name": "通信",
+      "font_class": "tongxin1",
+      "unicode": "e904",
+      "unicode_decimal": 59652
+    },
+    {
+      "icon_id": "25748560",
+      "name": "政策法规",
+      "font_class": "zhengcefagui1",
+      "unicode": "e906",
+      "unicode_decimal": 59654
+    },
+    {
+      "icon_id": "25748528",
+      "name": "大数据",
+      "font_class": "dashuju",
+      "unicode": "e8f3",
+      "unicode_decimal": 59635
+    },
+    {
+      "icon_id": "25748531",
+      "name": "人工智能",
+      "font_class": "rengongzhineng",
+      "unicode": "e8f6",
+      "unicode_decimal": 59638
+    },
+    {
+      "icon_id": "25733167",
+      "name": "双引号(1)@2x",
+      "font_class": "a-shuangyinhao12x",
+      "unicode": "e8f2",
+      "unicode_decimal": 59634
+    },
+    {
+      "icon_id": "25701947",
+      "name": "顶部",
+      "font_class": "dingbu",
+      "unicode": "e8ee",
+      "unicode_decimal": 59630
+    },
+    {
+      "icon_id": "25701948",
+      "name": "帮助",
+      "font_class": "bangzhu1",
+      "unicode": "e8ef",
+      "unicode_decimal": 59631
+    },
+    {
+      "icon_id": "25701949",
+      "name": "意见反馈",
+      "font_class": "yijianfankui2",
+      "unicode": "e8f0",
+      "unicode_decimal": 59632
+    },
+    {
+      "icon_id": "25701950",
+      "name": "分享",
+      "font_class": "fenxiang",
+      "unicode": "e8f1",
+      "unicode_decimal": 59633
+    },
+    {
+      "icon_id": "25580217",
+      "name": "地址",
+      "font_class": "dizhi",
+      "unicode": "e8eb",
+      "unicode_decimal": 59627
+    },
+    {
+      "icon_id": "25580218",
+      "name": "邮箱",
+      "font_class": "youxiang1",
+      "unicode": "e8ec",
+      "unicode_decimal": 59628
+    },
+    {
+      "icon_id": "25580219",
+      "name": "电话icon",
+      "font_class": "dianhuaicon",
+      "unicode": "e8ed",
+      "unicode_decimal": 59629
+    },
+    {
+      "icon_id": "25284174",
+      "name": "添加icon",
+      "font_class": "tianjiaicon",
+      "unicode": "e8e8",
+      "unicode_decimal": 59624
+    },
+    {
+      "icon_id": "25284175",
+      "name": "铃声icon",
+      "font_class": "lingshengicon",
+      "unicode": "e8ea",
+      "unicode_decimal": 59626
+    },
+    {
+      "icon_id": "25204490",
+      "name": "更多icon",
+      "font_class": "gengduoicon",
+      "unicode": "e8e5",
+      "unicode_decimal": 59621
+    },
+    {
+      "icon_id": "25204491",
+      "name": "时间icon",
+      "font_class": "shijianicon",
+      "unicode": "e8e7",
+      "unicode_decimal": 59623
+    },
+    {
+      "icon_id": "25188228",
+      "name": "密码icon",
+      "font_class": "mimaicon",
+      "unicode": "e8e1",
+      "unicode_decimal": 59617
+    },
+    {
+      "icon_id": "25188229",
+      "name": "钩icon",
+      "font_class": "gouicon",
+      "unicode": "e8e2",
+      "unicode_decimal": 59618
+    },
+    {
+      "icon_id": "25188230",
+      "name": "展开icon",
+      "font_class": "zhankaiicon",
+      "unicode": "e8e3",
+      "unicode_decimal": 59619
+    },
+    {
       "icon_id": "24656750",
       "name": "文件",
       "font_class": "wenjian7",
