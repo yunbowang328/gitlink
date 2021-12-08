@@ -14,7 +14,7 @@ if @project.educoder?
     json.type nil
     json.image_url commit[0]['author']['image_url']
   end
-  json.commiter do 
+  json.committer do 
     json.id nil
     json.login commit[0]['author']['username']
     json.name commit[0]['author']['username'] 
