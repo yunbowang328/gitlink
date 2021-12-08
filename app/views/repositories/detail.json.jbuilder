@@ -53,13 +53,13 @@ end
 json.license_name @project.license_name
 json.branches_count @result[:branch_tag_total_count].present? ? (@result[:branch_tag_total_count]['branch_count'] || 0) : 0
 json.tags_count @result[:branch_tag_total_count].present? ? (@result[:branch_tag_total_count]['tag_count'] || 0) : 0
-json.contributors do
-  total_count = @result[:contributor].size
-  json.list @result[:contributor].each do |contributor|
-    json.partial! 'contributor', locals: { contributor: contributor }
-  end
-  json.total_count total_count
-end
-json.languages @result[:language].blank? ? nil : @result[:language]
+# json.contributors do
+#   total_count = @result[:contributor].size
+#   json.list @result[:contributor].each do |contributor|
+#     json.partial! 'contributor', locals: { contributor: contributor }
+#   end
+#   json.total_count total_count
+# end
+# json.languages @result[:language].blank? ? nil : @result[:language]
 
 json.partial! 'author', locals: { user: @project.owner }
