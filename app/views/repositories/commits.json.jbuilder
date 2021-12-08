@@ -12,7 +12,7 @@ if @hash_commit.blank? || @project.educoder?   #如果有状态值，则表示�
         json.type nil
         json.image_url commit['author']['image_url']
       end
-      json.commiter do 
+      json.committer do 
         json.id nil
         json.login commit['author']['username']
         json.name commit['author']['username'] 
