@@ -1,6 +1,26 @@
-if @hash_commit.blank?   #如果有状态值，则表示报错了
+if @hash_commit.blank? || @project.educoder?   #如果有状态值，则表示报错了
   json.total_count 0
-  json.commits []
+  json.commits do 
+    json.array! @commits do |commit|
+      json.sha commit['id']
+      json.message commit['title']
+      json.time_from_now commit['time']
+      json.author do 
+        json.id nil
+        json.login commit['author']['username']
+        json.name commit['author']['username'] 
+        json.type nil
+        json.image_url commit['author']['image_url']
+      end
+      json.commiter do 
+        json.id nil
+        json.login commit['author']['username']
+        json.name commit['author']['username'] 
+        json.type nil
+        json.image_url commit['author']['image_url']
+      end
+    end
+  end
 else
   json.total_count @hash_commit[:total_count]
   json.commits do

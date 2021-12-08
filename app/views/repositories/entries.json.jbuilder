@@ -7,7 +7,7 @@ if @project.educoder?
     end
   end
   json.commits_count @entries['commit_count']
-  json.zip_url @entries['git_url']
+  json.zip_url ''
   json.tar_url ''
   json.entries do
     json.array! @entries['trees'] do |entry|
