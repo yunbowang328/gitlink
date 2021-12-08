@@ -7,11 +7,20 @@ if @project.educoder?
     json.timestamp 0
     json.time_from_now commit[0]['time']
   end
-  json.author do
-    {}
-    # json.partial! '/projects/author', user: render_commit_author(commit['author'])
+  json.author do 
+    json.id nil
+    json.login commit[0]['author']['username']
+    json.name commit[0]['author']['username'] 
+    json.type nil
+    json.image_url commit[0]['author']['image_url']
   end
-  json.committer {}
+  json.commiter do 
+    json.id nil
+    json.login commit[0]['author']['username']
+    json.name commit[0]['author']['username'] 
+    json.type nil
+    json.image_url commit[0]['author']['image_url']
+  end
 end
 
 if @project.forge?
