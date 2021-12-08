@@ -44,7 +44,7 @@ end
 if @result[:repo]
   json.size replace_bytes_to_b(number_to_human_size(@result[:repo]['size'].to_i*1024))
   json.ssh_url @result[:repo]['ssh_url']
-  json.clone_url @result[:repo]['clone_url']
+  json.clone_url @project.educoder? ? "#{Rails.application.config_for(:configuration)['educoder']['git_site']}/#{@project&.project_educoder&.repo_name}.git" : @result[:repo]['clone_url']
   json.default_branch @project.educoder? ? "master" : @result[:repo]['default_branch']
   json.empty @result[:repo]['empty']
   json.full_name @result[:repo]['full_name']
@@ -53,13 +53,13 @@ end
 json.license_name @project.license_name
 json.branches_count @result[:branch_tag_total_count].present? ? (@result[:branch_tag_total_count]['branch_count'] || 0) : 0
 json.tags_count @result[:branch_tag_total_count].present? ? (@result[:branch_tag_total_count]['tag_count'] || 0) : 0
-json.contributors do
-  total_count = @result[:contributor].size
-  json.list @result[:contributor].each do |contributor|
-    json.partial! 'contributor', locals: { contributor: contributor }
-  end
-  json.total_count total_count
-end
-json.languages @result[:language].blank? ? nil : @result[:language]
+# json.contributors do
+#   total_count = @result[:contributor].size
+#   json.list @result[:contributor].each do |contributor|
+#     json.partial! 'contributor', locals: { contributor: contributor }
+#   end
+#   json.total_count total_count
+# end
+# json.languages @result[:language].blank? ? nil : @result[:language]
 
 json.partial! 'author', locals: { user: @project.owner }
