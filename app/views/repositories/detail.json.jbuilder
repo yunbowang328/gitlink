@@ -44,7 +44,7 @@ end
 if @result[:repo]
   json.size replace_bytes_to_b(number_to_human_size(@result[:repo]['size'].to_i*1024))
   json.ssh_url @result[:repo]['ssh_url']
-  json.clone_url @result[:repo]['clone_url']
+  json.clone_url @project.educoder? ? "#{Rails.application.config_for(:configuration)['educoder']['git_site']}/#{@project&.project_educoder&.repo_name}.git" : @result[:repo]['clone_url']
   json.default_branch @project.educoder? ? "master" : @result[:repo]['default_branch']
   json.empty @result[:repo]['empty']
   json.full_name @result[:repo]['full_name']

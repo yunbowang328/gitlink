@@ -96,7 +96,7 @@ class RepositoriesController < ApplicationController
 
   def commits
     if @project.educoder?
-      @hash_commit = nil
+      @commits = Educoder::Repository::Commits::ListService.call(@project&.project_educoder&.repo_name)
     else
       if params[:filepath].present?
         file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
