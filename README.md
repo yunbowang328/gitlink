@@ -1,3 +1,8 @@
+<style>
+img{
+    width: 80%;
+}
+</style>
 # GitLink - CCF开源创新服务平台
 
 GitLink（确实开源）是中国计算机学会（CCF）官方指定的开源创新服务平台，旨在以“为开源创新服务”为使命，以“成为开源创新的汇聚地”为愿景，秉承“创新、开放、协作、共享”的价值观，致力于为大规模开源开放协同创新助力赋能，打造创新成果孵化和新工科人才培养的开源创新生态！
@@ -156,12 +161,7 @@ http://localhost:3000/
 - [Git常用命令](https://git-scm.com/)
 
 ## 页面展示
-<style>
-img{
-    width: 60%;
-    padding-left: 20%;
-}
-</style>
+
 - 项目列表
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true)
