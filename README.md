@@ -4,7 +4,7 @@ GitLink（确实开源）是中国计算机学会（CCF）官方指定的开源�
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/gitlink.png?raw=true)
 
-[toc]
+[TOC]
     
 ## 特色功能
 
