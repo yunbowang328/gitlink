@@ -153,9 +153,6 @@ http://localhost:3000/
 （16）其他说明
 通过页面注册以第一个用户为平台管理员用户
 
-### 指导文档
-- [API文档](https://www.gitlink.org.cn/docs/api)
-- [Git常用命令](https://git-scm.com/)
 
 ## 页面展示
 
@@ -199,5 +196,9 @@ http://localhost:3000/
 3. 提交更改 (git commit -am 'Add some feature')
 4. 推送到分支 (git push origin my-new-feature)
 5. 向源项目的 **develop** 分支发起 Pull Request
+
+#### 指导文档
+- [API文档](https://www.gitlink.org.cn/docs/api)
+- [Git常用命令](https://git-scm.com/)
 
 ## 许可证协议
