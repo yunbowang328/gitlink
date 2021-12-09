@@ -48,7 +48,7 @@ cd forgeplus && bundle install
 ```
 
 （3）配置初始化文件
-进入项目根目录执行一下命令：
+进入项目根目录执行以下命令：
 
 ```bash
 cp config/configuration.yml.example config/configuration.yml
@@ -149,7 +149,11 @@ http://localhost:3000/
 ```
 
 （16）其他说明
-通过页面注册都第一个用户为平台管理员用户
+通过页面注册以第一个用户为平台管理员用户
+
+### 指导文档
+- [API文档](https://www.gitlink.org.cn/docs/api)
+- [Git常用命令](https://git-scm.com/)
 
 ## 页面展示
 
@@ -173,12 +177,11 @@ http://localhost:3000/
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/engine.png?raw=true)
 
-## API
-- [API文档](https://forgeplus.trustie.net/docs/api)
-- [API](showdoc.com.cn)
-  账号：forgeplus@admin.com 密码：forge123
+
 
 ## 贡献代码
+
+我们期待您向GitLink提交贡献！请遵循以下流程指导：
 
 1. Fork 项目
 2. 创建本地分支(git checkout -b my-new-feature)
@@ -186,4 +189,4 @@ http://localhost:3000/
 4. 推送到分支 (git push origin my-new-feature)
 5. 向源项目的 **develop** 分支发起 Pull Request
 
-## License
+## 许可证协议
