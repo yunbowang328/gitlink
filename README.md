@@ -156,10 +156,15 @@ http://localhost:3000/
 - [Git常用命令](https://git-scm.com/)
 
 ## 页面展示
-
+<style>
+img{
+    width: 60%;
+    padding-left: 20%;
+}
+</style>
 - 项目列表
 
-![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true){:height="50%" width="50%"}
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true)
 
 - 代码仓库
 
