@@ -24,8 +24,6 @@ if @project.educoder?
     end
   end
   json.entries do
-    json.array! @sub_entries['trees'] do |entry|
-      json.partial! 'repositories/simple_entry', locals: { entry: entry }
-    end
+    json.partial! 'repositories/simple_entry', locals: { entry: @sub_entries['trees']}
   end
 end

@@ -7,20 +7,22 @@ if @project.educoder?
     json.timestamp 0
     json.time_from_now commit[0]['time']
   end
-  json.author do 
-    json.id nil
-    json.login commit[0]['author']['username']
-    json.name commit[0]['author']['username'] 
-    json.type nil
-    json.image_url commit[0]['author']['image_url']
-  end
-  json.committer do 
-    json.id nil
-    json.login commit[0]['author']['username']
-    json.name commit[0]['author']['username'] 
-    json.type nil
-    json.image_url commit[0]['author']['image_url']
-  end
+   if commit[0]['author'].present?
+      json.author do 
+        json.id nil
+        json.login commit[0]['author']['username']
+        json.name commit[0]['author']['username'] 
+        json.type nil
+        json.image_url commit[0]['author']['image_url']
+      end
+      json.committer do 
+        json.id nil
+        json.login commit[0]['author']['username']
+        json.name commit[0]['author']['username'] 
+        json.type nil
+        json.image_url commit[0]['author']['image_url']
+      end
+   end
 end
 
 if @project.forge?
