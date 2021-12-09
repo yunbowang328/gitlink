@@ -24,6 +24,12 @@ if @project.educoder?
     end
   end
   json.entries do
-    json.partial! 'repositories/simple_entry', locals: { entry: @sub_entries['trees']}
+    if @sub_entries['trees'].is_a?(Array)
+      json.array! @sub_entries['trees'] do |entry|
+        json.partial! 'repositories/simple_entry', locals: { entry: entry }
+      end
+    elsif @sub_entries['trees'].is_a?(Hash)
+      json.partial! 'repositories/simple_entry', locals: { entry: @sub_entries['trees'] }
+    end
   end
 end
