@@ -69,7 +69,9 @@ default: &default
 （5）配置gitea服务(可选)：如需要部署自己的gitea平台，请参考[gitea官方平台文档](https://docs.gitea.io/zh-cn/install-from-binary/)。因目前gitea平台api受限，暂时推荐从forge平台获取[gitea部署文件](https://forgeplus.trustie.net/projects/Trustie/gitea-binary)进行部署
 
 - 配置gitea服务步骤：
+                                                  
 1）部署gitea服务，并注册root账户
+                                                  
 2）修改forge平台的 config/configuration.yml中的gitea服务指向地址，如：
 
 ```ruby
