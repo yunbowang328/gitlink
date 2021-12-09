@@ -4,6 +4,8 @@ GitLink（确实开源）是中国计算机学会（CCF）官方指定的开源�
 
 ![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/gitlink.png?raw=true)
 
+[toc]
+    
 ## 特色功能
 
 - **分布式协作开发**：基于Git打造分布式代码托管环境，提供免费公、私有代码仓库，支持在线文件编辑、代码分支管理、协作贡献统计、代码仓库复刻（Fork）、贡献合并请求（PR）、群智贡献审阅等功能，让您的项目在这里健康、快速的成长！
