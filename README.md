@@ -161,24 +161,24 @@ http://localhost:3000/
 
 - 项目列表
 
-<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true width=60% />
+<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true" width=60% />
 
 
 - 代码仓库
 
-<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/repo.png?raw=true width=60% />
+<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/repo.png?raw=true" width=60% />
 
 - 任务管理
 
-<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/issues.png?raw=true width=60% />
+<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/issues.png?raw=true" width=60% />
 
 - 合并请求
 
-<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/PR.png?raw=true width=60% />
+<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/PR.png?raw=true" width=60% />
 
 - 引擎配置
 
-<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/engine.png?raw=true width=60% />
+<img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/engine.png?raw=true" width=60% />
 
 
 
