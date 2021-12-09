@@ -70,9 +70,9 @@ default: &default
 
 - 配置gitea服务步骤：
                                                   
--- 部署gitea服务，并注册root账户
+	-- 部署gitea服务，并注册root账户
                                                   
--- 修改forge平台的 config/configuration.yml中的gitea服务指向地址，如：
+	-- 修改forge平台的 config/configuration.yml中的gitea服务指向地址，如：
 
 ```ruby
 gitea:
