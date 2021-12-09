@@ -80,18 +80,22 @@ class RepositoriesController < ApplicationController
           "commits" => [{}]
         }
       else
-        @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
-        if @sub_entries.blank? 
-          @sub_entries = Educoder::Repository::Entries::GetService.call(@project&.project_educoder&.repo_name, file_path_uri)
-          return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
-          tmp_entries = [{
-            "content" =>  @sub_entries['data']['content'],
-            "type"    => "blob"
-          }]
-          @sub_entries = {
-            "trees"=>tmp_entries,
-            "commits" => [{}]
-          }
+        begin
+          @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
+          if @sub_entries.blank? 
+            @sub_entries = Educoder::Repository::Entries::GetService.call(@project&.project_educoder&.repo_name, file_path_uri)
+            return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
+            tmp_entries = [{
+              "content" =>  @sub_entries['data']['content'],
+              "type"    => "blob"
+            }]
+            @sub_entries = {
+              "trees"=>tmp_entries,
+              "commits" => [{}]
+            }
+          end
+        rescue 
+          return render_error('该文件暂未开放，敬请期待.')
         end
       end
     else
@@ -129,8 +133,7 @@ class RepositoriesController < ApplicationController
   def commit
     @sha         = params[:sha]
     if @project.educoder?
-      @commit = {}
-      @commit_diff ={}
+      return render_error('暂未开放，敬请期待.')
     else
       @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
       @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
