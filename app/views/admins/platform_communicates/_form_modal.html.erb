@@ -33,6 +33,12 @@
             </label>
             <%= p.number_field :fake_id,class: "form-control input-lg",required: true%>
           </div>
+          <div class="form-group">
+            <label>
+              排序等级 <span class="ml10 color-orange mr20">*</span>
+            </label>
+            <%= p.number_field :order_index,class: "form-control input-lg",required: true%>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>

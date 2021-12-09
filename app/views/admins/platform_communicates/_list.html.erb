@@ -6,6 +6,7 @@
     <th width="20%">内容</th>
     <th width="10%">帖子ID</th>
     <th width="20%">标签</th>
+    <th width="20%">排序等级</th>
     <th width="25%">操作</th>
   </tr>
   </thead>
@@ -18,6 +19,7 @@
         <td><%= c.content.truncate(50) %></td>
         <td><%= c.fake_id %></td>
         <td><%= c.tag_field %></td>
+        <td><%= c.order_index %></td>
         <td class="action-container">
           <%= link_to "编辑", edit_admins_platform_communicate_path(c), remote: true, class: "action" %>
           <%= link_to "删除", admins_platform_communicate_path(c), method: :delete, data:{confirm: "确认删除的吗？"}, class: "action" %>

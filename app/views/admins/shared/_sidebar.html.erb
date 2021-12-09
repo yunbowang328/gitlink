@@ -35,6 +35,18 @@
       <%= sidebar_item_group('#homepage-submenu', '首页配置', icon: 'file') do %>
         <li><%= sidebar_item(admins_platform_communicates_path, '社区动态', icon: 'edit', controller: 'admins-platform_communicates') %></li>
         <li><%= sidebar_item(admins_platform_people_path, '论坛交流人物', icon: 'user', controller: 'admins-platform_people') %></li>
+        <li>
+          <a href="/task/taskAdmin">
+            <i class="fa fa-bell fa-fw" data-toggle="tooltip" data-placement="right" data-boundary="window" title="" data-original-title="论坛交流人物"></i>
+            <span>创客任务</span>
+          </a>
+        </li>
+        <li>
+          <a href="<%= Rails.application.config_for(:configuration)['web_site'] %>/admin/competitions/list">
+            <i class="fa fa-wrench fa-fw" data-toggle="tooltip" data-placement="right" data-boundary="window" title="" data-original-title="论坛交流人物"></i>
+            <span>开放竞赛</span>
+          </a>
+        </li>
       <% end %>
     </li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>

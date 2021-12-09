@@ -1,7 +1,7 @@
 class Admins::PlatformCommunicatesController < Admins::BaseController 
   before_action :get_communicate, only: [:edit, :update, :destroy]
   def index
-    sort_by = PlatformCommunicate.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'created_at'
+    sort_by = PlatformCommunicate.column_names.include?(params[:sort_by]) ? params[:sort_by] : 'order_index'
     sort_direction = %w(desc asc).include?(params[:sort_direction]) ? params[:sort_direction] : 'desc'
     q = PlatformCommunicate.ransack(title_cont: params[:search])
     communicates = q.result(distinct: true).order("#{sort_by} #{sort_direction}")
