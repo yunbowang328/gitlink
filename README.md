@@ -159,7 +159,7 @@ http://localhost:3000/
 
 - 项目列表
 
-![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true =100x100)
+![](https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true){:height="50%" width="50%"}
 
 - 代码仓库
 
