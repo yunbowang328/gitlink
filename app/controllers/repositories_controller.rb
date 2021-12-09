@@ -74,7 +74,7 @@ class RepositoriesController < ApplicationController
         tmp_entries = {
             "content" =>  @sub_entries['data']['content'],
             "type"    => "blob"
-          }]
+          }
         @sub_entries = {
           "trees"=>tmp_entries,
           "commits" => [{}]
