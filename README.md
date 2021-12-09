@@ -165,25 +165,33 @@ http://localhost:3000/
 <img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/project_list.png?raw=true" width=50% />
 </ center>
 
+            
 - 代码仓库
+            
 
 <center>
 <img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/repo.png?raw=true" width=50% />
 </ center>
+          
             
 - 任务管理
+            
 
 <center>
 <img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/issues.png?raw=true" width=50% />
 </ center>
+          
             
 - 合并请求
+            
 
 <center>
 <img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/PR.png?raw=true" width=50% />
 </ center>
+         
             
 - 引擎配置
+            
 
 <center>
 <img src="https://code.gitlink.org.cn/young/forgeplus/raw/branch/standalone/docs/figs/engine.png?raw=true" width=50% />
