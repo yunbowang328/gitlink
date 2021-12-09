@@ -16,13 +16,13 @@ class ProjectsController < ApplicationController
     menu.append(menu_hash_by_name("home"))
     menu.append(menu_hash_by_name("code")) if @project.has_menu_permission("code")
     menu.append(menu_hash_by_name("issues")) if @project.has_menu_permission("issues")
-    menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls")
-    menu.append(menu_hash_by_name("wiki")) if @project.has_menu_permission("wiki")
-    menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops")
+    menu.append(menu_hash_by_name("pulls")) if @project.has_menu_permission("pulls") && @project.forge?
+    menu.append(menu_hash_by_name("wiki")) if @project.has_menu_permission("wiki") && @project.forge?
+    menu.append(menu_hash_by_name("devops")) if @project.has_menu_permission("devops") && @project.forge?
     menu.append(menu_hash_by_name("versions")) if @project.has_menu_permission("versions")
-    menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources")
+    menu.append(menu_hash_by_name("resources")) if @project.has_menu_permission("resources") && @project.forge?
     menu.append(menu_hash_by_name("activity"))
-    menu.append(menu_hash_by_name("settings")) if current_user.admin? || @project.manager?(current_user)
+    menu.append(menu_hash_by_name("settings")) if (current_user.admin? || @project.manager?(current_user)) && @project.forge?
 
     render json: menu
   end
