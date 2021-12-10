@@ -26,8 +26,12 @@ module TagChosenHelper
   end
 
   def render_branches(project)
-    branches = Gitea::Repository::Branches::ListService.call(project&.owner, project.identifier)
-    branches.collect{|i| i["name"] if i.is_a?(Hash)}
+    if project.educoder?
+      return ['master']
+    else
+      branches = Gitea::Repository::Branches::ListService.call(project&.owner, project.identifier)
+      branches.collect{|i| i["name"] if i.is_a?(Hash)}
+    end
   end
 
   def render_cache_trackers
