@@ -32,6 +32,8 @@ end
 
 if @project.educoder?
   file_path = params[:filepath].present? ? [params[:filepath], entry['name']].join('/') : entry['name']
+  file_type = File.extname(entry['name'].to_s)[1..-1]
+  image_type = image_type?(file_type)
 
   json.name entry['name']
   json.sha nil
@@ -42,7 +44,7 @@ if @project.educoder?
   json.target nil
   json.download_url nil
   json.direct_download false
-  json.image_type false
+  json.image_type image_type
   json.is_readme_file false
   json.commit do
     json.message entry['title']

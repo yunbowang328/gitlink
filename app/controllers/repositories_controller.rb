@@ -71,16 +71,32 @@ class RepositoriesController < ApplicationController
         logger.info "######### sub_entries: #{@sub_entries}"
         return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
 
-        tmp_entries = [{
+        tmp_entries = {
             "content" =>  @sub_entries['data']['content'],
             "type"    => "blob"
-          }]
+          }
         @sub_entries = {
           "trees"=>tmp_entries,
           "commits" => [{}]
         }
       else
-        @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
+        begin
+          @sub_entries = Educoder::Repository::Entries::ListService.call(@project&.project_educoder&.repo_name, {path: file_path_uri})
+          if @sub_entries.blank? || @sub_entries['status'].to_i === -1
+            @sub_entries = Educoder::Repository::Entries::GetService.call(@project&.project_educoder&.repo_name, file_path_uri)
+            return render_error('该文件暂未开放，敬请期待.') if @sub_entries['status'].to_i === -1
+            tmp_entries = {
+              "content" =>  @sub_entries['data']['content'],
+              "type"    => "blob"
+            }
+            @sub_entries = {
+              "trees"=>tmp_entries,
+              "commits" => [{}]
+            }
+          end
+        rescue 
+          return render_error('该文件暂未开放，敬请期待.')
+        end
       end
     else
       @path = Gitea.gitea_config[:domain]+"/#{@project.owner.login}/#{@project.identifier}/raw/branch/#{@ref}/"
@@ -96,7 +112,7 @@ class RepositoriesController < ApplicationController
 
   def commits
     if @project.educoder?
-      @hash_commit = nil
+      @commits = Educoder::Repository::Commits::ListService.call(@project&.project_educoder&.repo_name)
     else
       if params[:filepath].present?
         file_path_uri = URI.parse(URI.encode(params[:filepath].to_s.strip))
@@ -110,15 +126,14 @@ class RepositoriesController < ApplicationController
   end
 
   def commits_slice 
-    @hash_commit = Gitea::Repository::Commits::ListSliceService.call(@owner&.login, @project.identifier,
+    @hash_commit = Gitea::Repository::Commits::ListSliceService.call(@owner.login, @project.identifier,
       sha: params[:sha], page: params[:page], limit: params[:limit], token: current_user&.gitea_token)
   end 
 
   def commit
     @sha         = params[:sha]
     if @project.educoder?
-      @commit = {}
-      @commit_diff ={}
+      return render_error('暂未开放，敬请期待.')
     else
       @commit      = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token)
       @commit_diff = Gitea::Repository::Commits::GetService.call(@owner.login, @repository.identifier, @sha, current_user&.gitea_token, {diff: true})
@@ -132,7 +147,7 @@ class RepositoriesController < ApplicationController
   end
 
   def contributors
-    if params[:filepath].present? 
+    if params[:filepath].present? || @project.educoder?
       @contributors = []
     else
       @contributors = Gitea::Repository::Contributors::GetService.call(@owner, @repository.identifier)
@@ -213,7 +228,11 @@ class RepositoriesController < ApplicationController
   end
 
   def languages
-    render json: languages_precentagable
+    if @project.educoder? 
+      render json: {}
+    else
+      render json: languages_precentagable
+    end
   end
 
   def archive
@@ -357,7 +376,7 @@ class RepositoriesController < ApplicationController
         local_requests = PullRequest.new(local_params.merge(user_id: current_user.try(:id), project_id: @project.id, issue_id: @pull_issue.id))
         if local_requests.save
           gitea_request = Gitea::PullRequest::CreateService.new(current_user.try(:gitea_token), @owner.login, @project.try(:identifier), requests_params).call
-          if gitea_request[:status] == :success && local_requests.update_attributes(gitea_number: gitea_request["body"]["number"], gpid: gitea_request["body"]["number"])
+          if gitea_request[:status] == :success && local_requests.update_attributes(gpid: gitea_request["body"]["number"])
             local_requests.project_trends.create(user_id: current_user.id, project_id: @project.id, action_type: "create")
           end
         end
