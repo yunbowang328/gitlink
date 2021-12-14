@@ -59,6 +59,8 @@ class Notice::Write::ClientService < ApplicationService
         req.request :url_encoded
         req.headers['Content-Type'] = 'application/json'
         req.adapter Faraday.default_adapter
+        req.options.timeout = 100           # open/read timeout in seconds
+        req.options.open_timeout = 10      # connection open timeout in seconds
       end
     end
 
