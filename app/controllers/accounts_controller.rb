@@ -10,11 +10,12 @@ class AccountsController < ApplicationController
   def remote_register
     username = params[:username]&.gsub(/\s+/, "")
     email = params[:email]&.gsub(/\s+/, "")
+    phone = params[:phone]&.gsub(/\s+/, "")
     password = params[:password]
     platform = (params[:platform] || 'forge')&.gsub(/\s+/, "")
 
     ActiveRecord::Base.transaction do
-      result = autologin_register(username, email, password, platform)
+      result = autologin_register(username, email, password, platform, phone)
       if result[:message].blank?
         PlatformStatistic.data.increment!(:users_count)
         render_ok({user: result[:user]})
