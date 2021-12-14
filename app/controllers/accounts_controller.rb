@@ -15,6 +15,7 @@ class AccountsController < ApplicationController
     platform = (params[:platform] || 'forge')&.gsub(/\s+/, "")
 
     ActiveRecord::Base.transaction do
+      return render_error("该手机号已注册") if phone.present? && User.where(phone: phone).exists?
       result = autologin_register(username, email, password, platform, phone)
       if result[:message].blank?
         PlatformStatistic.data.increment!(:users_count)
