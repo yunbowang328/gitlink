@@ -32,6 +32,6 @@ class AtmeService < ApplicationService
     else 
       return 
     end
-    SendTemplateMessageJob.perform_later(message_source, receivers, user.id, @atmeable.id) if Site.has_notice_menu?
+    SendTemplateMessageJob.perform_later(message_source, receivers.pluck(:id), user.id, @atmeable.id) if Site.has_notice_menu?
   end
 end
