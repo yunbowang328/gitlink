@@ -155,7 +155,7 @@ class Issue < ApplicationRecord
   end
 
   def is_collaborators?
-    self.assigned_to_id.present? ? self.project.members.where(user_id: self.assigned_to_id).present? : false
+    self.assigned_to_id.present? ? self.project.member?(self.assigned_to_id) : false
   end
 
   def get_issue_tags_name
