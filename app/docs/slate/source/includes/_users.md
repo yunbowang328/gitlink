@@ -90,13 +90,13 @@ await octokit.request('GET /api/users/:login/messages.json')
 #### 消息来源source字段说明
 类型|说明
 --------- | -----------
-|IssueAssigned              | 有新指派给我的易修  | 
-|IssueAssignerExpire        | 我负责的易修截止日期到达最后一天  | 
-|IssueAtme                  | 在易修中@我  | 
-|IssueChanged               | 我创建或负责的易修状态变更  | 
-|IssueCreatorExpire         | 我创建的易修截止日期到达最后一天  | 
-|IssueDeleted               | 我创建或负责的易修删除  | 
-|IssueJournal               | 我创建或负责的易修有新的评论  | 
+|IssueAssigned              | 有新指派给我的疑修  | 
+|IssueAssignerExpire        | 我负责的疑修截止日期到达最后一天  | 
+|IssueAtme                  | 在疑修中@我  | 
+|IssueChanged               | 我创建或负责的疑修状态变更  | 
+|IssueCreatorExpire         | 我创建的疑修截止日期到达最后一天  | 
+|IssueDeleted               | 我创建或负责的疑修删除  | 
+|IssueJournal               | 我创建或负责的疑修有新的评论  | 
 |LoginIpTip                 | 登录异常提示  | 
 |OrganizationJoined         | 账号被拉入组织  | 
 |OrganizationLeft           | 账号被移出组织  | 
@@ -104,7 +104,7 @@ await octokit.request('GET /api/users/:login/messages.json')
 |ProjectDeleted             | 我关注的仓库被删除  | 
 |ProjectFollowed            | 我管理的仓库被关注  | 
 |ProjectForked              | 我管理的仓库被复刻  | 
-|ProjectIssue               | 我管理/关注的仓库有新的易修  | 
+|ProjectIssue               | 我管理/关注的仓库有新的疑修  | 
 |ProjectJoined              | 账号被拉入项目  | 
 |ProjectLeft                | 账号被移出项目  | 
 |ProjectMemberJoined        | 我管理的仓库有成员加入  | 
@@ -250,7 +250,7 @@ await octokit.request('POST /api/users/:login/messages.json')
 --------- | ----------- | -----------
 |type       | string  | 消息类型 |
 |receivers_login  | array   | 需要发送消息的用户名数组|
-|atmeable_type | string | atme消息对象，是从哪里@我的，比如评论：Journal、易修：Issue、合并请求：PullRequest |
+|atmeable_type | string | atme消息对象，是从哪里@我的，比如评论：Journal、疑修：Issue、合并请求：PullRequest |
 |atmeable_id | integer | atme消息对象id |
 
 > 请求的JSON示例:
@@ -469,7 +469,7 @@ await octokit.request('GET /api/template_message_settings.json')
             "total_settings_count": 4,
             "settings": [
                 {
-                    "name": "易修被指派",
+                    "name": "疑修被指派",
                     "key": "IssueAssigned",
                     "notification_disabled": true,
                     "email_disabled": false
@@ -488,7 +488,7 @@ await octokit.request('GET /api/template_message_settings.json')
             "total_settings_count": 4,
             "settings": [
                 {
-                    "name": "有新的易修",
+                    "name": "有新的疑修",
                     "key": "Issue",
                     "notification_disabled": true,
                     "email_disabled": false
@@ -875,7 +875,7 @@ await octokit.request('GET /api/users/:login/statistics/activity.json')
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
 |dates                  |array   |时间 |
-|issues_count           |array   |易修数量|
+|issues_count           |array   |疑修数量|
 |pull_requests_count    |array   |合并请求数量|
 |commtis_count          |array   |贡献数量|
 
@@ -1084,7 +1084,7 @@ await octokit.request('GET /api/users/:login/project_trends.json')
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
 |total_count                    |int   |所选时间内的总动态数 |
-|project_trends.trend_type      |string|动态类型，Issue：易修，VersionRelease：版本发布，PullRequest：合并请求|
+|project_trends.trend_type      |string|动态类型，Issue：疑修，VersionRelease：版本发布，PullRequest：合并请求|
 |project_trends.action_type     |string|操作类型|
 |project_trends.trend_id        |integer|动态id|
 |project_trends.user_name       |string|用户名称|

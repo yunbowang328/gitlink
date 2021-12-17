@@ -12,7 +12,7 @@
 #  email_title      :string(255)
 #
 
-# TODO 我创建或负责的易修有新的评论
+# TODO 我创建或负责的疑修有新的评论
 class MessageTemplate::IssueJournal < MessageTemplate
 
   # MessageTemplate::IssueJournal.get_message_content(User.where(login: 'yystopf'))

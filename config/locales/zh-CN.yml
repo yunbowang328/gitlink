@@ -15,7 +15,7 @@ zh-CN:
       'refused': '已拒绝'
       'agreed': '已同意'
   trend:
-    Issue: 易修(Issue)
+    Issue: 疑修(Issue)
     PullRequest: 合并请求(PR)
     VersionRelease: 版本发布
     create: 创建了
