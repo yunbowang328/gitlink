@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   before_action :load_user, only: [:show, :homepage_info, :sync_token, :sync_gitea_pwd, :projects, :watch_users, :fan_users]
   before_action :check_user_exist, only: [:show, :homepage_info,:projects, :watch_users, :fan_users]
-  before_action :require_login, only: %i[me list change_password change_email]
+  before_action :require_login, only: %i[me list]
   before_action :connect_to_ci_db, only: [:get_user_info]
   skip_before_action :check_sign, only: [:attachment_show]
 
@@ -236,7 +236,7 @@ class UsersController < ApplicationController
   # TODO: For Educoder
   def change_password
     user = User.find_by_login params[:login]
-    return render_error("用户 #{params[:login]} 不存在.") unless user === current_user
+    return render_error("用户 #{params[:login]} 不存在.") if user.nil?
 
     form_params= {
       login: params[:login],
@@ -265,7 +265,7 @@ class UsersController < ApplicationController
   # TODO: For Educoder
   def change_email
     user = User.find_by_login params[:login]
-    return render_error("用户 #{rq_params[:login]} 不存在.") unless user === current_user
+    return render_error("用户 #{rq_params[:login]} 不存在.") if user.nil?
 
     form_params= {
       login: params[:login],
