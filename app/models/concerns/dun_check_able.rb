@@ -2,7 +2,7 @@ module DunCheckAble
   extend ActiveSupport::Concern
 
   included do
-    validate :check_text_able
+    # validate :check_text_able # 敏感词过滤
   end
 
   def check_text_able

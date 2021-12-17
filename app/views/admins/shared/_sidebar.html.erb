@@ -17,7 +17,7 @@
     <li>
       <%= sidebar_item_group('#user-submenu', '用户', icon: 'user') do %>
         <li><%= sidebar_item(admins_users_path, '用户列表', icon: 'user', controller: 'admins-users') %></li>
-        <li><%= sidebar_item(admins_phenglei_users_path, '风雷意向用户列表', icon: 'user', controller: 'admins-phenglei_users') %></li>
+        <!-- <li><%= sidebar_item(admins_phenglei_users_path, '风雷意向用户列表', icon: 'user', controller: 'admins-phenglei_users') %></li> -->
       <% end %>
     </li>
     <li>
@@ -27,13 +27,30 @@
         <li><%= sidebar_item(admins_project_categories_path, '分类列表', icon: 'sitemap', controller: 'admins-project_categories') %></li>
         <li><%= sidebar_item(admins_project_licenses_path, '开源许可证', icon: 'file-text-o', controller: 'admins-project_licenses') %></li>
         <li><%= sidebar_item(admins_project_ignores_path, '忽略文件', icon: 'git', controller: 'admins-project_ignores') %></li>
-        <li><%= sidebar_item(admins_apply_signatures_path, '特殊许可申请列表', icon: 'git', controller: 'admins-apply_signatures') %></li>
+        <!-- <li><%= sidebar_item(admins_apply_signatures_path, '特殊许可申请列表', icon: 'git', controller: 'admins-apply_signatures') %></li> -->
 
       <% end %>
     </li>
-
+    <li>
+      <%= sidebar_item_group('#homepage-submenu', '首页配置', icon: 'file') do %>
+        <li><%= sidebar_item(admins_platform_communicates_path, '社区动态', icon: 'edit', controller: 'admins-platform_communicates') %></li>
+        <li><%= sidebar_item(admins_platform_people_path, '论坛交流人物', icon: 'user', controller: 'admins-platform_people') %></li>
+        <li>
+          <a href="/task/taskAdmin">
+            <i class="fa fa-bell fa-fw" data-toggle="tooltip" data-placement="right" data-boundary="window" title="" data-original-title="论坛交流人物"></i>
+            <span>创客任务</span>
+          </a>
+        </li>
+        <li>
+          <a href="<%= Rails.application.config_for(:configuration)['web_site'] %>/admin/competitions/list">
+            <i class="fa fa-wrench fa-fw" data-toggle="tooltip" data-placement="right" data-boundary="window" title="" data-original-title="论坛交流人物"></i>
+            <span>开放竞赛</span>
+          </a>
+        </li>
+      <% end %>
+    </li>
     <li><%= sidebar_item(admins_laboratories_path, '云上实验室', icon: 'cloud', controller: 'admins-laboratories') %></li>
-
+    <!-- 
     <li>
       <%= sidebar_item_group('#setting-submenu', '网站建设', icon: 'cogs') do %>
         <li><%= sidebar_item(edit_admins_about_path, '关于我们', icon: 'smile-o', controller: 'admins-abouts') %></li>
@@ -43,6 +60,7 @@
         <li><%= sidebar_item(edit_admins_help_center_path, '帮助中心', icon: 'question-circle-o', controller: 'admins-help_centers') %></li>
       <% end %>
     </li>
+     -->
     <li>
     <%= sidebar_item('/admins/sidekiq', '定时任务', icon: 'bell', controller: 'root') %>
     </li>

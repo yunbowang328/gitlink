@@ -12,4 +12,17 @@
 #
 
 class ProjectStatistic < ApplicationRecord
+
+  def self.data
+    data = self.last 
+    if data.present?
+      return data
+    else 
+      common_projects_count = Project.common.count
+      mirror_projects_count = Project.mirror.count
+      sync_mirror_projects_count = Project.sync_mirror.count
+      return ProjectStatistic.create(common_projects_count: common_projects_count, mirror_projects_count: mirror_projects_count, sync_mirror_projects_count: sync_mirror_projects_count)
+  
+    end
+  end
 end

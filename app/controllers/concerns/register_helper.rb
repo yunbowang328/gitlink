@@ -1,15 +1,17 @@
 module RegisterHelper
   extend ActiveSupport::Concern
 
-  def autologin_register(username, email, password, platform= 'forge')
+  def autologin_register(username, email, password, platform = 'forge', phone = nil)
     result = {message: nil, user: nil}
     email =  email.blank? ? "#{username}@example.org" : email
 
     user = User.find_by(login: username)
+    user = User.find_by(phone: phone) if phone.present?
     user ||= User.new(admin: false, login: username, mail: email, type: "User")
 
     user.password = password
     user.platform = platform
+    user.phone = phone
     user.activate
     
     return unless user.valid?

@@ -102,6 +102,12 @@ Rails.application.routes.draw do
         get :template_file
       end
     end
+    namespace :home do 
+      resources :platform_statistics, only: [:index] 
+      resources :competitions, only:[:index]
+      resources :platform_communicates, only: [:index]
+      resources :platform_people, only: [:index]
+    end
     get 'home/index'
     get 'home/search'
     get 'main/first_stamp'
@@ -858,6 +864,8 @@ Rails.application.routes.draw do
       post :batch_add, on: :collection
     end
     resources :apply_signatures, only: [:index, :update]
+    resources :platform_communicates
+    resources :platform_people
   end
 
 
