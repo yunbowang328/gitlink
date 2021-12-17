@@ -12,7 +12,7 @@
 #  email_title      :string(255)
 #
 
-# 有新指派给我的易修
+# 有新指派给我的疑修
 class MessageTemplate::IssueAssigned < MessageTemplate
 
   # MessageTemplate::IssueAssigned.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last)

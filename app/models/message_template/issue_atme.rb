@@ -12,7 +12,7 @@
 #  email_title      :string(255)
 #
 
-# 在易修中@我
+# 在疑修中@我
 class MessageTemplate::IssueAtme < MessageTemplate 
 
   # MessageTemplate::IssueAtme.get_message_content(User.where(login: 'yystopf'), User.last, Issue.last)
