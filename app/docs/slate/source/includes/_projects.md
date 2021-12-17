@@ -280,7 +280,7 @@ repo             |是| |string |项目标识identifier
 ### 返回字段说明
 参数  | 类型 | 字段说明
 --------- | ----------- | -----------
-menu_name     |string|导航名称， home:主页,code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑,activity:动态,setting:仓库设置
+menu_name     |string|导航名称， home:主页,code:代码库,issues:疑修,pulls:合并请求,devops:工作流,versions:里程碑,activity:动态,setting:仓库设置
 
 
 > 返回的JSON示例:
@@ -408,7 +408,7 @@ await octokit.request('POST /api/yystopf/ceshi/project_units')
 ### 请求参数
 参数    | 必选 | 默认 | 类型 | 字段说明
 --------- | ------- | ------- | -------- | ----------
-|unit_types |是| |array    | 项目模块内容， 支持以下参数:code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑 |
+|unit_types |是| |array    | 项目模块内容， 支持以下参数:code:代码库,issues:疑修,pulls:合并请求,devops:工作流,versions:里程碑 |
 
 
 ### 返回字段说明:

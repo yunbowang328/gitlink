@@ -12,7 +12,7 @@
 #  email_title      :string(255)
 #
 
-# 我负责的易修截止日期到达最后一天
+# 我负责的疑修截止日期到达最后一天
 class MessageTemplate::IssueAssignerExpire < MessageTemplate
 
   # MessageTemplate::IssueAssignerExpire.get_message_content(User.where(login: 'yystopf'), Issue.last)

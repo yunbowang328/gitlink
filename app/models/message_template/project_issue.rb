@@ -12,7 +12,7 @@
 #  email_title      :string(255)
 #
 
-# TODO 我管理/关注的仓库有新的易修
+# TODO 我管理/关注的仓库有新的疑修
 class MessageTemplate::ProjectIssue < MessageTemplate
 
   # MessageTemplate::ProjectIssue.get_message_content(User.where(login: 'yystopf'), User.where(login: 'forgetest1'), User.last, Issue.last)
