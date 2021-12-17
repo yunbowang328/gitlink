@@ -12,7 +12,7 @@
 #  email_title      :string(255)
 #
 
-# 我创建或负责的易修删除
+# 我创建或负责的疑修删除
 class MessageTemplate::IssueDeleted < MessageTemplate 
 
   # MessageTemplate::IssueDeleted.get_message_content(User.where(login: 'yystopf'), User.last, "hahah")

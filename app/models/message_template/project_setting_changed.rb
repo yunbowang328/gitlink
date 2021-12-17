@@ -15,7 +15,7 @@
 # 我管理的仓库项目设置被更改
 class MessageTemplate::ProjectSettingChanged < MessageTemplate
 
-  # MessageTemplate::ProjectSettingChanged.get_message_content(User.where(login: 'yystopf'), User.last, Project.last, {description: '测试修改项目简介', category: '大数据', language: 'Ruby', permission: '公有', navbar: '易修, 合并请求'})
+  # MessageTemplate::ProjectSettingChanged.get_message_content(User.where(login: 'yystopf'), User.last, Project.last, {description: '测试修改项目简介', category: '大数据', language: 'Ruby', permission: '公有', navbar: '疑修, 合并请求'})
   def self.get_message_content(receivers, operator, project, change_params)
     receivers.each do |receiver|
       if receiver.user_template_message_setting.present? 
@@ -135,7 +135,7 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
       unit_types.unshift('主页')
       unit_types.append('动态')
       navbar = unit_types.join('，') 
-      navbar.gsub!('issues', '易修')
+      navbar.gsub!('issues', '疑修')
       navbar.gsub!('pulls', '合并请求')
       navbar.gsub!('wiki', 'Wiki')
       navbar.gsub!('devops', '工作流')
@@ -284,7 +284,7 @@ class MessageTemplate::ProjectSettingChanged < MessageTemplate
         unit_types.unshift('主页')
         unit_types.append('动态')
         navbar = unit_types.join('，') 
-        navbar.gsub!('issues', '易修')
+        navbar.gsub!('issues', '疑修')
         navbar.gsub!('pulls', '合并请求')
         navbar.gsub!('wiki', 'Wiki')
         navbar.gsub!('devops', '工作流')

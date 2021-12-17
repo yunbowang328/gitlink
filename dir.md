@@ -87,7 +87,7 @@ forgeplus
 │   │   │   │   └── tags(标签)
 │   │   │   ├── user(用户)
 │   │   │   └── versions(发行版)
-│   │   ├── issues(易修)
+│   │   ├── issues(疑修)
 │   │   ├── libraries
 │   │   ├── oauth
 │   │   ├── organizations(组织)
