@@ -16,6 +16,7 @@ class Gitea::Organization::UpdateService < Gitea::ClientService
   def request_params
     update_params = {
         name: org.login,
+        full_name: org.nickname,
         description: org.description,
         location: org.location,
         repo_admin_change_team_access: org.repo_admin_change_team_access,
