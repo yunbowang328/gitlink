@@ -89,6 +89,7 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
+          return normal_status(-1, "title不能超过255个字符") if params[:title].length > 255
           merge_params
 
           @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?
