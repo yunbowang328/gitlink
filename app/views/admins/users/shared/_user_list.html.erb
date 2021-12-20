@@ -18,7 +18,7 @@
         <tr class="user-item-<%= user.id %>">
           <td><%= list_index_no((params[:page] || 1).to_i, index) %></td>
           <td class="text-left">
-            <%= link_to "/#{user.login}", target: '_blank' do %>
+            <%= link_to "/accounts/#{user.login}", target: '_blank' do %>
               <%= overflow_hidden_span user.real_name, width: 100 %>
             <% end %>
           </td>
