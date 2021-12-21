@@ -68,6 +68,8 @@ module RepositoriesHelper
           # else
           #   new_r_content = r_content + "?raw=true"
           # end
+          new_r_content = r_content
+
           unless r_content.include?("http://") || r_content.include?("https://") || r_content.include?("mailto:")
             # new_r_content = "#{path}" + new_r_content
             new_r_content = [base_url, "/api/#{owner&.login}/#{repo.identifier}/raw?filepath=#{r_content}&ref=#{ref}"].join
