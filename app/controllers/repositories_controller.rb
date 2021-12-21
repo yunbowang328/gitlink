@@ -254,7 +254,7 @@ class RepositoriesController < ApplicationController
 
     url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{params[:filepath]}?ref=#{params[:ref]}"
     file_path = [domain, api_url, url].join
-    file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") if @repository.hidden?
+    file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") 
 
     redirect_to URI.escape(file_path)
   end
