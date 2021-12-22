@@ -28,7 +28,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
   def create
     ActiveRecord::Base.transaction do
       tip_exception("无法使用以下关键词：#{organization_params[:name]}，请重新命名") if ReversedKeyword.check_exists?(organization_params[:name])
-      Organizations::CreateForm.new(organization_params).validate!
+      Organizations::CreateForm.new(organization_params.merge(original_name: @organization.login)).validate!
       @organization = Organizations::CreateService.call(current_user, organization_params)
       Util.write_file(@image, avatar_path(@organization)) if params[:image].present?
     end
@@ -39,7 +39,7 @@ class Organizations::OrganizationsController < Organizations::BaseController
 
   def update
     ActiveRecord::Base.transaction do
-      Organizations::CreateForm.new(organization_params).validate!
+      Organizations::CreateForm.new(organization_params.merge(original_name: @organization.login)).validate!
       login = @organization.login
       @organization.login = organization_params[:name] if organization_params[:name].present?
       @organization.nickname = organization_params[:nickname] if organization_params[:nickname].present?

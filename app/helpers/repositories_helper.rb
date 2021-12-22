@@ -45,7 +45,7 @@ module RepositoriesHelper
     end
   end
 
-  def readme_render_decode64_content(str, path)
+  def readme_render_decode64_content(str, owner, repo, ref)
     return nil if str.blank?
     begin
       content = Base64.decode64(str).force_encoding('UTF-8')
@@ -63,13 +63,16 @@ module RepositoriesHelper
           if remove_title.length > 0
             r_content = r_content.gsub(/#{remove_title[0]}/, "").strip
           end
-          if r_content.include?("?")
-            new_r_content = r_content + "&raw=true"
-          else
-            new_r_content = r_content + "?raw=true"
-          end
+          # if r_content.include?("?")
+          #   new_r_content = r_content + "&raw=true"
+          # else
+          #   new_r_content = r_content + "?raw=true"
+          # end
+          new_r_content = r_content
+
           unless r_content.include?("http://") || r_content.include?("https://") || r_content.include?("mailto:")
-            new_r_content = "#{path}" + new_r_content
+            # new_r_content = "#{path}" + new_r_content
+            new_r_content = [base_url, "/api/#{owner&.login}/#{repo.identifier}/raw?filepath=#{r_content}&ref=#{ref}"].join
           end
           content = content.gsub(/#{r_content}/, new_r_content)
         end
@@ -94,7 +97,7 @@ module RepositoriesHelper
   def decode64_content(entry, owner, repo, ref, path=nil)
     if is_readme?(entry['type'], entry['name'])
       content = Gitea::Repository::Entries::GetService.call(owner, repo.identifier, URI.escape(entry['path']), ref: ref)['content']
-      readme_render_decode64_content(content, path)
+      readme_render_decode64_content(content, owner, repo, ref)
     else
       file_type = File.extname(entry['name'].to_s)[1..-1]
       if image_type?(file_type)

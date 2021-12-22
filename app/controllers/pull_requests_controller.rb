@@ -56,7 +56,7 @@ class PullRequestsController < ApplicationController
   end
 
   def create
-    return normal_status(-1, "您不是目标分支开发者，没有权限，请联系目标分支作者.") unless @project.operator?(current_user)
+    # return normal_status(-1, "您不是目标分支开发者，没有权限，请联系目标分支作者.") unless @project.operator?(current_user)
     ActiveRecord::Base.transaction do
       @pull_request, @gitea_pull_request = PullRequests::CreateService.call(current_user, @owner, @project, params)
       if @gitea_pull_request[:status] == :success
@@ -89,6 +89,7 @@ class PullRequestsController < ApplicationController
     else
       ActiveRecord::Base.transaction do
         begin
+          return normal_status(-1, "title不能超过255个字符") if params[:title].length > 255
           merge_params
 
           @issue&.issue_tags_relates&.destroy_all if params[:issue_tag_ids].blank?

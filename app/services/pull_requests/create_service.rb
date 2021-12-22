@@ -148,6 +148,7 @@ class PullRequests::CreateService < ApplicationService
 
   def validate!
     raise "title参数不能为空" if @params[:title].blank?
+    raise "title不能超过255个字符" if @params[:title].length > 255
     raise "head参数不能为空" if @params[:head].blank?
     raise "base参数不能为空" if @params[:base].blank?
     raise "fork_project_id参数错误" if is_original && !@project.forked_projects.pluck(:id).include?(@params[:fork_project_id].to_i)

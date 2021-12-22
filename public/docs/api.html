@@ -1138,31 +1138,31 @@ Success — a happy kitten is an authenticated kitten!
 </thead><tbody>
 <tr>
 <td>IssueAssigned</td>
-<td>有新指派给我的易修</td>
+<td>有新指派给我的疑修</td>
 </tr>
 <tr>
 <td>IssueAssignerExpire</td>
-<td>我负责的易修截止日期到达最后一天</td>
+<td>我负责的疑修截止日期到达最后一天</td>
 </tr>
 <tr>
 <td>IssueAtme</td>
-<td>在易修中@我</td>
+<td>在疑修中@我</td>
 </tr>
 <tr>
 <td>IssueChanged</td>
-<td>我创建或负责的易修状态变更</td>
+<td>我创建或负责的疑修状态变更</td>
 </tr>
 <tr>
 <td>IssueCreatorExpire</td>
-<td>我创建的易修截止日期到达最后一天</td>
+<td>我创建的疑修截止日期到达最后一天</td>
 </tr>
 <tr>
 <td>IssueDeleted</td>
-<td>我创建或负责的易修删除</td>
+<td>我创建或负责的疑修删除</td>
 </tr>
 <tr>
 <td>IssueJournal</td>
-<td>我创建或负责的易修有新的评论</td>
+<td>我创建或负责的疑修有新的评论</td>
 </tr>
 <tr>
 <td>LoginIpTip</td>
@@ -1194,7 +1194,7 @@ Success — a happy kitten is an authenticated kitten!
 </tr>
 <tr>
 <td>ProjectIssue</td>
-<td>我管理/关注的仓库有新的易修</td>
+<td>我管理/关注的仓库有新的疑修</td>
 </tr>
 <tr>
 <td>ProjectJoined</td>
@@ -1403,7 +1403,7 @@ Success — a happy kitten is an authenticated kitten!
 <tr>
 <td>atmeable_type</td>
 <td>string</td>
-<td>atme消息对象，是从哪里@我的，比如评论：Journal、易修：Issue、合并请求：PullRequest</td>
+<td>atme消息对象，是从哪里@我的，比如评论：Journal、疑修：Issue、合并请求：PullRequest</td>
 </tr>
 <tr>
 <td>atmeable_id</td>
@@ -1706,7 +1706,7 @@ Success — a happy kitten is an authenticated kitten!
             </span><span class="nl">"total_settings_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
             </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
                 </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"易修被指派"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"疑修被指派"</span><span class="p">,</span><span class="w">
                     </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IssueAssigned"</span><span class="p">,</span><span class="w">
                     </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
                     </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
@@ -1725,7 +1725,7 @@ Success — a happy kitten is an authenticated kitten!
             </span><span class="nl">"total_settings_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
             </span><span class="nl">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
                 </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"有新的易修"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"有新的疑修"</span><span class="p">,</span><span class="w">
                     </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Issue"</span><span class="p">,</span><span class="w">
                     </span><span class="nl">"notification_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
                     </span><span class="nl">"email_disabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
@@ -2245,7 +2245,7 @@ Success — a happy kitten is an authenticated kitten!
 <tr>
 <td>issues_count</td>
 <td>array</td>
-<td>易修数量</td>
+<td>疑修数量</td>
 </tr>
 <tr>
 <td>pull_requests_count</td>
@@ -2493,7 +2493,7 @@ Success — a happy kitten is an authenticated kitten!
 <tr>
 <td>project_trends.trend_type</td>
 <td>string</td>
-<td>动态类型，Issue：易修，VersionRelease：版本发布，PullRequest：合并请求</td>
+<td>动态类型，Issue：疑修，VersionRelease：版本发布，PullRequest：合并请求</td>
 </tr>
 <tr>
 <td>project_trends.action_type</td>
@@ -4968,7 +4968,7 @@ http://localhost:3000/api/yystopf/ceshi/menu_list  | jq
 <tr>
 <td>menu_name</td>
 <td>string</td>
-<td>导航名称， home:主页,code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑,activity:动态,setting:仓库设置</td>
+<td>导航名称， home:主页,code:代码库,issues:疑修,pulls:合并请求,devops:工作流,versions:里程碑,activity:动态,setting:仓库设置</td>
 </tr>
 </tbody></table>
 
@@ -5131,7 +5131,7 @@ http://localhost:3000/api/yystopf/ceshi/project_units.json
 <td>是</td>
 <td></td>
 <td>array</td>
-<td>项目模块内容， 支持以下参数:code:代码库,issues:易修,pulls:合并请求,devops:工作流,versions:里程碑</td>
+<td>项目模块内容， 支持以下参数:code:代码库,issues:疑修,pulls:合并请求,devops:工作流,versions:里程碑</td>
 </tr>
 </tbody></table>
 <h3 id='7447e4874e-2'>返回字段说明:</h3>
@@ -8346,23 +8346,23 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/3/edit.json
 </tr>
 <tr>
 <td>issue</td>
-<td>易修已打开、已关闭、已重新打开或编辑</td>
+<td>疑修已打开、已关闭、已重新打开或编辑</td>
 </tr>
 <tr>
 <td>issue_assign</td>
-<td>易修被指派</td>
+<td>疑修被指派</td>
 </tr>
 <tr>
 <td>issue_label</td>
-<td>易修标签被更新或删除</td>
+<td>疑修标签被更新或删除</td>
 </tr>
 <tr>
 <td>issue_milestone</td>
-<td>易修被收入里程碑</td>
+<td>疑修被收入里程碑</td>
 </tr>
 <tr>
 <td>issue_comment</td>
-<td>易修评论</td>
+<td>疑修评论</td>
 </tr>
 <tr>
 <td>pull_request</td>
@@ -8568,23 +8568,23 @@ http://localhost:3000/api/yystopf/ceshi/webhooks.json
 </tr>
 <tr>
 <td>issue</td>
-<td>易修已打开、已关闭、已重新打开或编辑</td>
+<td>疑修已打开、已关闭、已重新打开或编辑</td>
 </tr>
 <tr>
 <td>issue_assign</td>
-<td>易修被指派</td>
+<td>疑修被指派</td>
 </tr>
 <tr>
 <td>issue_label</td>
-<td>易修标签被更新或删除</td>
+<td>疑修标签被更新或删除</td>
 </tr>
 <tr>
 <td>issue_milestone</td>
-<td>易修被收入里程碑</td>
+<td>疑修被收入里程碑</td>
 </tr>
 <tr>
 <td>issue_comment</td>
-<td>易修评论</td>
+<td>疑修评论</td>
 </tr>
 <tr>
 <td>pull_request</td>
@@ -8833,23 +8833,23 @@ http://localhost:3000/api/yystopf/ceshi/webhooks/7.json
 </tr>
 <tr>
 <td>issue</td>
-<td>易修已打开、已关闭、已重新打开或编辑</td>
+<td>疑修已打开、已关闭、已重新打开或编辑</td>
 </tr>
 <tr>
 <td>issue_assign</td>
-<td>易修被指派</td>
+<td>疑修被指派</td>
 </tr>
 <tr>
 <td>issue_label</td>
-<td>易修标签被更新或删除</td>
+<td>疑修标签被更新或删除</td>
 </tr>
 <tr>
 <td>issue_milestone</td>
-<td>易修被收入里程碑</td>
+<td>疑修被收入里程碑</td>
 </tr>
 <tr>
 <td>issue_comment</td>
-<td>易修评论</td>
+<td>疑修评论</td>
 </tr>
 <tr>
 <td>pull_request</td>
