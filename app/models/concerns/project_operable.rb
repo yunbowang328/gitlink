@@ -21,13 +21,37 @@ module ProjectOperable
   end
 
   def add_member!(user_id, role_name='Developer')
-    member = members.create!(user_id: user_id)
+    if self.owner.is_a?(Organization) 
+      case role_name 
+      when 'Manager'
+        team = self.owner.teams.admin.take
+        team = team.nil? ? Team.build(self.user_id, 'admin', '管理员', '', 'admin', false, false) : team
+        TeamProject.build(self.user_id, team.id, self.id)
+        OrganizationUser.build(self.user_id, user_id)
+        team_user = TeamUser.build(self.user_id, user_id, team.id)
+      when 'Developer'
+        team = self.owner.teams.write.take
+        team = team.nil? ? Team.build(self.user_id, 'developer', '开发者', '', 'write', false, false) : team
+        TeamProject.build(self.user_id, team.id, self.id)
+        OrganizationUser.build(self.user_id, user_id)
+        team_user = TeamUser.build(self.user_id, user_id, team.id)
+      when 'Reporter'
+        team = self.owner.teams.read.take
+        team = team.nil? ? Team.build(self.user_id, 'reporter', '报告者', '', 'read', false, false) : team
+        TeamProject.build(self.user_id, team.id, self.id)
+        OrganizationUser.build(self.user_id, user_id)
+        team_user = TeamUser.build(self.user_id, user_id, team.id)
+      end
+    end
+    member = members.create!(user_id: user_id, team_user_id: team_user&.id)
     set_developer_role(member, role_name)
   end
 
   def remove_member!(user_id)
     member = members.find_by(user_id: user_id)
     member.destroy! if member && self.user_id != user_id
+    team_user = TeamUser.find_by_id(member&.team_user_id)
+    team_user.destroy! if team_user
   end
 
   def member?(user_id)
