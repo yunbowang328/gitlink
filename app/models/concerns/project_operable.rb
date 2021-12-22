@@ -71,6 +71,28 @@ module ProjectOperable
 
   def change_member_role!(user_id, role)
     member = self.member(user_id)
+    if self.owner.is_a?(Organization) && member.team_user.present?
+      case role&.name
+      when 'Manager'
+        team = self.owner.teams.admin.take
+        team = team.nil? ? Team.build(self.user_id, 'admin', '管理员', '', 'admin', false, false) : team
+        TeamProject.build(self.user_id, team.id, self.id)
+        OrganizationUser.build(self.user_id, user_id)
+        team_user = member.team_user.update(team_id: team&.id)
+      when 'Developer'
+        team = self.owner.teams.write.take
+        team = team.nil? ? Team.build(self.user_id, 'developer', '开发者', '', 'write', false, false) : team
+        TeamProject.build(self.user_id, team.id, self.id)
+        OrganizationUser.build(self.user_id, user_id)
+        team_user = member.team_user.update(team_id: team&.id)
+      when 'Reporter'
+        team = self.owner.teams.read.take
+        team = team.nil? ? Team.build(self.user_id, 'reporter', '报告者', '', 'read', false, false) : team
+        TeamProject.build(self.user_id, team.id, self.id)
+        OrganizationUser.build(self.user_id, user_id)
+        team_user = member.team_user.update(team_id: team&.id)
+      end
+    end
     member.member_roles.last.update_attributes!(role: role)
   end
 
