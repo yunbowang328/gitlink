@@ -238,25 +238,25 @@ class RepositoriesController < ApplicationController
   def archive
     domain  = Gitea.gitea_config[:domain]
     api_url = Gitea.gitea_config[:base_url]
-    archive_url = "/repos/#{@owner.login}/#{@repository.identifier}/archive/#{params[:archive]}"
+    archive_url = "/repos/#{@owner.login}/#{@repository.identifier}/archive/#{CGI.escape(params[:archive])}"
 
     file_path = [domain, api_url, archive_url].join
     file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("?") if @repository.hidden?
 
     return render_not_found if !request.format.zip? && !request.format.gzip?
 
-    redirect_to URI.escape(file_path)
+    redirect_to file_path
   end
   
   def raw 
     domain  = Gitea.gitea_config[:domain]
     api_url = Gitea.gitea_config[:base_url]
 
-    url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{params[:filepath]}?ref=#{params[:ref]}"
+    url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{params[:filepath]}?ref=#{CGI.escapte(params[:ref])}"
     file_path = [domain, api_url, url].join
     file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") 
 
-    redirect_to URI.escape(file_path)
+    redirect_to file_path
   end
 
   private
