@@ -252,7 +252,7 @@ class RepositoriesController < ApplicationController
     domain  = Gitea.gitea_config[:domain]
     api_url = Gitea.gitea_config[:base_url]
 
-    url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{params[:filepath]}?ref=#{CGI.escapte(params[:ref])}"
+    url = "/repos/#{@owner.login}/#{@repository.identifier}/raw/#{URI.escape(params[:filepath])}?ref=#{CGI.escape(params[:ref])}"
     file_path = [domain, api_url, url].join
     file_path = [file_path, "access_token=#{current_user&.gitea_token}"].join("&") 
 
