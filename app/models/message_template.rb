@@ -31,8 +31,6 @@ class MessageTemplate < ApplicationRecord
     self.create(type: 'MessageTemplate::OrganizationJoined', sys_notice: '你已加入 <b>{organization}</b> 组织', notification_url: '{baseurl}/{login}', email: email_html, email_title: 'GitLink: 你已加入 {organization} 组织')
     email_html = File.read("#{email_template_html_dir}/organization_left.html")
     self.create(type: 'MessageTemplate::OrganizationLeft', sys_notice: '你已被移出 <b>{organization}</b> 组织', notification_url: '', email: email_html, email_title: 'GitLink: 你已被移出 {organization} 组织')
-    email_html = File.read("#{email_template_html_dir}/organization_role.html")
-    self.create(type: 'MessageTemplate::OrganizationRole', sys_notice: '组织 <b>{organization}</b> 已把你的角色改为 <b>{role}</b>', email: email_html, email_title: 'GitLink: 在 {organization} 组织你的账号有权限变更', notification_url: '{baseurl}/{login}')
     self.create(type: 'MessageTemplate::ProjectDeleted', sys_notice: '你关注的仓库{nickname}/{repository}已被删除', notification_url: '')
     self.create(type: 'MessageTemplate::ProjectFollowed', sys_notice: '<b>{nickname}</b> 关注了你管理的仓库', notification_url: '{baseurl}/{login}')
     self.create(type: 'MessageTemplate::ProjectForked', sys_notice: '<b>{nickname1}</b> 复刻了你管理的仓库{nickname1}/{repository1}到{nickname2}/{repository2}', notification_url: '{baseurl}/{owner}/{identifier}')
@@ -66,6 +64,10 @@ class MessageTemplate < ApplicationRecord
     self.create(type: 'MessageTemplate::PullRequestJournal', sys_notice: '{nickname}评论合并请求{title}：<b>{notes}</b>', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}')
     email_html = File.read("#{email_template_html_dir}/pull_request_merged.html")
     self.create(type: 'MessageTemplate::PullRequestMerged', sys_notice: '你提交的合并请求：{title} <b>已通过</b>', email: email_html, email_title: 'GitLink: 合并请求 {title} 有状态变更', notification_url: '{baseurl}/{owner}/{identifier}/pulls/{id}')
+    email_html = File.read("#{email_template_html_dir}/team_joined.html")
+    self.create(type: 'MessageTemplate::TeamJoined', sys_notice: '你已被拉入组织 <b>{organization}</b> 的 <b>{team}</b> 团队，拥有 <b>{role}</b>', email: email_html, email_title: 'GitLink: 在 {organization} 组织你的账号有权限变更', notification_url: '{baseurl}/{login}')
+    email_html = File.read("#{email_template_html_dir}/team_left.html")
+    self.create(type: 'MessageTemplate::TeamLeft', sys_notice: '你已被移出组织 <b>{organization}</b> 的 <b>{team}</b> 团队', email: email_html, email_title: 'GitLink: 在 {organization} 组织你的账号有权限变更', notification_url: '{baseurl}/{login}')
   end
 
   def self.sys_notice
