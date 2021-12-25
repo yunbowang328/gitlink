@@ -6,12 +6,12 @@ module RegisterHelper
     email =  email.blank? ? "#{username}@example.org" : email
 
     user = User.find_by(login: username)
-    user = User.find_by(phone: phone) if phone.present?
+    user = User.find_by(phone: phone) if user.blank? && phone.present?
     user ||= User.new(admin: false, login: username, mail: email, type: "User")
 
     user.password = password
     user.platform = platform
-    user.phone = phone
+    user.phone = phone if phone.present?
     user.activate
     
     return unless user.valid?
