@@ -13,6 +13,7 @@ json.tracker @issue.tracker.try(:name)
 json.issue_status @issue.issue_status.try(:name)
 json.priority @issue.priority.try(:name)
 json.version @issue.version.try(:name)
+json.version_id @issue.version.try(:id)
 json.issue_tags @issue.get_issue_tags
 json.done_ratio @issue.done_ratio.to_s + "%" 
 json.issue_type @issue.issue_type
