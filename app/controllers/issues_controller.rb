@@ -486,7 +486,7 @@ class IssuesController < ApplicationController
   end
 
   def operate_issue_permission
-    set_issue unless @issue.present?
+    @issue = Issue.find_by_id(params[:id]) unless @issue.present?
     return render_forbidden("您没有权限进行此操作.") unless current_user.present? && current_user.logged? && (current_user.admin? || @project.member?(current_user) || (@project.is_public && @issue.nil?) || (@project.is_public && @issue.present? && @issue.author_id == current_user.id))
   end
 
