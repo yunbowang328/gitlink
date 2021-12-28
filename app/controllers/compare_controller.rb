@@ -42,9 +42,11 @@ class CompareController < ApplicationController
   end
 
   def load_compare_params
-    @base = Addressable::URI.unescape(params[:base])
+    # @base = Addressable::URI.unescape(params[:base])
+    @base = Base64.decode64(params[:base])
     @head = params[:head].include?('.json') ? params[:head][0..-6] : params[:head]
-    @head = Addressable::URI.unescape(@head)
+    # @head = Addressable::URI.unescape(@head)
+    @head = Base64.decode6(@head)
   end
 
   def gitea_compare(base, head)
