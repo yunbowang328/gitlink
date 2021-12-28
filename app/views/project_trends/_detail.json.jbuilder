@@ -6,6 +6,13 @@ json.user_name trend.user.try(:show_real_name)
 json.user_login trend.user.login
 json.user_avatar url_to_avatar(trend.user)
 json.action_time time_from_now(trend.created_at)
+json.project do 
+  json.owner do 
+    json.partial! 'users/user_simple', locals: {user: trend&.project&.owner}
+  end
+  json.identifier trend&.project&.identifier 
+  json.description trend&.project&.description
+end
 
 if trend.trend_type == "Issue"
   json.partial! "issues/simple_issue_item", locals: {issue: trend.trend}

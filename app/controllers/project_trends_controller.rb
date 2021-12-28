@@ -3,7 +3,7 @@ class ProjectTrendsController < ApplicationController
   before_action :check_project_public
 
   def index
-    project_trends = @project.project_trends.preload(:user, trend: :user)
+    project_trends = @project.project_trends.preload(:user, trend: :user, project: :owner)
 
     check_time = params[:time]  #时间的筛选
     check_type = params[:type]   #动态类型的筛选，目前已知的有 Issue, PullRequest, Version
