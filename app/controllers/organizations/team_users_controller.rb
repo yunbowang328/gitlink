@@ -18,7 +18,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user = TeamUser.build(@organization.id, @operate_user.id, @team.id)
       @organization_user = OrganizationUser.build(@organization.id, @operate_user.id)
-      SendTemplateMessageJob.perform_later('OrganizationRole', @operate_user.id, @organization.id, @team.authorize_name) if Site.has_notice_menu?
+      SendTemplateMessageJob.perform_later('TeamJoined', @operate_user.id, @organization.id, @team.id) if Site.has_notice_menu?
       Gitea::Organization::TeamUser::CreateService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
     end
   rescue Exception => e
@@ -31,6 +31,7 @@ class Organizations::TeamUsersController < Organizations::BaseController
     ActiveRecord::Base.transaction do
       @team_user.destroy!
       Gitea::Organization::TeamUser::DeleteService.call(@organization.gitea_token, @team.gtid, @operate_user.login)
+      SendTemplateMessageJob.perform_later('TeamLeft', @operate_user.id, @organization.id, @team.id) if Site.has_notice_menu?
       org_team_users = @organization.team_users.where(user_id: @operate_user.id)
       unless org_team_users.present?
         @organization.organization_users.find_by(user_id: @operate_user.id).destroy!
