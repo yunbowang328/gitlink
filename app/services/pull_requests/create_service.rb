@@ -162,7 +162,7 @@ class PullRequests::CreateService < ApplicationService
 
   def compare_head_base!
     head = pull_request.is_original && @params[:merge_user_login] ? "#{@params[:merge_user_login]}/#{@project.identifier}:#{@params[:head]}" : @params[:head]
-    compare_result = Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, @params[:base], head, @current_user.gitea_token)
+    compare_result = Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, CGI.escape(@params[:base]), CGI.escape(head), @current_user.gitea_token)
     raise '分支内容相同，无需创建合并请求' if compare_result["Commits"].blank? && compare_result["Diff"].blank?
   end
 
