@@ -46,7 +46,7 @@ class CompareController < ApplicationController
     @base = Base64.decode64(params[:base])
     @head = params[:head].include?('.json') ? params[:head][0..-6] : params[:head]
     # @head = Addressable::URI.unescape(@head)
-    @head = Base64.decode6(@head)
+    @head = Base64.decode64(@head)
   end
 
   def gitea_compare(base, head)
