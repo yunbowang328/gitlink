@@ -55,7 +55,12 @@ class Gitea::Repository::Entries::CreateService < Gitea::ClientService
     when 201 then success(json_parse!(body))
     when 403 then error("你没有权限操作!")
     when 404 then error("你操作的链接不存在!")
-    when 422 then error("#{filepath}文件已存在，不能重复创建!")
+    when 422 
+      if @body[:new_branch].include?('/') || @body[:new_branch].include?('\'') || @body[:new_branch].include?('^') || @body[:new_branch].include?('*')
+        error("不合法的分支名称!")
+      else
+        error("#{filepath}文件已存在，不能重复创建!")
+      end
     else error("系统错误!")
     end
   end

@@ -786,7 +786,7 @@ class User < Owner
   end
 
   def profile_is_completed?
-    self.nickname.present? && self.gender.present? && self.mail.present? && self.custom_department.present?
+    self.nickname.present? && self.mail.present?
   end
 
   protected
