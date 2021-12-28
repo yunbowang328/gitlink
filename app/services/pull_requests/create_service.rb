@@ -129,8 +129,10 @@ class PullRequests::CreateService < ApplicationService
   end
 
   def merge_original_pull_params
+    base_pull_params[:head] = CGI.escape(base_pull_params[:head])
+    base_pull_params[:base] = CGI.escape(base_pull_params[:base])
     if pull_request.is_original && @params[:merge_user_login]
-      base_pull_params.merge(head: "#{@params[:merge_user_login]}:#{@params[:head]}")
+      base_pull_params.merge(head: "#{@params[:merge_user_login]}:#{base_pull_params[:head]}")
     else
       base_pull_params
     end
