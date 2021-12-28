@@ -56,10 +56,10 @@ class Team < ApplicationRecord
 
   def authorize_name 
     case self.authorize 
-    when 'read' then '报告者'
-    when 'write' then '开发者'
+    when 'read' then '读取'
+    when 'write' then '写入'
     when 'admin' then '管理员'
-    when 'owner' then '拥有者'
+    when 'owner' then '管理员'
     else 
       ''
     end
