@@ -251,7 +251,7 @@ class AccountsController < ApplicationController
 
   def set_autologin_cookie(user)
     token = Token.get_or_create_permanent_login_token(user, "autologin")
-    sync_user_token_to_trustie(user.login, token.value)
+    # sync_user_token_to_trustie(user.login, token.value)
 
     cookie_options = {
                       :value => token.value,
