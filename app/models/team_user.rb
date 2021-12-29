@@ -22,9 +22,17 @@ class TeamUser < ApplicationRecord
   belongs_to :team, counter_cache: :num_users
   belongs_to :user
 
+  has_one :member
+
   validates :user_id, uniqueness: {scope: [:organization_id, :team_id]}
+
+  before_destroy :remove_project_member
 
   def self.build(organization_id, user_id, team_id)
     self.create!(organization_id: organization_id, user_id: user_id, team_id: team_id)
+  end
+
+  def remove_project_member
+    member.destroy if member.present? 
   end
 end

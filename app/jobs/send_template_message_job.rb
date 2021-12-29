@@ -94,18 +94,6 @@ class SendTemplateMessageJob < ApplicationJob
         receivers_email_string, email_title, email_content = MessageTemplate::OrganizationLeft.get_email_message_content(receiver, organization)
         Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
       end
-    when 'OrganizationRole'
-      user_id, organization_id, role = args[0], args[1], args[2]
-      user = User.find_by_id(user_id)
-      organization = Organization.find_by_id(organization_id)
-      return unless user.present? && organization.present?
-      receivers = User.where(id: user.id)
-      receivers_string, content, notification_url = MessageTemplate::OrganizationRole.get_message_content(receivers, organization, role)
-      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, organization_id: organization.id, role: role})
-      receivers.find_each do |receiver|
-        receivers_email_string, email_title, email_content = MessageTemplate::OrganizationRole.get_email_message_content(receiver, organization, role)
-        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
-      end
     when 'ProjectIssue'
       operator_id, issue_id = args[0], args[1]
       operator = User.find_by_id(operator_id)
@@ -274,6 +262,32 @@ class SendTemplateMessageJob < ApplicationJob
       Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {operator_id: operator.id, pull_request_id: pull_request.id})
       receivers.find_each do |receiver|
         receivers_email_string, email_title, email_content = MessageTemplate::PullRequestMerged.get_email_message_content(receiver, operator, pull_request)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
+    when 'TeamJoined'
+      user_id, organization_id, team_id = args[0], args[1], args[2]
+      user = User.find_by_id(user_id)
+      organization = Organization.find_by_id(organization_id)
+      team = Team.find_by_id(team_id)
+      return unless user.present? && organization.present? && team.present?
+      receivers = User.where(id: user.id)
+      receivers_string, content, notification_url = MessageTemplate::TeamJoined.get_message_content(receivers, organization, team)
+      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, organization_id: organization.id, team_id: team.id})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::TeamJoined.get_email_message_content(receiver, organization, team)
+        Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
+      end
+    when 'TeamLeft'
+      user_id, organization_id, team_id = args[0], args[1], args[2]
+      user = User.find_by_id(user_id)
+      organization = Organization.find_by_id(organization_id)
+      team = Team.find_by_id(team_id)
+      return unless user.present? && organization.present? && team.present?
+      receivers = User.where(id: user.id)
+      receivers_string, content, notification_url = MessageTemplate::TeamLeft.get_message_content(receivers, organization, team)
+      Notice::Write::CreateService.call(receivers_string, content, notification_url, source, {user_id: user.id, organization_id: organization.id, team_id: team.id})
+      receivers.find_each do |receiver|
+        receivers_email_string, email_title, email_content = MessageTemplate::TeamLeft.get_email_message_content(receiver, organization, team)
         Notice::Write::EmailCreateService.call(receivers_email_string, email_title, email_content)
       end
     end

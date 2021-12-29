@@ -7,6 +7,7 @@ class AccountsController < ApplicationController
 
   # 其他平台同步注册的用户
   def remote_register
+    Register::RemoteForm.new(remote_register_params).validate!
     username = params[:username]&.gsub(/\s+/, "")
     tip_exception("无法使用以下关键词：#{username}，请重新命名") if ReversedKeyword.check_exists?(username)
     email = params[:email]&.gsub(/\s+/, "")
@@ -374,6 +375,10 @@ class AccountsController < ApplicationController
   def find_user
     phone_or_mail = strip(reset_password_params[:login])
     User.where("phone = :search OR mail = :search", search: phone_or_mail).last
+  end
+
+  def remote_register_params
+    params.permit(:username, :email, :password, :platform)
   end
   
 end

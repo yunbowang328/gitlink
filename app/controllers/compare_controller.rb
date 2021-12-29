@@ -42,12 +42,14 @@ class CompareController < ApplicationController
   end
 
   def load_compare_params
-    @base = Addressable::URI.unescape(params[:base])
+    # @base = Addressable::URI.unescape(params[:base])
+    @base = params[:base].include?(":") ? Addressable::URI.unescape(params[:base].split(":")[0]) + ':' + Base64.decode64(params[:base].split(":")[1]) : Base64.decode64(params[:base])
     @head = params[:head].include?('.json') ? params[:head][0..-6] : params[:head]
-
+    # @head = Addressable::URI.unescape(@head)
+    @head = @head.include?(":") ? Addressable::URI.unescape(@head.split(":")[0]) + ':' + Base64.decode64(@head.split(":")[1]) : Base64.decode64(@head)
   end
 
   def gitea_compare(base, head)
-    Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, base, head, current_user.gitea_token)
+    Gitea::Repository::Commits::CompareService.call(@owner.login, @project.identifier, CGI.escape(base), CGI.escape(head), current_user.gitea_token)
   end
 end
