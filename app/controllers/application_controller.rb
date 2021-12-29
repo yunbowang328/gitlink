@@ -272,18 +272,18 @@ class ApplicationController < ActionController::Base
 
 		# 测试版前端需求
 		logger.info("subdomain:#{request.subdomain}")
-		# if request.subdomain != "www"
-		# 	if params[:debug] == 'teacher' #todo 为了测试,记得讲debug删除
-		# 		User.current = User.find 81403
-		# 	elsif params[:debug] == 'student'
-		# 		User.current = User.find 8686
-		# 	elsif params[:debug] == 'admin'
-		# 		logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
-		# 		user =  User.find 36480
-		# 		User.current = user
-		# 		cookies.signed[:user_id] = user.id
-		# 	end
-		# end
+		if request.subdomain != "www"
+			if params[:debug] == 'teacher' #todo 为了测试,记得讲debug删除
+				User.current = User.find 81403
+			elsif params[:debug] == 'student'
+				User.current = User.find 8686
+			elsif params[:debug] == 'admin'
+				logger.info "@@@@@@@@@@@@@@@@@@@@@@ debug mode....."
+				user =  User.find 36480
+				User.current = user
+				cookies.signed[:user_id] = user.id
+			end
+		end
 		# User.current = User.find 81403
 	end
 
